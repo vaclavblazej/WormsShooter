@@ -4,10 +4,13 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.KeyEvent;
 import java.awt.image.BufferedImage;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
+import spritesheets.Controls;
+import spritesheets.ControlsEnum;
 
 /**
  *
@@ -15,6 +18,7 @@ import javax.swing.Timer;
  */
 public class GamePanel extends JPanel implements ActionListener {
 
+    private static Controls controls;
     private BufferedImage image;
     private Timer timer;
     private Worm worm;
@@ -32,6 +36,12 @@ public class GamePanel extends JPanel implements ActionListener {
                 init();
             }
         });
+
+        controls = new Controls()
+                .add(ControlsEnum.Up, 38)
+                .add(ControlsEnum.Down, 40)
+                .add(ControlsEnum.Right, 39)
+                .add(ControlsEnum.Left, 37);
     }
 
     public void startMoving() {
@@ -51,11 +61,30 @@ public class GamePanel extends JPanel implements ActionListener {
         if (worm != null) {
             worm.draw(g, this);
         }
+        g.scale(4, 4);
     }
 
     @Override
     public void actionPerformed(ActionEvent ae) {
         worm.tick();
         repaint();
+    }
+
+    void keyPressed(KeyEvent ke) {
+        int i = ke.getKeyCode();
+        ControlsEnum en = controls.get(i);
+        System.out.println(i + " " + en);
+        if (en != null) {
+            worm.controlOn(en);
+        }
+    }
+
+    void keyReleased(KeyEvent ke) {
+        int i = ke.getKeyCode();
+        ControlsEnum en = controls.get(i);
+        System.out.println(i + " " + en);
+        if (en != null) {
+            worm.controlOff(en);
+        }
     }
 }

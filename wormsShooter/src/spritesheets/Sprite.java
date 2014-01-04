@@ -16,17 +16,18 @@ import wormsshooter.Worm;
 public class Sprite {
 
     private static BufferedImage spriteSheet;
-    private static int tileSize = 32;
+    private static int tileSizeX = 32;
+    private static int tileSizeY = 32;
     private static int x = 0;
     private static int y = 0;
 
-    public static void set(int tileSize) {
-        set(tileSize, 0, 0);
-        Sprite.tileSize = tileSize;
+    public static void set(int tileSizeX, int tileSizeY) {
+        set(tileSizeX, tileSizeY, 0, 0);
     }
 
-    public static void set(int tileSize, int x, int y) {
-        Sprite.tileSize = tileSize;
+    public static void set(int tileSizeX, int tileSizeY, int x, int y) {
+        Sprite.tileSizeX = tileSizeX;
+        Sprite.tileSizeY = tileSizeY;
         Sprite.x = x;
         Sprite.y = y;
     }
@@ -42,25 +43,30 @@ public class Sprite {
          }
          */
         //try {
-            URL url = Main.class.getResource("/images/" + file + ".png");
-            try {
-                sprite = ImageIO.read(url);
-            } catch (IOException ex) {
-                Logger.getLogger(Worm.class.getName()).log(Level.SEVERE, null, ex);
-            }
-/*            sprite = ImageIO.read(new File("/images/" + file + ".bmp"));
-        } catch (IOException e) {
-            e.printStackTrace();
-        }*/
+        URL url = Main.class.getResource("/images/" + file + ".png");
+        try {
+            sprite = ImageIO.read(url);
+        } catch (IOException ex) {
+            Logger.getLogger(Worm.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        /*            sprite = ImageIO.read(new File("/images/" + file + ".bmp"));
+         } catch (IOException e) {
+         e.printStackTrace();
+         }*/
+
         spriteSheet = sprite;
         return sprite;
     }
 
-    public static BufferedImage getSprite(int xGrid, int yGrid) {
+    public static Frame getSprite(int xGrid, int yGrid) {
+        return getSprite(xGrid, yGrid, 0);
+    }
+
+    public static Frame getSprite(int xGrid, int yGrid, int val) {
         if (spriteSheet == null) {
             return null;
         }
-        return spriteSheet.getSubimage(x + xGrid * tileSize, y + yGrid * tileSize, tileSize, tileSize);
+        return new Frame(spriteSheet.getSubimage(x + xGrid * tileSizeX, y + yGrid * tileSizeY, tileSizeX, tileSizeY), 1, val);
     }
 
     private Sprite() {

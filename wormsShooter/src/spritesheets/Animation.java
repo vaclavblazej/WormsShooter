@@ -18,17 +18,24 @@ public class Animation {
     private boolean stopped;                // has animations stopped
     private List<Frame> frames = new ArrayList<>(5);    // Arraylist of frames 
 
-    public Animation(ArrayList<BufferedImage> frames, int frameDelay) {
-        this.frameDelay = frameDelay;
+    public Animation(ArrayList<Frame> frames) {
         this.stopped = true;
         for (int i = 0; i < frames.size(); i++) {
-            addFrame(frames.get(i), frameDelay);
+            addFrame(frames.get(i));
         }
         this.frameCount = 0;
-        this.frameDelay = frameDelay;
+        this.frameDelay = 0;
         this.currentFrame = 0;
         this.animationDirection = 1;
         this.totalFrames = this.frames.size();
+    }
+
+    public Animation(ArrayList<Frame> frames, int frameDelay) {
+        this(frames);
+        for (int i = 0; i < frames.size(); i++) {
+            frames.get(i).setDuration(frameDelay);
+        }
+        this.frameDelay = frameDelay;
     }
 
     public void start() {
@@ -62,12 +69,16 @@ public class Animation {
         this.currentFrame = 0;
     }
 
-    private void addFrame(BufferedImage frame, int duration) {
-        if (duration <= 0) {
-            System.err.println("Invalid duration: " + duration);
-            throw new RuntimeException("Invalid duration: " + duration);
-        }
-        frames.add(new Frame(frame, duration));
+    public int getDirection() {
+        return animationDirection;
+    }
+
+    public void setDirection(int i) {
+        animationDirection = i;
+    }
+
+    private void addFrame(Frame frame) {
+        frames.add(frame);
         currentFrame = 0;
     }
 
@@ -75,7 +86,7 @@ public class Animation {
         return frames.get(currentFrame).getFrame();
     }
 
-    public void update() {
+    public boolean update() {
         if (!stopped) {
             frameCount++;
             if (frameCount > frameDelay) {
@@ -86,7 +97,13 @@ public class Animation {
                 } else if (currentFrame < 0) {
                     currentFrame = totalFrames - 1;
                 }
+                return true;
             }
         }
+        return false;
+    }
+
+    public int value() {
+        return frames.get(currentFrame).getValue();
     }
 }

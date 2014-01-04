@@ -39,10 +39,11 @@ public class GameWindow extends JFrame implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent ke) {
+        gamePlane.keyPressed(ke);
     }
 
     @Override
     public void keyReleased(KeyEvent ke) {
+        gamePlane.keyReleased(ke);
     }
 }
-
