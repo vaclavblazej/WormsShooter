@@ -1,4 +1,4 @@
-package wormsshooter;
+package main;
 
 import javax.swing.SwingUtilities;
 

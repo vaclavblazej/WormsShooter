@@ -1,5 +1,6 @@
-package wormsshooter;
+package main;
 
+import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.AffineTransform;
@@ -31,6 +32,7 @@ public class Worm implements GraphicComponent {
     private double headRotation;
     private double headChange;
     private EnumSet<ControlsEnum> controls;
+    private static final int HEIGHT = 8;
 
     public Worm(int x, int y) {
         headRotation = 0;
@@ -53,7 +55,12 @@ public class Worm implements GraphicComponent {
     }
 
     public void tick() {
-        int tmp = animation.value();;
+        if (MainPanel.check(position.x, position.y + HEIGHT + 1) == Color.BLACK.getRGB()) {
+            position.y += 1;
+        } else if (MainPanel.check(position.x, position.y + HEIGHT) != Color.BLACK.getRGB()) {
+            position.y -= 1;
+        }
+        int tmp = animation.value();
         if (animation.update()) {
             if (animation.getDirection() > 0) {
                 position.x += tmp;

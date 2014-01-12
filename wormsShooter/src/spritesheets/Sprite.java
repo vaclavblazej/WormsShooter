@@ -10,8 +10,8 @@ import java.net.URL;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
-import wormsshooter.Main;
-import wormsshooter.Worm;
+import main.Main;
+import main.Worm;
 
 public class Sprite {
 
