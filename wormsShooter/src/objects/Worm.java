@@ -1,4 +1,4 @@
-package main;
+package objects;
 
 import java.awt.Color;
 import java.awt.Graphics2D;
@@ -8,10 +8,10 @@ import java.awt.image.BufferedImage;
 import java.awt.image.ImageObserver;
 import java.util.ArrayList;
 import java.util.EnumSet;
+import main.MainPanel;
+import static objects.ControlsEnum.Down;
+import static objects.ControlsEnum.Up;
 import spritesheets.Animation;
-import spritesheets.ControlsEnum;
-import static spritesheets.ControlsEnum.Down;
-import static spritesheets.ControlsEnum.Up;
 import spritesheets.Frame;
 import spritesheets.Sprite;
 
@@ -24,6 +24,8 @@ public class Worm implements GraphicComponent {
     private static final Point HEAD_POSITION = new Point(9, -17);
     private static final Point HEAD_CENTER = new Point(8, 16);
     private static final Point BODY_CENTER = new Point(10, 10);
+    private static final int LASER_LENGTH = 500;
+    private static final int HEIGHT = 8;
     private BufferedImage img;
     private Point position;
     private ArrayList<Frame> images;
@@ -32,7 +34,6 @@ public class Worm implements GraphicComponent {
     private double headRotation;
     private double headChange;
     private EnumSet<ControlsEnum> controls;
-    private static final int HEIGHT = 8;
 
     public Worm(int x, int y) {
         headRotation = 0;
@@ -65,7 +66,7 @@ public class Worm implements GraphicComponent {
             if (animation.getDirection() > 0) {
                 position.x += tmp;
             } else {
-                position.x += -animation.value();
+                position.x += -tmp;
             }
         }
         headRotation += headChange;
@@ -108,12 +109,15 @@ public class Worm implements GraphicComponent {
                 case Down:
                     headChange = 0;
                     break;
+                case Fire:
+                    MainPanel.newSand(position.x, position.y);
+                    break;
             }
         }
     }
 
     @Override
-    public void draw(Graphics2D g, ImageObserver obs) {
+    public void draw(Graphics2D g) {
         AffineTransform transformer = new AffineTransform();
         transformer.translate(position.x, position.y);
         g.drawImage(animation.getSprite(), transformer, null);
@@ -125,6 +129,10 @@ public class Worm implements GraphicComponent {
         transformer.rotate(headRotation);
         transformer.translate(-HEAD_CENTER.x, -HEAD_CENTER.y);
         g.drawImage(headFrame.getFrame(), transformer, null);
+        g.setColor(Color.RED);
+        g.drawLine(position.x, position.y,
+                position.x + (int) (LASER_LENGTH * Math.cos(headRotation)),
+                position.y + (int) (LASER_LENGTH * Math.sin(headRotation)));
         //g.drawImage(img, null, null);
     }
 }

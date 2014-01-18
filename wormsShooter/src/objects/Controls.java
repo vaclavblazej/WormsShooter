@@ -1,6 +1,5 @@
-package spritesheets;
+package objects;
 
-import spritesheets.ControlsEnum;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -17,7 +16,7 @@ public class Controls {
 
     public Controls add(ControlsEnum en, Integer i) {
         if (keys == null) {
-            keys = new HashMap<>(6);
+            keys = new HashMap<>(10);
         }
         keys.put(i, en);
         return this;

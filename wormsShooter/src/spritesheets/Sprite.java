@@ -11,7 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.imageio.ImageIO;
 import main.Main;
-import main.Worm;
+import objects.Worm;
 
 public class Sprite {
 
@@ -34,28 +34,18 @@ public class Sprite {
 
     public static BufferedImage loadSprite(String file) {
         BufferedImage sprite = null;
-        /*
-         URL url = Main.class.getResource("/images/Grass.bmp");
-         try {
-         img = ImageIO.read(url);
-         } catch (IOException ex) {
-         Logger.getLogger(Worm.class.getName()).log(Level.SEVERE, null, ex);
-         }
-         */
-        //try {
         URL url = Main.class.getResource("/images/" + file + ".png");
         try {
             sprite = ImageIO.read(url);
         } catch (IOException ex) {
             Logger.getLogger(Worm.class.getName()).log(Level.SEVERE, null, ex);
         }
-        /*            sprite = ImageIO.read(new File("/images/" + file + ".bmp"));
-         } catch (IOException e) {
-         e.printStackTrace();
-         }*/
-
         spriteSheet = sprite;
         return sprite;
+    }
+
+    public static Frame getSprite() {
+        return getSprite(0, 0, 0);
     }
 
     public static Frame getSprite(int xGrid, int yGrid) {

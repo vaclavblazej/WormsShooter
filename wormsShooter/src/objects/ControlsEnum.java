@@ -1,4 +1,4 @@
-package spritesheets;
+package objects;
 
 /**
  *
@@ -8,5 +8,6 @@ public enum ControlsEnum {
     Up,
     Down,
     Left,
-    Right;
+    Right,
+    Fire;
 }

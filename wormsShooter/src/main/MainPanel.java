@@ -18,10 +18,14 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
+import objects.Controls;
+import objects.ControlsEnum;
+import objects.GraphicComponent;
+import objects.Miscellaneous;
+import objects.Worm;
 import particles.Particle;
 import particles.Sand;
-import spritesheets.Controls;
-import spritesheets.ControlsEnum;
+import spritesheets.Sprite;
 
 /**
  *
@@ -39,96 +43,11 @@ public class MainPanel extends JPanel implements
     private static BufferedImage map;
     private static CopyOnWriteArrayList<Particle> grains;
     private static Point mouse;
-    private Timer timer;
-    private Timer rBrushTimer;
-    private Worm worm;
-    private Random random;
+    private static Random random;
+    private static CopyOnWriteArrayList<GraphicComponent> objects;
 
-    public MainPanel() {
-        setFocusable(true);
-        mouse = new Point();
+    static {
         random = new Random();
-        setPreferredSize(SIZE);
-        map = new BufferedImage(SIZE.width, SIZE.height, BufferedImage.TYPE_INT_RGB);
-        Graphics g = map.getGraphics();
-        grains = new CopyOnWriteArrayList<>();
-        timer = new Timer(20, this);
-        // when invokeLater is not used, first game is spoiled by a bug
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                init();
-            }
-        });
-        rBrushTimer = new Timer(40, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                for (int i = 0; i < 10; i++) {
-                    newSand(mouse.x, mouse.y);
-                }
-            }
-        });
-        controls = new Controls()
-                .add(ControlsEnum.Up, 38)
-                .add(ControlsEnum.Down, 40)
-                .add(ControlsEnum.Right, 39)
-                .add(ControlsEnum.Left, 37);
-        addMouseListener(this);
-        addMouseMotionListener(this);
-        addKeyListener(this);
-    }
-
-    public void startMoving() {
-        timer.start();
-    }
-
-    public void init() {
-        worm = new Worm(200, 200);
-        repaint();
-    }
-
-    @Override
-    public void paint(Graphics grphcs) {
-        super.paint(grphcs);
-        Graphics2D g = (Graphics2D) grphcs;
-        g.drawImage(map, null, this);
-        for (Particle grain : grains) {
-            g.setColor(grain.color);
-            grain.draw(g);
-        }
-        if (worm != null) {
-            worm.draw(g, this);
-        }
-        g.scale(4, 4);
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent ae) {
-        worm.tick();
-        for (Particle particle : grains) {
-            particle.tick();
-        }
-        repaint();
-    }
-
-    @Override
-    public void keyPressed(KeyEvent ke) {
-        int i = ke.getKeyCode();
-        ControlsEnum en = controls.get(i);
-        System.out.println(i + " " + en);
-        if (en != null) {
-            worm.controlOn(en);
-        }
-    }
-
-    @Override
-    public void keyReleased(KeyEvent ke) {
-        int i = ke.getKeyCode();
-        ControlsEnum en = controls.get(i);
-        System.out.println(i + " " + en);
-        if (en != null) {
-            worm.controlOff(en);
-        }
     }
 
     public static int check(int x, int y) {
@@ -181,21 +100,119 @@ public class MainPanel extends JPanel implements
          }*/
     }
 
-    public void clear() {
-        for (Particle grain : grains) {
-            if (grain.clear()) {
-                grains.remove(grain);
-            }
-        }
+    private static void addObject(GraphicComponent comp) {
+        objects.add(comp);
     }
 
-    public void newSand(int x, int y) {
+    public static void newSand(int x, int y) {
         grains.add(new Sand(
                 x + random.nextInt(10) - 5,
                 y + random.nextInt(20) - 10,
                 (random.nextInt(RNG) - RNG / 2) / 10.,
                 -(random.nextInt(RNG) - RNG / 2) / 10.,
                 Color.CYAN));
+    }
+    private Timer timer;
+    private Timer rBrushTimer;
+    private Worm worm;
+
+    public MainPanel() {
+        setFocusable(true);
+        mouse = new Point();
+        setPreferredSize(SIZE);
+        map = new BufferedImage(SIZE.width, SIZE.height, BufferedImage.TYPE_INT_RGB);
+        Graphics g = map.getGraphics();
+        grains = new CopyOnWriteArrayList<>();
+        objects = new CopyOnWriteArrayList<>();
+        timer = new Timer(20, this);
+        // when invokeLater is not used, first game is spoiled by a bug
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                init();
+            }
+        });
+        rBrushTimer = new Timer(40, new ActionListener() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                for (int i = 0; i < 10; i++) {
+                    newSand(mouse.x, mouse.y);
+                }
+            }
+        });
+        controls = new Controls()
+                .add(ControlsEnum.Up, 38)
+                .add(ControlsEnum.Down, 40)
+                .add(ControlsEnum.Right, 39)
+                .add(ControlsEnum.Left, 37)
+                .add(ControlsEnum.Fire, 32);
+        addMouseListener(this);
+        addMouseMotionListener(this);
+        addKeyListener(this);
+    }
+
+    public void startMoving() {
+        timer.start();
+    }
+
+    public void init() {
+        worm = new Worm(200, 200);
+        repaint();
+    }
+
+    @Override
+    public void paint(Graphics grphcs) {
+        super.paint(grphcs);
+        Graphics2D g = (Graphics2D) grphcs;
+        g.drawImage(map, null, this);
+        for (Particle grain : grains) {
+            g.setColor(grain.color);
+            grain.draw(g);
+        }
+        for (GraphicComponent obj : objects) {
+            obj.draw(g);
+        }
+        if (worm != null) {
+            worm.draw(g);
+        }
+        g.scale(4, 4);
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent ae) {
+        worm.tick();
+        for (Particle particle : grains) {
+            particle.tick();
+        }
+        repaint();
+    }
+
+    @Override
+    public void keyPressed(KeyEvent ke) {
+        int i = ke.getKeyCode();
+        ControlsEnum en = controls.get(i);
+        System.out.println(i + " " + en);
+        if (en != null) {
+            worm.controlOn(en);
+        }
+    }
+
+    @Override
+    public void keyReleased(KeyEvent ke) {
+        int i = ke.getKeyCode();
+        ControlsEnum en = controls.get(i);
+        System.out.println(i + " " + en);
+        if (en != null) {
+            worm.controlOff(en);
+        }
+    }
+
+    public void clear() {
+        for (Particle grain : grains) {
+            if (grain.clear()) {
+                grains.remove(grain);
+            }
+        }
     }
 
     @Override
