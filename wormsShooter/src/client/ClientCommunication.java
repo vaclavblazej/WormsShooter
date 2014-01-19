@@ -12,11 +12,11 @@ import server.ServerCommunication;
 public class ClientCommunication {
 
     public static Dimension getSize() {
-        return ServerCommunication.getSize();
+        return ServerCommunication.getInstance().getSize();
     }
     
     public static Color getPixel(int x, int y){
-        return ServerCommunication.getPixel(new Point(x, y));
+        return ServerCommunication.getInstance().getPixel(new Point(x, y));
     }
 
     private ClientCommunication() {

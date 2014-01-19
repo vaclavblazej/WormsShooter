@@ -24,25 +24,23 @@ import spritesheets.Sprite;
  * @author Skarab
  */
 public class ServerPanel extends JPanel implements ActionListener {
+    
+    private static ServerPanel instance;
 
     private static final int RNG = 20;
     public static final Dimension SIZE = new Dimension(400, 300);
-    private static BufferedImage map;
-    private static CopyOnWriteArrayList<Particle> grains;
-    private static CopyOnWriteArrayList<GraphicComponent> objects;
-    private static Random random;
-
-    static {
-        Sprite.loadSprite("Map");
-        Sprite.set(400, 300);
-        map = Sprite.getSprite().getFrame();
-        //map = new BufferedImage(SIZE.width, SIZE.height, BufferedImage.TYPE_INT_RGB);
-        grains = new CopyOnWriteArrayList<>();
-        objects = new CopyOnWriteArrayList<>();
-        random = new Random();
+    private BufferedImage map;
+    private CopyOnWriteArrayList<Particle> grains;
+    private CopyOnWriteArrayList<GraphicComponent> objects;
+    private Random random;
+    
+    
+    public static ServerPanel getInstance() {
+        if (instance == null) instance = new ServerPanel();
+        return instance;
     }
 
-    public static Color check(int x, int y) {
+    public Color check(int x, int y) {
         int rgb;
         try {
             rgb = map.getRGB(x, y);
@@ -52,27 +50,27 @@ public class ServerPanel extends JPanel implements ActionListener {
         return new Color(rgb);
     }
 
-    public static void imprint(Particle gr) {
+    public void imprint(Particle gr) {
         destroy(gr);
         Graphics g = map.getGraphics();
         g.setColor(gr.color);
         gr.draw(g);
     }
 
-    public static void imprint(int x, int y, Color color) {
+    public void imprint(int x, int y, Color color) {
         Graphics g = map.getGraphics();
         g.setColor(color);
         g.drawLine(x, y, x, y);
     }
 
-    public static void swap(int x, int y, int sx, int sy) {
+    public void swap(int x, int y, int sx, int sy) {
         Color first = check(x, y);
         Color second = check(sx, sy);
         imprint(x, y, second);
         imprint(sx, sy, first);
     }
 
-    private static void erase(int x, int y, int r) {
+    private void erase(int x, int y, int r) {
         for (int i = 0; i < r; i++) {
             for (int j = 0; j < r; j++) {
                 imprint(x + i, y + j, Color.BLACK);
@@ -80,18 +78,22 @@ public class ServerPanel extends JPanel implements ActionListener {
         }
     }
 
-    public static void destroy(Particle gr) {
+    public void destroy(Particle gr) {
         grains.remove(gr);
     }
 
-    public static void update(int x, int y) {
+    public void update(int x, int y) {
     }
 
-    private static void addObject(GraphicComponent comp) {
+    private void addObject(GraphicComponent comp) {
         objects.add(comp);
     }
+    
+    public BufferedImage getMap() {
+        return map;
+    }
 
-    public static void newSand(int x, int y) {
+    public void newSand(int x, int y) {
         grains.add(new Sand(
                 x + random.nextInt(10) - 5,
                 y + random.nextInt(20) - 10,
@@ -103,7 +105,15 @@ public class ServerPanel extends JPanel implements ActionListener {
     private Timer graphicTimer;
     private Worm worm;
 
-    public ServerPanel() {
+    private ServerPanel() {
+        Sprite.loadSprite("Map");
+        Sprite.set(400, 300);
+        map = Sprite.getSprite().getFrame();
+        //map = new BufferedImage(SIZE.width, SIZE.height, BufferedImage.TYPE_INT_RGB);
+        grains = new CopyOnWriteArrayList<>();
+        objects = new CopyOnWriteArrayList<>();
+        random = new Random();
+
         setFocusable(true);
         setPreferredSize(SIZE);
         //Graphics g = map.getGraphics();

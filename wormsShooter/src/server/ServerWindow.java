@@ -9,8 +9,6 @@ import javax.swing.JFrame;
  */
 public class ServerWindow extends JFrame {
 
-    private static ServerPanel gamePlane;
-
     public ServerWindow(String title) {
         super(title);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
@@ -18,8 +16,7 @@ public class ServerWindow extends JFrame {
         setResizable(false);
 
         setLayout(new BorderLayout());
-        gamePlane = new ServerPanel();
-        add(gamePlane, BorderLayout.CENTER);
+        add(ServerPanel.getInstance(), BorderLayout.CENTER);
         pack();
         //setLocationRelativeTo(null);
         setLocation(70, 10);
