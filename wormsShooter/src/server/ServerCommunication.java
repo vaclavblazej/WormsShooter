@@ -4,7 +4,10 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
+import java.net.MalformedURLException;
+import java.rmi.Naming;
 import java.rmi.RemoteException;
+import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -30,22 +33,32 @@ public class ServerCommunication extends UnicastRemoteObject implements ServerCo
         return instance;
     }
 
+    private ServerCommunication() throws RemoteException {
+        super(0);
+    }
+    
+    public void init() throws RemoteException {
+        LocateRegistry.createRegistry(4242);
+        try {
+            Naming.rebind("ServerComm", instance);
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(ServerCommunication.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
     @Override
     public Dimension getSize() {
         return ServerPanel.SIZE;
     }
 
     @Override
-    public Color getPixel(Point point) {
-        return ServerPanel.getInstance().check(point.x, point.y);
+    public Color getPixel(int x, int y) {
+        return ServerPanel.getInstance().check(x, y);
     }
 
     @Override
     public BufferedImage getMap() {
         return ServerPanel.getInstance().getMap();
-    }
-
-    private ServerCommunication() throws RemoteException {
     }
 
     @Override
