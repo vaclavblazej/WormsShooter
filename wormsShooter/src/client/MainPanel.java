@@ -21,6 +21,7 @@ import java.util.logging.Logger;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
+import objects.CollisionState;
 import objects.Controls;
 import objects.ControlsEnum;
 import objects.GraphicComponent;
@@ -39,9 +40,10 @@ public class MainPanel extends JPanel implements
         MouseListener {
 
     private static final int RNG = 20;
+    public static final int RATIO = 20;
     public static final Dimension SIZE = new Dimension(800, 600);
-    public static final Dimension VIEW_SIZE = new Dimension(64, 48);
-    public static final Color BACKGROUND = Color.BLUE;
+    public static final Dimension VIEW_SIZE = new Dimension(SIZE.width / RATIO, SIZE.height / RATIO);
+    public static final Color BACKGROUND = Color.decode("#84AAF8");
     private static Controls controls;
     private static BufferedImage map;
     private static BufferedImage curentView;
@@ -83,14 +85,19 @@ public class MainPanel extends JPanel implements
         imprint(x, y, ret);
     }
 
-    public static Color check(int x, int y) {
-        int rgb;
+    public static CollisionState check(int x, int y) {
+        if (getPixel(x, y).getRGB() == BACKGROUND.getRGB()) {
+            return CollisionState.Free;
+        }
+        return CollisionState.Crushed;
+    }
+
+    public static Color getPixel(int x, int y) {
         try {
-            rgb = map.getRGB(x, y);
+            return new Color(map.getRGB(x, y));
         } catch (ArrayIndexOutOfBoundsException ex) {
             return Color.BLACK;
         }
-        return new Color(rgb);
     }
 
     public static void imprint(Particle gr) {
@@ -107,8 +114,8 @@ public class MainPanel extends JPanel implements
     }
 
     public static void swap(int x, int y, int sx, int sy) {
-        Color first = check(x, y);
-        Color second = check(sx, sy);
+        Color first = getPixel(x, y);
+        Color second = getPixel(sx, sy);
         imprint(x, y, second);
         imprint(sx, sy, first);
     }
@@ -145,7 +152,7 @@ public class MainPanel extends JPanel implements
     private TestBody body;
 
     public MainPanel() {
-        body = new TestBody(30, 20);
+        body = new TestBody(100, 100);
         mouse = new Point();
         grains = new CopyOnWriteArrayList<>();
         objects = new CopyOnWriteArrayList<>();
@@ -187,12 +194,13 @@ public class MainPanel extends JPanel implements
     @Override
     public void paint(Graphics grphcs) {
         super.paint(grphcs);
-        currentPosition.x = body.getPosition().x;
-        currentPosition.y = body.getPosition().y;
+        currentPosition.x = body.getPosition().x - VIEW_SIZE.width / 2;
+        currentPosition.y = body.getPosition().y - VIEW_SIZE.height / 2;
         curentView = map.getSubimage(currentPosition.x, currentPosition.y, VIEW_SIZE.width, VIEW_SIZE.height);
         Graphics2D g = (Graphics2D) grphcs;
         //g.drawImage(map, null, this);
         g.drawImage(curentView, 0, 0, getWidth(), getHeight(), null);
+        g.translate(RATIO * VIEW_SIZE.width / 2, RATIO * VIEW_SIZE.height / 2);
         body.draw(g);
         /*for (Particle grain : grains) {
          g.setColor(grain.color);

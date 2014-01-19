@@ -5,7 +5,6 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.geom.AffineTransform;
 import java.util.EnumSet;
 
 /**
@@ -17,11 +16,13 @@ public class TestBody implements GraphicComponent {
     private Point position;
     private EnumSet<ControlsEnum> controls;
     private Dimension SIZE;
+    private Dimension REAL_SIZE;
 
     public TestBody(int x, int y) {
         position = new Point(x, y);
         controls = EnumSet.noneOf(ControlsEnum.class);
-        SIZE = new Dimension(14, 30);
+        REAL_SIZE = new Dimension(1, 2);
+        SIZE = new Dimension(REAL_SIZE.width * MainPanel.RATIO, REAL_SIZE.height * MainPanel.RATIO);
     }
 
     public Point getPosition() {
@@ -29,16 +30,27 @@ public class TestBody implements GraphicComponent {
     }
 
     public void tick() {
-        if (MainPanel.check(position.x, position.y + SIZE.height + 1) == MainPanel.BACKGROUND) {
-            position.y += 1;
-        } /*else if (MainPanel.check(position.x, position.y + SIZE.height) != MainPanel.BACKGROUND) {
-            position.y -= 1;
-        }*/
-        if (controls.contains(ControlsEnum.Left)) {
-            position.x -= 1;
+        int c = 0;
+        if (controls.contains(ControlsEnum.Up)) {
+            c = 1;
         }
-        if (controls.contains(ControlsEnum.Right)) {
-            position.x += 1;
+        switch (MainPanel.check(position.x, position.y + REAL_SIZE.height + c)) {
+            case Free:
+                position.y += 1;
+                break;
+        }
+        if (MainPanel.check(position.x + 1, position.y + 1) == CollisionState.Free) {
+            if (controls.contains(ControlsEnum.Right)) {
+                position.x += 1;
+            }
+        }
+        if (MainPanel.check(position.x - 1, position.y + 1) == CollisionState.Free) {
+            if (controls.contains(ControlsEnum.Left)) {
+                position.x -= 1;
+            }
+        }
+        if (controls.contains(ControlsEnum.Down)) {
+            position.y += 1;
         }
     }
 
@@ -50,6 +62,7 @@ public class TestBody implements GraphicComponent {
                 case Left:
                     break;
                 case Up:
+                    position.y -= 1;
                     break;
                 case Down:
                     break;
@@ -75,6 +88,6 @@ public class TestBody implements GraphicComponent {
         //AffineTransform transformer = new AffineTransform();
         //transformer.translate(position.x, position.y);
         g.setColor(Color.RED);
-        g.fillRect(position.x, position.y, SIZE.width, SIZE.height);
+        g.fillRect(0, 0, SIZE.width, SIZE.height);
     }
 }

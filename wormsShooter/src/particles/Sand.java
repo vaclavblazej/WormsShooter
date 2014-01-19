@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import client.MainPanel;
+import objects.CollisionState;
 
 /**
  *
@@ -26,11 +27,11 @@ public class Sand extends Particle {
          return;
          }
          }*/
-        if (MainPanel.check((int) position.x, (int) position.y + 1) != BACKGROUND) {
-            boolean left = MainPanel.check((int) position.x - 1, (int) position.y) == BACKGROUND;
-            boolean right = MainPanel.check((int) position.x + 1, (int) position.y) == BACKGROUND;
-            boolean leftD = MainPanel.check((int) position.x - 1, (int) position.y + 1) == BACKGROUND;
-            boolean rightD = MainPanel.check((int) position.x + 1, (int) position.y + 1) == BACKGROUND;
+        if (MainPanel.check((int) position.x, (int) position.y + 1) != CollisionState.Free) {
+            boolean left = MainPanel.check((int) position.x - 1, (int) position.y) == CollisionState.Free;
+            boolean right = MainPanel.check((int) position.x + 1, (int) position.y) == CollisionState.Free;
+            boolean leftD = MainPanel.check((int) position.x - 1, (int) position.y + 1) == CollisionState.Free;
+            boolean rightD = MainPanel.check((int) position.x + 1, (int) position.y + 1) == CollisionState.Free;
             if (!left && !right) {
                 MainPanel.imprint(this);
             } else if (left && leftD) {
@@ -60,7 +61,7 @@ public class Sand extends Particle {
             for (int k = 0; k < absX; k++) {
                 if (MainPanel.check(
                         (int) (position.x + k * dirX),
-                        (int) (position.y + i * dirY)) != BACKGROUND) {
+                        (int) (position.y + i * dirY)) != CollisionState.Free) {
                     if (k == 0) {
                         position.x += k * dirX;
                         position.y += i * dirY - dirY;
