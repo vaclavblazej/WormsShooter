@@ -13,8 +13,11 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
+import java.rmi.RemoteException;
 import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
@@ -49,7 +52,12 @@ public class MainPanel extends JPanel implements
     private static Random random;
 
     static {
-        Dimension mapSize = ClientCommunication.getSize();
+        Dimension mapSize = SIZE;
+        try {
+            mapSize = ClientCommunication.getInstance().getSize();
+        } catch (RemoteException ex) {
+            Logger.getLogger(MainPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
         map = new BufferedImage(mapSize.width, mapSize.height, BufferedImage.TYPE_INT_RGB);
         curentView = new BufferedImage(VIEW_SIZE.width, VIEW_SIZE.height, BufferedImage.TYPE_INT_RGB);
         currentPosition = new Point(30, 20);
@@ -57,11 +65,20 @@ public class MainPanel extends JPanel implements
     }
 
     public static void loadAllChunks() {
-        map = ClientCommunication.getMap();
+        try {
+            map = ClientCommunication.getInstance().getMap();
+        } catch (RemoteException ex) {
+            Logger.getLogger(MainPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     public static void loadChunk(int x, int y) {
-        Color ret = ClientCommunication.getPixel(x, y);
+        Color ret = Color.BLACK;
+        try {
+            ret = ClientCommunication.getInstance().getPixel(x, y);
+        } catch (RemoteException ex) {
+            Logger.getLogger(MainPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
         System.out.println(ret);
         imprint(x, y, ret);
     }

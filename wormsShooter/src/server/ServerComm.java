@@ -18,7 +18,7 @@ import utilities.Action;
  */
 public interface ServerComm extends Remote{
 
-    Color getPixel(Point point) throws RemoteException;
+    Color getPixel(int x, int y) throws RemoteException;
 
     Dimension getSize()throws RemoteException;
 
