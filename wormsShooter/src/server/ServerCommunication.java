@@ -2,7 +2,6 @@ package server;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.net.MalformedURLException;
 import java.rmi.Naming;
@@ -38,12 +37,7 @@ public class ServerCommunication extends UnicastRemoteObject implements ServerCo
     }
     
     public void init() throws RemoteException {
-        LocateRegistry.createRegistry(4242);
-        try {
-            Naming.rebind("ServerComm", instance);
-        } catch (MalformedURLException ex) {
-            Logger.getLogger(ServerCommunication.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        LocateRegistry.createRegistry(4242).rebind("ServerComm", instance);
     }
 
     @Override

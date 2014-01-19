@@ -19,8 +19,9 @@ import utilities.Message;
 public class Main {
 
     public static void main(String[] args) {
+
         try {
-            ServerCommunication.getInstance().init();
+           ServerCommunication.getInstance().init();
         } catch (RemoteException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
