@@ -17,6 +17,7 @@ import utilities.Action;
 public class ServerCommunication extends UnicastRemoteObject implements ServerComm {
 
     private static ServerCommunication instance;
+    private static final long serialVersionUID = 1L;
 
     public static ServerCommunication getInstance() {
         if (instance == null) {
@@ -43,12 +44,8 @@ public class ServerCommunication extends UnicastRemoteObject implements ServerCo
     public BufferedImage getMap() {
         return ServerPanel.getInstance().getMap();
     }
-    
-    
 
     private ServerCommunication() throws RemoteException {
-        
-        
     }
 
     @Override

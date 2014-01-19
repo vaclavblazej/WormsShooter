@@ -9,6 +9,7 @@ import java.awt.Dimension;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.rmi.Remote;
+import java.rmi.RemoteException;
 import utilities.Action;
 
 /**
@@ -17,12 +18,12 @@ import utilities.Action;
  */
 public interface ServerComm extends Remote{
 
-    Color getPixel(Point point);
+    Color getPixel(Point point) throws RemoteException;
 
-    Dimension getSize();
+    Dimension getSize()throws RemoteException;
 
-    BufferedImage getMap();
+    BufferedImage getMap()throws RemoteException;
     
-    void sendAction(Action action);
+    void sendAction(Action action)throws RemoteException;
     
 }
