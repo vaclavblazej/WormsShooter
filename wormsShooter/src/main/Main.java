@@ -1,6 +1,7 @@
 package main;
 
 import client.ClientCommunication;
+import client.GameLauncher;
 import client.GameWindow;
 import java.net.MalformedURLException;
 import java.rmi.NotBoundException;
@@ -25,24 +26,24 @@ public class Main {
         } catch (RemoteException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
-        try {
-            ClientCommunication.getInstance().init("localhost:4242");
-        } catch (NotBoundException | MalformedURLException | RemoteException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-        }
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                startGame();
+                startMenu();
             }
         });
     }
 
     public static void startMenu() {
+        new GameLauncher();
     }
 
     public static void startGame() {
         new ServerWindow(Message.Server_window_title.cm());
         GameWindow.getInstance();
+    }
+    
+    public static void exit(){
+        System.exit(0);
     }
 }

@@ -14,6 +14,11 @@ public enum Message {
 
     Server_window_title,
     Client_window_title,
+    Launcher_window_title,
+    Address,
+    Address_initial,
+    Socket,
+    Socket_initial,
     Cancel_button,
     OK_button,
     Error;

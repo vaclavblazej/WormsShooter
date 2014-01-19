@@ -8,7 +8,6 @@ import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import server.ServerComm;
-import server.ServerCommunication;
 import utilities.Action;
 import utilities.SerializableBufferedImage;
 
@@ -36,13 +35,11 @@ public class ClientCommunication implements ServerComm {
 
     @Override
     public Dimension getSize() throws RemoteException {
-        //return ServerCommunication.getInstance().getSize();
         return serverComm.getSize();
     }
 
     @Override
     public Color getPixel(int x, int y) throws RemoteException {
-        //return ServerCommunication.getInstance().getPixel(x, y);
         return serverComm.getPixel(x, y);
     }
     
@@ -52,7 +49,6 @@ public class ClientCommunication implements ServerComm {
 
     @Override
     public SerializableBufferedImage getMapSerializable() throws RemoteException {
-        //return ServerCommunication.getInstance().getMap();
         return serverComm.getMapSerializable();
     }
 

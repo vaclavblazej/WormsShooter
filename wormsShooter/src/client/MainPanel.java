@@ -14,6 +14,8 @@ import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.rmi.RemoteException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
@@ -43,7 +45,7 @@ public class MainPanel extends JPanel implements
     public static final int RATIO = 20;
     public static final Dimension SIZE = new Dimension(800, 600);
     public static final Dimension VIEW_SIZE = new Dimension(SIZE.width / RATIO, SIZE.height / RATIO);
-    public static final Color BACKGROUND = Color.decode("#84AAF8");
+    public static final Map<Color, CollisionState> background;
     private static Controls controls;
     private static BufferedImage map;
     private static BufferedImage curentView;
@@ -54,6 +56,8 @@ public class MainPanel extends JPanel implements
     private static Random random;
 
     static {
+        background = new HashMap<>();
+        background.put(Color.decode("#84AAF8"), CollisionState.Free);
         Dimension mapSize = SIZE;
         try {
             mapSize = ClientCommunication.getInstance().getSize();
@@ -86,8 +90,8 @@ public class MainPanel extends JPanel implements
     }
 
     public static CollisionState check(int x, int y) {
-        if (getPixel(x, y).getRGB() == BACKGROUND.getRGB()) {
-            return CollisionState.Free;
+        if (background.containsKey(getPixel(x, y))) {
+            return background.get(getPixel(x, y));
         }
         return CollisionState.Crushed;
     }
