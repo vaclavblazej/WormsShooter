@@ -11,6 +11,7 @@ import java.rmi.server.UnicastRemoteObject;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import utilities.Action;
+import utilities.SerializableBufferedImage;
 
 /**
  *
@@ -51,8 +52,12 @@ public class ServerCommunication extends UnicastRemoteObject implements ServerCo
     }
 
     @Override
-    public BufferedImage getMap() {
-        return ServerPanel.getInstance().getMap();
+    public SerializableBufferedImage getMapSerializable() {
+        return getMap();
+    }
+    
+    public SerializableBufferedImage getMap() {
+        return new SerializableBufferedImage(ServerPanel.getInstance().getMap());
     }
 
     @Override

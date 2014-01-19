@@ -6,10 +6,10 @@ package server;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.image.BufferedImage;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import utilities.Action;
+import utilities.SerializableBufferedImage;
 
 /**
  *
@@ -21,7 +21,7 @@ public interface ServerComm extends Remote {
 
     Dimension getSize() throws RemoteException;
 
-    BufferedImage getMap() throws RemoteException;
+    SerializableBufferedImage getMapSerializable() throws RemoteException;
 
     void sendAction(Action action) throws RemoteException;
     

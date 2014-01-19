@@ -10,6 +10,7 @@ import java.rmi.RemoteException;
 import server.ServerComm;
 import server.ServerCommunication;
 import utilities.Action;
+import utilities.SerializableBufferedImage;
 
 /**
  *
@@ -44,11 +45,15 @@ public class ClientCommunication implements ServerComm {
         //return ServerCommunication.getInstance().getPixel(x, y);
         return serverComm.getPixel(x, y);
     }
+    
+    public BufferedImage getMap() throws RemoteException {
+        return getMapSerializable().getImage();
+    }
 
     @Override
-    public BufferedImage getMap() throws RemoteException {
+    public SerializableBufferedImage getMapSerializable() throws RemoteException {
         //return ServerCommunication.getInstance().getMap();
-        return serverComm.getMap();
+        return serverComm.getMapSerializable();
     }
 
     @Override
