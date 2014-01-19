@@ -4,6 +4,7 @@ package spritesheets;
  *
  * @author Skarab
  */
+import client.GameWindow;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
 import java.net.URL;
@@ -37,7 +38,8 @@ public class Sprite {
         URL url = Main.class.getResource("/images/" + file + ".png");
         try {
             sprite = ImageIO.read(url);
-        } catch (IOException ex) {
+        } catch (Exception ex) {
+            //GameWindow.getInstance().showError("Could not load: " + url.toString());
             Logger.getLogger(Worm.class.getName()).log(Level.SEVERE, null, ex);
         }
         spriteSheet = sprite;

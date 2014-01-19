@@ -2,6 +2,8 @@ package client;
 
 import java.awt.BorderLayout;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
+import utilities.Message;
 
 /**
  *
@@ -10,6 +12,14 @@ import javax.swing.JFrame;
 public class GameWindow extends JFrame {
 
     private static MainPanel gamePlane;
+    private static GameWindow instance;
+
+    public static GameWindow getInstance() {
+        if (instance == null) {
+            instance = new GameWindow(Message.Client_window_title.cm());
+        }
+        return instance;
+    }
 
     public GameWindow(String title) {
         super(title);
@@ -23,5 +33,9 @@ public class GameWindow extends JFrame {
         pack();
         //setLocationRelativeTo(null);
         setLocation(500, 10);
+    }
+
+    public void showError(String message) {
+        JOptionPane.showMessageDialog(this, message);
     }
 }

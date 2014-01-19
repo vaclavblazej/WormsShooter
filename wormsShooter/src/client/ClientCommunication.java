@@ -30,7 +30,7 @@ public class ClientCommunication implements ServerComm {
     }
     
     public void init(String ip) throws NotBoundException, MalformedURLException, RemoteException {
-        serverComm = (ServerComm) Naming.lookup("//" + ip + "/" + ServerComm.class.getName());
+        serverComm = (ServerComm) Naming.lookup("//" + ip + "/" + ServerComm.class.getSimpleName());
     }
 
     @Override

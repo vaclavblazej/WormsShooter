@@ -13,7 +13,10 @@ import java.util.Properties;
 public enum Message {
 
     Server_window_title,
-    Client_window_title;
+    Client_window_title,
+    Cancel_button,
+    OK_button,
+    Error;
 
     public String cm() {
         Properties prop = new Properties();

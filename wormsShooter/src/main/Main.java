@@ -21,12 +21,12 @@ public class Main {
     public static void main(String[] args) {
 
         try {
-           ServerCommunication.getInstance().init();
+            ServerCommunication.getInstance().init();
         } catch (RemoteException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
         try {
-            ClientCommunication.getInstance().init("localhost");
+            ClientCommunication.getInstance().init("localhost:4242");
         } catch (NotBoundException | MalformedURLException | RemoteException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -43,6 +43,6 @@ public class Main {
 
     public static void startGame() {
         new ServerWindow(Message.Server_window_title.cm());
-        new GameWindow(Message.Client_window_title.cm());
+        GameWindow.getInstance();
     }
 }
