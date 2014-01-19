@@ -1,14 +1,13 @@
 package objects;
 
+import client.MainPanel;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
-import java.awt.image.ImageObserver;
 import java.util.ArrayList;
 import java.util.EnumSet;
-import main.MainPanel;
 import static objects.ControlsEnum.Down;
 import static objects.ControlsEnum.Up;
 import spritesheets.Animation;

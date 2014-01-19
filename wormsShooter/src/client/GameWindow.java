@@ -1,4 +1,4 @@
-package main;
+package client;
 
 import java.awt.BorderLayout;
 import javax.swing.JFrame;
@@ -11,19 +11,17 @@ public class GameWindow extends JFrame {
 
     private static MainPanel gamePlane;
 
-    public GameWindow() {
-        super("Cervi 1.0");
+    public GameWindow(String title) {
+        super(title);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
         setResizable(false);
 
-        gamePlane = new MainPanel();
         setLayout(new BorderLayout());
-        gamePlane.setFocusable(true);
+        gamePlane = new MainPanel();
         add(gamePlane, BorderLayout.CENTER);
         pack();
-
-        gamePlane.startMoving();
-        setLocationRelativeTo(null);
+        //setLocationRelativeTo(null);
+        setLocation(500, 10);
     }
 }

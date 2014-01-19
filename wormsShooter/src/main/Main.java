@@ -1,6 +1,9 @@
 package main;
 
+import client.GameWindow;
 import javax.swing.SwingUtilities;
+import server.ServerWindow;
+import utilities.Message;
 
 /**
  *
@@ -21,6 +24,7 @@ public class Main {
     }
 
     public static void startGame() {
-        new GameWindow();
+        new ServerWindow(Message.Server_window_title.cm());
+        new GameWindow(Message.Client_window_title.cm());
     }
 }

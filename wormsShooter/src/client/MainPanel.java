@@ -1,4 +1,4 @@
-package main;
+package client;
 
 import java.awt.Color;
 import java.awt.Dimension;
@@ -21,11 +21,9 @@ import javax.swing.Timer;
 import objects.Controls;
 import objects.ControlsEnum;
 import objects.GraphicComponent;
-import objects.Miscellaneous;
 import objects.Worm;
 import particles.Particle;
 import particles.Sand;
-import spritesheets.Sprite;
 
 /**
  *
@@ -42,12 +40,35 @@ public class MainPanel extends JPanel implements
     private static Controls controls;
     private static BufferedImage map;
     private static CopyOnWriteArrayList<Particle> grains;
+    private static CopyOnWriteArrayList<GraphicComponent> objects;
     private static Point mouse;
     private static Random random;
-    private static CopyOnWriteArrayList<GraphicComponent> objects;
 
     static {
+        Dimension mapSize = ClientCommunication.getSize();
+        map = new BufferedImage(mapSize.width, mapSize.height, BufferedImage.TYPE_INT_RGB);
         random = new Random();
+    }
+
+    public static void loadAllChunks() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                int weight = map.getWidth();
+                int height = map.getHeight();
+                for (int i = 0; i < weight; i++) {
+                    for (int j = 0; j < height; j++) {
+                        loadChunk(i, j);
+                    }
+                }
+            }
+        }).start();
+    }
+
+    public static void loadChunk(int x, int y) {
+        int ret = ClientCommunication.getPixel(x, y);
+        System.out.println(ret);
+        imprint(x, y, Color.getColor(Integer.toString(ret)));
     }
 
     public static int check(int x, int y) {
@@ -94,10 +115,6 @@ public class MainPanel extends JPanel implements
 
     public static void update(int x, int y) {
         int tmp = check(x, y);
-        /*if (tmp == Color.CYAN.getRGB()) {
-         imprint(new Grain(x, y, 0, 0, Color.BLACK));
-         grains.add(new Sand(x, y, 0, 0, Color.CYAN));
-         }*/
     }
 
     private static void addObject(GraphicComponent comp) {
@@ -117,14 +134,11 @@ public class MainPanel extends JPanel implements
     private Worm worm;
 
     public MainPanel() {
-        setFocusable(true);
         mouse = new Point();
-        setPreferredSize(SIZE);
-        map = new BufferedImage(SIZE.width, SIZE.height, BufferedImage.TYPE_INT_RGB);
-        Graphics g = map.getGraphics();
         grains = new CopyOnWriteArrayList<>();
         objects = new CopyOnWriteArrayList<>();
-        timer = new Timer(20, this);
+        setFocusable(true);
+        setPreferredSize(SIZE);
         // when invokeLater is not used, first game is spoiled by a bug
         SwingUtilities.invokeLater(new Runnable() {
             @Override
@@ -132,6 +146,10 @@ public class MainPanel extends JPanel implements
                 init();
             }
         });
+    }
+
+    public void init() {
+        timer = new Timer(20, this);
         rBrushTimer = new Timer(40, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {
@@ -146,25 +164,21 @@ public class MainPanel extends JPanel implements
                 .add(ControlsEnum.Right, 39)
                 .add(ControlsEnum.Left, 37)
                 .add(ControlsEnum.Fire, 32);
+        worm = new Worm(200, 200);
+        repaint();
         addMouseListener(this);
         addMouseMotionListener(this);
         addKeyListener(this);
-    }
-
-    public void startMoving() {
         timer.start();
-    }
-
-    public void init() {
-        worm = new Worm(200, 200);
-        repaint();
+        loadAllChunks();
     }
 
     @Override
     public void paint(Graphics grphcs) {
         super.paint(grphcs);
         Graphics2D g = (Graphics2D) grphcs;
-        g.drawImage(map, null, this);
+        //g.drawImage(map, null, this);
+        g.drawImage(map, 0, 0, getWidth(), getHeight(), null);
         for (Particle grain : grains) {
             g.setColor(grain.color);
             grain.draw(g);
