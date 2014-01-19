@@ -57,18 +57,7 @@ public class MainPanel extends JPanel implements
     }
 
     public static void loadAllChunks() {
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                int weight = map.getWidth();
-                int height = map.getHeight();
-                for (int i = 0; i < weight; i++) {
-                    for (int j = 0; j < height; j++) {
-                        loadChunk(i, j);
-                    }
-                }
-            }
-        }).start();
+        map = ClientCommunication.getMap();
     }
 
     public static void loadChunk(int x, int y) {

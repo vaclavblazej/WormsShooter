@@ -7,6 +7,8 @@ import java.awt.Graphics2D;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
+import java.awt.image.ColorModel;
+import java.awt.image.WritableRaster;
 import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 import javax.swing.AbstractAction;
@@ -24,19 +26,19 @@ import spritesheets.Sprite;
  * @author Skarab
  */
 public class ServerPanel extends JPanel implements ActionListener {
-    
-    private static ServerPanel instance;
 
+    private static ServerPanel instance;
     private static final int RNG = 20;
     public static final Dimension SIZE = new Dimension(400, 300);
     private BufferedImage map;
     private CopyOnWriteArrayList<Particle> grains;
     private CopyOnWriteArrayList<GraphicComponent> objects;
     private Random random;
-    
-    
+
     public static ServerPanel getInstance() {
-        if (instance == null) instance = new ServerPanel();
+        if (instance == null) {
+            instance = new ServerPanel();
+        }
         return instance;
     }
 
@@ -88,9 +90,12 @@ public class ServerPanel extends JPanel implements ActionListener {
     private void addObject(GraphicComponent comp) {
         objects.add(comp);
     }
-    
+
     public BufferedImage getMap() {
-        return map;
+        ColorModel cm = map.getColorModel();
+        boolean isAlphaPremultiplied = cm.isAlphaPremultiplied();
+        WritableRaster raster = map.copyData(null);
+        return new BufferedImage(cm, raster, isAlphaPremultiplied, null);
     }
 
     public void newSand(int x, int y) {
