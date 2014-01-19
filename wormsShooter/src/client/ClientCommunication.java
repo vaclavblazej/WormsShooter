@@ -1,5 +1,6 @@
 package client;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
 import server.ServerCommunication;
@@ -14,7 +15,7 @@ public class ClientCommunication {
         return ServerCommunication.getSize();
     }
     
-    public static int getPixel(int x, int y){
+    public static Color getPixel(int x, int y){
         return ServerCommunication.getPixel(new Point(x, y));
     }
 

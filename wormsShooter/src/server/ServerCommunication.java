@@ -1,5 +1,6 @@
 package server;
 
+import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Point;
 
@@ -13,7 +14,7 @@ public class ServerCommunication {
         return ServerPanel.SIZE;
     }
 
-    public static int getPixel(Point point) {
+    public static Color getPixel(Point point) {
         return ServerPanel.check(point.x, point.y);
     }
 

@@ -42,14 +42,14 @@ public class ServerPanel extends JPanel implements ActionListener {
         random = new Random();
     }
 
-    public static int check(int x, int y) {
+    public static Color check(int x, int y) {
         int rgb;
         try {
             rgb = map.getRGB(x, y);
         } catch (ArrayIndexOutOfBoundsException ex) {
-            return Color.BLACK.getRGB();
+            return Color.BLACK;
         }
-        return rgb;
+        return new Color(rgb);
     }
 
     public static void imprint(Particle gr) {
@@ -66,10 +66,10 @@ public class ServerPanel extends JPanel implements ActionListener {
     }
 
     public static void swap(int x, int y, int sx, int sy) {
-        int first = check(x, y);
-        int second = check(sx, sy);
-        imprint(x, y, Color.getColor(Integer.toString(second)));
-        imprint(sx, sy, Color.getColor(Integer.toString(first)));
+        Color first = check(x, y);
+        Color second = check(sx, sy);
+        imprint(x, y, second);
+        imprint(sx, sy, first);
     }
 
     private static void erase(int x, int y, int r) {
@@ -85,7 +85,6 @@ public class ServerPanel extends JPanel implements ActionListener {
     }
 
     public static void update(int x, int y) {
-        int tmp = check(x, y);
     }
 
     private static void addObject(GraphicComponent comp) {

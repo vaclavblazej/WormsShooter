@@ -66,9 +66,9 @@ public class MainPanel extends JPanel implements
     }
 
     public static void loadChunk(int x, int y) {
-        int ret = ClientCommunication.getPixel(x, y);
+        Color ret = ClientCommunication.getPixel(x, y);
         System.out.println(ret);
-        imprint(x, y, Color.getColor(Integer.toString(ret)));
+        imprint(x, y, ret);
     }
 
     public static int check(int x, int y) {
