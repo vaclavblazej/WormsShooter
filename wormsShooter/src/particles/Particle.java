@@ -11,7 +11,7 @@ import client.MainPanel;
  */
 public abstract class Particle {
 
-    public static final int BACKGROUND = Color.BLACK.getRGB();
+    public static final Color BACKGROUND = Color.BLACK;
     public Point.Double position;
     public Color color;
 

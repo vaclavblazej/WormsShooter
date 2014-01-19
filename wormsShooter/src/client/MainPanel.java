@@ -21,7 +21,7 @@ import javax.swing.Timer;
 import objects.Controls;
 import objects.ControlsEnum;
 import objects.GraphicComponent;
-import objects.Worm;
+import objects.TestBody;
 import particles.Particle;
 import particles.Sand;
 
@@ -37,8 +37,12 @@ public class MainPanel extends JPanel implements
 
     private static final int RNG = 20;
     public static final Dimension SIZE = new Dimension(800, 600);
+    public static final Dimension VIEW_SIZE = new Dimension(64, 48);
+    public static final Color BACKGROUND = Color.BLUE;
     private static Controls controls;
     private static BufferedImage map;
+    private static BufferedImage curentView;
+    private static Point currentPosition;
     private static CopyOnWriteArrayList<Particle> grains;
     private static CopyOnWriteArrayList<GraphicComponent> objects;
     private static Point mouse;
@@ -47,6 +51,8 @@ public class MainPanel extends JPanel implements
     static {
         Dimension mapSize = ClientCommunication.getSize();
         map = new BufferedImage(mapSize.width, mapSize.height, BufferedImage.TYPE_INT_RGB);
+        curentView = new BufferedImage(VIEW_SIZE.width, VIEW_SIZE.height, BufferedImage.TYPE_INT_RGB);
+        currentPosition = new Point(30, 20);
         random = new Random();
     }
 
@@ -71,14 +77,14 @@ public class MainPanel extends JPanel implements
         imprint(x, y, ret);
     }
 
-    public static int check(int x, int y) {
+    public static Color check(int x, int y) {
         int rgb;
         try {
             rgb = map.getRGB(x, y);
         } catch (ArrayIndexOutOfBoundsException ex) {
-            return 0;
+            return Color.BLACK;
         }
-        return rgb;
+        return new Color(rgb);
     }
 
     public static void imprint(Particle gr) {
@@ -95,10 +101,10 @@ public class MainPanel extends JPanel implements
     }
 
     public static void swap(int x, int y, int sx, int sy) {
-        int first = check(x, y);
-        int second = check(sx, sy);
-        imprint(x, y, Color.getColor(Integer.toString(second)));
-        imprint(sx, sy, Color.getColor(Integer.toString(first)));
+        Color first = check(x, y);
+        Color second = check(sx, sy);
+        imprint(x, y, second);
+        imprint(sx, sy, first);
     }
 
     private static void erase(int x, int y, int r) {
@@ -114,7 +120,6 @@ public class MainPanel extends JPanel implements
     }
 
     public static void update(int x, int y) {
-        int tmp = check(x, y);
     }
 
     private static void addObject(GraphicComponent comp) {
@@ -131,9 +136,10 @@ public class MainPanel extends JPanel implements
     }
     private Timer timer;
     private Timer rBrushTimer;
-    private Worm worm;
+    private TestBody body;
 
     public MainPanel() {
+        body = new TestBody(30, 20);
         mouse = new Point();
         grains = new CopyOnWriteArrayList<>();
         objects = new CopyOnWriteArrayList<>();
@@ -164,7 +170,6 @@ public class MainPanel extends JPanel implements
                 .add(ControlsEnum.Right, 39)
                 .add(ControlsEnum.Left, 37)
                 .add(ControlsEnum.Fire, 32);
-        worm = new Worm(200, 200);
         repaint();
         addMouseListener(this);
         addMouseMotionListener(this);
@@ -176,25 +181,29 @@ public class MainPanel extends JPanel implements
     @Override
     public void paint(Graphics grphcs) {
         super.paint(grphcs);
+        currentPosition.x = body.getPosition().x;
+        currentPosition.y = body.getPosition().y;
+        curentView = map.getSubimage(currentPosition.x, currentPosition.y, VIEW_SIZE.width, VIEW_SIZE.height);
         Graphics2D g = (Graphics2D) grphcs;
         //g.drawImage(map, null, this);
-        g.drawImage(map, 0, 0, getWidth(), getHeight(), null);
-        for (Particle grain : grains) {
-            g.setColor(grain.color);
-            grain.draw(g);
-        }
-        for (GraphicComponent obj : objects) {
-            obj.draw(g);
-        }
-        if (worm != null) {
-            worm.draw(g);
-        }
-        g.scale(4, 4);
+        g.drawImage(curentView, 0, 0, getWidth(), getHeight(), null);
+        body.draw(g);
+        /*for (Particle grain : grains) {
+         g.setColor(grain.color);
+         grain.draw(g);
+         }
+         for (GraphicComponent obj : objects) {
+         obj.draw(g);
+         }
+         if (worm != null) {
+         worm.draw(g);
+         }
+         g.scale(4, 4);*/
     }
 
     @Override
     public void actionPerformed(ActionEvent ae) {
-        worm.tick();
+        body.tick();
         for (Particle particle : grains) {
             particle.tick();
         }
@@ -205,20 +214,34 @@ public class MainPanel extends JPanel implements
     public void keyPressed(KeyEvent ke) {
         int i = ke.getKeyCode();
         ControlsEnum en = controls.get(i);
-        System.out.println(i + " " + en);
-        if (en != null) {
-            worm.controlOn(en);
-        }
+        body.controlOn(en);
+        /*switch (en) {
+         case Up:
+         currentPosition.y--;
+         break;
+         case Down:
+         currentPosition.y++;
+         break;
+         case Left:
+         currentPosition.x--;
+         break;
+         case Right:
+         currentPosition.x++;
+         break;
+         }*/
+        /*if (en != null) {
+         worm.controlOn(en);
+         }*/
     }
 
     @Override
     public void keyReleased(KeyEvent ke) {
         int i = ke.getKeyCode();
         ControlsEnum en = controls.get(i);
-        System.out.println(i + " " + en);
-        if (en != null) {
-            worm.controlOff(en);
-        }
+        body.controlOff(en);
+        /*if (en != null) {
+         worm.controlOff(en);
+         }*/
     }
 
     public void clear() {

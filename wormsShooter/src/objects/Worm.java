@@ -55,9 +55,9 @@ public class Worm implements GraphicComponent {
     }
 
     public void tick() {
-        if (MainPanel.check(position.x, position.y + HEIGHT + 1) == Color.BLACK.getRGB()) {
+        if (MainPanel.check(position.x, position.y + HEIGHT + 1) == Color.BLACK) {
             position.y += 1;
-        } else if (MainPanel.check(position.x, position.y + HEIGHT) != Color.BLACK.getRGB()) {
+        } else if (MainPanel.check(position.x, position.y + HEIGHT) != Color.BLACK) {
             position.y -= 1;
         }
         int tmp = animation.value();

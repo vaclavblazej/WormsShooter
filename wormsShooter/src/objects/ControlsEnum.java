@@ -9,5 +9,6 @@ public enum ControlsEnum {
     Down,
     Left,
     Right,
+    Jump,
     Fire;
 }
