@@ -28,6 +28,8 @@ public enum Message {
     Socket_error_message,
     Image_format,
     Image_folder,
+    Image_online_folder,
+    Image_save_folder,
     Image_load_error;
 
     public String cm() {

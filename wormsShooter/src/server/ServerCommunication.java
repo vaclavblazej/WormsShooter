@@ -2,15 +2,13 @@ package server;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.image.BufferedImage;
-import java.net.MalformedURLException;
-import java.rmi.Naming;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import utilities.Action;
+import objects.ControlsEnum;
+import objects.TestBody;
 import utilities.SerializableBufferedImage;
 
 /**
@@ -21,6 +19,7 @@ public class ServerCommunication extends UnicastRemoteObject implements ServerCo
 
     private static ServerCommunication instance;
     private static final long serialVersionUID = 1L;
+    private static TestBody body;
 
     public static ServerCommunication getInstance() {
         if (instance == null) {
@@ -36,7 +35,11 @@ public class ServerCommunication extends UnicastRemoteObject implements ServerCo
     private ServerCommunication() throws RemoteException {
         super(0);
     }
-    
+
+    public void setBody(TestBody body) {
+        this.body = body;
+    }
+
     public void init() throws RemoteException {
         LocateRegistry.createRegistry(4242).rebind("ServerComm", instance);
     }
@@ -48,20 +51,26 @@ public class ServerCommunication extends UnicastRemoteObject implements ServerCo
 
     @Override
     public Color getPixel(int x, int y) {
-        return ServerPanel.getInstance().check(x, y);
+        return ServerPanel.getInstance().getPixel(x, y);
     }
 
     @Override
     public SerializableBufferedImage getMapSerializable() {
         return getMap();
     }
-    
+
     public SerializableBufferedImage getMap() {
         return new SerializableBufferedImage(ServerPanel.getInstance().getMap());
     }
 
     @Override
-    public void sendAction(Action action) {
-        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    public void sendAction(ControlsEnum action, boolean on) {
+        if (body != null) {
+            if (on) {
+                body.controlOn(action);
+            } else {
+                body.controlOff(action);
+            }
+        }
     }
 }

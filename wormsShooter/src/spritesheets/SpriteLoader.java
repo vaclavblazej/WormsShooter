@@ -33,16 +33,24 @@ public class SpriteLoader {
 
     public static BufferedImage loadSprite(String file) {
         BufferedImage sprite = null;
-        URL url = Main.class.getResource(Message.Image_folder.cm() + file + Message.Image_format.cm());
+        URL localUrl = Main.class.getResource(Message.Image_folder.cm() + file + Message.Image_format.cm());
         try {
-            sprite = ImageIO.read(url);
-        } catch (IllegalArgumentException | IOException ex) {
-            //Logger.getLogger(Worm.class.getName()).log(Level.SEVERE, null, ex);
+            // read image from local source
+            sprite = ImageIO.read(localUrl);
+        } catch (IllegalArgumentException | IOException e) {
+//            try {
+            // read image from online source
+//                URL serverUrl = new URL(Message.Image_online_folder.cm() + file + Message.Image_format.cm());
+//                sprite = ImageIO.read(serverUrl);
+//                File outputfile = new File(Message.Image_save_folder.cm() + file + Message.Image_format.cm());
+//                ImageIO.write(sprite, "png", outputfile);
+//            } catch (IllegalArgumentException | IOException ex) {
             GameWindow.getInstance().showError(new Exception(
                     Message.Image_load_error.cm()
                     + Message.Image_folder.cm()
                     + file
                     + Message.Image_format.cm()));
+//            }
         }
         spriteSheet = sprite;
         return sprite;

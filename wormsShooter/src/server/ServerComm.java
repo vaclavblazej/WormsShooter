@@ -8,7 +8,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import utilities.Action;
+import objects.ControlsEnum;
 import utilities.SerializableBufferedImage;
 
 /**
@@ -23,6 +23,5 @@ public interface ServerComm extends Remote {
 
     SerializableBufferedImage getMapSerializable() throws RemoteException;
 
-    void sendAction(Action action) throws RemoteException;
-    
+    void sendAction(ControlsEnum action, boolean on) throws RemoteException;
 }

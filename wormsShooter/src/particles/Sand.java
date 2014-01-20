@@ -27,7 +27,7 @@ public class Sand extends Particle {
          return;
          }
          }*/
-        if (MainPanel.check((int) position.x, (int) position.y + 1) != CollisionState.Free) {
+        /*if (MainPanel.check((int) position.x, (int) position.y + 1) != CollisionState.Free) {
             boolean left = MainPanel.check((int) position.x - 1, (int) position.y) == CollisionState.Free;
             boolean right = MainPanel.check((int) position.x + 1, (int) position.y) == CollisionState.Free;
             boolean leftD = MainPanel.check((int) position.x - 1, (int) position.y + 1) == CollisionState.Free;
@@ -76,7 +76,7 @@ public class Sand extends Particle {
             }
         }
         position.x += velocity.x;
-        position.y += velocity.y;
+        position.y += velocity.y;*/
     }
 
     public boolean clear() {

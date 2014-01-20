@@ -7,8 +7,8 @@ import java.net.MalformedURLException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import objects.ControlsEnum;
 import server.ServerComm;
-import utilities.Action;
 import utilities.SerializableBufferedImage;
 
 /**
@@ -16,19 +16,20 @@ import utilities.SerializableBufferedImage;
  * @author Skarab
  */
 public class ClientCommunication implements ServerComm {
-    
+
     private static ClientCommunication instance;
     private ServerComm serverComm;
-    
-    
+
     public static ClientCommunication getInstance() {
-        if (instance == null) instance = new ClientCommunication();
+        if (instance == null) {
+            instance = new ClientCommunication();
+        }
         return instance;
     }
-    
+
     private ClientCommunication() {
     }
-    
+
     public void init(String ip) throws NotBoundException, MalformedURLException, RemoteException {
         serverComm = (ServerComm) Naming.lookup("//" + ip + "/" + ServerComm.class.getSimpleName());
     }
@@ -42,7 +43,7 @@ public class ClientCommunication implements ServerComm {
     public Color getPixel(int x, int y) throws RemoteException {
         return serverComm.getPixel(x, y);
     }
-    
+
     public BufferedImage getMap() throws RemoteException {
         return getMapSerializable().getImage();
     }
@@ -53,7 +54,7 @@ public class ClientCommunication implements ServerComm {
     }
 
     @Override
-    public void sendAction(Action action) throws RemoteException {
-        serverComm.sendAction(action);
+    public void sendAction(ControlsEnum action, boolean on) throws RemoteException {
+        serverComm.sendAction(action, on);
     }
 }

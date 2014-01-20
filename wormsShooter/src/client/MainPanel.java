@@ -15,8 +15,7 @@ import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.RasterFormatException;
 import java.rmi.RemoteException;
-import java.util.HashMap;
-import java.util.Map;
+import java.util.EnumSet;
 import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
@@ -30,12 +29,15 @@ import objects.GraphicComponent;
 import objects.TestBody;
 import particles.Particle;
 import particles.Sand;
+import utilities.MapInterface;
+import utilities.Materials;
 
 /**
  *
  * @author Skarab
  */
 public class MainPanel extends JPanel implements
+        MapInterface,
         ActionListener,
         KeyListener,
         MouseMotionListener,
@@ -45,7 +47,6 @@ public class MainPanel extends JPanel implements
     public static final int RATIO = 20;
     public static final Dimension SIZE = new Dimension(800, 600);
     public static final Dimension VIEW_SIZE = new Dimension(SIZE.width / RATIO, SIZE.height / RATIO);
-    public static final Map<Color, CollisionState> background;
     private static Controls controls;
     private static BufferedImage map;
     private static BufferedImage curentView;
@@ -57,8 +58,6 @@ public class MainPanel extends JPanel implements
     private static MainPanel instance;
 
     static {
-        background = new HashMap<>();
-        background.put(Color.decode("#84AAF8"), CollisionState.Free);
         map = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
         curentView = new BufferedImage(VIEW_SIZE.width, VIEW_SIZE.height, BufferedImage.TYPE_INT_RGB);
         currentPosition = new Point(30, 20);
@@ -71,94 +70,14 @@ public class MainPanel extends JPanel implements
         }
         return instance;
     }
-
-    public static void loadAllChunks() {
-        try {
-            map = ClientCommunication.getInstance().getMap();
-        } catch (RemoteException ex) {
-            Logger.getLogger(MainPanel.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    public static void loadChunk(int x, int y) {
-        Color ret = Color.BLACK;
-        try {
-            ret = ClientCommunication.getInstance().getPixel(x, y);
-        } catch (RemoteException ex) {
-            Logger.getLogger(MainPanel.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        System.out.println(ret);
-        imprint(x, y, ret);
-    }
-
-    public static CollisionState check(int x, int y) {
-        if (background.containsKey(getPixel(x, y))) {
-            return background.get(getPixel(x, y));
-        }
-        return CollisionState.Crushed;
-    }
-
-    public static Color getPixel(int x, int y) {
-        try {
-            return new Color(map.getRGB(x, y));
-        } catch (ArrayIndexOutOfBoundsException ex) {
-            return Color.BLACK;
-        }
-    }
-
-    public static void imprint(Particle gr) {
-        destroy(gr);
-        Graphics g = map.getGraphics();
-        g.setColor(gr.color);
-        gr.draw(g);
-    }
-
-    public static void imprint(int x, int y, Color color) {
-        Graphics g = map.getGraphics();
-        g.setColor(color);
-        g.drawLine(x, y, x, y);
-    }
-
-    public static void swap(int x, int y, int sx, int sy) {
-        Color first = getPixel(x, y);
-        Color second = getPixel(sx, sy);
-        imprint(x, y, second);
-        imprint(sx, sy, first);
-    }
-
-    private static void erase(int x, int y, int r) {
-        for (int i = 0; i < r; i++) {
-            for (int j = 0; j < r; j++) {
-                imprint(x + i, y + j, Color.BLACK);
-            }
-        }
-    }
-
-    public static void destroy(Particle gr) {
-        grains.remove(gr);
-    }
-
-    public static void update(int x, int y) {
-    }
-
-    private static void addObject(GraphicComponent comp) {
-        objects.add(comp);
-    }
-
-    public static void newSand(int x, int y) {
-        grains.add(new Sand(
-                x + random.nextInt(10) - 5,
-                y + random.nextInt(20) - 10,
-                (random.nextInt(RNG) - RNG / 2) / 10.,
-                -(random.nextInt(RNG) - RNG / 2) / 10.,
-                Color.CYAN));
-    }
     private Timer timer;
     private Timer rBrushTimer;
     private TestBody body;
+    private EnumSet<ControlsEnum> controlSet;
 
     private MainPanel() {
-        body = new TestBody(100, 100);
+        controlSet = EnumSet.noneOf(ControlsEnum.class);
+        body = new TestBody(100, 100, RATIO, this);
         mouse = new Point();
         grains = new CopyOnWriteArrayList<>();
         objects = new CopyOnWriteArrayList<>();
@@ -170,6 +89,82 @@ public class MainPanel extends JPanel implements
          init();
          }
          });*/
+    }
+
+    public void loadAllChunks() {
+        try {
+            map = ClientCommunication.getInstance().getMap();
+        } catch (RemoteException ex) {
+            Logger.getLogger(MainPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void loadChunk(int x, int y) {
+        Color ret = Color.BLACK;
+        try {
+            ret = ClientCommunication.getInstance().getPixel(x, y);
+        } catch (RemoteException ex) {
+            Logger.getLogger(MainPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        System.out.println(ret);
+        imprint(x, y, ret);
+    }
+
+    public CollisionState check(int x, int y) {
+        return Materials.check(getPixel(x, y));
+    }
+
+    public Color getPixel(int x, int y) {
+        try {
+            return new Color(map.getRGB(x, y));
+        } catch (ArrayIndexOutOfBoundsException ex) {
+            return Color.BLACK;
+        }
+    }
+
+    public void imprint(Particle gr) {
+        destroy(gr);
+        Graphics g = map.getGraphics();
+        g.setColor(gr.color);
+        gr.draw(g);
+    }
+
+    public void imprint(int x, int y, Color color) {
+        Graphics g = map.getGraphics();
+        g.setColor(color);
+        g.drawLine(x, y, x, y);
+    }
+
+    public void swap(int x, int y, int sx, int sy) {
+        Color first = getPixel(x, y);
+        Color second = getPixel(sx, sy);
+        imprint(x, y, second);
+        imprint(sx, sy, first);
+    }
+
+    private void erase(int x, int y, int r) {
+        for (int i = 0; i < r; i++) {
+            for (int j = 0; j < r; j++) {
+                imprint(x + i, y + j, Color.BLACK);
+            }
+        }
+    }
+
+    public void destroy(Particle gr) {
+        grains.remove(gr);
+    }
+
+    private void addObject(GraphicComponent comp) {
+        objects.add(comp);
+    }
+
+    public void newSand(int x, int y) {
+        grains.add(new Sand(
+                x + random.nextInt(10) - 5,
+                y + random.nextInt(20) - 10,
+                (random.nextInt(RNG) - RNG / 2) / 10.,
+                -(random.nextInt(RNG) - RNG / 2) / 10.,
+                Color.CYAN));
     }
 
     public void init() {
@@ -216,7 +211,7 @@ public class MainPanel extends JPanel implements
         //g.drawImage(map, null, this);
         g.drawImage(curentView, 0, 0, getWidth(), getHeight(), null);
         g.translate(RATIO * VIEW_SIZE.width / 2, RATIO * VIEW_SIZE.height / 2);
-        body.draw(g);
+        body.drawRelative(g);
         /*for (Particle grain : grains) {
          g.setColor(grain.color);
          grain.draw(g);
@@ -243,31 +238,30 @@ public class MainPanel extends JPanel implements
     public void keyPressed(KeyEvent ke) {
         int i = ke.getKeyCode();
         ControlsEnum en = controls.get(i);
-        body.controlOn(en);
-        /*switch (en) {
-         case Up:
-         currentPosition.y--;
-         break;
-         case Down:
-         currentPosition.y++;
-         break;
-         case Left:
-         currentPosition.x--;
-         break;
-         case Right:
-         currentPosition.x++;
-         break;
-         }*/
-        /*if (en != null) {
-         worm.controlOn(en);
-         }*/
+        if (!controlSet.contains(en)) {
+            try {
+                ClientCommunication.getInstance().sendAction(en, true);
+            } catch (RemoteException ex) {
+                Logger.getLogger(MainPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        controlSet.add(en);
+        //body.controlOn(en);
     }
 
     @Override
     public void keyReleased(KeyEvent ke) {
         int i = ke.getKeyCode();
         ControlsEnum en = controls.get(i);
-        body.controlOff(en);
+        if (controlSet.contains(en)) {
+            try {
+                ClientCommunication.getInstance().sendAction(en, false);
+            } catch (RemoteException ex) {
+                Logger.getLogger(MainPanel.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
+        controlSet.remove(en);
+        //body.controlOff(en);
         /*if (en != null) {
          worm.controlOff(en);
          }*/

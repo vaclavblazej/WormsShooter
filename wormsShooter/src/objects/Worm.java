@@ -55,7 +55,7 @@ public class Worm implements GraphicComponent {
     }
 
     public void tick() {
-        if (MainPanel.check(position.x, position.y + HEIGHT + 1) == CollisionState.Free) {
+        /*if (MainPanel.check(position.x, position.y + HEIGHT + 1) == CollisionState.Free) {
             position.y += 1;
         } else if (MainPanel.check(position.x, position.y + HEIGHT) != CollisionState.Free) {
             position.y -= 1;
@@ -73,7 +73,7 @@ public class Worm implements GraphicComponent {
             headRotation = Math.PI / 2;
         } else if (headRotation < -Math.PI / 2) {
             headRotation = -Math.PI / 2;
-        }
+        }*/
     }
 
     public void controlOn(ControlsEnum en) {
@@ -109,7 +109,7 @@ public class Worm implements GraphicComponent {
                     headChange = 0;
                     break;
                 case Fire:
-                    MainPanel.newSand(position.x, position.y);
+                    //MainPanel.newSand(position.x, position.y);
                     break;
             }
         }

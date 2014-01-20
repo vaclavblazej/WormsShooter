@@ -15,25 +15,25 @@ import javax.swing.AbstractAction;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
+import objects.CollisionState;
 import objects.GraphicComponent;
-import objects.Worm;
+import objects.TestBody;
 import particles.Particle;
 import particles.Sand;
 import spritesheets.SpriteLoader;
+import utilities.MapInterface;
+import utilities.Materials;
 
 /**
  *
  * @author Skarab
  */
-public class ServerPanel extends JPanel implements ActionListener {
+public class ServerPanel extends JPanel implements MapInterface, ActionListener {
 
     private static ServerPanel instance;
     private static final int RNG = 20;
     public static final Dimension SIZE = new Dimension(400, 300);
-    private BufferedImage map;
-    private CopyOnWriteArrayList<Particle> grains;
-    private CopyOnWriteArrayList<GraphicComponent> objects;
-    private Random random;
+    public static final int RATIO = 1;
 
     public static ServerPanel getInstance() {
         if (instance == null) {
@@ -41,15 +41,52 @@ public class ServerPanel extends JPanel implements ActionListener {
         }
         return instance;
     }
+    private BufferedImage map;
+    private CopyOnWriteArrayList<Particle> grains;
+    private CopyOnWriteArrayList<GraphicComponent> objects;
+    private Random random;
+    private Timer tickTimer;
+    private Timer graphicTimer;
+    private TestBody body;
 
-    public Color check(int x, int y) {
-        int rgb;
+    private ServerPanel() {
+        body = new TestBody(100, 100, RATIO, this);
+        SpriteLoader.loadSprite("Map");
+        SpriteLoader.set(400, 300);
+        map = SpriteLoader.getSprite().getFrame();
+        //map = new BufferedImage(SIZE.width, SIZE.height, BufferedImage.TYPE_INT_RGB);
+        grains = new CopyOnWriteArrayList<>();
+        objects = new CopyOnWriteArrayList<>();
+        random = new Random();
+
+        setFocusable(true);
+        setPreferredSize(SIZE);
+        //Graphics g = map.getGraphics();
+        tickTimer = new Timer(40, this);
+        graphicTimer = new Timer(100, new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                repaint();
+            }
+        });
+        SwingUtilities.invokeLater(new Runnable() {
+            @Override
+            public void run() {
+                init();
+            }
+        });
+    }
+
+    public CollisionState check(int x, int y) {
+        return Materials.check(getPixel(x, y));
+    }
+
+    public Color getPixel(int x, int y) {
         try {
-            rgb = map.getRGB(x, y);
+            return new Color(map.getRGB(x, y));
         } catch (ArrayIndexOutOfBoundsException ex) {
             return Color.BLACK;
         }
-        return new Color(rgb);
     }
 
     public void imprint(Particle gr) {
@@ -63,13 +100,6 @@ public class ServerPanel extends JPanel implements ActionListener {
         Graphics g = map.getGraphics();
         g.setColor(color);
         g.drawLine(x, y, x, y);
-    }
-
-    public void swap(int x, int y, int sx, int sy) {
-        Color first = check(x, y);
-        Color second = check(sx, sy);
-        imprint(x, y, second);
-        imprint(sx, sy, first);
     }
 
     private void erase(int x, int y, int r) {
@@ -106,38 +136,9 @@ public class ServerPanel extends JPanel implements ActionListener {
                 -(random.nextInt(RNG) - RNG / 2) / 10.,
                 Color.CYAN));
     }
-    private Timer tickTimer;
-    private Timer graphicTimer;
-    private Worm worm;
-
-    private ServerPanel() {
-        SpriteLoader.loadSprite("Map");
-        SpriteLoader.set(400, 300);
-        map = SpriteLoader.getSprite().getFrame();
-        //map = new BufferedImage(SIZE.width, SIZE.height, BufferedImage.TYPE_INT_RGB);
-        grains = new CopyOnWriteArrayList<>();
-        objects = new CopyOnWriteArrayList<>();
-        random = new Random();
-
-        setFocusable(true);
-        setPreferredSize(SIZE);
-        //Graphics g = map.getGraphics();
-        tickTimer = new Timer(40, this);
-        graphicTimer = new Timer(100, new AbstractAction() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                repaint();
-            }
-        });
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                init();
-            }
-        });
-    }
 
     public void init() {
+        ServerCommunication.getInstance().setBody(body);
         tickTimer.start();
         graphicTimer.start();
     }
@@ -146,12 +147,14 @@ public class ServerPanel extends JPanel implements ActionListener {
     public void paint(Graphics grphcs) {
         super.paint(grphcs);
         Graphics2D g = (Graphics2D) grphcs;
-        //g.drawImage(map, null, this);
-        g.drawImage(map, 0, 0, getWidth(), getHeight(), null);
+        g.drawImage(map, null, this);
+        //g.drawImage(map, 0, 0, getWidth(), getHeight(), null);
+        body.draw(g);
     }
 
     @Override
     public void actionPerformed(ActionEvent ae) {
+        body.tick();
         for (Particle particle : grains) {
             particle.tick();
         }
