@@ -4,6 +4,7 @@ import client.GameWindow;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
@@ -15,6 +16,7 @@ import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JComponent;
 import javax.swing.JDialog;
+import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
 
@@ -25,22 +27,22 @@ import javax.swing.JPanel;
 public abstract class AbstractDialog extends JDialog implements Validator {
 
     private JLabel errorLabel;
-    private JPanel content = new JPanel();
+    private JPanel content;
     private Action okAction;
 
-    public AbstractDialog(String title) {
-        super();
-        //super(null, title, true);
+    public AbstractDialog(JFrame owner, String title) {
+        super(owner, title, true);
         int i = 5;
+        content = new JPanel();
         JPanel interior = new JPanel(new BorderLayout(i, i));
         interior.setBorder(BorderFactory.createEmptyBorder(i, i, i, i));
         add(interior);
         interior.add(createErrorPanel(), BorderLayout.PAGE_START);
         interior.add(content, BorderLayout.LINE_START);
         interior.add(createButtonPanel(), BorderLayout.PAGE_END);
-        //Point loc = MainFrame.getInstance().getLocation();
-        //loc.translate(200, 100);
-        //setLocation(loc);
+        Point loc = owner.getLocation();
+        loc.translate(200, 100);
+        setLocation(loc);
         addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -72,7 +74,7 @@ public abstract class AbstractDialog extends JDialog implements Validator {
                     AbstractDialog.this.cancelAction();
                     AbstractDialog.this.dispose();
                 } catch (Exception ex) {
-                    GameWindow.getInstance().showError(ex.toString());
+                    GameWindow.getInstance().showError(ex);
                 }
             }
         }));
@@ -84,7 +86,7 @@ public abstract class AbstractDialog extends JDialog implements Validator {
                     AbstractDialog.this.okAction();
                     AbstractDialog.this.dispose();
                 } catch (Exception ex) {
-                    GameWindow.getInstance().showError(ex.toString());
+                    GameWindow.getInstance().showError(ex);
                 }
             }
         };
@@ -99,7 +101,7 @@ public abstract class AbstractDialog extends JDialog implements Validator {
 
     public void clearError() {
         errorLabel.setForeground(Color.BLUE);
-        errorLabel.setText("Everything is ok");
+        errorLabel.setText(Message.OK_message.cm());
         okAction.setEnabled(true);
     }
 

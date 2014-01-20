@@ -12,7 +12,7 @@ import static objects.ControlsEnum.Down;
 import static objects.ControlsEnum.Up;
 import spritesheets.Animation;
 import spritesheets.Frame;
-import spritesheets.Sprite;
+import spritesheets.SpriteLoader;
 
 /**
  *
@@ -38,16 +38,16 @@ public class Worm implements GraphicComponent {
         headRotation = 0;
         position = new Point(x, y);
         images = new ArrayList<>(5);
-        Sprite.set(19, 24);
-        Sprite.loadSprite("WormHead");
-        headFrame = Sprite.getSprite(0, 0);
+        SpriteLoader.set(19, 24);
+        SpriteLoader.loadSprite("WormHead");
+        headFrame = SpriteLoader.getSprite(0, 0);
         // head
-        Sprite.set(21, 17);
-        Sprite.loadSprite("WormBody");
-        images.add(Sprite.getSprite(0, 0, 0));
-        images.add(Sprite.getSprite(0, 1, 0));
-        images.add(Sprite.getSprite(0, 2, 2));
-        images.add(Sprite.getSprite(0, 3, 2));
+        SpriteLoader.set(21, 17);
+        SpriteLoader.loadSprite("WormBody");
+        images.add(SpriteLoader.getSprite(0, 0, 0));
+        images.add(SpriteLoader.getSprite(0, 1, 0));
+        images.add(SpriteLoader.getSprite(0, 2, 2));
+        images.add(SpriteLoader.getSprite(0, 3, 2));
 
         animation = new Animation(images, 4);
 

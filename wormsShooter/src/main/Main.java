@@ -1,10 +1,7 @@
 package main;
 
-import client.ClientCommunication;
 import client.GameLauncher;
 import client.GameWindow;
-import java.net.MalformedURLException;
-import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,21 +26,20 @@ public class Main {
         SwingUtilities.invokeLater(new Runnable() {
             @Override
             public void run() {
-                startMenu();
+                startGame();
             }
         });
     }
 
-    public static void startMenu() {
-        new GameLauncher();
+    public static void startGame() {
+        GameWindow.getInstance().launch();
     }
 
-    public static void startGame() {
+    public static void startServer() {
         new ServerWindow(Message.Server_window_title.cm());
-        GameWindow.getInstance();
     }
-    
-    public static void exit(){
+
+    public static void exit() {
         System.exit(0);
     }
 }

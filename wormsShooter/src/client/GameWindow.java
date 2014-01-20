@@ -3,6 +3,7 @@ package client;
 import java.awt.BorderLayout;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
+import main.Main;
 import utilities.Message;
 
 /**
@@ -28,14 +29,19 @@ public class GameWindow extends JFrame {
         setResizable(false);
 
         setLayout(new BorderLayout());
-        gamePlane = new MainPanel();
+        gamePlane = MainPanel.getInstance();
         add(gamePlane, BorderLayout.CENTER);
         pack();
         //setLocationRelativeTo(null);
         setLocation(500, 10);
     }
 
-    public void showError(String message) {
-        JOptionPane.showMessageDialog(this, message);
+    public void launch() {
+        new GameLauncher(this);
+    }
+
+    public void showError(Exception ex) {
+        JOptionPane.showMessageDialog(this, ex.getMessage(), "Error", JOptionPane.WARNING_MESSAGE);
+        Main.exit();
     }
 }

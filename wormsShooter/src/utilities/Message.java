@@ -15,13 +15,20 @@ public enum Message {
     Server_window_title,
     Client_window_title,
     Launcher_window_title,
+    Create_server,
     Address,
-    Address_initial,
     Socket,
+    Address_initial,
     Socket_initial,
-    Cancel_button,
     OK_button,
-    Error;
+    Cancel_button,
+    Error,
+    OK_message,
+    Address_error_message,
+    Socket_error_message,
+    Image_format,
+    Image_folder,
+    Image_load_error;
 
     public String cm() {
         Properties prop = new Properties();

@@ -19,7 +19,7 @@ import objects.GraphicComponent;
 import objects.Worm;
 import particles.Particle;
 import particles.Sand;
-import spritesheets.Sprite;
+import spritesheets.SpriteLoader;
 
 /**
  *
@@ -111,9 +111,9 @@ public class ServerPanel extends JPanel implements ActionListener {
     private Worm worm;
 
     private ServerPanel() {
-        Sprite.loadSprite("Map");
-        Sprite.set(400, 300);
-        map = Sprite.getSprite().getFrame();
+        SpriteLoader.loadSprite("Map");
+        SpriteLoader.set(400, 300);
+        map = SpriteLoader.getSprite().getFrame();
         //map = new BufferedImage(SIZE.width, SIZE.height, BufferedImage.TYPE_INT_RGB);
         grains = new CopyOnWriteArrayList<>();
         objects = new CopyOnWriteArrayList<>();

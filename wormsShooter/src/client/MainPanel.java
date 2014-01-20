@@ -13,6 +13,7 @@ import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
+import java.awt.image.RasterFormatException;
 import java.rmi.RemoteException;
 import java.util.HashMap;
 import java.util.Map;
@@ -21,7 +22,6 @@ import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JPanel;
-import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import objects.CollisionState;
 import objects.Controls;
@@ -54,20 +54,22 @@ public class MainPanel extends JPanel implements
     private static CopyOnWriteArrayList<GraphicComponent> objects;
     private static Point mouse;
     private static Random random;
+    private static MainPanel instance;
 
     static {
         background = new HashMap<>();
         background.put(Color.decode("#84AAF8"), CollisionState.Free);
-        Dimension mapSize = SIZE;
-        try {
-            mapSize = ClientCommunication.getInstance().getSize();
-        } catch (RemoteException ex) {
-            Logger.getLogger(MainPanel.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        map = new BufferedImage(mapSize.width, mapSize.height, BufferedImage.TYPE_INT_RGB);
+        map = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
         curentView = new BufferedImage(VIEW_SIZE.width, VIEW_SIZE.height, BufferedImage.TYPE_INT_RGB);
         currentPosition = new Point(30, 20);
         random = new Random();
+    }
+
+    public static MainPanel getInstance() {
+        if (instance == null) {
+            instance = new MainPanel();
+        }
+        return instance;
     }
 
     public static void loadAllChunks() {
@@ -155,23 +157,29 @@ public class MainPanel extends JPanel implements
     private Timer rBrushTimer;
     private TestBody body;
 
-    public MainPanel() {
+    private MainPanel() {
         body = new TestBody(100, 100);
         mouse = new Point();
         grains = new CopyOnWriteArrayList<>();
         objects = new CopyOnWriteArrayList<>();
         setFocusable(true);
         setPreferredSize(SIZE);
-        // when invokeLater is not used, first game is spoiled by a bug
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                init();
-            }
-        });
+        /*SwingUtilities.invokeLater(new Runnable() {
+         @Override
+         public void run() {
+         init();
+         }
+         });*/
     }
 
     public void init() {
+        Dimension mapSize = SIZE;
+        try {
+            mapSize = ClientCommunication.getInstance().getSize();
+        } catch (RemoteException ex) {
+            Logger.getLogger(MainPanel.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        map = new BufferedImage(mapSize.width, mapSize.height, BufferedImage.TYPE_INT_RGB);
         timer = new Timer(20, this);
         rBrushTimer = new Timer(40, new ActionListener() {
             @Override
@@ -200,7 +208,10 @@ public class MainPanel extends JPanel implements
         super.paint(grphcs);
         currentPosition.x = body.getPosition().x - VIEW_SIZE.width / 2;
         currentPosition.y = body.getPosition().y - VIEW_SIZE.height / 2;
-        curentView = map.getSubimage(currentPosition.x, currentPosition.y, VIEW_SIZE.width, VIEW_SIZE.height);
+        try {
+            curentView = map.getSubimage(currentPosition.x, currentPosition.y, VIEW_SIZE.width, VIEW_SIZE.height);
+        } catch (RasterFormatException ex) {
+        }
         Graphics2D g = (Graphics2D) grphcs;
         //g.drawImage(map, null, this);
         g.drawImage(curentView, 0, 0, getWidth(), getHeight(), null);
