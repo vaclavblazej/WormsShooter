@@ -59,12 +59,6 @@ public class GameLauncher extends AbstractDialog {
     }
 
     @Override
-    public void cancelAction() throws Exception {
-        super.cancelAction();
-        Main.exit();
-    }
-
-    @Override
     public void okAction() throws Exception {
         try {
             if (newServer.isSelected()) {

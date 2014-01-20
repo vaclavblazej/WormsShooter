@@ -1,7 +1,9 @@
 package client;
 
+import client.menu.GameWindowMenu;
 import java.awt.BorderLayout;
 import javax.swing.JFrame;
+import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import main.Main;
 import utilities.Message;
@@ -12,7 +14,6 @@ import utilities.Message;
  */
 public class GameWindow extends JFrame {
 
-    private static MainPanel gamePlane;
     private static GameWindow instance;
 
     public static GameWindow getInstance() {
@@ -21,12 +22,17 @@ public class GameWindow extends JFrame {
         }
         return instance;
     }
+    private MainPanel gamePlane;
+    private JMenuBar menuBar;
 
     public GameWindow(String title) {
         super(title);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
         setResizable(false);
+
+        menuBar = new GameWindowMenu();
+        setJMenuBar(menuBar);
 
         setLayout(new BorderLayout());
         gamePlane = MainPanel.getInstance();
