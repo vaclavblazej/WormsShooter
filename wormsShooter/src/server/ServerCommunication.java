@@ -9,7 +9,10 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import objects.ControlsEnum;
 import objects.TestBody;
+import utilities.PlayerInfo;
+import utilities.RegistrationForm;
 import utilities.SerializableBufferedImage;
+import utilities.ServerInfo;
 
 /**
  *
@@ -73,4 +76,15 @@ public class ServerCommunication extends UnicastRemoteObject implements ServerCo
             }
         }
     }
+
+    @Override
+    public PlayerInfo register(RegistrationForm form) {
+        return ServerComService.getInstance().registerPlayer(form);
+    }
+
+    @Override
+    public ServerInfo getServerInfo() {
+        return ServerComService.getInstance().getServerInfo();
+    }
+
 }

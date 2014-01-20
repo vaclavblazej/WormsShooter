@@ -9,7 +9,10 @@ import java.awt.Dimension;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import objects.ControlsEnum;
+import utilities.PlayerInfo;
+import utilities.RegistrationForm;
 import utilities.SerializableBufferedImage;
+import utilities.ServerInfo;
 
 /**
  *
@@ -24,4 +27,8 @@ public interface ServerComm extends Remote {
     SerializableBufferedImage getMapSerializable() throws RemoteException;
 
     void sendAction(ControlsEnum action, boolean on) throws RemoteException;
+    
+    PlayerInfo register(RegistrationForm from);
+    
+    ServerInfo getServerInfo();
 }
