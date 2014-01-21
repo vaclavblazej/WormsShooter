@@ -44,7 +44,7 @@ public class ServerCommunication extends UnicastRemoteObject implements ServerCo
     }
 
     public void init() throws RemoteException {
-        LocateRegistry.createRegistry(4242).rebind("ServerComm", instance);
+        LocateRegistry.createRegistry(4242).rebind(ServerComm.class.getSimpleName(), instance);
     }
 
     @Override

@@ -52,6 +52,7 @@ public class SettingsDialog extends AbstractDialog {
                 .rebind(ControlsEnum.Right, right.getKeyCode());
         Settings.getInstance().setVolume(soundLevel.getValue());
         Settings.getInstance().setQuality(detailLevel.getValue());
+        Settings.getInstance().saveSettings();
     }
 
     @Override

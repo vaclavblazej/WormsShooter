@@ -10,7 +10,6 @@ import java.io.IOException;
 import java.net.URL;
 import javax.imageio.ImageIO;
 import main.Main;
-import sun.util.BuddhistCalendar;
 import utilities.Message;
 
 public class SpriteLoader {

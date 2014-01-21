@@ -42,7 +42,13 @@ public enum Message {
     Settings_tab_keys,
     Settings_tab_sound,
     Detail_level,
-    Settings_tab_graphics;
+    Settings_tab_graphics,
+    Menu_main,
+    Menu_settings,
+    Menu_exit,
+    Menu_connection,
+    Menu_connect,
+    Menu_disconnect;
 
     public String cm() {
         Properties prop = new Properties();
