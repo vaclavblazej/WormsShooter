@@ -15,7 +15,7 @@ import utilities.SerializableBufferedImage;
  *
  * @author Skarab
  */
-public class ClientCommunication implements ServerComm {
+public class ClientCommunication {
 
     private static ClientCommunication instance;
     private ServerComm serverComm;
@@ -34,12 +34,10 @@ public class ClientCommunication implements ServerComm {
         serverComm = (ServerComm) Naming.lookup("//" + ip + "/" + ServerComm.class.getSimpleName());
     }
 
-    @Override
     public Dimension getSize() throws RemoteException {
         return serverComm.getSize();
     }
 
-    @Override
     public Color getPixel(int x, int y) throws RemoteException {
         return serverComm.getPixel(x, y);
     }
@@ -48,12 +46,10 @@ public class ClientCommunication implements ServerComm {
         return getMapSerializable().getImage();
     }
 
-    @Override
     public SerializableBufferedImage getMapSerializable() throws RemoteException {
         return serverComm.getMapSerializable();
     }
 
-    @Override
     public void sendAction(ControlsEnum action, boolean on) throws RemoteException {
         serverComm.sendAction(action, on);
     }

@@ -1,7 +1,3 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package server;
 
 import java.awt.Color;
@@ -28,7 +24,7 @@ public interface ServerComm extends Remote {
 
     void sendAction(ControlsEnum action, boolean on) throws RemoteException;
     
-    PlayerInfo register(RegistrationForm from);
+    PlayerInfo register(RegistrationForm from) throws RemoteException;
     
-    ServerInfo getServerInfo();
+    ServerInfo getServerInfo() throws RemoteException;
 }

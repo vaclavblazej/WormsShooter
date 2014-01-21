@@ -13,27 +13,6 @@ import java.awt.Insets;
  */
 public class GBCBuilder {
 
-    public enum Anchor {
-
-        FIRST_LINE_START,
-        PAGE_START,
-        FIRST_LINE_END,
-        LINE_START,
-        CENTER,
-        LINE_END,
-        LAST_LINE_START,
-        PAGE_END,
-        LAST_LINE_END,
-    }
-
-    public static enum Fill {
-
-        NONE,//the default), 
-        HORIZONTAL,// (make the component wide enough to fill its display area horizontally, but do not change its height), 
-        VERTICAL,//(make the component tall enough to fill its display area vertically, but do not change its width),
-
-        BOTH
-    }
     GridBagConstraints gbc = new GridBagConstraints();
 
     public GBCBuilder(GridBagConstraints gbc) {
@@ -152,5 +131,26 @@ public class GBCBuilder {
 
     public GridBagConstraints build() {
         return gbc;
+    }
+
+    public static enum Fill {
+
+        NONE,//the default), 
+        HORIZONTAL,// (make the component wide enough to fill its display area horizontally, but do not change its height), 
+        VERTICAL,//(make the component tall enough to fill its display area vertically, but do not change its width),
+        BOTH;
+    }
+
+    public enum Anchor {
+
+        FIRST_LINE_START,
+        PAGE_START,
+        FIRST_LINE_END,
+        LINE_START,
+        CENTER,
+        LINE_END,
+        LAST_LINE_START,
+        PAGE_END,
+        LAST_LINE_END,
     }
 }

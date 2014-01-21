@@ -15,6 +15,7 @@ public enum Message {
     Server_window_title,
     Client_window_title,
     Launcher_window_title,
+    Settings_window_title,
     Create_server,
     Address,
     Socket,
@@ -30,7 +31,12 @@ public enum Message {
     Image_folder,
     Image_online_folder,
     Image_save_folder,
-    Image_load_error;
+    Image_load_error,
+    Key_settings,
+    Left,
+    Right,
+    Up,
+    Down;
 
     public String cm() {
         Properties prop = new Properties();

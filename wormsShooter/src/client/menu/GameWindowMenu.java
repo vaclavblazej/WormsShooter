@@ -1,6 +1,7 @@
 package client.menu;
 
 import client.GameWindow;
+import client.SettingsDialog;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JMenu;
@@ -17,6 +18,16 @@ public class GameWindowMenu extends JMenuBar {
     public GameWindowMenu() {
         JMenu menu = new JMenu("Main");
         JMenuItem item = new JMenuItem();
+        item.setAction(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new SettingsDialog(GameWindow.getInstance());
+            }
+        });
+        item.setText("Settings");
+        menu.add(item);
+        add(menu);
+        item = new JMenuItem();
         item.setAction(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {

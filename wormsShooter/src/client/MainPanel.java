@@ -184,12 +184,8 @@ public class MainPanel extends JPanel implements
                 }
             }
         });
-        controls = new Controls()
-                .add(ControlsEnum.Up, 38)
-                .add(ControlsEnum.Down, 40)
-                .add(ControlsEnum.Right, 39)
-                .add(ControlsEnum.Left, 37)
-                .add(ControlsEnum.Fire, 32);
+        controls = Settings.getInstance().getControls();
+        Settings.getInstance().setControls(controls);
         repaint();
         addMouseListener(this);
         addMouseMotionListener(this);
@@ -238,14 +234,14 @@ public class MainPanel extends JPanel implements
     public void keyPressed(KeyEvent ke) {
         int i = ke.getKeyCode();
         ControlsEnum en = controls.get(i);
-        if (!controlSet.contains(en)) {
+        if (en != null && !controlSet.contains(en)) {
             try {
                 ClientCommunication.getInstance().sendAction(en, true);
             } catch (RemoteException ex) {
                 Logger.getLogger(MainPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
+            controlSet.add(en);
         }
-        controlSet.add(en);
         //body.controlOn(en);
     }
 
@@ -253,14 +249,14 @@ public class MainPanel extends JPanel implements
     public void keyReleased(KeyEvent ke) {
         int i = ke.getKeyCode();
         ControlsEnum en = controls.get(i);
-        if (controlSet.contains(en)) {
+        if (en != null && controlSet.contains(en)) {
             try {
                 ClientCommunication.getInstance().sendAction(en, false);
             } catch (RemoteException ex) {
                 Logger.getLogger(MainPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
+            controlSet.remove(en);
         }
-        controlSet.remove(en);
         //body.controlOff(en);
         /*if (en != null) {
          worm.controlOff(en);

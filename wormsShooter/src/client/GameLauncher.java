@@ -32,13 +32,7 @@ public class GameLauncher extends AbstractDialog {
 
     public GameLauncher(JFrame owner) {
         super(owner, Message.Launcher_window_title.cm());
-        WindowListener exitListener = new WindowAdapter() {
-            @Override
-            public void windowClosing(WindowEvent e) {
-                Main.exit();
-            }
-        };
-        addWindowListener(exitListener);
+        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         newServer = new JCheckBox();
         newServer.setSelected(true);
