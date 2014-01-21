@@ -10,6 +10,7 @@ import java.io.IOException;
 import java.net.URL;
 import javax.imageio.ImageIO;
 import main.Main;
+import sun.util.BuddhistCalendar;
 import utilities.Message;
 
 public class SpriteLoader {
@@ -69,6 +70,21 @@ public class SpriteLoader {
             return null;
         }
         return new Frame(spriteSheet.getSubimage(x + xGrid * tileSizeX, y + yGrid * tileSizeY, tileSizeX, tileSizeY), 1, val);
+    }
+
+    public static BufferedImage getRawSprite() {
+        return getRawSprite(0, 0, 0);
+    }
+
+    public static BufferedImage getRawSprite(int xGrid, int yGrid) {
+        return getRawSprite(xGrid, yGrid, 0);
+    }
+
+    public static BufferedImage getRawSprite(int xGrid, int yGrid, int val) {
+        if (spriteSheet == null) {
+            return null;
+        }
+        return spriteSheet.getSubimage(x + xGrid * tileSizeX, y + yGrid * tileSizeY, tileSizeX, tileSizeY);
     }
 
     private SpriteLoader() {

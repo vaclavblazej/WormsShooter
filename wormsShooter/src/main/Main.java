@@ -31,7 +31,7 @@ public class Main {
     }
 
     public static void startGame() {
-        GameWindow.getInstance().launch();
+        GameWindow.getInstance();//.launch();
     }
 
     public static void startServer() {

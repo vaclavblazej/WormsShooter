@@ -37,7 +37,12 @@ public enum Message {
     Right,
     Up,
     Down,
-    Server_name;
+    Server_name,
+    Sound_level,
+    Settings_tab_keys,
+    Settings_tab_sound,
+    Detail_level,
+    Settings_tab_graphics;
 
     public String cm() {
         Properties prop = new Properties();

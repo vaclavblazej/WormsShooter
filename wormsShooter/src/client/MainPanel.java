@@ -15,20 +15,25 @@ import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.RasterFormatException;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+import objects.Body;
 import objects.CollisionState;
 import objects.Controls;
 import objects.ControlsEnum;
 import objects.GraphicComponent;
+import objects.Part;
 import objects.TestBody;
 import particles.Particle;
 import particles.Sand;
+import spritesheets.SpriteLoader;
 import utilities.MapInterface;
 import utilities.Materials;
 
@@ -74,6 +79,7 @@ public class MainPanel extends JPanel implements
     private Timer rBrushTimer;
     private TestBody body;
     private EnumSet<ControlsEnum> controlSet;
+    private List<Body> bodies;
 
     private MainPanel() {
         controlSet = EnumSet.noneOf(ControlsEnum.class);
@@ -81,6 +87,7 @@ public class MainPanel extends JPanel implements
         mouse = new Point();
         grains = new CopyOnWriteArrayList<>();
         objects = new CopyOnWriteArrayList<>();
+        bodies = new ArrayList<>(10);
         setFocusable(true);
         setPreferredSize(SIZE);
         /*SwingUtilities.invokeLater(new Runnable() {
@@ -89,6 +96,19 @@ public class MainPanel extends JPanel implements
          init();
          }
          });*/
+        test();
+    }
+    
+    public void addBody(Body body){
+        bodies.add(body);
+    }
+    
+    private void test(){
+        Body t = new Body(20, 20);
+        SpriteLoader.loadSprite("WormHead");
+        SpriteLoader.set(15, 15);
+        t.addPart(new Part(SpriteLoader.getRawSprite()));
+        addBody(t);
     }
 
     public void loadAllChunks() {
@@ -208,6 +228,9 @@ public class MainPanel extends JPanel implements
         g.drawImage(curentView, 0, 0, getWidth(), getHeight(), null);
         g.translate(RATIO * VIEW_SIZE.width / 2, RATIO * VIEW_SIZE.height / 2);
         body.drawRelative(g);
+        for (Body b : bodies) {
+            b.draw(g);
+        }
     }
 
     @Override

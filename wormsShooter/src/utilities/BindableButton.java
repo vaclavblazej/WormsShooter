@@ -13,9 +13,11 @@ import javax.swing.JButton;
 public class BindableButton extends JButton implements KeyListener {
 
     private BindableButton me;
+    private int code;
 
-    public BindableButton(String text) {
+    public BindableButton(int code) {
         super();
+        this.code = code;
         me = this;
         setAction(new AbstractAction() {
             @Override
@@ -23,7 +25,11 @@ public class BindableButton extends JButton implements KeyListener {
                 addKeyListener(me);
             }
         });
-        setText(text);
+        setText(KeyEvent.getKeyText(code));
+    }
+
+    public int getKeyCode() {
+        return code;
     }
 
     @Override
@@ -32,7 +38,8 @@ public class BindableButton extends JButton implements KeyListener {
 
     @Override
     public void keyPressed(KeyEvent e) {
-        setText("" + e.getKeyCode());
+        setText("" + e.getKeyChar());
+        code = e.getKeyCode();
         removeKeyListener(me);
     }
 

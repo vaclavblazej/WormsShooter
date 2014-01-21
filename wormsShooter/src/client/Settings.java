@@ -19,6 +19,7 @@ public class Settings {
         return instance;
     }
     private int quality;
+    private int volume;
     private Controls controls;
 
     private Settings() {
@@ -37,6 +38,14 @@ public class Settings {
 
     public int getQuality() {
         return quality;
+    }
+
+    public int getVolume() {
+        return volume;
+    }
+
+    public void setVolume(int volume) {
+        this.volume = volume;
     }
 
     public void setControls(Controls controls) {

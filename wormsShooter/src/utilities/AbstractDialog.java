@@ -31,13 +31,19 @@ public abstract class AbstractDialog extends JDialog implements Validator {
     private Action okAction;
 
     public AbstractDialog(JFrame owner, String title) {
+        this(owner, title, true);
+    }
+
+    public AbstractDialog(JFrame owner, String title, boolean errorPanel) {
         super(owner, title, true);
         int i = 5;
         content = new JPanel();
         JPanel interior = new JPanel(new BorderLayout(i, i));
         interior.setBorder(BorderFactory.createEmptyBorder(i, i, i, i));
         add(interior);
-        interior.add(createErrorPanel(), BorderLayout.PAGE_START);
+        if (errorPanel) {
+            interior.add(createErrorPanel(), BorderLayout.PAGE_START);
+        }
         interior.add(content, BorderLayout.LINE_START);
         interior.add(createButtonPanel(), BorderLayout.PAGE_END);
         Point loc = owner.getLocation();
@@ -95,13 +101,17 @@ public abstract class AbstractDialog extends JDialog implements Validator {
     }
 
     public void error(String message) {
-        errorLabel.setForeground(Color.RED);
-        errorLabel.setText(Message.Error.cm() + ": " + message);
+        if (errorLabel != null) {
+            errorLabel.setForeground(Color.RED);
+            errorLabel.setText(Message.Error.cm() + ": " + message);
+        }
     }
 
     public void clearError() {
-        errorLabel.setForeground(Color.BLUE);
-        errorLabel.setText(Message.OK_message.cm());
+        if (errorLabel != null) {
+            errorLabel.setForeground(Color.BLUE);
+            errorLabel.setText(Message.OK_message.cm());
+        }
         okAction.setEnabled(true);
     }
 
