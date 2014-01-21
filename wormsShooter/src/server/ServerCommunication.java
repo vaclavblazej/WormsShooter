@@ -22,7 +22,6 @@ public class ServerCommunication extends UnicastRemoteObject implements ServerCo
 
     private static ServerCommunication instance;
     private static final long serialVersionUID = 1L;
-    private static TestBody body;
 
     public static ServerCommunication getInstance() {
         if (instance == null) {
@@ -34,6 +33,7 @@ public class ServerCommunication extends UnicastRemoteObject implements ServerCo
         }
         return instance;
     }
+    private TestBody body;
 
     private ServerCommunication() throws RemoteException {
         super(0);
@@ -62,7 +62,7 @@ public class ServerCommunication extends UnicastRemoteObject implements ServerCo
         return getMap();
     }
 
-    public SerializableBufferedImage getMap() {
+        public SerializableBufferedImage getMap() {
         return new SerializableBufferedImage(ServerPanel.getInstance().getMap());
     }
 

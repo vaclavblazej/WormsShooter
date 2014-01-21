@@ -30,10 +30,10 @@ import utilities.Materials;
  */
 public class ServerPanel extends JPanel implements MapInterface, ActionListener {
 
+    public static final Dimension SIZE = new Dimension(400, 300);
     private static ServerPanel instance;
     private static final int RNG = 20;
-    public static final Dimension SIZE = new Dimension(400, 300);
-    public static final int RATIO = 1;
+    private static final int RATIO = 1;
 
     public static ServerPanel getInstance() {
         if (instance == null) {
@@ -54,14 +54,12 @@ public class ServerPanel extends JPanel implements MapInterface, ActionListener 
         SpriteLoader.loadSprite("Map");
         SpriteLoader.set(400, 300);
         map = SpriteLoader.getSprite().getFrame();
-        //map = new BufferedImage(SIZE.width, SIZE.height, BufferedImage.TYPE_INT_RGB);
         grains = new CopyOnWriteArrayList<>();
         objects = new CopyOnWriteArrayList<>();
         random = new Random();
 
         setFocusable(true);
         setPreferredSize(SIZE);
-        //Graphics g = map.getGraphics();
         tickTimer = new Timer(40, this);
         graphicTimer = new Timer(100, new AbstractAction() {
             @Override
@@ -147,8 +145,7 @@ public class ServerPanel extends JPanel implements MapInterface, ActionListener 
     public void paint(Graphics grphcs) {
         super.paint(grphcs);
         Graphics2D g = (Graphics2D) grphcs;
-        g.drawImage(map, null, this);
-        //g.drawImage(map, 0, 0, getWidth(), getHeight(), null);
+        g.drawImage(map, 0, 0, getWidth(), getHeight(), null);
         body.draw(g);
     }
 

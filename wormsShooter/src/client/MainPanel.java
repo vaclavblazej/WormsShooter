@@ -110,6 +110,7 @@ public class MainPanel extends JPanel implements
         imprint(x, y, ret);
     }
 
+    @Override
     public CollisionState check(int x, int y) {
         return Materials.check(getPixel(x, y));
     }
@@ -204,21 +205,9 @@ public class MainPanel extends JPanel implements
         } catch (RasterFormatException ex) {
         }
         Graphics2D g = (Graphics2D) grphcs;
-        //g.drawImage(map, null, this);
         g.drawImage(curentView, 0, 0, getWidth(), getHeight(), null);
         g.translate(RATIO * VIEW_SIZE.width / 2, RATIO * VIEW_SIZE.height / 2);
         body.drawRelative(g);
-        /*for (Particle grain : grains) {
-         g.setColor(grain.color);
-         grain.draw(g);
-         }
-         for (GraphicComponent obj : objects) {
-         obj.draw(g);
-         }
-         if (worm != null) {
-         worm.draw(g);
-         }
-         g.scale(4, 4);*/
     }
 
     @Override
@@ -242,7 +231,6 @@ public class MainPanel extends JPanel implements
             }
             controlSet.add(en);
         }
-        //body.controlOn(en);
     }
 
     @Override
@@ -257,10 +245,6 @@ public class MainPanel extends JPanel implements
             }
             controlSet.remove(en);
         }
-        //body.controlOff(en);
-        /*if (en != null) {
-         worm.controlOff(en);
-         }*/
     }
 
     public void clear() {

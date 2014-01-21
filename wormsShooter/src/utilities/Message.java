@@ -36,7 +36,8 @@ public enum Message {
     Left,
     Right,
     Up,
-    Down;
+    Down,
+    Server_name;
 
     public String cm() {
         Properties prop = new Properties();

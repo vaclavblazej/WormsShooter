@@ -1,9 +1,6 @@
 package client;
 
 import java.awt.GridBagLayout;
-import java.awt.event.WindowAdapter;
-import java.awt.event.WindowEvent;
-import java.awt.event.WindowListener;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.UnknownHostException;
@@ -49,7 +46,7 @@ public class GameLauncher extends AbstractDialog {
         getContent().add(socket, new GBCBuilder().setY(2).setXRel().build());
         pack();
         setResizable(false);
-        setVisible(true); // dialog locks after setVisible(true) is called, so it must be last
+        setVisible(true);
     }
 
     @Override

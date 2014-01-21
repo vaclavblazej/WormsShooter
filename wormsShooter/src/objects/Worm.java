@@ -1,6 +1,5 @@
 package objects;
 
-import client.MainPanel;
 import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
@@ -56,24 +55,24 @@ public class Worm implements GraphicComponent {
 
     public void tick() {
         /*if (MainPanel.check(position.x, position.y + HEIGHT + 1) == CollisionState.Free) {
-            position.y += 1;
-        } else if (MainPanel.check(position.x, position.y + HEIGHT) != CollisionState.Free) {
-            position.y -= 1;
-        }
-        int tmp = animation.value();
-        if (animation.update()) {
-            if (animation.getDirection() > 0) {
-                position.x += tmp;
-            } else {
-                position.x += -tmp;
-            }
-        }
-        headRotation += headChange;
-        if (headRotation > Math.PI / 2) {
-            headRotation = Math.PI / 2;
-        } else if (headRotation < -Math.PI / 2) {
-            headRotation = -Math.PI / 2;
-        }*/
+         position.y += 1;
+         } else if (MainPanel.check(position.x, position.y + HEIGHT) != CollisionState.Free) {
+         position.y -= 1;
+         }
+         int tmp = animation.value();
+         if (animation.update()) {
+         if (animation.getDirection() > 0) {
+         position.x += tmp;
+         } else {
+         position.x += -tmp;
+         }
+         }
+         headRotation += headChange;
+         if (headRotation > Math.PI / 2) {
+         headRotation = Math.PI / 2;
+         } else if (headRotation < -Math.PI / 2) {
+         headRotation = -Math.PI / 2;
+         }*/
     }
 
     public void controlOn(ControlsEnum en) {

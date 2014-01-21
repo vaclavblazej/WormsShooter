@@ -2,6 +2,7 @@ package server;
 
 import java.awt.BorderLayout;
 import javax.swing.JFrame;
+import utilities.Message;
 
 /**
  *
@@ -9,8 +10,8 @@ import javax.swing.JFrame;
  */
 public class ServerWindow extends JFrame {
 
-    public ServerWindow(String title) {
-        super(title);
+    public ServerWindow() {
+        super(Message.Server_window_title.cm());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
         setResizable(false);

@@ -1,12 +1,9 @@
 package client;
 
 import java.awt.GridBagLayout;
-import java.awt.event.KeyEvent;
-import java.awt.event.KeyListener;
 import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
-import javax.swing.JTabbedPane;
 import objects.ControlsEnum;
 import utilities.AbstractDialog;
 import utilities.BindableButton;
@@ -17,7 +14,7 @@ import utilities.Message;
  *
  * @author Skarab
  */
-public class SettingsDialog extends AbstractDialog implements KeyListener {
+public class SettingsDialog extends AbstractDialog {
 
     private JButton up;
     private JButton down;
@@ -50,7 +47,7 @@ public class SettingsDialog extends AbstractDialog implements KeyListener {
         pack();
 
         setResizable(false);
-        setVisible(true); // dialog locks after setVisible(true) is called, so it must be last
+        setVisible(true);
     }
 
     @Override
@@ -68,17 +65,5 @@ public class SettingsDialog extends AbstractDialog implements KeyListener {
     @Override
     public boolean validateDialog() {
         return true;
-    }
-
-    @Override
-    public void keyTyped(KeyEvent e) {
-    }
-
-    @Override
-    public void keyPressed(KeyEvent e) {
-    }
-
-    @Override
-    public void keyReleased(KeyEvent e) {
     }
 }

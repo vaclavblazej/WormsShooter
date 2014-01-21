@@ -1,6 +1,5 @@
 package main;
 
-import client.GameLauncher;
 import client.GameWindow;
 import java.rmi.RemoteException;
 import java.util.logging.Level;
@@ -36,7 +35,7 @@ public class Main {
     }
 
     public static void startServer() {
-        new ServerWindow(Message.Server_window_title.cm());
+        new ServerWindow();
     }
 
     public static void exit() {
