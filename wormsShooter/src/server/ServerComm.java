@@ -22,7 +22,7 @@ public interface ServerComm extends Remote {
 
     SerializableBufferedImage getMapSerializable() throws RemoteException;
 
-    void sendAction(ControlsEnum action, boolean on) throws RemoteException;
+    void sendAction(int id, ControlsEnum action, boolean on) throws RemoteException;
     
     PlayerInfo register(RegistrationForm from) throws RemoteException;
     

@@ -5,6 +5,8 @@ import java.awt.Dimension;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import objects.ControlsEnum;
@@ -33,14 +35,11 @@ public class ServerCommunication extends UnicastRemoteObject implements ServerCo
         }
         return instance;
     }
-    private TestBody body;
+    private Map<Integer, TestBody> controls;
 
     private ServerCommunication() throws RemoteException {
         super(0);
-    }
-
-    public void setBody(TestBody body) {
-        this.body = body;
+        controls = new HashMap<>(20);
     }
 
     public void init() throws RemoteException {
@@ -62,12 +61,13 @@ public class ServerCommunication extends UnicastRemoteObject implements ServerCo
         return getMap();
     }
 
-        public SerializableBufferedImage getMap() {
+    public SerializableBufferedImage getMap() {
         return new SerializableBufferedImage(ServerPanel.getInstance().getMap());
     }
 
     @Override
-    public void sendAction(ControlsEnum action, boolean on) {
+    public void sendAction(int id, ControlsEnum action, boolean on) {
+        TestBody body = controls.get(id);
         if (body != null) {
             if (on) {
                 body.controlOn(action);
@@ -75,6 +75,10 @@ public class ServerCommunication extends UnicastRemoteObject implements ServerCo
                 body.controlOff(action);
             }
         }
+    }
+
+    public void bindBody(int id, TestBody body) {
+        controls.put(id, body);
     }
 
     @Override
@@ -86,5 +90,4 @@ public class ServerCommunication extends UnicastRemoteObject implements ServerCo
     public ServerInfo getServerInfo() {
         return ServerComService.getInstance().getServerInfo();
     }
-
 }

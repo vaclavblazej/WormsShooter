@@ -7,7 +7,6 @@ import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import server.ServerCommunication;
 import server.ServerWindow;
-import utilities.Message;
 
 /**
  *
@@ -31,7 +30,7 @@ public class Main {
     }
 
     public static void startGame() {
-        GameWindow.getInstance();//.launch();
+        GameWindow.getInstance().launch();
     }
 
     public static void startServer() {

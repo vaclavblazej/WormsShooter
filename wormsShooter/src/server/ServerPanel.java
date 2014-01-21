@@ -9,6 +9,8 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.ColorModel;
 import java.awt.image.WritableRaster;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 import javax.swing.AbstractAction;
@@ -47,10 +49,10 @@ public class ServerPanel extends JPanel implements MapInterface, ActionListener 
     private Random random;
     private Timer tickTimer;
     private Timer graphicTimer;
-    private TestBody body;
+    private List<TestBody> bodies;
 
     private ServerPanel() {
-        body = new TestBody(100, 100, RATIO, this);
+        bodies = new ArrayList<>(10);
         SpriteLoader.loadSprite("Map");
         SpriteLoader.set(400, 300);
         map = SpriteLoader.getSprite().getFrame();
@@ -73,6 +75,12 @@ public class ServerPanel extends JPanel implements MapInterface, ActionListener 
                 init();
             }
         });
+    }
+
+    public TestBody newBody() {
+        TestBody b = new TestBody(100, 100, RATIO, this);
+        bodies.add(b);
+        return b;
     }
 
     public CollisionState check(int x, int y) {
@@ -136,7 +144,6 @@ public class ServerPanel extends JPanel implements MapInterface, ActionListener 
     }
 
     public void init() {
-        ServerCommunication.getInstance().setBody(body);
         tickTimer.start();
         graphicTimer.start();
     }
@@ -146,12 +153,16 @@ public class ServerPanel extends JPanel implements MapInterface, ActionListener 
         super.paint(grphcs);
         Graphics2D g = (Graphics2D) grphcs;
         g.drawImage(map, 0, 0, getWidth(), getHeight(), null);
-        body.draw(g);
+        for (TestBody b : bodies) {
+            b.draw(g);
+        }
     }
 
     @Override
     public void actionPerformed(ActionEvent ae) {
-        body.tick();
+        for (TestBody b : bodies) {
+            b.tick();
+        }
         for (Particle particle : grains) {
             particle.tick();
         }
