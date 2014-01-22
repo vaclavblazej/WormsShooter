@@ -72,9 +72,11 @@ public class ServerCommunication extends UnicastRemoteObject implements ServerCo
         TestBody body = controls.get(id);
         if (body != null) {
             Point pos = body.getPosition();
+            Point.Double vel = body.getVelocity();
             ServerComService.getInstance().broadcast(
                     0 + " " + id + " "
                     + pos.x + " " + pos.y + " "
+                    + vel.x + " " + vel.y + " "
                     + action + " " + on);
             if (on) {
                 body.controlOn(action);

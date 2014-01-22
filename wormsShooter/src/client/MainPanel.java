@@ -197,7 +197,7 @@ public class MainPanel extends JPanel implements
             Logger.getLogger(MainPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
         map = new BufferedImage(mapSize.width, mapSize.height, BufferedImage.TYPE_INT_RGB);
-        timer = new Timer(20, this);
+        timer = new Timer(40, this);
         rBrushTimer = new Timer(40, new ActionListener() {
             @Override
             public void actionPerformed(ActionEvent e) {

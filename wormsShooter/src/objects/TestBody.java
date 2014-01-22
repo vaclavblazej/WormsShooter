@@ -53,11 +53,11 @@ public class TestBody implements GraphicComponent {
     }
 
     public void tick() {
-        velocity.y += 0.1;
         double differenceY = velocity.y;
         int directionY = (differenceY >= 0) ? 1 : -1;
         double absoluteY = Math.abs(differenceY);
         boolean next = true;
+        velocity.y += 0.1;
         for (int i = 1; next && i <= absoluteY; i++) {
             switch (map.check((int) position.x, (int) position.y + REAL_SIZE.height - 1 + directionY)) {
                 case Free:
