@@ -67,6 +67,7 @@ public class ServerCommunication extends UnicastRemoteObject implements ServerCo
 
     @Override
     public void sendAction(int id, ControlsEnum action, boolean on) {
+        ServerComService.getInstance().broadcast(id + " " + action + " " + on);
         TestBody body = controls.get(id);
         if (body != null) {
             if (on) {

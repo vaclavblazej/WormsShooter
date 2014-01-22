@@ -3,7 +3,6 @@ package server;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
-import java.net.ConnectException;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -69,6 +68,24 @@ public class ServerComService {
                 }
             }
         }).start();
+    }
+
+    public void send(int id, String str) {
+        try {
+            players.get(id).socket.getOutputStream().write((str + "\n").getBytes());
+        } catch (IOException ex) {
+            Logger.getLogger(ServerComService.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public void broadcast(String str) {
+        for (PlayerComInfo player : players.values()) {
+            try {
+                player.socket.getOutputStream().write((str + "\n").getBytes());
+            } catch (IOException ex) {
+                Logger.getLogger(ServerComService.class.getName()).log(Level.SEVERE, null, ex);
+            }
+        }
     }
 
     public void setName(String name) {

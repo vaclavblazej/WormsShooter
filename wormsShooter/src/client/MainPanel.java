@@ -79,7 +79,7 @@ public class MainPanel extends JPanel implements
     private Timer rBrushTimer;
     private TestBody body;
     private EnumSet<ControlsEnum> controlSet;
-    private List<Body> bodies;
+    private List<TestBody> bodies;
 
     private MainPanel() {
         controlSet = EnumSet.noneOf(ControlsEnum.class);
@@ -96,19 +96,20 @@ public class MainPanel extends JPanel implements
          init();
          }
          });*/
-        test();
     }
-    
-    public void addBody(Body body){
+
+    public void addBody(TestBody body) {
         bodies.add(body);
     }
-    
-    private void test(){
-        Body t = new Body(20, 20);
-        SpriteLoader.loadSprite("WormHead");
-        SpriteLoader.set(15, 15);
-        t.addPart(new Part(SpriteLoader.getRawSprite()));
-        addBody(t);
+
+    public TestBody newBody() {
+        TestBody body = new TestBody(100, 100, RATIO, this);
+        bodies.add(body);
+        return body;
+    }
+
+    public void setMyBody(TestBody body) {
+        this.body = body;
     }
 
     public void loadAllChunks() {
@@ -218,26 +219,27 @@ public class MainPanel extends JPanel implements
     @Override
     public void paint(Graphics grphcs) {
         super.paint(grphcs);
-        currentPosition.x = body.getPosition().x - VIEW_SIZE.width / 2;
-        currentPosition.y = body.getPosition().y - VIEW_SIZE.height / 2;
+        if (body != null) {
+            currentPosition.x = body.getPosition().x - VIEW_SIZE.width / 2;
+            currentPosition.y = body.getPosition().y - VIEW_SIZE.height / 2;
+        }
         try {
             curentView = map.getSubimage(currentPosition.x, currentPosition.y, VIEW_SIZE.width, VIEW_SIZE.height);
         } catch (RasterFormatException ex) {
         }
+        // todo - fix exception when you are near end of the map
         Graphics2D g = (Graphics2D) grphcs;
         g.drawImage(curentView, 0, 0, getWidth(), getHeight(), null);
         g.translate(RATIO * VIEW_SIZE.width / 2, RATIO * VIEW_SIZE.height / 2);
-        body.drawRelative(g);
-        for (Body b : bodies) {
-            b.draw(g);
+        for (TestBody b : bodies) {
+            b.drawRelative(g);
         }
     }
 
     @Override
     public void actionPerformed(ActionEvent ae) {
-        body.tick();
-        for (Particle particle : grains) {
-            particle.tick();
+        for (TestBody b : bodies) {
+            b.tick();
         }
         repaint();
     }
