@@ -2,7 +2,6 @@ package client;
 
 import java.awt.Color;
 import java.awt.Dimension;
-import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -127,13 +126,16 @@ public class ClientCommunication {
                                 case 0:
                                     i = Integer.parseInt(split[1]);
                                     if (controls.containsKey(i)) {
-                                        Point pos = controls.get(i).getPosition();
-                                        pos.x = Integer.parseInt(split[2]);
-                                        pos.y = Integer.parseInt(split[3]);
-                                        if (new Boolean(split[5])) {
-                                            controls.get(i).controlOn(ControlsEnum.valueOf(split[4]));
+                                        controls.get(i).setPosition(
+                                                Integer.parseInt(split[2]),
+                                                Integer.parseInt(split[3]));
+                                        controls.get(i).setVelocity(
+                                                Double.parseDouble(split[4]),
+                                                Double.parseDouble(split[5]));
+                                        if (new Boolean(split[7])) {
+                                            controls.get(i).controlOn(ControlsEnum.valueOf(split[6]));
                                         } else {
-                                            controls.get(i).controlOff(ControlsEnum.valueOf(split[4]));
+                                            controls.get(i).controlOff(ControlsEnum.valueOf(split[6]));
                                         }
                                     }
                                     break;
