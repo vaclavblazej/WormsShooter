@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
+import java.util.Collection;
 import objects.ControlsEnum;
 import utilities.PlayerInfo;
 import utilities.RegistrationForm;
@@ -15,6 +16,8 @@ import utilities.ServerInfo;
  * @author plach_000
  */
 public interface ServerComm extends Remote {
+    
+    Collection<Integer> getPlayers()throws RemoteException;
 
     Color getPixel(int x, int y) throws RemoteException;
 

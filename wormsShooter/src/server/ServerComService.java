@@ -10,6 +10,8 @@ import java.net.Socket;
 import java.net.UnknownHostException;
 import java.rmi.server.RemoteServer;
 import java.rmi.server.ServerNotActiveException;
+import java.util.ArrayList;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.Random;
@@ -106,6 +108,14 @@ public class ServerComService {
         return new PlayerInfo(id);
     }
 
+    public Collection<Integer> getPlayers() {
+        Collection<Integer> res = new ArrayList<>();
+        for (Integer integer : players.keySet()) {
+            res.add(integer);
+        }
+        return res;
+    }
+
     private InetAddress getClientIp() {
         try {
             return Inet4Address.getByName(RemoteServer.getClientHost());
@@ -118,6 +128,7 @@ public class ServerComService {
     }
 
     public void completeRegistration(int id, PlayerComInfo pci) {
+        broadcast(0 + " " + id);
         players.put(id, pci);
         ServerCommunication.getInstance().bindBody(id, ServerPanel.getInstance().newBody());
     }

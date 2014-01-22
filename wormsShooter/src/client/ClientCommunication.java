@@ -2,6 +2,7 @@ package client;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.IOException;
@@ -13,6 +14,7 @@ import java.net.UnknownHostException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -61,14 +63,26 @@ public class ClientCommunication {
         } catch (IOException ex) {
             GameWindow.getInstance().showError(new Exception("IOException in ClientCommunication init"));
         }
-        TestBody b = MainPanel.getInstance().newBody();
-        bindBody(info.getId(), b);
-        MainPanel.getInstance().setMyBody(b);
+        loadPlayers();
+        MainPanel.getInstance().setMyBody(createPlayer(info.getId()));
         startSocket();
     }
 
     public Dimension getSize() throws RemoteException {
         return serverComm.getSize();
+    }
+
+    private void loadPlayers() throws RemoteException {
+        Collection<Integer> players = serverComm.getPlayers();
+        for (Integer integer : players) {
+            createPlayer(integer);
+        }
+    }
+
+    private TestBody createPlayer(int id) {
+        TestBody b = MainPanel.getInstance().newBody();
+        bindBody(id, b);
+        return b;
     }
 
     public Color getPixel(int x, int y) throws RemoteException {
@@ -107,13 +121,28 @@ public class ClientCommunication {
                             String[] split = str.split(" ");
                             System.out.println(str);
                             //System.out.println(Integer.parseInt(split[0]) + " " + );
-                            int i = Integer.parseInt(split[0]);
-                            if (controls.containsKey(i)) {
-                                if (new Boolean(split[2])) {
-                                    controls.get(i).controlOn(ControlsEnum.valueOf(split[1]));
-                                } else {
-                                    controls.get(i).controlOff(ControlsEnum.valueOf(split[1]));
-                                }
+                            int type = Integer.parseInt(split[0]);
+                            int i;
+                            switch (type) {
+                                case 0:
+                                    i = Integer.parseInt(split[1]);
+                                    if (controls.containsKey(i)) {
+                                        Point pos = controls.get(i).getPosition();
+                                        pos.x = Integer.parseInt(split[2]);
+                                        pos.y = Integer.parseInt(split[3]);
+                                        if (new Boolean(split[5])) {
+                                            controls.get(i).controlOn(ControlsEnum.valueOf(split[4]));
+                                        } else {
+                                            controls.get(i).controlOff(ControlsEnum.valueOf(split[4]));
+                                        }
+                                    }
+                                    break;
+                                case 1:
+                                    i = Integer.parseInt(split[1]);
+                                    if (i == 0) {
+                                        createPlayer(info.getId());
+                                    }
+                                    break;
                             }
                         } catch (IOException ex) {
                             Logger.getLogger(ServerComService.class.getName()).log(Level.SEVERE, null, ex);

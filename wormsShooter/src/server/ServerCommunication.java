@@ -2,9 +2,11 @@ package server;
 
 import java.awt.Color;
 import java.awt.Dimension;
+import java.awt.Point;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
+import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -67,9 +69,13 @@ public class ServerCommunication extends UnicastRemoteObject implements ServerCo
 
     @Override
     public void sendAction(int id, ControlsEnum action, boolean on) {
-        ServerComService.getInstance().broadcast(id + " " + action + " " + on);
         TestBody body = controls.get(id);
         if (body != null) {
+            Point pos = body.getPosition();
+            ServerComService.getInstance().broadcast(
+                    0 + " " + id + " "
+                    + pos.x + " " + pos.y + " "
+                    + action + " " + on);
             if (on) {
                 body.controlOn(action);
             } else {
@@ -90,5 +96,10 @@ public class ServerCommunication extends UnicastRemoteObject implements ServerCo
     @Override
     public ServerInfo getServerInfo() {
         return ServerComService.getInstance().getServerInfo();
+    }
+
+    @Override
+    public Collection<Integer> getPlayers() throws RemoteException {
+        return ServerComService.getInstance().getPlayers();
     }
 }
