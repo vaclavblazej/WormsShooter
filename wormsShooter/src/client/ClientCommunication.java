@@ -23,7 +23,7 @@ import objects.TestBody;
 import server.ServerComService;
 import server.ServerComm;
 import utilities.PlayerInfo;
-import utilities.RegistrationForm;
+import utilities.communication.RegistrationForm;
 
 /**
  *

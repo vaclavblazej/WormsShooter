@@ -1,4 +1,4 @@
-package client;
+package client.menu;
 
 import java.io.BufferedInputStream;
 import java.io.File;

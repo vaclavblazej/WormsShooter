@@ -1,5 +1,7 @@
-package client;
+package client.menu;
 
+import client.ClientCommunication;
+import client.MainPanel;
 import java.awt.GridBagLayout;
 import java.net.InetAddress;
 import java.net.MalformedURLException;

@@ -7,9 +7,9 @@ import java.rmi.RemoteException;
 import java.util.Collection;
 import objects.ControlsEnum;
 import utilities.PlayerInfo;
-import utilities.RegistrationForm;
-import utilities.SerializableBufferedImage;
-import utilities.ServerInfo;
+import utilities.communication.RegistrationForm;
+import utilities.communication.SerializableBufferedImage;
+import utilities.communication.ServerInfo;
 
 /**
  *

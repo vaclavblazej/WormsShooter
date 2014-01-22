@@ -1,4 +1,4 @@
-package client;
+package client.menu;
 
 import java.awt.GridBagLayout;
 import javax.swing.JFrame;

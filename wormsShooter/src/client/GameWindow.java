@@ -1,5 +1,6 @@
 package client;
 
+import client.menu.GameLauncher;
 import client.menu.GameWindowMenu;
 import java.awt.BorderLayout;
 import javax.swing.JFrame;

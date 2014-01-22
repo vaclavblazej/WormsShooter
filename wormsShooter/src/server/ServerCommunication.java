@@ -14,9 +14,9 @@ import java.util.logging.Logger;
 import objects.ControlsEnum;
 import objects.TestBody;
 import utilities.PlayerInfo;
-import utilities.RegistrationForm;
-import utilities.SerializableBufferedImage;
-import utilities.ServerInfo;
+import utilities.communication.RegistrationForm;
+import utilities.communication.SerializableBufferedImage;
+import utilities.communication.ServerInfo;
 
 /**
  *

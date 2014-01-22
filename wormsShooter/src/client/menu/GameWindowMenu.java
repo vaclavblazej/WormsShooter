@@ -1,7 +1,6 @@
 package client.menu;
 
 import client.GameWindow;
-import client.SettingsDialog;
 import java.awt.event.ActionEvent;
 import javax.swing.AbstractAction;
 import javax.swing.JMenu;

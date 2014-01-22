@@ -1,5 +1,6 @@
 package client;
 
+import client.menu.Settings;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -24,12 +25,12 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JPanel;
 import javax.swing.Timer;
-import objects.Body;
 import objects.CollisionState;
 import objects.Controls;
 import objects.ControlsEnum;
 import objects.GraphicComponent;
-import objects.Part;
+import objects.Miscellaneous;
+import objects.Model;
 import objects.TestBody;
 import particles.Particle;
 import particles.Sand;
@@ -48,26 +49,14 @@ public class MainPanel extends JPanel implements
         MouseMotionListener,
         MouseListener {
 
-    private static final int RNG = 20;
     public static final int RATIO = 20;
     public static final Dimension SIZE = new Dimension(800, 600);
     public static final Dimension VIEW_SIZE = new Dimension(SIZE.width / RATIO, SIZE.height / RATIO);
+    private static final int RNG = 20;
     private static Controls controls;
-    private static BufferedImage map;
-    private static BufferedImage curentView;
-    private static Point currentPosition;
     private static CopyOnWriteArrayList<Particle> grains;
-    private static CopyOnWriteArrayList<GraphicComponent> objects;
     private static Point mouse;
-    private static Random random;
     private static MainPanel instance;
-
-    static {
-        map = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
-        curentView = new BufferedImage(VIEW_SIZE.width, VIEW_SIZE.height, BufferedImage.TYPE_INT_RGB);
-        currentPosition = new Point(30, 20);
-        random = new Random();
-    }
 
     public static MainPanel getInstance() {
         if (instance == null) {
@@ -80,14 +69,25 @@ public class MainPanel extends JPanel implements
     private TestBody body;
     private EnumSet<ControlsEnum> controlSet;
     private List<TestBody> bodies;
+    private CopyOnWriteArrayList<GraphicComponent> objects;
+    private BufferedImage map;
+    private BufferedImage curentView;
+    private Point currentPosition;
+    private Random random;
+    private Model model;
 
     private MainPanel() {
+        random = new Random();
+        map = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
+        curentView = new BufferedImage(VIEW_SIZE.width, VIEW_SIZE.height, BufferedImage.TYPE_INT_RGB);
+        currentPosition = new Point(30, 20);
         controlSet = EnumSet.noneOf(ControlsEnum.class);
         body = new TestBody(100, 100, RATIO, this);
         mouse = new Point();
         grains = new CopyOnWriteArrayList<>();
         objects = new CopyOnWriteArrayList<>();
         bodies = new ArrayList<>(10);
+        model = new Model(map, bodies);
         setFocusable(true);
         setPreferredSize(SIZE);
         /*SwingUtilities.invokeLater(new Runnable() {
@@ -96,6 +96,22 @@ public class MainPanel extends JPanel implements
          init();
          }
          });*/
+        test();
+    }
+
+    private void test() {
+        SpriteLoader.loadSprite("Campfire");
+        SpriteLoader.set(20, 20);
+        Miscellaneous m = new Miscellaneous(SpriteLoader.getSprite(), 100, 100);
+        addObject(m);
+    }
+
+    public Model getModel() {
+        return model;
+    }
+
+    public void setModel(Model model) {
+        this.model = model;
     }
 
     public void addBody(TestBody body) {
@@ -233,6 +249,9 @@ public class MainPanel extends JPanel implements
         g.translate(RATIO * VIEW_SIZE.width / 2, RATIO * VIEW_SIZE.height / 2);
         for (TestBody b : bodies) {
             b.drawRelative(g);
+        }
+        for (GraphicComponent o : objects) {
+            o.draw(g);
         }
     }
 

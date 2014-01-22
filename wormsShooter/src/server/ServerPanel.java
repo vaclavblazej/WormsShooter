@@ -19,6 +19,7 @@ import javax.swing.SwingUtilities;
 import javax.swing.Timer;
 import objects.CollisionState;
 import objects.GraphicComponent;
+import objects.Model;
 import objects.TestBody;
 import particles.Particle;
 import particles.Sand;
@@ -50,6 +51,7 @@ public class ServerPanel extends JPanel implements MapInterface, ActionListener 
     private Timer tickTimer;
     private Timer graphicTimer;
     private List<TestBody> bodies;
+    private Model model;
 
     private ServerPanel() {
         bodies = new ArrayList<>(10);
@@ -59,6 +61,7 @@ public class ServerPanel extends JPanel implements MapInterface, ActionListener 
         grains = new CopyOnWriteArrayList<>();
         objects = new CopyOnWriteArrayList<>();
         random = new Random();
+        model = new Model(map, bodies);
 
         setFocusable(true);
         setPreferredSize(SIZE);
@@ -75,6 +78,14 @@ public class ServerPanel extends JPanel implements MapInterface, ActionListener 
                 init();
             }
         });
+    }
+
+    public Model getModel() {
+        return model;
+    }
+
+    public void setModel(Model model) {
+        this.model = model;
     }
 
     public TestBody newBody() {

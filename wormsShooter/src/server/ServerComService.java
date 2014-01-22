@@ -19,8 +19,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import utilities.Message;
 import utilities.PlayerInfo;
-import utilities.RegistrationForm;
-import utilities.ServerInfo;
+import utilities.communication.RegistrationForm;
+import utilities.communication.ServerInfo;
 
 /**
  *
