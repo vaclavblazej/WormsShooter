@@ -4,19 +4,17 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.image.BufferedImage;
 import java.io.IOException;
+import java.net.InetAddress;
 import java.net.MalformedURLException;
-import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.UnknownHostException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import objects.ControlsEnum;
 import server.ServerComm;
 import utilities.PlayerInfo;
 import utilities.RegistrationForm;
-import utilities.SerializableBufferedImage;
 
 /**
  *
@@ -34,23 +32,22 @@ public class ClientCommunication {
     }
     private ServerComm serverComm;
     private PlayerInfo info;
-    ServerSocket clientSocket;
+    Socket clientSocket;
 
     private ClientCommunication() {
     }
 
-    public void init(String ip) throws NotBoundException, MalformedURLException, RemoteException {
-        serverComm = (ServerComm) Naming.lookup("//" + ip + "/" + ServerComm.class.getSimpleName());
+    public void init(String ip, String socket) throws NotBoundException, MalformedURLException, RemoteException {
+        serverComm = (ServerComm) Naming.lookup("//" + ip + ":" + socket + "/" + ServerComm.class.getSimpleName());
         // todo socket should be in settings
-        int socketNumber = 4243;
+        info = serverComm.register(new RegistrationForm());
         try {
-            clientSocket = new ServerSocket(socketNumber);
+            clientSocket = new Socket(InetAddress.getByName(ip), 4243);
+            clientSocket.getOutputStream().write(new String("" + info.getId() + "\n").getBytes());
+        } catch (UnknownHostException ex) {
+            GameWindow.getInstance().showError(new Exception("Could not connect to the Server"));
         } catch (IOException ex) {
-            Logger.getLogger(ClientCommunication.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        info = serverComm.register(new RegistrationForm(socketNumber));
-        if (info == null) {
-            GameWindow.getInstance().showError(new Exception("Server could not connect to you"));
+            GameWindow.getInstance().showError(new Exception("IOException in ClientCommunication init"));
         }
     }
 

@@ -37,33 +37,40 @@ public class ServerComService {
     }
     private String serverName = Message.Server_name.cm();
     private Map<Integer, PlayerComInfo> players;
-    //private Map<Integer, RegistrationForm> waitingRegistrations;
+    private Map<Integer, RegistrationForm> waitingRegistrations;
 
     private ServerComService() {
         players = new HashMap<>(20);
-        //waitingRegistrations = new HashMap<>(30);
+        waitingRegistrations = new HashMap<>(30);
+        init();
     }
 
-    /*public void init() {
-     new Thread(new Runnable() {
-     @Override
-     public void run() {
-     while (true) {
-     try {
-     ServerSocket ss = new ServerSocket(4243);
-     Socket socket = ss.accept();
-     BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-     int id = Integer.parseInt(br.readLine());
-     if (ServerComService.getInstance().waitingRegistrations.containsKey(id)) {
-     ServerComService.getInstance().completeRegistration(id, new PlayerComInfo(socket));
-     }
-     } catch (IOException ex) {
-     Logger.getLogger(ServerComService.class.getName()).log(Level.SEVERE, null, ex);
-     }
-     }
-     }
-     }).start();
-     }*/
+    public void init() {
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                ServerSocket ss = null;
+                try {
+                    ss = new ServerSocket(4243);
+                } catch (IOException ex) {
+                    Logger.getLogger(ServerComService.class.getName()).log(Level.SEVERE, null, ex);
+                }
+                while (true) {
+                    try {
+                        Socket socket = ss.accept();
+                        BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
+                        int id = Integer.parseInt(br.readLine());
+                        if (ServerComService.getInstance().waitingRegistrations.containsKey(id)) {
+                            ServerComService.getInstance().completeRegistration(id, new PlayerComInfo(socket));
+                        }
+                    } catch (IOException ex) {
+                        Logger.getLogger(ServerComService.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
+            }
+        }).start();
+    }
+
     public void setName(String name) {
         serverName = name;
     }
@@ -78,16 +85,7 @@ public class ServerComService {
 
     public PlayerInfo registerPlayer(RegistrationForm form) {
         int id = new Random().nextInt();
-        InetAddress clientIp = getClientIp();
-        // test if(clientIp != null) is possible
-        PlayerComInfo com;
-        try {
-            com = new PlayerComInfo(clientIp, form.getSocket());
-        } catch (IOException ex) {
-            return null;
-        }
-        completeRegistration(id, com);
-        //waitingRegistrations.put(id, form);
+        waitingRegistrations.put(id, form);
         return new PlayerInfo(id);
     }
 
@@ -111,11 +109,8 @@ public class ServerComService {
 
         private Socket socket;
 
-        public PlayerComInfo(InetAddress ip, int socket) throws IOException {
-            System.out.println("player registered");
-            System.out.println("IP: " + ip);
-            System.out.println("socket: " + socket);
-            this.socket = new Socket(ip, socket);
+        public PlayerComInfo(Socket socket) throws IOException {
+            this.socket = socket;
         }
     }
 }

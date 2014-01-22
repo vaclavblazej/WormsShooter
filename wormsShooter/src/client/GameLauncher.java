@@ -55,7 +55,7 @@ public class GameLauncher extends AbstractDialog {
             if (newServer.isSelected()) {
                 Main.startServer();
             }
-            ClientCommunication.getInstance().init(address.getText() + ":" + socket.getText());
+            ClientCommunication.getInstance().init(address.getText(), socket.getText());
             MainPanel.getInstance().init();
         } catch (NotBoundException ex) {
             Logger.getLogger(GameLauncher.class.getName()).log(Level.SEVERE, null, ex);

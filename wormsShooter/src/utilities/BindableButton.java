@@ -39,8 +39,8 @@ public class BindableButton extends JButton implements KeyListener {
     @Override
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() != KeyEvent.VK_ESCAPE) {
-            setText("" + e.getKeyChar());
             code = e.getKeyCode();
+            setText(KeyEvent.getKeyText(code));
         }
         removeKeyListener(me);
     }

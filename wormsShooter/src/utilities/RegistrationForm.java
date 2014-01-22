@@ -8,13 +8,4 @@ import java.io.Serializable;
  */
 public class RegistrationForm implements Serializable {
 
-    private int socket;
-
-    public RegistrationForm(int socket) {
-        this.socket = socket;
-    }
-
-    public int getSocket() {
-        return socket;
-    }
 }
