@@ -1,5 +1,6 @@
 package objects;
 
+import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 
@@ -7,7 +8,7 @@ import java.util.Map;
  *
  * @author Skarab
  */
-public class Controls {
+public class Controls implements Serializable{
 
     private Map<Integer, ControlsEnum> keys;
     private Map<ControlsEnum, Integer> actions;

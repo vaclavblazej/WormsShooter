@@ -1,17 +1,12 @@
 package client;
 
 import java.io.BufferedInputStream;
-import java.io.BufferedOutputStream;
+import java.io.File;
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.FileOutputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.io.ObjectInput;
 import java.io.ObjectInputStream;
-import java.io.ObjectOutput;
 import java.io.ObjectOutputStream;
-import java.io.OutputStream;
 import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -72,27 +67,26 @@ public class Settings implements Serializable {
     }
     public void saveSettings() {
         try {
-            OutputStream file = new FileOutputStream("settings.cfg");
-            ObjectOutput output = new ObjectOutputStream(new BufferedOutputStream(file));
-            output.writeObject(this);
+            FileOutputStream file = new FileOutputStream("settings.cfg");
+            ObjectOutputStream output = new ObjectOutputStream(file);
+            output.writeObject(instance);
         } catch (IOException ex) {
             Logger.getLogger(Settings.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
     private static boolean loadSettings() {
         try {
-            InputStream file = new FileInputStream("settings.cfg");
-            ObjectInput input = new ObjectInputStream(new BufferedInputStream(file));
-            if (input.read() == -1) return false; //checks empty file 
-            try {
+            File f = new File("settings.cfg");
+            if (!f.exists()) return false;
+            FileInputStream file = new FileInputStream(f);
+            ObjectInputStream input = new ObjectInputStream(new BufferedInputStream(file));
                 instance = (Settings)input.readObject();
-            } catch (ClassNotFoundException ex) {
-                Logger.getLogger(Settings.class.getName()).log(Level.SEVERE, null, ex);
-                return false;
-            }
+                return true;
         } catch (IOException ex) {
             Logger.getLogger(Settings.class.getName()).log(Level.SEVERE, null, ex);
             return false;
+        } catch (ClassNotFoundException ex) {
+            Logger.getLogger(Settings.class.getName()).log(Level.SEVERE, null, ex);
         }
         return true;
     }
