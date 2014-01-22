@@ -18,14 +18,14 @@ import objects.ControlsEnum;
  * @author Skarab
  */
 public class Settings implements Serializable {
-    
+
     private static Settings instance;
 
     public static Settings getInstance() {
         if (instance == null) {
             //default settings if it fails to obtain controls from a file.
             if (!loadSettings()) instance = new Settings();
-        }
+            }
         return instance;
     }
     private int quality;
