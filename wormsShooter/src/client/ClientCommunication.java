@@ -1,8 +1,5 @@
 package client;
 
-import java.awt.Color;
-import java.awt.Dimension;
-import java.awt.image.BufferedImage;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
@@ -13,7 +10,6 @@ import java.net.UnknownHostException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -108,11 +104,11 @@ public class ClientCommunication {
                         try {
                             String str = br.readLine();
                             String[] split = str.split(" ");
-                            System.out.println("client: " + str);
+                            //System.out.println("client: " + str);
                             Action type = Action.valueOf(split[0]);
                             int count = Integer.parseInt(split[1]);
                             int i;
-                            System.out.println("counters: " + count + " " + counter);
+                            //System.out.println("counters: " + count + " " + counter);
                             switch (type) {
                                 case Move:
                                     i = Integer.parseInt(split[2]);

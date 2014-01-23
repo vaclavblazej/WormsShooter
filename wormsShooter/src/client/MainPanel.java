@@ -72,6 +72,7 @@ public class MainPanel extends JPanel implements
     private CopyOnWriteArrayList<GraphicComponent> objects;
     private BufferedImage map;
     private BufferedImage curentView;
+    private BufferedImage realView;
     private Point currentPosition;
     private Random random;
     private Model model;
@@ -79,6 +80,7 @@ public class MainPanel extends JPanel implements
     private MainPanel() {
         random = new Random();
         map = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
+        realView = new BufferedImage(SIZE.width, SIZE.height, BufferedImage.TYPE_INT_RGB);
         curentView = new BufferedImage(VIEW_SIZE.width, VIEW_SIZE.height, BufferedImage.TYPE_INT_RGB);
         currentPosition = new Point(30, 20);
         controlSet = EnumSet.noneOf(ControlsEnum.class);
@@ -221,11 +223,12 @@ public class MainPanel extends JPanel implements
         }
         try {
             curentView = map.getSubimage(currentPosition.x, currentPosition.y, VIEW_SIZE.width, VIEW_SIZE.height);
+            Materials.redraw(curentView, realView);
         } catch (RasterFormatException ex) {
         }
         // todo - fix exception when you are near end of the map
         Graphics2D g = (Graphics2D) grphcs;
-        g.drawImage(curentView, 0, 0, getWidth(), getHeight(), null);
+        g.drawImage(realView, 0, 0, getWidth(), getHeight(), null);
         g.translate(RATIO * VIEW_SIZE.width / 2, RATIO * VIEW_SIZE.height / 2);
         for (TestBody b : bodies) {
             b.drawRelative(g);
