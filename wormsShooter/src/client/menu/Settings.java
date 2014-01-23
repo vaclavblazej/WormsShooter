@@ -20,20 +20,37 @@ import objects.ControlsEnum;
 public class Settings implements Serializable {
 
     private static Settings instance;
+    private static final String SAVE_FILE = "settings.cfg";
 
     public static Settings getInstance() {
         if (instance == null) {
             //default settings if it fails to obtain controls from a file.
-            if (!loadSettings()) instance = new Settings();
+            if (!loadSettings()) {
+                instance = new Settings();
             }
+        }
         return instance;
+    }
+
+    private static boolean loadSettings() {
+        try {
+            File f = new File(SAVE_FILE);
+            if (!f.exists()) {
+                return false;
+            }
+            FileInputStream file = new FileInputStream(f);
+            ObjectInputStream input = new ObjectInputStream(new BufferedInputStream(file));
+            instance = (Settings) input.readObject();
+            return true;
+        } catch (IOException | ClassNotFoundException ex) {
+            return false;
+        }
     }
     private int quality;
     private int volume;
     private Controls controls;
 
     private Settings() {
-        // todo loading from file
         controls = new Controls()
                 .add(ControlsEnum.Up, 38)
                 .add(ControlsEnum.Down, 40)
@@ -65,29 +82,14 @@ public class Settings implements Serializable {
     public Controls getControls() {
         return controls;
     }
+
     public void saveSettings() {
         try {
-            FileOutputStream file = new FileOutputStream("settings.cfg");
+            FileOutputStream file = new FileOutputStream(SAVE_FILE);
             ObjectOutputStream output = new ObjectOutputStream(file);
             output.writeObject(instance);
         } catch (IOException ex) {
             Logger.getLogger(Settings.class.getName()).log(Level.SEVERE, null, ex);
         }
-    }
-    private static boolean loadSettings() {
-        try {
-            File f = new File("settings.cfg");
-            if (!f.exists()) return false;
-            FileInputStream file = new FileInputStream(f);
-            ObjectInputStream input = new ObjectInputStream(new BufferedInputStream(file));
-                instance = (Settings)input.readObject();
-                return true;
-        } catch (IOException ex) {
-            Logger.getLogger(Settings.class.getName()).log(Level.SEVERE, null, ex);
-            return false;
-        } catch (ClassNotFoundException ex) {
-            Logger.getLogger(Settings.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return true;
     }
 }

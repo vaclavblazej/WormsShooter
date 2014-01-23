@@ -7,6 +7,7 @@ import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.util.EnumSet;
 import utilities.MapInterface;
+import utilities.communication.SerializableBody;
 
 /**
  *
@@ -22,6 +23,19 @@ public class TestBody implements GraphicComponent {
     private int ratio;
     private boolean jump;
     private MapInterface map;
+
+    public TestBody(Point2D.Double position, Point2D.Double velocity,
+            EnumSet<ControlsEnum> controls, Dimension REAL_SIZE,
+            boolean jump, MapInterface map) {
+        this.position = position;
+        this.velocity = velocity;
+        this.controls = controls;
+        this.REAL_SIZE = REAL_SIZE;
+        this.ratio = map.getRatio();
+        this.SIZE = new Dimension(REAL_SIZE.width * ratio, REAL_SIZE.height * ratio);
+        this.jump = jump;
+        this.map = map;
+    }
 
     public TestBody(int x, int y, int ratio, MapInterface map) {
         position = new Point.Double(x, y);
@@ -126,5 +140,9 @@ public class TestBody implements GraphicComponent {
     public void drawRelative(Graphics2D g) {
         g.setColor(Color.RED);
         g.fillRect(0, 0, SIZE.width, SIZE.height);
+    }
+
+    public SerializableBody serialize() {
+        return new SerializableBody(position, velocity, controls, REAL_SIZE, jump);
     }
 }

@@ -23,6 +23,8 @@ import objects.TestBody;
 import server.ServerComService;
 import server.ServerComm;
 import utilities.PlayerInfo;
+import utilities.communication.Action;
+import utilities.communication.Model;
 import utilities.communication.RegistrationForm;
 
 /**
@@ -44,6 +46,7 @@ public class ClientCommunication {
     private boolean listening;
     private Socket clientSocket;
     private Map<Integer, TestBody> controls;
+    private int counter;
 
     private ClientCommunication() {
         listening = false;
@@ -56,25 +59,12 @@ public class ClientCommunication {
         info = serverComm.register(new RegistrationForm());
         try {
             clientSocket = new Socket(InetAddress.getByName(ip), 4243);
-            clientSocket.getOutputStream().write(new String("" + info.getId() + "\n").getBytes());
+            clientSocket.getOutputStream().write(("" + info.getId() + "\n").getBytes());
+            startSocket();
         } catch (UnknownHostException ex) {
             GameWindow.getInstance().showError(new Exception("Could not connect to the Server"));
         } catch (IOException ex) {
             GameWindow.getInstance().showError(new Exception("IOException in ClientCommunication init"));
-        }
-        loadPlayers();
-        MainPanel.getInstance().setMyBody(createPlayer(info.getId()));
-        startSocket();
-    }
-
-    public Dimension getSize() throws RemoteException {
-        return serverComm.getSize();
-    }
-
-    private void loadPlayers() throws RemoteException {
-        Collection<Integer> players = serverComm.getPlayers();
-        for (Integer integer : players) {
-            createPlayer(integer);
         }
     }
 
@@ -84,16 +74,16 @@ public class ClientCommunication {
         return b;
     }
 
-    public Color getPixel(int x, int y) throws RemoteException {
-        return serverComm.getPixel(x, y);
-    }
-
-    public BufferedImage getMap() throws RemoteException {
-        return serverComm.getMapSerializable().getImage();
-    }
-
     public void sendAction(ControlsEnum action, boolean on) throws RemoteException {
         serverComm.sendAction(info.getId(), action, on);
+    }
+
+    public void getModel() throws RemoteException {
+        Model model = serverComm.getMode(info.getId()).deserialize(MainPanel.getInstance());
+        MainPanel.getInstance().setModel(model);
+        controls = model.getControls();
+        counter = model.getCounter();
+        MainPanel.getInstance().setMyBody(controls.get(info.getId()));
     }
 
     public void bindBody(int id, TestBody body) {
@@ -118,38 +108,43 @@ public class ClientCommunication {
                         try {
                             String str = br.readLine();
                             String[] split = str.split(" ");
-                            System.out.println(str);
-                            //System.out.println(Integer.parseInt(split[0]) + " " + );
-                            int type = Integer.parseInt(split[0]);
+                            System.out.println("client: " + str);
+                            Action type = Action.valueOf(split[0]);
+                            int count = Integer.parseInt(split[1]);
                             int i;
+                            System.out.println("counters: " + count + " " + counter);
                             switch (type) {
-                                case 0:
-                                    i = Integer.parseInt(split[1]);
+                                case Move:
+                                    i = Integer.parseInt(split[2]);
                                     if (controls.containsKey(i)) {
                                         controls.get(i).setPosition(
-                                                Integer.parseInt(split[2]),
-                                                Integer.parseInt(split[3]));
+                                                Integer.parseInt(split[3]),
+                                                Integer.parseInt(split[4]));
                                         controls.get(i).setVelocity(
-                                                Double.parseDouble(split[4]),
-                                                Double.parseDouble(split[5]));
-                                        if (new Boolean(split[7])) {
-                                            controls.get(i).controlOn(ControlsEnum.valueOf(split[6]));
+                                                Double.parseDouble(split[5]),
+                                                Double.parseDouble(split[6]));
+                                        if (Boolean.valueOf(split[8])) {
+                                            controls.get(i).controlOn(ControlsEnum.valueOf(split[7]));
                                         } else {
-                                            controls.get(i).controlOff(ControlsEnum.valueOf(split[6]));
+                                            controls.get(i).controlOff(ControlsEnum.valueOf(split[7]));
                                         }
                                     }
                                     break;
-                                case 1:
-                                    i = Integer.parseInt(split[1]);
+                                case Connect:
+                                    i = Integer.parseInt(split[2]);
                                     if (i == 0) {
                                         createPlayer(info.getId());
                                     }
+                                    break;
+                                case Confirm:
+                                    getModel();
                                     break;
                             }
                         } catch (IOException ex) {
                             Logger.getLogger(ServerComService.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
+
                 }
             }).start();
         }

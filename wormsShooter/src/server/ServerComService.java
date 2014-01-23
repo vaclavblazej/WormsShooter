@@ -19,6 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import utilities.Message;
 import utilities.PlayerInfo;
+import utilities.communication.Action;
 import utilities.communication.RegistrationForm;
 import utilities.communication.ServerInfo;
 
@@ -39,11 +40,13 @@ public class ServerComService {
     private String serverName = Message.Server_name.cm();
     private Map<Integer, PlayerComInfo> players;
     private Map<Integer, RegistrationForm> waitingRegistrations;
+    private int counter;
 
     private ServerComService() {
         players = new HashMap<>(20);
         waitingRegistrations = new HashMap<>(30);
         init();
+        counter = 0;
     }
 
     public void init() {
@@ -72,26 +75,31 @@ public class ServerComService {
         }).start();
     }
 
-    public void send(int id, String str) {
+    public void send(int id, Action a, String str) {
         try {
-            players.get(id).socket.getOutputStream().write((str + "\n").getBytes());
+            System.out.println("server: " + a.name() + " " + counter + " " + str);
+            players.get(id).socket.getOutputStream().write(
+                    (a.name() + " "
+                    + counter + " "
+                    + str + "\n").getBytes());
         } catch (IOException ex) {
             Logger.getLogger(ServerComService.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    public void broadcast(String str) {
-        for (PlayerComInfo player : players.values()) {
-            try {
-                player.socket.getOutputStream().write((str + "\n").getBytes());
-            } catch (IOException ex) {
-                Logger.getLogger(ServerComService.class.getName()).log(Level.SEVERE, null, ex);
-            }
+    public void broadcast(Action a, String str) {
+        counter++;
+        for (Integer player : players.keySet()) {
+            send(player, a, str);
         }
     }
 
     public void setName(String name) {
         serverName = name;
+    }
+
+    public int getCounter() {
+        return counter;
     }
 
     public ServerInfo getServerInfo() {
@@ -128,9 +136,10 @@ public class ServerComService {
     }
 
     public void completeRegistration(int id, PlayerComInfo pci) {
-        broadcast(0 + " " + id);
+        broadcast(Action.Connect, "" + id);
         players.put(id, pci);
         ServerCommunication.getInstance().bindBody(id, ServerPanel.getInstance().newBody());
+        send(id, Action.Confirm, "");
     }
 
     private class PlayerComInfo {

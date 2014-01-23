@@ -1,12 +1,9 @@
 package server;
 
-import java.awt.Color;
-import java.awt.Dimension;
 import java.awt.Point;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
-import java.util.Collection;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
@@ -14,8 +11,9 @@ import java.util.logging.Logger;
 import objects.ControlsEnum;
 import objects.TestBody;
 import utilities.PlayerInfo;
+import utilities.communication.Action;
 import utilities.communication.RegistrationForm;
-import utilities.communication.SerializableBufferedImage;
+import utilities.communication.SerializableModel;
 import utilities.communication.ServerInfo;
 
 /**
@@ -44,27 +42,12 @@ public class ServerCommunication extends UnicastRemoteObject implements ServerCo
         controls = new HashMap<>(20);
     }
 
+    public Map<Integer, TestBody> getControls() {
+        return controls;
+    }
+
     public void init() throws RemoteException {
         LocateRegistry.createRegistry(4242).rebind(ServerComm.class.getSimpleName(), instance);
-    }
-
-    @Override
-    public Dimension getSize() {
-        return ServerPanel.SIZE;
-    }
-
-    @Override
-    public Color getPixel(int x, int y) {
-        return ServerPanel.getInstance().getPixel(x, y);
-    }
-
-    @Override
-    public SerializableBufferedImage getMapSerializable() {
-        return getMap();
-    }
-
-    public SerializableBufferedImage getMap() {
-        return new SerializableBufferedImage(ServerPanel.getInstance().getMap());
     }
 
     @Override
@@ -73,8 +56,8 @@ public class ServerCommunication extends UnicastRemoteObject implements ServerCo
         if (body != null) {
             Point pos = body.getPosition();
             Point.Double vel = body.getVelocity();
-            ServerComService.getInstance().broadcast(
-                    0 + " " + id + " "
+            ServerComService.getInstance().broadcast(Action.Move,
+                    id + " "
                     + pos.x + " " + pos.y + " "
                     + vel.x + " " + vel.y + " "
                     + action + " " + on);
@@ -101,7 +84,7 @@ public class ServerCommunication extends UnicastRemoteObject implements ServerCo
     }
 
     @Override
-    public Collection<Integer> getPlayers() throws RemoteException {
-        return ServerComService.getInstance().getPlayers();
+    public SerializableModel getMode(int id) throws RemoteException {
+        return ServerPanel.getInstance().getModel().serialize();
     }
 }

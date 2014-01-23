@@ -17,8 +17,8 @@ import java.awt.image.BufferedImage;
 import java.awt.image.RasterFormatException;
 import java.rmi.RemoteException;
 import java.util.ArrayList;
+import java.util.Collection;
 import java.util.EnumSet;
-import java.util.List;
 import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
@@ -30,13 +30,13 @@ import objects.Controls;
 import objects.ControlsEnum;
 import objects.GraphicComponent;
 import objects.Miscellaneous;
-import objects.Model;
 import objects.TestBody;
 import particles.Particle;
 import particles.Sand;
 import spritesheets.SpriteLoader;
 import utilities.MapInterface;
 import utilities.Materials;
+import utilities.communication.Model;
 
 /**
  *
@@ -68,7 +68,7 @@ public class MainPanel extends JPanel implements
     private Timer rBrushTimer;
     private TestBody body;
     private EnumSet<ControlsEnum> controlSet;
-    private List<TestBody> bodies;
+    private Collection<TestBody> bodies;
     private CopyOnWriteArrayList<GraphicComponent> objects;
     private BufferedImage map;
     private BufferedImage curentView;
@@ -87,7 +87,6 @@ public class MainPanel extends JPanel implements
         grains = new CopyOnWriteArrayList<>();
         objects = new CopyOnWriteArrayList<>();
         bodies = new ArrayList<>(10);
-        model = new Model(map, bodies);
         setFocusable(true);
         setPreferredSize(SIZE);
         /*SwingUtilities.invokeLater(new Runnable() {
@@ -96,7 +95,7 @@ public class MainPanel extends JPanel implements
          init();
          }
          });*/
-        test();
+        //test();
     }
 
     private void test() {
@@ -111,6 +110,8 @@ public class MainPanel extends JPanel implements
     }
 
     public void setModel(Model model) {
+        map = model.getMap();
+        bodies = model.getControls().values();
         this.model = model;
     }
 
@@ -128,23 +129,9 @@ public class MainPanel extends JPanel implements
         this.body = body;
     }
 
-    public void loadAllChunks() {
-        try {
-            map = ClientCommunication.getInstance().getMap();
-        } catch (RemoteException ex) {
-            Logger.getLogger(MainPanel.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    public void loadChunk(int x, int y) {
-        Color ret = Color.BLACK;
-        try {
-            ret = ClientCommunication.getInstance().getPixel(x, y);
-        } catch (RemoteException ex) {
-            Logger.getLogger(MainPanel.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        System.out.println(ret);
-        imprint(x, y, ret);
+    @Override
+    public int getRatio() {
+        return RATIO;
     }
 
     @Override
@@ -207,12 +194,6 @@ public class MainPanel extends JPanel implements
 
     public void init() {
         Dimension mapSize = SIZE;
-        try {
-            mapSize = ClientCommunication.getInstance().getSize();
-        } catch (RemoteException ex) {
-            Logger.getLogger(MainPanel.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        map = new BufferedImage(mapSize.width, mapSize.height, BufferedImage.TYPE_INT_RGB);
         timer = new Timer(40, this);
         rBrushTimer = new Timer(40, new ActionListener() {
             @Override
@@ -229,7 +210,6 @@ public class MainPanel extends JPanel implements
         addMouseMotionListener(this);
         addKeyListener(this);
         timer.start();
-        loadAllChunks();
     }
 
     @Override

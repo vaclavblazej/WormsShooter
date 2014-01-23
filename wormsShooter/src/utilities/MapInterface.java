@@ -9,4 +9,6 @@ import objects.CollisionState;
 public interface MapInterface {
 
     public CollisionState check(int x, int y);
+    
+    public int getRatio();
 }
