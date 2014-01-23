@@ -85,6 +85,12 @@ public class ServerPanel extends JPanel implements MapInterface, ActionListener 
     public void save() {
         SpriteLoader.saveSprite("Map", map);
     }
+    
+    public void change(int x, int y, Materials mat){
+        Graphics g = map.getGraphics();
+        g.setColor(mat.getColor());
+        g.drawLine(x, y, x, y);
+    }
 
     public Model getModel() {
         return model;

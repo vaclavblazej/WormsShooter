@@ -10,5 +10,6 @@ public enum ControlsEnum {
     Left,
     Right,
     Jump,
-    Fire;
+    Fire,
+    Mine;
 }

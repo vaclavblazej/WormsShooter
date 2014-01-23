@@ -10,6 +10,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import objects.ControlsEnum;
 import objects.TestBody;
+import utilities.Materials;
 import utilities.PlayerInfo;
 import utilities.communication.Action;
 import utilities.communication.RegistrationForm;
@@ -51,21 +52,34 @@ public class ServerCommunication extends UnicastRemoteObject implements ServerCo
     }
 
     @Override
-    public void sendAction(int id, ControlsEnum action, boolean on) {
-        TestBody body = controls.get(id);
-        if (body != null) {
-            Point pos = body.getPosition();
-            Point.Double vel = body.getVelocity();
-            ServerComService.getInstance().broadcast(Action.Move,
-                    id + " "
-                    + pos.x + " " + pos.y + " "
-                    + vel.x + " " + vel.y + " "
-                    + action + " " + on);
-            if (on) {
-                body.controlOn(action);
-            } else {
-                body.controlOff(action);
-            }
+    public void sendAction(int id, Action action, ControlsEnum cont, boolean on) {
+        TestBody body;
+        switch (action) {
+            case Mine:
+                body = controls.get(id);
+                int x = body.getPosition().x;
+                int y = body.getPosition().y + 1;
+                //System.out.println("change " + point.x + " " + point.y + " to dirt");
+                ServerPanel.getInstance().change(x, y, Materials.Dirt);
+                ServerComService.getInstance().broadcast(Action.Mine, "" + x + " " + y);
+                break;
+            case Move:
+                body = controls.get(id);
+                if (body != null) {
+                    Point pos = body.getPosition();
+                    Point.Double vel = body.getVelocity();
+                    ServerComService.getInstance().broadcast(Action.Move,
+                            id + " "
+                            + pos.x + " " + pos.y + " "
+                            + vel.x + " " + vel.y + " "
+                            + cont + " " + on);
+                    if (on) {
+                        body.controlOn(cont);
+                    } else {
+                        body.controlOff(cont);
+                    }
+                }
+                break;
         }
     }
 

@@ -18,6 +18,7 @@ import objects.ControlsEnum;
 import objects.TestBody;
 import server.ServerComService;
 import server.ServerComm;
+import utilities.Materials;
 import utilities.PlayerInfo;
 import utilities.communication.Action;
 import utilities.communication.Model;
@@ -70,8 +71,8 @@ public class ClientCommunication {
         return b;
     }
 
-    public void sendAction(ControlsEnum action, boolean on) throws RemoteException {
-        serverComm.sendAction(info.getId(), action, on);
+    public void sendAction(Action action, ControlsEnum cont, boolean on) throws RemoteException {
+        serverComm.sendAction(info.getId(), action, cont, on);
     }
 
     public void getModel() throws RemoteException {
@@ -136,6 +137,12 @@ public class ClientCommunication {
                                         break;
                                     case Confirm:
                                         getModel();
+                                        break;
+                                    case Mine:
+                                        MainPanel.getInstance().change(
+                                                Integer.parseInt(split[2]),
+                                                Integer.parseInt(split[3]),
+                                                Materials.Dirt);
                                         break;
                                 }
                             } else {

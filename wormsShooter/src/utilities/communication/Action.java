@@ -9,5 +9,6 @@ public enum Action {
     Move,
     Confirm,
     Connect,
-    Disconnect;
+    Disconnect,
+    Mine;
 }

@@ -36,6 +36,7 @@ import particles.Sand;
 import spritesheets.SpriteLoader;
 import utilities.MapInterface;
 import utilities.Materials;
+import utilities.communication.Action;
 import utilities.communication.Model;
 
 /**
@@ -115,6 +116,12 @@ public class MainPanel extends JPanel implements
         map = model.getMap();
         bodies = model.getControls().values();
         this.model = model;
+    }
+    
+    public void change(int x, int y, Materials mat){
+        Graphics g = map.getGraphics();
+        g.setColor(mat.getColor());
+        g.drawLine(x, y, x, y);
     }
 
     public void addBody(TestBody body) {
@@ -252,7 +259,15 @@ public class MainPanel extends JPanel implements
         ControlsEnum en = controls.get(i);
         if (en != null && !controlSet.contains(en)) {
             try {
-                ClientCommunication.getInstance().sendAction(en, true);
+                switch (en) {
+                    case Mine:
+                        ClientCommunication.getInstance().sendAction(Action.Mine, en, true);
+                        break;
+                    default:
+                        ClientCommunication.getInstance().sendAction(Action.Move, en, true);
+                        break;
+                }
+
             } catch (RemoteException ex) {
                 Logger.getLogger(MainPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
@@ -266,7 +281,7 @@ public class MainPanel extends JPanel implements
         ControlsEnum en = controls.get(i);
         if (en != null && controlSet.contains(en)) {
             try {
-                ClientCommunication.getInstance().sendAction(en, false);
+                ClientCommunication.getInstance().sendAction(Action.Move, en, false);
             } catch (RemoteException ex) {
                 Logger.getLogger(MainPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
