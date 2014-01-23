@@ -82,6 +82,10 @@ public class ServerPanel extends JPanel implements MapInterface, ActionListener 
         });
     }
 
+    public void save() {
+        SpriteLoader.saveSprite("Map", map);
+    }
+
     public Model getModel() {
         return model;
     }

@@ -6,6 +6,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import server.ServerCommunication;
+import server.ServerPanel;
 import server.ServerWindow;
 
 /**
@@ -14,8 +15,9 @@ import server.ServerWindow;
  */
 public class Main {
 
-    public static void main(String[] args) {
+    private static boolean server = false;
 
+    public static void main(String[] args) {
         try {
             ServerCommunication.getInstance().init();
         } catch (RemoteException ex) {
@@ -35,9 +37,13 @@ public class Main {
 
     public static void startServer() {
         new ServerWindow();
+        server = true;
     }
 
     public static void exit() {
+        if (server) {
+            ServerPanel.getInstance().save();
+        }
         System.exit(0);
     }
 }

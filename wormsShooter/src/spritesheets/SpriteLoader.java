@@ -6,6 +6,7 @@ package spritesheets;
  */
 import client.GameWindow;
 import java.awt.image.BufferedImage;
+import java.io.File;
 import java.io.IOException;
 import java.net.URL;
 import javax.imageio.ImageIO;
@@ -38,22 +39,34 @@ public class SpriteLoader {
             // read image from local source
             sprite = ImageIO.read(localUrl);
         } catch (IllegalArgumentException | IOException e) {
-//            try {
-            // read image from online source
-//                URL serverUrl = new URL(Message.Image_online_folder.cm() + file + Message.Image_format.cm());
-//                sprite = ImageIO.read(serverUrl);
-//                File outputfile = new File(Message.Image_save_folder.cm() + file + Message.Image_format.cm());
-//                ImageIO.write(sprite, "png", outputfile);
-//            } catch (IllegalArgumentException | IOException ex) {
-            GameWindow.getInstance().showError(new Exception(
-                    Message.Image_load_error.cm()
-                    + Message.Image_folder.cm()
-                    + file
-                    + Message.Image_format.cm()));
-//            }
+            try {
+                System.out.println("Downloading " + file + Message.Image_format.cm());
+                //read image from online source
+                URL serverUrl = new URL(Message.Image_online_folder.cm() + file + Message.Image_format.cm());
+                sprite = ImageIO.read(serverUrl);
+                saveSprite(file, sprite);
+            } catch (IllegalArgumentException | IOException ex) {
+                GameWindow.getInstance().showError(new Exception(
+                        Message.Image_load_error.cm()
+                        + Message.Image_folder.cm()
+                        + file
+                        + Message.Image_format.cm()));
+            }
         }
         spriteSheet = sprite;
         return sprite;
+    }
+
+    public static boolean saveSprite(String file, BufferedImage image) {
+        String path = Message.Image_save_folder.cm() + file + Message.Image_format.cm();
+        try {
+            File outputfile = new File(path);
+            outputfile.createNewFile();
+            ImageIO.write(image, "png", outputfile);
+            return true;
+        } catch (IllegalArgumentException | IOException e) {
+            return false;
+        }
     }
 
     public static Frame getSprite() {
