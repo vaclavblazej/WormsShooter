@@ -75,6 +75,7 @@ public class ClientCommunication {
     }
 
     public void getModel() throws RemoteException {
+        System.out.println("getModel call");
         Model model = serverComm.getMode(info.getId()).deserialize(MainPanel.getInstance());
         MainPanel.getInstance().setModel(model);
         controls = model.getControls();
@@ -108,34 +109,39 @@ public class ClientCommunication {
                             Action type = Action.valueOf(split[0]);
                             int count = Integer.parseInt(split[1]);
                             int i;
-                            //System.out.println("counters: " + count + " " + counter);
-                            switch (type) {
-                                case Move:
-                                    i = Integer.parseInt(split[2]);
-                                    if (controls.containsKey(i)) {
-                                        controls.get(i).setPosition(
-                                                Integer.parseInt(split[3]),
-                                                Integer.parseInt(split[4]));
-                                        controls.get(i).setVelocity(
-                                                Double.parseDouble(split[5]),
-                                                Double.parseDouble(split[6]));
-                                        if (Boolean.valueOf(split[8])) {
-                                            controls.get(i).controlOn(ControlsEnum.valueOf(split[7]));
-                                        } else {
-                                            controls.get(i).controlOff(ControlsEnum.valueOf(split[7]));
+                            if (count - counter == 1) {
+                                //System.out.println("counters: " + count + " " + counter);
+                                switch (type) {
+                                    case Move:
+                                        i = Integer.parseInt(split[2]);
+                                        if (controls.containsKey(i)) {
+                                            controls.get(i).setPosition(
+                                                    Integer.parseInt(split[3]),
+                                                    Integer.parseInt(split[4]));
+                                            controls.get(i).setVelocity(
+                                                    Double.parseDouble(split[5]),
+                                                    Double.parseDouble(split[6]));
+                                            if (Boolean.valueOf(split[8])) {
+                                                controls.get(i).controlOn(ControlsEnum.valueOf(split[7]));
+                                            } else {
+                                                controls.get(i).controlOff(ControlsEnum.valueOf(split[7]));
+                                            }
                                         }
-                                    }
-                                    break;
-                                case Connect:
-                                    i = Integer.parseInt(split[2]);
-                                    if (i == 0) {
-                                        createPlayer(info.getId());
-                                    }
-                                    break;
-                                case Confirm:
-                                    getModel();
-                                    break;
+                                        break;
+                                    case Connect:
+                                        i = Integer.parseInt(split[2]);
+                                        if (i == 0) {
+                                            createPlayer(info.getId());
+                                        }
+                                        break;
+                                    case Confirm:
+                                        getModel();
+                                        break;
+                                }
+                            } else {
+                                getModel();
                             }
+                            counter = count;
                         } catch (IOException ex) {
                             Logger.getLogger(ServerComService.class.getName()).log(Level.SEVERE, null, ex);
                         }

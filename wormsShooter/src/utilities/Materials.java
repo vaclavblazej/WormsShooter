@@ -25,6 +25,12 @@ public class Materials {
                 new Material(null, CollisionState.Free));
         material.put(Color.decode("#976B4B").getRGB(),
                 new Material(SpriteLoader.getRawSprite(2, 0), CollisionState.Free));
+        material.put(Color.decode("#D3C66F").getRGB(),
+                new Material(SpriteLoader.getRawSprite(8, 2), CollisionState.Crushed));
+        material.put(Color.decode("#964316").getRGB(),
+                new Material(SpriteLoader.getRawSprite(7, 2), CollisionState.Crushed));
+        material.put(Color.decode("#1CD85E").getRGB(),
+                new Material(SpriteLoader.getRawSprite(0, 3), CollisionState.Crushed));
     }
 
     public static CollisionState check(Color color) {

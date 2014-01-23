@@ -77,7 +77,7 @@ public class ServerComService {
 
     public void send(int id, Action a, String str) {
         try {
-            System.out.println("server: " + a.name() + " " + counter + " " + str);
+            //System.out.println("server: " + a.name() + " " + counter + " " + str);
             players.get(id).socket.getOutputStream().write(
                     (a.name() + " "
                     + counter + " "

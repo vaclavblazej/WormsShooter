@@ -6,6 +6,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.util.EnumSet;
+import static objects.CollisionState.Free;
 import utilities.MapInterface;
 import utilities.communication.SerializableBody;
 
@@ -15,6 +16,7 @@ import utilities.communication.SerializableBody;
  */
 public class TestBody implements GraphicComponent {
 
+    private static final double JUMP = 0.6;
     private Point.Double position;
     private Point.Double velocity;
     private EnumSet<ControlsEnum> controls;
@@ -66,24 +68,31 @@ public class TestBody implements GraphicComponent {
         this.velocity.y = y;
     }
 
-    public void tick() {
-        double differenceY = velocity.y;
-        int directionY = (differenceY >= 0) ? 1 : -1;
-        double absoluteY = Math.abs(differenceY);
-        boolean next = true;
-        velocity.y += 0.1;
-        for (int i = 1; next && i <= absoluteY; i++) {
-            switch (map.check((int) position.x, (int) position.y + REAL_SIZE.height - 1 + directionY)) {
-                case Free:
-                    position.y += directionY;
-                    jump = false;
-                    break;
-                case Crushed:
-                    jump = true;
-                    next = false;
-                    velocity.y = 0;
-                    break;
+    public void fallBy(double y) {
+        int directionY = (velocity.y >= 0) ? 1 : -1;
+        double absoluteY = Math.abs(y) + 0.00001;
+        int i;
+        for (i = 1; i <= absoluteY; i++) {
+            if (map.check((int) position.x, (int) position.y + REAL_SIZE.height + i * directionY)
+                    == CollisionState.Crushed) {
+                velocity.y = 0;
+                break;
             }
+        }
+        position.y += i * directionY;
+    }
+
+    public void tick() {
+        int directionY = (velocity.y >= 0) ? 1 : -1;
+        switch (map.check((int) position.x, (int) position.y + REAL_SIZE.height - 1 + directionY)) {
+            case Free:
+                velocity.y += 0.1;
+                fallBy(velocity.y);
+                break;
+            case Crushed:
+                velocity.y = 0;
+                jump = true;
+                break;
         }
         if (map.check((int) position.x + 1, (int) position.y + 1) == CollisionState.Free) {
             if (controls.contains(ControlsEnum.Right)) {
@@ -106,7 +115,7 @@ public class TestBody implements GraphicComponent {
                     break;
                 case Up:
                     if (jump == true) {
-                        velocity.y -= 2.4;
+                        velocity.y -= JUMP;
                         jump = false;
                     }
                     break;
