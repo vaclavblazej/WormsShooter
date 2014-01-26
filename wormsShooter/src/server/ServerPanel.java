@@ -101,7 +101,7 @@ public class ServerPanel extends JPanel implements MapInterface, ActionListener 
     }
 
     public TestBody newBody() {
-        TestBody b = new TestBody(100, 100, RATIO, this);
+        TestBody b = new TestBody(100, 100, this);
         bodies.add(b);
         return b;
     }

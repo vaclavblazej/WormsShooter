@@ -7,6 +7,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import main.Main;
+import objects.Inventory;
 import utilities.Message;
 
 /**
@@ -26,7 +27,15 @@ public class GameWindowMenu extends JMenuBar {
         });
         item.setText(Message.Menu_settings.cm());
         menu.add(item);
-        add(menu);
+        item = new JMenuItem();
+        item.setAction(new AbstractAction() {
+            @Override
+            public void actionPerformed(ActionEvent e) {
+                new InventoryDialog(GameWindow.getInstance());
+            }
+        });
+        item.setText(Message.Menu_inventory.cm());
+        menu.add(item);
         item = new JMenuItem();
         item.setAction(new AbstractAction() {
             @Override

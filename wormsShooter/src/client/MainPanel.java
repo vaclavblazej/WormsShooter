@@ -85,7 +85,7 @@ public class MainPanel extends JPanel implements
         curentView = new BufferedImage(VIEW_SIZE.width, VIEW_SIZE.height, BufferedImage.TYPE_INT_RGB);
         currentPosition = new Point(30, 20);
         controlSet = EnumSet.noneOf(ControlsEnum.class);
-        body = new TestBody(100, 100, RATIO, this);
+        body = new TestBody(100, 100, this);
         mouse = new Point();
         grains = new CopyOnWriteArrayList<>();
         objects = new CopyOnWriteArrayList<>();
@@ -129,13 +129,17 @@ public class MainPanel extends JPanel implements
     }
 
     public TestBody newBody() {
-        TestBody body = new TestBody(100, 100, RATIO, this);
+        TestBody body = new TestBody(100, 100, this);
         bodies.add(body);
         return body;
     }
 
     public void setMyBody(TestBody body) {
         this.body = body;
+    }
+    
+    public TestBody getMyBody(){
+        return body;
     }
 
     @Override

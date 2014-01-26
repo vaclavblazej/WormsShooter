@@ -25,6 +25,7 @@ public class TestBody implements GraphicComponent {
     private int ratio;
     private boolean jump;
     private MapInterface map;
+    private Inventory inventory;
 
     public TestBody(Point2D.Double position, Point2D.Double velocity,
             EnumSet<ControlsEnum> controls, Dimension REAL_SIZE,
@@ -37,17 +38,17 @@ public class TestBody implements GraphicComponent {
         this.SIZE = new Dimension(REAL_SIZE.width * ratio, REAL_SIZE.height * ratio);
         this.jump = jump;
         this.map = map;
+        this.inventory = new Inventory();
     }
 
-    public TestBody(int x, int y, int ratio, MapInterface map) {
-        position = new Point.Double(x, y);
-        velocity = new Point.Double(0, 0);
-        this.ratio = ratio;
-        this.map = map;
-        controls = EnumSet.noneOf(ControlsEnum.class);
-        REAL_SIZE = new Dimension(1, 2);
-        SIZE = new Dimension(REAL_SIZE.width * ratio, REAL_SIZE.height * ratio);
-        jump = false;
+    public TestBody(int x, int y, MapInterface map) {
+        this(new Point.Double(x, y), new Point.Double(0, 0),
+                EnumSet.noneOf(ControlsEnum.class),
+                new Dimension(1, 2), false, map);
+    }
+    
+    public Inventory getInventory(){
+        return inventory;
     }
 
     public void setPosition(int x, int y) {
