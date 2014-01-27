@@ -1,9 +1,8 @@
-package server;
+package utilities.communication;
 
 import java.awt.Point;
 import java.io.Serializable;
 import java.util.ArrayList;
-import utilities.communication.Action;
 
 /**
  *
@@ -17,7 +16,6 @@ public class Packet implements Serializable {
     private int id;
     private ArrayList<Point> points;
     private ArrayList<Point> doublePoints;
-    private boolean bool;
 
     public Packet(Action action, int id) {
         this.action = action;
@@ -40,14 +38,6 @@ public class Packet implements Serializable {
 
     public int getId() {
         return id;
-    }
-
-    public void setBool(boolean bool) {
-        this.bool = bool;
-    }
-
-    public boolean getBool() {
-        return bool;
     }
 
     public void addPoint(Point point) {

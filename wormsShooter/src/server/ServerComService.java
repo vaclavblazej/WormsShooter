@@ -22,6 +22,8 @@ import java.util.logging.Logger;
 import utilities.Message;
 import utilities.PlayerInfo;
 import utilities.communication.Action;
+import utilities.communication.Packet;
+import utilities.communication.PacketBuilder;
 import utilities.communication.RegistrationForm;
 import utilities.communication.ServerInfo;
 

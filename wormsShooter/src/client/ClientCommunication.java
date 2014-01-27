@@ -13,15 +13,14 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import utilities.ControlsEnum;
 import objects.TestBody;
-import server.Packet;
 import server.ServerComService;
 import server.ServerComm;
 import utilities.Materials;
 import utilities.PlayerInfo;
 import utilities.communication.Action;
 import utilities.communication.Model;
+import utilities.communication.Packet;
 import utilities.communication.RegistrationForm;
 
 /**
@@ -76,7 +75,6 @@ public class ClientCommunication {
     }
 
     public void getModel() throws RemoteException {
-        System.out.println("getModel call");
         Model model = serverComm.getMode(info.getId()).deserialize(MainPanel.getInstance());
         MainPanel.getInstance().setModel(model);
         controls = model.getControls();
