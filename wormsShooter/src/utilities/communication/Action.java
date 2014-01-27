@@ -10,6 +10,7 @@ public enum Action {
     MOVE_RIGHT,
     MOVE_STOP,
     MOVE_JUMP,
+    ADD_ITEM,
     CONFIRM,
     CONNECT,
     DISCONNECT,

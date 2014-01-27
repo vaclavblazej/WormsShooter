@@ -9,6 +9,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import objects.TestBody;
+import objects.items.ItemEnum;
 import utilities.Materials;
 import utilities.PlayerInfo;
 import utilities.communication.Action;
@@ -59,9 +60,12 @@ public class ServerCommunication extends UnicastRemoteObject implements ServerCo
                 body = controls.get(id);
                 int x = body.getPosition().x;
                 int y = body.getPosition().y + 1;
-                ServerPanel.getInstance().change(x, y, Materials.Dirt);
+                body.addItem(ServerPanel.getInstance().getItemFactory().get(ItemEnum.BLOCK));
+                ServerPanel.getInstance().change(x, y, Materials.DIRT);
                 ServerComService.getInstance().broadcast(
-                        new PacketBuilder(action, id).addPoint(new Point(x, y)).build());
+                        new PacketBuilder(Action.ADD_ITEM, id).addInfo(ItemEnum.BLOCK).build());
+                ServerComService.getInstance().broadcast(
+                        new PacketBuilder(Action.MINE, id).addInfo(new Point(x, y)).build());
                 break;
             case MOVE_LEFT:
             case MOVE_RIGHT:
@@ -72,7 +76,8 @@ public class ServerCommunication extends UnicastRemoteObject implements ServerCo
                     Point pos = body.getPosition();
                     Point.Double vel = body.getVelocity();
                     ServerComService.getInstance().broadcast(
-                            new PacketBuilder(action, id).addPoint(pos).addDoublePoint(vel).build());
+                            new PacketBuilder(action, id).addInfo(pos)
+                            .addInfo(vel.x).addInfo(vel.y).build());
                     body.control(action);
                 }
                 break;
@@ -94,7 +99,7 @@ public class ServerCommunication extends UnicastRemoteObject implements ServerCo
     }
 
     @Override
-    public SerializableModel getMode(int id) throws RemoteException {
+    public SerializableModel getModel(int id) throws RemoteException {
         return ServerPanel.getInstance().getModel().serialize();
     }
 }

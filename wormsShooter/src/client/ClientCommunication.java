@@ -1,5 +1,6 @@
 package client;
 
+import java.awt.Point;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.net.InetAddress;
@@ -14,6 +15,8 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import objects.TestBody;
+import objects.items.ItemEnum;
+import objects.items.ItemFactory;
 import server.ServerComService;
 import server.ServerComm;
 import utilities.Materials;
@@ -43,6 +46,7 @@ public class ClientCommunication {
     private Socket clientSocket;
     private Map<Integer, TestBody> controls;
     private int counter;
+    private ItemFactory factory;
 
     private ClientCommunication() {
         listening = false;
@@ -75,10 +79,11 @@ public class ClientCommunication {
     }
 
     public void getModel() throws RemoteException {
-        Model model = serverComm.getMode(info.getId()).deserialize(MainPanel.getInstance());
+        Model model = serverComm.getModel(info.getId()).deserialize(MainPanel.getInstance());
         MainPanel.getInstance().setModel(model);
         controls = model.getControls();
         counter = model.getCounter();
+        factory = model.getFactory();
         MainPanel.getInstance().setMyBody(controls.get(info.getId()));
     }
 
@@ -112,18 +117,22 @@ public class ClientCommunication {
                                     case MOVE_STOP:
                                     case MOVE_JUMP:
                                         i = packet.getId();
-                                        controls.get(i).setPosition(packet.getPoint(0));
-                                        controls.get(i).setVelocity(packet.getDoublePoint(0));
+                                        controls.get(i).setPosition((Point) packet.get(0));
+                                        controls.get(i).setVelocity(
+                                                new Point.Double((Double) packet.get(1), (Double) packet.get(2)));
                                         controls.get(i).control(type);
                                         break;
                                     case MINE:
-                                        MainPanel.getInstance().change(packet.getPoint(0), Materials.Dirt);
+                                        MainPanel.getInstance().change((Point) packet.get(0), Materials.DIRT);
                                         break;
                                     case CONNECT:
                                         i = packet.getId();
                                         if (i == 0) {
                                             createPlayer(info.getId());
                                         }
+                                        break;
+                                    case ADD_ITEM:
+                                        MainPanel.getInstance().getMyBody().addItem(factory.get((ItemEnum) packet.get(0)));
                                         break;
                                     case CONFIRM:
                                         getModel();

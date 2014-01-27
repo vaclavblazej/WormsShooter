@@ -13,31 +13,26 @@ import spritesheets.SpriteLoader;
  */
 public enum Materials {
 
-    Air,
-    Wood,
-    Sand,
-    Dirt,
-    Grass,
-    Stone;
+    AIR,
+    WOOD,
+    SAND,
+    DIRT,
+    GRASS,
+    STONE;
     private static final Map<Integer, Material> material;
     private static final Map<Materials, Color> codes;
-    public static final CollisionState DEFAULT = CollisionState.CRUSHED;
+    public static final CollisionState DEFAULT = CollisionState.SOLID;
 
     static {
         material = new HashMap<>();
         codes = new HashMap<>();
         SpriteLoader.loadSprite("Materials");
         SpriteLoader.set(20, 20);
-        addMaterial(Air, "#84AAF8", CollisionState.FREE);
-        addMaterial(Wood, "#976B4B", CollisionState.FREE, 2, 0);
-        addMaterial(Dirt, "#D3C66F", CollisionState.CRUSHED, 8, 2);
-        addMaterial(Grass, "#964316", CollisionState.CRUSHED, 7, 2);
-        addMaterial(Stone, "#1CD85E", CollisionState.CRUSHED, 0, 3);
-        //material.put(Color.decode("#84AAF8").getRGB(), new Material(null, CollisionState.FREE));
-        //material.put(Color.decode("#976B4B").getRGB(), new Material(SpriteLoader.getRawSprite(2, 0), CollisionState.FREE));
-        //material.put(Color.decode("#D3C66F").getRGB(), new Material(SpriteLoader.getRawSprite(8, 2), CollisionState.CRUSHED));
-        //material.put(Color.decode("#964316").getRGB(), new Material(SpriteLoader.getRawSprite(7, 2), CollisionState.CRUSHED));
-        //material.put(Color.decode("#1CD85E").getRGB(), new Material(SpriteLoader.getRawSprite(0, 3), CollisionState.CRUSHED));
+        addMaterial(AIR, "#84AAF8", CollisionState.FREE);
+        addMaterial(WOOD, "#976B4B", CollisionState.FREE, 2, 0);
+        addMaterial(DIRT, "#D3C66F", CollisionState.SOLID, 8, 2);
+        addMaterial(GRASS, "#964316", CollisionState.SOLID, 7, 2);
+        addMaterial(STONE, "#1CD85E", CollisionState.SOLID, 0, 3);
     }
 
     private static void addMaterial(Materials mat, String code, CollisionState state) {

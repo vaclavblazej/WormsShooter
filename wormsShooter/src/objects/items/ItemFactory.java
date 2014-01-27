@@ -1,5 +1,6 @@
 package objects.items;
 
+import java.io.Serializable;
 import java.util.EnumMap;
 import java.util.Map;
 
@@ -7,7 +8,7 @@ import java.util.Map;
  *
  * @author Skarab
  */
-public class ItemFactory {
+public class ItemFactory implements Serializable {
 
     private Map<ItemEnum, ItemBlueprint> items;
 

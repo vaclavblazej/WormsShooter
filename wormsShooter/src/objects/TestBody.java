@@ -81,7 +81,7 @@ public class TestBody implements GraphicComponent {
         int i;
         for (i = 1; i <= absoluteY; i++) {
             if (map.check((int) position.x, (int) position.y + REAL_SIZE.height + i * directionY)
-                    == CollisionState.CRUSHED) {
+                    == CollisionState.SOLID) {
                 velocity.y = 0;
                 break;
             }
@@ -96,7 +96,7 @@ public class TestBody implements GraphicComponent {
                 velocity.y += 0.1;
                 fallBy(velocity.y);
                 break;
-            case CRUSHED:
+            case SOLID:
                 velocity.y = 0;
                 jump = true;
                 break;

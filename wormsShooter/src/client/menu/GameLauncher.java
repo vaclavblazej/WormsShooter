@@ -37,12 +37,12 @@ public class GameLauncher extends AbstractDialog {
         newServer.setSelected(true);
         address = new ValidatedTF(this);
         socket = new ValidatedTF(this);
-        address.setText(Message.ADRESS_INITIAL.cm());
+        address.setText(Message.ADDRESS_INITIAL.cm());
         socket.setText(Message.SOCKET_INITIAL.cm());
         getContent().setLayout(new GridBagLayout());
         getContent().add(new JLabel(Message.CREATE_SERVER.cm() + ": "), new GBCBuilder().setY(0).build());
         getContent().add(newServer, new GBCBuilder().setY(0).setXRel().build());
-        getContent().add(new JLabel(Message.ADRESS.cm() + ": "), new GBCBuilder().setY(1).build());
+        getContent().add(new JLabel(Message.ADDRESS.cm() + ": "), new GBCBuilder().setY(1).build());
         getContent().add(address, new GBCBuilder().setY(1).setXRel().build());
         getContent().add(new JLabel(Message.SOCKET.cm() + ": "), new GBCBuilder().setY(2).build());
         getContent().add(socket, new GBCBuilder().setY(2).setXRel().build());

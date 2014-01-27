@@ -17,18 +17,20 @@ import javax.swing.AbstractAction;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
-import utilities.CollisionState;
 import objects.GraphicComponent;
-import utilities.communication.Model;
 import objects.TestBody;
 import objects.items.Crafting;
-import objects.items.Item;
+import objects.items.ItemBlueprint;
+import objects.items.ItemEnum;
+import objects.items.ItemFactory;
 import objects.items.Receipe;
 import particles.Particle;
 import particles.Sand;
 import spritesheets.SpriteLoader;
+import utilities.CollisionState;
 import utilities.MapInterface;
 import utilities.Materials;
+import utilities.communication.Model;
 
 /**
  *
@@ -55,8 +57,11 @@ public class ServerPanel extends JPanel implements MapInterface, ActionListener 
     private Timer graphicTimer;
     private List<TestBody> bodies;
     private Model model;
+    private ItemFactory itemFactory;
 
     private ServerPanel() {
+        createItems();
+        createReceipes();
         bodies = new ArrayList<>(10);
         SpriteLoader.loadSprite("Map");
         SpriteLoader.set(400, 300);
@@ -66,6 +71,7 @@ public class ServerPanel extends JPanel implements MapInterface, ActionListener 
         random = new Random();
         model = new Model(map,
                 ServerCommunication.getInstance().getControls(),
+                itemFactory,
                 ServerComService.getInstance().getCounter());
 
         setFocusable(true);
@@ -83,7 +89,15 @@ public class ServerPanel extends JPanel implements MapInterface, ActionListener 
                 init();
             }
         });
-        createReceipes();
+    }
+
+    private void createItems() {
+        itemFactory = new ItemFactory();
+        itemFactory.addItem(ItemEnum.BLOCK, new ItemBlueprint("Block", 1, 1));
+    }
+
+    public ItemFactory getItemFactory() {
+        return itemFactory;
     }
 
     private void createReceipes() {

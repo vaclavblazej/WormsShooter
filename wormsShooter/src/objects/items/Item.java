@@ -2,20 +2,19 @@ package objects.items;
 
 import java.awt.Point;
 import java.awt.image.BufferedImage;
+import java.io.Serializable;
 
 /**
  *
  * @author Skarab
  */
-public class Item {
+public class Item implements Serializable{
 
-    private BufferedImage image;
     private String name;
     private Point size;
 
-    public Item(String name, BufferedImage image, Point size) {
+    public Item(String name, Point size) {
         this.name = name;
-        this.image = image;
         this.size = size;
     }
 

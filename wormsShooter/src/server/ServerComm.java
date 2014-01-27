@@ -15,7 +15,7 @@ import utilities.communication.ServerInfo;
  */
 public interface ServerComm extends Remote {
 
-    SerializableModel getMode(int id) throws RemoteException;
+    SerializableModel getModel(int id) throws RemoteException;
 
     void sendAction(int id, Action action) throws RemoteException;
 

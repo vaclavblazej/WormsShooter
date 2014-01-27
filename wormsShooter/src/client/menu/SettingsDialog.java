@@ -78,7 +78,7 @@ public class SettingsDialog extends AbstractDialog {
         right = new BindableButton(Settings.getInstance().getControls().get(ControlsEnum.RIGHT));
         keys.add(new JLabel(Message.RIGHT.cm() + ": "), new GBCBuilder().setY(row).build());
         keys.add(right, new GBCBuilder().setY(row).setXRel().build());
-        tabbedPane.addTab(Message.SETTINGS_TAB_KEY.cm(), keys);
+        tabbedPane.addTab(Message.SETTINGS_TAB_KEYS.cm(), keys);
     }
 
     private void createGraphicsTab() {

@@ -5,6 +5,6 @@ package utilities;
  * @author Skarab
  */
 public enum CollisionState {
-    CRUSHED,
+    SOLID,
     FREE;
 }

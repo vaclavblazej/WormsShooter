@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
 import objects.TestBody;
+import objects.items.ItemFactory;
 
 /**
  *
@@ -13,11 +14,13 @@ public class Model {
 
     private BufferedImage map;
     private Map<Integer, TestBody> controls;
+    private ItemFactory factory;
     private int counter;
 
-    public Model(BufferedImage map, Map<Integer, TestBody> controls, int counter) {
+    public Model(BufferedImage map, Map<Integer, TestBody> controls, ItemFactory factory, int counter) {
         this.map = map;
         this.controls = controls;
+        this.factory = factory;
         this.counter = counter;
     }
 
@@ -29,6 +32,10 @@ public class Model {
         return controls;
     }
 
+    public ItemFactory getFactory() {
+        return factory;
+    }
+
     public int getCounter() {
         return counter;
     }
@@ -38,6 +45,6 @@ public class Model {
         for (Integer i : controls.keySet()) {
             arr.put(i, controls.get(i).serialize());
         }
-        return new SerializableModel(new SerializableBufferedImage(map), arr, counter);
+        return new SerializableModel(new SerializableBufferedImage(map), factory, arr, counter);
     }
 }

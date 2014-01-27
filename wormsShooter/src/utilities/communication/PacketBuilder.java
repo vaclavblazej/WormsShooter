@@ -1,7 +1,5 @@
 package utilities.communication;
 
-import java.awt.Point;
-
 /**
  * Use to build packets.
  *
@@ -28,25 +26,13 @@ public class PacketBuilder {
     }
 
     /**
-     * Stores point. Get this point by calling getPoint(number) on Packet
+     * Stores information. Get this information by calling get(number) on Packet
      *
-     * @param point
+     * @param itemEnum
      * @return
      */
-    public PacketBuilder addPoint(Point point) {
-        packet.addPoint(point);
-        return this;
-    }
-
-    /**
-     * Stores double point. Get this point by calling getDoublePoint(number) on
-     * Packet
-     *
-     * @param point
-     * @return
-     */
-    public PacketBuilder addDoublePoint(Point.Double point) {
-        packet.addDoublePoint(point);
+    public PacketBuilder addInfo(Object object) {
+        packet.addInfo(object);
         return this;
     }
 

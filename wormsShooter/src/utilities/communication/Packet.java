@@ -1,6 +1,5 @@
 package utilities.communication;
 
-import java.awt.Point;
 import java.io.Serializable;
 import java.util.ArrayList;
 
@@ -10,18 +9,15 @@ import java.util.ArrayList;
  */
 public class Packet implements Serializable {
 
-    private static final double PRECISION = 1000;
     private Action action;
     private int count;
     private int id;
-    private ArrayList<Point> points;
-    private ArrayList<Point> doublePoints;
+    private ArrayList<Object> information;
 
     public Packet(Action action, int id) {
         this.action = action;
         this.id = id;
-        this.points = new ArrayList<>();
-        this.doublePoints = new ArrayList<>();
+        this.information = new ArrayList<>();
     }
 
     public void setCount(int count) {
@@ -40,23 +36,11 @@ public class Packet implements Serializable {
         return id;
     }
 
-    public void addPoint(Point point) {
-        points.add(point);
+    public void addInfo(Object object) {
+        information.add(object);
     }
 
-    public Point getPoint(int index) {
-        return points.get(index);
-    }
-
-    public void addDoublePoint(Point.Double point) {
-        // Point.Double does not serialize properly
-        Point p = new Point((int) (point.x * PRECISION), (int) (point.y * PRECISION));
-        doublePoints.add(p);
-    }
-
-    public Point.Double getDoublePoint(int index) {
-        Point g = doublePoints.get(index);
-        Point.Double p = new Point.Double(g.x / PRECISION, g.y / PRECISION);
-        return p;
+    public Object get(int index) {
+        return information.get(index);
     }
 }
