@@ -2,7 +2,7 @@ package server;
 
 import java.rmi.Remote;
 import java.rmi.RemoteException;
-import objects.ControlsEnum;
+import utilities.ControlsEnum;
 import utilities.PlayerInfo;
 import utilities.communication.Action;
 import utilities.communication.RegistrationForm;

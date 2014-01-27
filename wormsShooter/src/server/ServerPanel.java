@@ -17,7 +17,7 @@ import javax.swing.AbstractAction;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import javax.swing.Timer;
-import objects.CollisionState;
+import utilities.CollisionState;
 import objects.GraphicComponent;
 import utilities.communication.Model;
 import objects.TestBody;

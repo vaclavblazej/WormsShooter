@@ -6,7 +6,7 @@ import javax.swing.JLabel;
 import javax.swing.JPanel;
 import javax.swing.JSlider;
 import javax.swing.JTabbedPane;
-import objects.ControlsEnum;
+import utilities.ControlsEnum;
 import utilities.AbstractDialog;
 import utilities.BindableButton;
 import utilities.GBCBuilder;

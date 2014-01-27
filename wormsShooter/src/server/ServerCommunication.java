@@ -8,7 +8,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import objects.ControlsEnum;
+import utilities.ControlsEnum;
 import objects.TestBody;
 import utilities.Materials;
 import utilities.PlayerInfo;

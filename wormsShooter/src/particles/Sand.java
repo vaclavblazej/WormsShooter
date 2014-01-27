@@ -4,7 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.Point;
 import client.MainPanel;
-import objects.CollisionState;
+import utilities.CollisionState;
 
 /**
  *

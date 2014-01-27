@@ -5,7 +5,6 @@ import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
-import objects.CollisionState;
 import spritesheets.SpriteLoader;
 
 /**

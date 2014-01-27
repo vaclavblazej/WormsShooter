@@ -10,8 +10,8 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import objects.Controls;
-import objects.ControlsEnum;
+import utilities.Controls;
+import utilities.ControlsEnum;
 
 /**
  *

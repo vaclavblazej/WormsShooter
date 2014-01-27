@@ -1,11 +1,12 @@
 package objects;
 
+import utilities.CollisionState;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.Point2D;
-import static objects.CollisionState.Free;
+import static utilities.CollisionState.Free;
 import objects.items.Inventory;
 import objects.items.Item;
 import utilities.MapInterface;

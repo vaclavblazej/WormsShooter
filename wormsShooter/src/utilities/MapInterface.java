@@ -1,7 +1,5 @@
 package utilities;
 
-import objects.CollisionState;
-
 /**
  *
  * @author Skarab

@@ -1,5 +1,6 @@
-package objects;
+package utilities;
 
+import utilities.ControlsEnum;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
