@@ -21,6 +21,9 @@ import utilities.CollisionState;
 import objects.GraphicComponent;
 import utilities.communication.Model;
 import objects.TestBody;
+import objects.items.Crafting;
+import objects.items.Item;
+import objects.items.Receipe;
 import particles.Particle;
 import particles.Sand;
 import spritesheets.SpriteLoader;
@@ -80,13 +83,19 @@ public class ServerPanel extends JPanel implements MapInterface, ActionListener 
                 init();
             }
         });
+        createReceipes();
+    }
+
+    private void createReceipes() {
+        Receipe r = new Receipe();
+        Crafting.getInstance().addReceipe(r);
     }
 
     public void save() {
         SpriteLoader.saveSprite("Map", map);
     }
-    
-    public void change(int x, int y, Materials mat){
+
+    public void change(int x, int y, Materials mat) {
         Graphics g = map.getGraphics();
         g.setColor(mat.getColor());
         g.drawLine(x, y, x, y);

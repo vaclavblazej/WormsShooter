@@ -11,24 +11,18 @@ public class Item {
 
     private BufferedImage image;
     private String name;
-    private int count;
     private Point size;
 
-    public Item(String name, BufferedImage image, int x, int y) {
+    public Item(String name, BufferedImage image, Point size) {
         this.name = name;
-        this.count = 0;
         this.image = image;
-        this.size = new Point(x, y);
+        this.size = size;
     }
 
     Object get(int columnIndex) {
-        switch(columnIndex){
+        switch (columnIndex) {
             case 0:
                 return name;
-            case 1:
-                return count;
-            case 2:
-                return size;
         }
         return null;
     }

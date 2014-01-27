@@ -136,7 +136,7 @@ public class ServerComService {
         return null;
     }
 
-    public void completeRegistration(int id, PlayerComInfo pci) {
+    private void completeRegistration(int id, PlayerComInfo pci) {
         broadcast(new PacketBuilder(Action.Connect, id).build());
         players.put(id, pci);
         ServerCommunication.getInstance().bindBody(id, ServerPanel.getInstance().newBody());

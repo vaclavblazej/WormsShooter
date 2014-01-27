@@ -47,7 +47,7 @@ public abstract class AbstractDialog extends JDialog implements Validator {
         interior.add(content, BorderLayout.LINE_START);
         interior.add(createButtonPanel(), BorderLayout.PAGE_END);
         Point loc = owner.getLocation();
-        loc.translate(200, 100);
+        loc.translate(-200, 100);
         setLocation(loc);
         addWindowListener(new WindowAdapter() {
             @Override
