@@ -1,4 +1,4 @@
-package objects;
+package objects.items;
 
 import java.util.ArrayList;
 import javax.swing.table.AbstractTableModel;
@@ -15,9 +15,7 @@ public class Inventory extends AbstractTableModel {
     private ArrayList<Item> items;
 
     public Inventory() {
-        items = new ArrayList<>();
-        addItem(new Item("Dagger", null, 2, 3));
-        addItem(new Item("AK-47", null, 2, 3));
+        items = new ArrayList<>(10);
     }
 
     public void addItem(Item item) {

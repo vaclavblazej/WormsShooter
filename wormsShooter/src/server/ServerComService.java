@@ -3,6 +3,8 @@ package server;
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.io.ObjectOutputStream;
+import java.io.OutputStream;
 import java.net.Inet4Address;
 import java.net.InetAddress;
 import java.net.ServerSocket;
@@ -75,22 +77,19 @@ public class ServerComService {
         }).start();
     }
 
-    public void send(int id, Action a, String str) {
+    public void send(int id, Packet packet) {
         try {
-            //System.out.println("server: " + a.name() + " " + counter + " " + str);
-            players.get(id).socket.getOutputStream().write(
-                    (a.name() + " "
-                    + counter + " "
-                    + str + "\n").getBytes());
+            packet.setCount(counter);
+            players.get(id).objectOutput.writeObject(packet);
         } catch (IOException ex) {
             Logger.getLogger(ServerComService.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    public void broadcast(Action a, String str) {
+    public void broadcast(Packet packet) {
         counter++;
         for (Integer player : players.keySet()) {
-            send(player, a, str);
+            send(player, packet);
         }
     }
 
@@ -136,18 +135,21 @@ public class ServerComService {
     }
 
     public void completeRegistration(int id, PlayerComInfo pci) {
-        broadcast(Action.Connect, "" + id);
+        broadcast(new PacketBuilder(Action.Connect, id).build());
         players.put(id, pci);
         ServerCommunication.getInstance().bindBody(id, ServerPanel.getInstance().newBody());
-        send(id, Action.Confirm, "");
+        send(id, new PacketBuilder(Action.Confirm, id).build());
     }
 
     private class PlayerComInfo {
 
-        private Socket socket;
+        public Socket socket;
+        public ObjectOutputStream objectOutput;
 
-        public PlayerComInfo(Socket socket) throws IOException {
+        private PlayerComInfo(Socket socket) throws IOException {
             this.socket = socket;
+            OutputStream os = socket.getOutputStream();
+            objectOutput = new ObjectOutputStream(os);
         }
     }
 }

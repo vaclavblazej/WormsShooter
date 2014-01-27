@@ -5,9 +5,11 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.Point2D;
-import java.util.EnumSet;
 import static objects.CollisionState.Free;
+import objects.items.Inventory;
+import objects.items.Item;
 import utilities.MapInterface;
+import utilities.communication.Action;
 import utilities.communication.SerializableBody;
 
 /**
@@ -19,7 +21,7 @@ public class TestBody implements GraphicComponent {
     private static final double JUMP = 0.6;
     private Point.Double position;
     private Point.Double velocity;
-    private EnumSet<ControlsEnum> controls;
+    private Action movement;
     private Dimension SIZE;
     private Dimension REAL_SIZE;
     private int ratio;
@@ -28,11 +30,11 @@ public class TestBody implements GraphicComponent {
     private Inventory inventory;
 
     public TestBody(Point2D.Double position, Point2D.Double velocity,
-            EnumSet<ControlsEnum> controls, Dimension REAL_SIZE,
+            Action movement, Dimension REAL_SIZE,
             boolean jump, MapInterface map) {
         this.position = position;
         this.velocity = velocity;
-        this.controls = controls;
+        this.movement = movement;
         this.REAL_SIZE = REAL_SIZE;
         this.ratio = map.getRatio();
         this.SIZE = new Dimension(REAL_SIZE.width * ratio, REAL_SIZE.height * ratio);
@@ -43,17 +45,20 @@ public class TestBody implements GraphicComponent {
 
     public TestBody(int x, int y, MapInterface map) {
         this(new Point.Double(x, y), new Point.Double(0, 0),
-                EnumSet.noneOf(ControlsEnum.class),
-                new Dimension(1, 2), false, map);
+                Action.Move_stop, new Dimension(1, 2), false, map);
     }
-    
-    public Inventory getInventory(){
+
+    public Inventory getInventory() {
         return inventory;
     }
 
-    public void setPosition(int x, int y) {
-        this.position.x = x;
-        this.position.y = y;
+    public void addItem(Item item) {
+        inventory.addItem(item);
+    }
+
+    public void setPosition(Point point) {
+        this.position.x = point.x;
+        this.position.y = point.y;
     }
 
     public Point getPosition() {
@@ -64,9 +69,9 @@ public class TestBody implements GraphicComponent {
         return velocity;
     }
 
-    public void setVelocity(double x, double y) {
-        this.velocity.x = x;
-        this.velocity.y = y;
+    public void setVelocity(Point.Double point) {
+        this.velocity.x = point.x;
+        this.velocity.y = point.y;
     }
 
     public void fallBy(double y) {
@@ -96,53 +101,35 @@ public class TestBody implements GraphicComponent {
                 break;
         }
         if (map.check((int) position.x + 1, (int) position.y + 1) == CollisionState.Free) {
-            if (controls.contains(ControlsEnum.Right)) {
+            if (movement.equals(Action.Move_right)) {
                 position.x += 1;
             }
         }
         if (map.check((int) position.x - 1, (int) position.y + 1) == CollisionState.Free) {
-            if (controls.contains(ControlsEnum.Left)) {
+            if (movement.equals(Action.Move_left)) {
                 position.x -= 1;
             }
         }
     }
 
-    public void controlOn(ControlsEnum en) {
-        if (controls.add(en)) {
-            switch (en) {
-                case Right:
-                    break;
-                case Left:
-                    break;
-                case Up:
-                    if (jump == true) {
-                        velocity.y -= JUMP;
-                        jump = false;
-                    }
-                    break;
-                case Down:
-                    break;
-            }
-        }
-    }
-
-    public void controlOff(ControlsEnum en) {
-        if (controls.remove(en)) {
-            switch (en) {
-                case Right:
-                case Left:
-                    break;
-                case Up:
-                case Down:
-                    break;
-            }
+    public void control(Action action) {
+        switch (action) {
+            case Move_right:
+            case Move_left:
+            case Move_stop:
+                movement = action;
+                break;
+            case Move_jump:
+                if (jump == true) {
+                    velocity.y -= JUMP;
+                    jump = false;
+                }
+                break;
         }
     }
 
     @Override
     public void draw(Graphics2D g) {
-        //AffineTransform transformer = new AffineTransform();
-        //transformer.translate(position.x, position.y);
         g.setColor(Color.RED);
         g.fillRect((int) position.x, (int) position.y, SIZE.width, SIZE.height);
     }
@@ -153,6 +140,6 @@ public class TestBody implements GraphicComponent {
     }
 
     public SerializableBody serialize() {
-        return new SerializableBody(position, velocity, controls, REAL_SIZE, jump);
+        return new SerializableBody(position, velocity, movement, REAL_SIZE, jump);
     }
 }

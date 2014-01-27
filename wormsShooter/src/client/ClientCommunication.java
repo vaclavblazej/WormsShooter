@@ -1,8 +1,7 @@
 package client;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.Socket;
@@ -16,6 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import objects.ControlsEnum;
 import objects.TestBody;
+import server.Packet;
 import server.ServerComService;
 import server.ServerComm;
 import utilities.Materials;
@@ -71,8 +71,8 @@ public class ClientCommunication {
         return b;
     }
 
-    public void sendAction(Action action, ControlsEnum cont, boolean on) throws RemoteException {
-        serverComm.sendAction(info.getId(), action, cont, on);
+    public void sendAction(Action action) throws RemoteException {
+        serverComm.sendAction(info.getId(), action);
     }
 
     public void getModel() throws RemoteException {
@@ -94,55 +94,41 @@ public class ClientCommunication {
             new Thread(new Runnable() {
                 @Override
                 public void run() {
-                    InputStreamReader stream;
-                    BufferedReader br = null;
+                    ObjectInputStream objectInput = null;
+                    Packet packet;
                     try {
-                        stream = new InputStreamReader(clientSocket.getInputStream());
-                        br = new BufferedReader(stream);
+                        objectInput = new ObjectInputStream(clientSocket.getInputStream());
                     } catch (IOException ex) {
                         Logger.getLogger(ClientCommunication.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     while (true) {
                         try {
-                            String str = br.readLine();
-                            String[] split = str.split(" ");
-                            //System.out.println("client: " + str);
-                            Action type = Action.valueOf(split[0]);
-                            int count = Integer.parseInt(split[1]);
+                            packet = (Packet) objectInput.readObject();
+                            Action type = packet.getAction();
+                            int count = packet.getCount();
                             int i;
-                            if (count - counter == 1) {
-                                //System.out.println("counters: " + count + " " + counter);
+                            if (count - counter <= 1) {
                                 switch (type) {
-                                    case Move:
-                                        i = Integer.parseInt(split[2]);
-                                        if (controls.containsKey(i)) {
-                                            controls.get(i).setPosition(
-                                                    Integer.parseInt(split[3]),
-                                                    Integer.parseInt(split[4]));
-                                            controls.get(i).setVelocity(
-                                                    Double.parseDouble(split[5]),
-                                                    Double.parseDouble(split[6]));
-                                            if (Boolean.valueOf(split[8])) {
-                                                controls.get(i).controlOn(ControlsEnum.valueOf(split[7]));
-                                            } else {
-                                                controls.get(i).controlOff(ControlsEnum.valueOf(split[7]));
-                                            }
-                                        }
+                                    case Move_left:
+                                    case Move_right:
+                                    case Move_stop:
+                                    case Move_jump:
+                                        i = packet.getId();
+                                        controls.get(i).setPosition(packet.getPoint(0));
+                                        controls.get(i).setVelocity(packet.getDoublePoint(0));
+                                        controls.get(i).control(type);
+                                        break;
+                                    case Mine:
+                                        MainPanel.getInstance().change(packet.getPoint(0), Materials.Dirt);
                                         break;
                                     case Connect:
-                                        i = Integer.parseInt(split[2]);
+                                        i = packet.getId();
                                         if (i == 0) {
                                             createPlayer(info.getId());
                                         }
                                         break;
                                     case Confirm:
                                         getModel();
-                                        break;
-                                    case Mine:
-                                        MainPanel.getInstance().change(
-                                                Integer.parseInt(split[2]),
-                                                Integer.parseInt(split[3]),
-                                                Materials.Dirt);
                                         break;
                                 }
                             } else {
@@ -151,6 +137,8 @@ public class ClientCommunication {
                             counter = count;
                         } catch (IOException ex) {
                             Logger.getLogger(ServerComService.class.getName()).log(Level.SEVERE, null, ex);
+                        } catch (ClassNotFoundException ex) {
+                            Logger.getLogger(ClientCommunication.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
 

@@ -17,7 +17,7 @@ public interface ServerComm extends Remote {
 
     SerializableModel getMode(int id) throws RemoteException;
 
-    void sendAction(int id, Action action, ControlsEnum cont, boolean on) throws RemoteException;
+    void sendAction(int id, Action action) throws RemoteException;
 
     PlayerInfo register(RegistrationForm from) throws RemoteException;
 

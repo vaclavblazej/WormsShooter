@@ -117,11 +117,11 @@ public class MainPanel extends JPanel implements
         bodies = model.getControls().values();
         this.model = model;
     }
-    
-    public void change(int x, int y, Materials mat){
+
+    public void change(Point point, Materials mat) {
         Graphics g = map.getGraphics();
         g.setColor(mat.getColor());
-        g.drawLine(x, y, x, y);
+        g.drawLine(point.x, point.y, point.x, point.y);
     }
 
     public void addBody(TestBody body) {
@@ -137,8 +137,8 @@ public class MainPanel extends JPanel implements
     public void setMyBody(TestBody body) {
         this.body = body;
     }
-    
-    public TestBody getMyBody(){
+
+    public TestBody getMyBody() {
         return body;
     }
 
@@ -261,21 +261,24 @@ public class MainPanel extends JPanel implements
     public void keyPressed(KeyEvent ke) {
         int i = ke.getKeyCode();
         ControlsEnum en = controls.get(i);
-        if (en != null && !controlSet.contains(en)) {
+        if (en != null && controlSet.add(en)) {
             try {
                 switch (en) {
                     case Mine:
-                        ClientCommunication.getInstance().sendAction(Action.Mine, en, true);
+                        ClientCommunication.getInstance().sendAction(Action.Mine);
                         break;
-                    default:
-                        ClientCommunication.getInstance().sendAction(Action.Move, en, true);
+                    case Up:
+                        ClientCommunication.getInstance().sendAction(Action.Move_jump);
+                        break;
+                    case Left:
+                    case Right:
+                        changeMovement();
                         break;
                 }
 
             } catch (RemoteException ex) {
                 Logger.getLogger(MainPanel.class.getName()).log(Level.SEVERE, null, ex);
             }
-            controlSet.add(en);
         }
     }
 
@@ -283,13 +286,38 @@ public class MainPanel extends JPanel implements
     public void keyReleased(KeyEvent ke) {
         int i = ke.getKeyCode();
         ControlsEnum en = controls.get(i);
-        if (en != null && controlSet.contains(en)) {
-            try {
-                ClientCommunication.getInstance().sendAction(Action.Move, en, false);
-            } catch (RemoteException ex) {
-                Logger.getLogger(MainPanel.class.getName()).log(Level.SEVERE, null, ex);
+        if (en != null && controlSet.remove(en)) {
+            switch (en) {
+                case Left:
+                case Right:
+                    changeMovement();
+                    break;
             }
-            controlSet.remove(en);
+        }
+    }
+
+    public void changeMovement() {
+        try {
+            int d = 0;
+            if (controlSet.contains(ControlsEnum.Left)) {
+                d--;
+            }
+            if (controlSet.contains(ControlsEnum.Right)) {
+                d++;
+            }
+            switch (d) {
+                case 1:
+                    ClientCommunication.getInstance().sendAction(Action.Move_right);
+                    break;
+                case 0:
+                    ClientCommunication.getInstance().sendAction(Action.Move_stop);
+                    break;
+                case -1:
+                    ClientCommunication.getInstance().sendAction(Action.Move_left);
+                    break;
+            }
+        } catch (RemoteException ex) {
+            Logger.getLogger(MainPanel.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 

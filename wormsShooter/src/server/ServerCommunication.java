@@ -52,32 +52,28 @@ public class ServerCommunication extends UnicastRemoteObject implements ServerCo
     }
 
     @Override
-    public void sendAction(int id, Action action, ControlsEnum cont, boolean on) {
+    public void sendAction(int id, Action action) {
         TestBody body;
         switch (action) {
             case Mine:
                 body = controls.get(id);
                 int x = body.getPosition().x;
                 int y = body.getPosition().y + 1;
-                //System.out.println("change " + point.x + " " + point.y + " to dirt");
                 ServerPanel.getInstance().change(x, y, Materials.Dirt);
-                ServerComService.getInstance().broadcast(Action.Mine, "" + x + " " + y);
+                ServerComService.getInstance().broadcast(
+                        new PacketBuilder(action, id).addPoint(new Point(x, y)).build());
                 break;
-            case Move:
+            case Move_left:
+            case Move_right:
+            case Move_stop:
+            case Move_jump:
                 body = controls.get(id);
                 if (body != null) {
                     Point pos = body.getPosition();
                     Point.Double vel = body.getVelocity();
-                    ServerComService.getInstance().broadcast(Action.Move,
-                            id + " "
-                            + pos.x + " " + pos.y + " "
-                            + vel.x + " " + vel.y + " "
-                            + cont + " " + on);
-                    if (on) {
-                        body.controlOn(cont);
-                    } else {
-                        body.controlOff(cont);
-                    }
+                    ServerComService.getInstance().broadcast(
+                            new PacketBuilder(action, id).addPoint(pos).addDoublePoint(vel).build());
+                    body.control(action);
                 }
                 break;
         }

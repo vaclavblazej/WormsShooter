@@ -7,7 +7,7 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import javax.swing.JMenuItem;
 import main.Main;
-import objects.Inventory;
+import objects.items.Inventory;
 import utilities.Message;
 
 /**

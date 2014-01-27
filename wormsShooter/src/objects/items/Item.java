@@ -1,4 +1,4 @@
-package objects;
+package objects.items;
 
 import java.awt.Point;
 import java.awt.image.BufferedImage;
