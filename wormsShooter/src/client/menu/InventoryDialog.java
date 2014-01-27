@@ -20,7 +20,7 @@ public class InventoryDialog extends AbstractDialog {
     private JTable recepies;
 
     public InventoryDialog(JFrame owner) {
-        super(owner, Message.Inventory_window_title.cm(), false);
+        super(owner, Message.INVENTORY_WINDOW_TITLE.cm(), false);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);

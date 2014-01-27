@@ -264,14 +264,14 @@ public class MainPanel extends JPanel implements
         if (en != null && controlSet.add(en)) {
             try {
                 switch (en) {
-                    case Mine:
-                        ClientCommunication.getInstance().sendAction(Action.Mine);
+                    case MINE:
+                        ClientCommunication.getInstance().sendAction(Action.MINE);
                         break;
-                    case Up:
-                        ClientCommunication.getInstance().sendAction(Action.Move_jump);
+                    case UP:
+                        ClientCommunication.getInstance().sendAction(Action.MOVE_JUMP);
                         break;
-                    case Left:
-                    case Right:
+                    case LEFT:
+                    case RIGHT:
                         changeMovement();
                         break;
                 }
@@ -288,8 +288,8 @@ public class MainPanel extends JPanel implements
         ControlsEnum en = controls.get(i);
         if (en != null && controlSet.remove(en)) {
             switch (en) {
-                case Left:
-                case Right:
+                case LEFT:
+                case RIGHT:
                     changeMovement();
                     break;
             }
@@ -299,21 +299,21 @@ public class MainPanel extends JPanel implements
     public void changeMovement() {
         try {
             int d = 0;
-            if (controlSet.contains(ControlsEnum.Left)) {
+            if (controlSet.contains(ControlsEnum.LEFT)) {
                 d--;
             }
-            if (controlSet.contains(ControlsEnum.Right)) {
+            if (controlSet.contains(ControlsEnum.RIGHT)) {
                 d++;
             }
             switch (d) {
                 case 1:
-                    ClientCommunication.getInstance().sendAction(Action.Move_right);
+                    ClientCommunication.getInstance().sendAction(Action.MOVE_RIGHT);
                     break;
                 case 0:
-                    ClientCommunication.getInstance().sendAction(Action.Move_stop);
+                    ClientCommunication.getInstance().sendAction(Action.MOVE_STOP);
                     break;
                 case -1:
-                    ClientCommunication.getInstance().sendAction(Action.Move_left);
+                    ClientCommunication.getInstance().sendAction(Action.MOVE_LEFT);
                     break;
             }
         } catch (RemoteException ex) {

@@ -41,7 +41,7 @@ public class ServerComService {
         }
         return instance;
     }
-    private String serverName = Message.Server_name.cm();
+    private String serverName = Message.SERVER_NAME.cm();
     private Map<Integer, PlayerComInfo> players;
     private Map<Integer, RegistrationForm> waitingRegistrations;
     private int counter;
@@ -137,10 +137,10 @@ public class ServerComService {
     }
 
     private void completeRegistration(int id, PlayerComInfo pci) {
-        broadcast(new PacketBuilder(Action.Connect, id).build());
+        broadcast(new PacketBuilder(Action.CONNECT, id).build());
         players.put(id, pci);
         ServerCommunication.getInstance().bindBody(id, ServerPanel.getInstance().newBody());
-        send(id, new PacketBuilder(Action.Confirm, id).build());
+        send(id, new PacketBuilder(Action.CONFIRM, id).build());
     }
 
     private class PlayerComInfo {

@@ -19,7 +19,7 @@ public class GameWindow extends JFrame {
 
     public static GameWindow getInstance() {
         if (instance == null) {
-            instance = new GameWindow(Message.Client_window_title.cm());
+            instance = new GameWindow(Message.CLIENT_WINDOW_TITLE.cm());
         }
         return instance;
     }

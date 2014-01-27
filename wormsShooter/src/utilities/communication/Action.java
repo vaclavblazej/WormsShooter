@@ -6,12 +6,12 @@ package utilities.communication;
  */
 public enum Action {
 
-    Move_left,
-    Move_right,
-    Move_stop,
-    Move_jump,
-    Confirm,
-    Connect,
-    Disconnect,
-    Mine;
+    MOVE_LEFT,
+    MOVE_RIGHT,
+    MOVE_STOP,
+    MOVE_JUMP,
+    CONFIRM,
+    CONNECT,
+    DISCONNECT,
+    MINE;
 }

@@ -6,7 +6,7 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.Point2D;
-import static utilities.CollisionState.Free;
+import static utilities.CollisionState.FREE;
 import objects.items.Inventory;
 import objects.items.Item;
 import utilities.MapInterface;
@@ -46,7 +46,7 @@ public class TestBody implements GraphicComponent {
 
     public TestBody(int x, int y, MapInterface map) {
         this(new Point.Double(x, y), new Point.Double(0, 0),
-                Action.Move_stop, new Dimension(1, 2), false, map);
+                Action.MOVE_STOP, new Dimension(1, 2), false, map);
     }
 
     public Inventory getInventory() {
@@ -81,7 +81,7 @@ public class TestBody implements GraphicComponent {
         int i;
         for (i = 1; i <= absoluteY; i++) {
             if (map.check((int) position.x, (int) position.y + REAL_SIZE.height + i * directionY)
-                    == CollisionState.Crushed) {
+                    == CollisionState.CRUSHED) {
                 velocity.y = 0;
                 break;
             }
@@ -92,22 +92,22 @@ public class TestBody implements GraphicComponent {
     public void tick() {
         int directionY = (velocity.y >= 0) ? 1 : -1;
         switch (map.check((int) position.x, (int) position.y + REAL_SIZE.height - 1 + directionY)) {
-            case Free:
+            case FREE:
                 velocity.y += 0.1;
                 fallBy(velocity.y);
                 break;
-            case Crushed:
+            case CRUSHED:
                 velocity.y = 0;
                 jump = true;
                 break;
         }
-        if (map.check((int) position.x + 1, (int) position.y + 1) == CollisionState.Free) {
-            if (movement.equals(Action.Move_right)) {
+        if (map.check((int) position.x + 1, (int) position.y + 1) == CollisionState.FREE) {
+            if (movement.equals(Action.MOVE_RIGHT)) {
                 position.x += 1;
             }
         }
-        if (map.check((int) position.x - 1, (int) position.y + 1) == CollisionState.Free) {
-            if (movement.equals(Action.Move_left)) {
+        if (map.check((int) position.x - 1, (int) position.y + 1) == CollisionState.FREE) {
+            if (movement.equals(Action.MOVE_LEFT)) {
                 position.x -= 1;
             }
         }
@@ -115,12 +115,12 @@ public class TestBody implements GraphicComponent {
 
     public void control(Action action) {
         switch (action) {
-            case Move_right:
-            case Move_left:
-            case Move_stop:
+            case MOVE_RIGHT:
+            case MOVE_LEFT:
+            case MOVE_STOP:
                 movement = action;
                 break;
-            case Move_jump:
+            case MOVE_JUMP:
                 if (jump == true) {
                     velocity.y -= JUMP;
                     jump = false;

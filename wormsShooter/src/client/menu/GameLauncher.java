@@ -30,21 +30,21 @@ public class GameLauncher extends AbstractDialog {
     private JCheckBox newServer;
 
     public GameLauncher(JFrame owner) {
-        super(owner, Message.Launcher_window_title.cm());
+        super(owner, Message.LAUNCHER_WINDOW_TITLE.cm());
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         newServer = new JCheckBox();
         newServer.setSelected(true);
         address = new ValidatedTF(this);
         socket = new ValidatedTF(this);
-        address.setText(Message.Address_initial.cm());
-        socket.setText(Message.Socket_initial.cm());
+        address.setText(Message.ADRESS_INITIAL.cm());
+        socket.setText(Message.SOCKET_INITIAL.cm());
         getContent().setLayout(new GridBagLayout());
-        getContent().add(new JLabel(Message.Create_server.cm() + ": "), new GBCBuilder().setY(0).build());
+        getContent().add(new JLabel(Message.CREATE_SERVER.cm() + ": "), new GBCBuilder().setY(0).build());
         getContent().add(newServer, new GBCBuilder().setY(0).setXRel().build());
-        getContent().add(new JLabel(Message.Address.cm() + ": "), new GBCBuilder().setY(1).build());
+        getContent().add(new JLabel(Message.ADRESS.cm() + ": "), new GBCBuilder().setY(1).build());
         getContent().add(address, new GBCBuilder().setY(1).setXRel().build());
-        getContent().add(new JLabel(Message.Socket.cm() + ": "), new GBCBuilder().setY(2).build());
+        getContent().add(new JLabel(Message.SOCKET.cm() + ": "), new GBCBuilder().setY(2).build());
         getContent().add(socket, new GBCBuilder().setY(2).setXRel().build());
         pack();
         setResizable(false);
@@ -77,13 +77,13 @@ public class GameLauncher extends AbstractDialog {
         try {
             InetAddress.getByName(address.getText());
         } catch (UnknownHostException ex) {
-            error(Message.Address_error_message.cm());
+            error(Message.ADRESS_ERROR_MESSAGE.cm());
             return false;
         }
         try {
             Integer.parseInt(socket.getText());
         } catch (NumberFormatException ex) {
-            error(Message.Socket_error_message.cm());
+            error(Message.SOCKET_ERROR_MESSAGE.cm());
             return false;
         }
         clearError();

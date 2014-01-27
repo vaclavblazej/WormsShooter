@@ -55,7 +55,7 @@ public class ServerCommunication extends UnicastRemoteObject implements ServerCo
     public void sendAction(int id, Action action) {
         TestBody body;
         switch (action) {
-            case Mine:
+            case MINE:
                 body = controls.get(id);
                 int x = body.getPosition().x;
                 int y = body.getPosition().y + 1;
@@ -63,10 +63,10 @@ public class ServerCommunication extends UnicastRemoteObject implements ServerCo
                 ServerComService.getInstance().broadcast(
                         new PacketBuilder(action, id).addPoint(new Point(x, y)).build());
                 break;
-            case Move_left:
-            case Move_right:
-            case Move_stop:
-            case Move_jump:
+            case MOVE_LEFT:
+            case MOVE_RIGHT:
+            case MOVE_STOP:
+            case MOVE_JUMP:
                 body = controls.get(id);
                 if (body != null) {
                     Point pos = body.getPosition();

@@ -107,25 +107,25 @@ public class ClientCommunication {
                             int i;
                             if (count - counter <= 1) {
                                 switch (type) {
-                                    case Move_left:
-                                    case Move_right:
-                                    case Move_stop:
-                                    case Move_jump:
+                                    case MOVE_LEFT:
+                                    case MOVE_RIGHT:
+                                    case MOVE_STOP:
+                                    case MOVE_JUMP:
                                         i = packet.getId();
                                         controls.get(i).setPosition(packet.getPoint(0));
                                         controls.get(i).setVelocity(packet.getDoublePoint(0));
                                         controls.get(i).control(type);
                                         break;
-                                    case Mine:
+                                    case MINE:
                                         MainPanel.getInstance().change(packet.getPoint(0), Materials.Dirt);
                                         break;
-                                    case Connect:
+                                    case CONNECT:
                                         i = packet.getId();
                                         if (i == 0) {
                                             createPlayer(info.getId());
                                         }
                                         break;
-                                    case Confirm:
+                                    case CONFIRM:
                                         getModel();
                                         break;
                                 }

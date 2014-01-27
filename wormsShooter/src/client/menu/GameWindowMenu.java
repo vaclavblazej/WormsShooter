@@ -19,7 +19,7 @@ import utilities.Message;
 public class GameWindowMenu extends JMenuBar {
 
     public GameWindowMenu() {
-        JMenu menu = new JMenu(Message.Menu_main.cm());
+        JMenu menu = new JMenu(Message.MENU_MAIN.cm());
         JMenuItem item = new JMenuItem();
         item.setAction(new AbstractAction() {
             @Override
@@ -28,7 +28,7 @@ public class GameWindowMenu extends JMenuBar {
             }
         });
         item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, 0));
-        item.setText(Message.Menu_settings.cm());
+        item.setText(Message.MENU_SETTINGS.cm());
         menu.add(item);
         item = new JMenuItem();
         item.setAction(new AbstractAction() {
@@ -38,7 +38,7 @@ public class GameWindowMenu extends JMenuBar {
             }
         });
         item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I, 0));
-        item.setText(Message.Menu_inventory.cm());
+        item.setText(Message.MENU_INVENTORY.cm());
         menu.add(item);
         item = new JMenuItem();
         item.setAction(new AbstractAction() {
@@ -48,11 +48,11 @@ public class GameWindowMenu extends JMenuBar {
             }
         });
         item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_F4, InputEvent.ALT_DOWN_MASK));
-        item.setText(Message.Menu_exit.cm());
+        item.setText(Message.MENU_EXIT.cm());
         menu.add(item);
         add(menu);
 
-        menu = new JMenu(Message.Menu_connection.cm());
+        menu = new JMenu(Message.MENU_CONNECTION.cm());
         item = new JMenuItem();
         item.setAction(new AbstractAction() {
             @Override
@@ -60,7 +60,7 @@ public class GameWindowMenu extends JMenuBar {
                 GameWindow.getInstance().launch();
             }
         });
-        item.setText(Message.Menu_connect.cm());
+        item.setText(Message.MENU_CONNECT.cm());
         menu.add(item);
         item = new JMenuItem();
         item.setAction(new AbstractAction() {
@@ -68,7 +68,7 @@ public class GameWindowMenu extends JMenuBar {
             public void actionPerformed(ActionEvent e) {
             }
         });
-        item.setText(Message.Menu_disconnect.cm());
+        item.setText(Message.MENU_DISCONNECT.cm());
         menu.add(item);
         add(menu);
     }

@@ -52,12 +52,12 @@ public class Settings implements Serializable {
 
     private Settings() {
         controls = new Controls()
-                .add(ControlsEnum.Up, 38)
-                .add(ControlsEnum.Down, 40)
-                .add(ControlsEnum.Right, 39)
-                .add(ControlsEnum.Left, 37)
-                .add(ControlsEnum.Fire, 32)
-                .add(ControlsEnum.Mine, 67);
+                .add(ControlsEnum.UP, 38)
+                .add(ControlsEnum.DOWN, 40)
+                .add(ControlsEnum.RIGHT, 39)
+                .add(ControlsEnum.LEFT, 37)
+                .add(ControlsEnum.FIRE, 32)
+                .add(ControlsEnum.MINE, 67);
     }
 
     public void setQuality(int quality) {

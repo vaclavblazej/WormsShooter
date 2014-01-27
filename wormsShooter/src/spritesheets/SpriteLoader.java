@@ -34,23 +34,23 @@ public class SpriteLoader {
 
     public static BufferedImage loadSprite(String file) {
         BufferedImage sprite = null;
-        URL localUrl = Main.class.getResource(Message.Image_folder.cm() + file + Message.Image_format.cm());
+        URL localUrl = Main.class.getResource(Message.IMAGE_FOLDER.cm() + file + Message.IMAGE_FORMAT.cm());
         try {
             // read image from local source
             sprite = ImageIO.read(localUrl);
         } catch (IllegalArgumentException | IOException e) {
             try {
-                System.out.println("Downloading " + file + Message.Image_format.cm());
+                System.out.println("Downloading " + file + Message.IMAGE_FORMAT.cm());
                 //read image from online source
-                URL serverUrl = new URL(Message.Image_online_folder.cm() + file + Message.Image_format.cm());
+                URL serverUrl = new URL(Message.IMAGE_ONLINE_FOLDER.cm() + file + Message.IMAGE_FORMAT.cm());
                 sprite = ImageIO.read(serverUrl);
                 saveSprite(file, sprite);
             } catch (IllegalArgumentException | IOException ex) {
                 GameWindow.getInstance().showError(new Exception(
-                        Message.Image_load_error.cm()
-                        + Message.Image_folder.cm()
+                        Message.IMAGE_LOAD_ERROR.cm()
+                        + Message.IMAGE_FOLDER.cm()
                         + file
-                        + Message.Image_format.cm()));
+                        + Message.IMAGE_FORMAT.cm()));
             }
         }
         spriteSheet = sprite;
@@ -58,7 +58,7 @@ public class SpriteLoader {
     }
 
     public static boolean saveSprite(String file, BufferedImage image) {
-        String path = Message.Image_save_folder.cm() + file + Message.Image_format.cm();
+        String path = Message.IMAGE_SAVE_FOLDER.cm() + file + Message.IMAGE_FORMAT.cm();
         try {
             File outputfile = new File(path);
             outputfile.createNewFile();
