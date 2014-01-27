@@ -36,8 +36,8 @@ public class Main {
     }
 
     public static void startGame() {
-        //GameWindow.getInstance().launch();
-        GameWindow.getInstance();
+        GameWindow.getInstance().launch();
+        /*GameWindow.getInstance();
         Main.startServer();
         try {
             ClientCommunication.getInstance().init("localhost", "4242");
@@ -48,7 +48,7 @@ public class Main {
         } catch (RemoteException ex) {
             Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
         }
-        MainPanel.getInstance().init();
+        MainPanel.getInstance().init();*/
     }
 
     public static void startServer() {
