@@ -1,28 +1,20 @@
 package objects.items;
 
 import java.awt.Point;
-import java.awt.image.BufferedImage;
 import java.io.Serializable;
 
 /**
  *
  * @author Skarab
  */
-public class Item implements Serializable{
-
-    private String name;
-    private Point size;
+public class Item extends ItemBlueprint implements Serializable {
 
     public Item(String name, Point size) {
-        this.name = name;
-        this.size = size;
+        super(name, size);
     }
 
-    Object get(int columnIndex) {
-        switch (columnIndex) {
-            case 0:
-                return name;
-        }
-        return null;
+    @Override
+    public Item getInstance() {
+        return this;
     }
 }

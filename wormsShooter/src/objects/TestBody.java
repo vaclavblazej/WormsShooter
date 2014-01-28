@@ -7,7 +7,7 @@ import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.Point2D;
 import static utilities.CollisionState.FREE;
-import objects.items.Inventory;
+import objects.items.ComponentTableModel;
 import objects.items.Item;
 import utilities.MapInterface;
 import utilities.communication.Action;
@@ -28,7 +28,7 @@ public class TestBody implements GraphicComponent {
     private int ratio;
     private boolean jump;
     private MapInterface map;
-    private Inventory inventory;
+    private ComponentTableModel inventory;
 
     public TestBody(Point2D.Double position, Point2D.Double velocity,
             Action movement, Dimension REAL_SIZE,
@@ -41,7 +41,7 @@ public class TestBody implements GraphicComponent {
         this.SIZE = new Dimension(REAL_SIZE.width * ratio, REAL_SIZE.height * ratio);
         this.jump = jump;
         this.map = map;
-        this.inventory = new Inventory();
+        this.inventory = new ComponentTableModel("Item", "Count");
     }
 
     public TestBody(int x, int y, MapInterface map) {
@@ -49,12 +49,12 @@ public class TestBody implements GraphicComponent {
                 Action.MOVE_STOP, new Dimension(1, 2), false, map);
     }
 
-    public Inventory getInventory() {
+    public ComponentTableModel getInventory() {
         return inventory;
     }
 
     public void addItem(Item item) {
-        inventory.addItem(item);
+        inventory.add(item, 1);
     }
 
     public void setPosition(Point point) {

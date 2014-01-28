@@ -23,4 +23,8 @@ public class ItemFactory implements Serializable {
     public Item get(ItemEnum en) {
         return items.get(en).getInstance();
     }
+
+    public ItemBlueprint getBlueprint(ItemEnum en) {
+        return items.get(en);
+    }
 }

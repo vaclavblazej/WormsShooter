@@ -18,14 +18,19 @@ public class Crafting extends AbstractTableModel {
         }
         return instance;
     }
-    private List<Receipe> recepies;
+    private List<Recipe> recepies;
+    private String[] columnName = {"Recipes"};
 
     private Crafting() {
         this.recepies = new ArrayList<>();
     }
 
-    public void addReceipe(Receipe receipe) {
+    public void addReceipe(Recipe receipe) {
         recepies.add(receipe);
+    }
+
+    public Recipe getReceipe(int index) {
+        return recepies.get(index);
     }
 
     @Override
@@ -42,10 +47,13 @@ public class Crafting extends AbstractTableModel {
     public Object getValueAt(int rowIndex, int columnIndex) {
         switch (columnIndex) {
             case 0:
-                return recepies.get(rowIndex);
-            case 1:
-                return recepies.get(rowIndex);
+                return recepies.get(rowIndex).getName();
         }
         return null;
+    }
+
+    @Override
+    public String getColumnName(int column) {
+        return columnName[column];
     }
 }

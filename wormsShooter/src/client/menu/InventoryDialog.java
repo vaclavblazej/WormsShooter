@@ -5,7 +5,7 @@ import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
 import javax.swing.JTable;
-import objects.items.Crafting;
+import objects.items.CraftingPanel;
 import utilities.AbstractDialog;
 import utilities.Message;
 
@@ -17,7 +17,6 @@ public class InventoryDialog extends AbstractDialog {
 
     private JSplitPane split;
     private JTable items;
-    private JTable recepies;
 
     public InventoryDialog(JFrame owner) {
         super(owner, Message.INVENTORY_WINDOW_TITLE.cm(), false);
@@ -25,9 +24,8 @@ public class InventoryDialog extends AbstractDialog {
 
         split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         items = new JTable(MainPanel.getInstance().getMyBody().getInventory());
-        recepies = new JTable(Crafting.getInstance());
         split.add(new JScrollPane(items), 1);
-        split.add(new JScrollPane(recepies), 2);
+        split.add(new CraftingPanel(), 2);
         getContent().add(split);
         pack();
         setResizable(false);

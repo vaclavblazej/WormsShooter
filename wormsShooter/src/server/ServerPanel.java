@@ -23,7 +23,7 @@ import objects.items.Crafting;
 import objects.items.ItemBlueprint;
 import objects.items.ItemEnum;
 import objects.items.ItemFactory;
-import objects.items.Receipe;
+import objects.items.Recipe;
 import particles.Particle;
 import particles.Sand;
 import spritesheets.SpriteLoader;
@@ -61,7 +61,6 @@ public class ServerPanel extends JPanel implements MapInterface, ActionListener 
 
     private ServerPanel() {
         createItems();
-        createReceipes();
         bodies = new ArrayList<>(10);
         SpriteLoader.loadSprite("Map");
         SpriteLoader.set(400, 300);
@@ -89,6 +88,7 @@ public class ServerPanel extends JPanel implements MapInterface, ActionListener 
                 init();
             }
         });
+        createReceipes();
     }
 
     private void createItems() {
@@ -101,7 +101,11 @@ public class ServerPanel extends JPanel implements MapInterface, ActionListener 
     }
 
     private void createReceipes() {
-        Receipe r = new Receipe();
+        Recipe r = new Recipe("Block");
+        r.addIngredient(getModel().getFactory().getBlueprint(ItemEnum.BLOCK), 4);
+        r.addProduct(getModel().getFactory().getBlueprint(ItemEnum.BLOCK), 1);
+        Crafting.getInstance().addReceipe(r);
+        r = new Recipe("Gun");
         Crafting.getInstance().addReceipe(r);
     }
 
