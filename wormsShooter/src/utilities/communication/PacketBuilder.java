@@ -9,8 +9,23 @@ public class PacketBuilder {
 
     private static Packet packet;
 
+    public PacketBuilder(Action action) {
+        this(action, 0);
+    }
+
     public PacketBuilder(Action action, int id) {
         packet = new Packet(action, id);
+    }
+
+    /**
+     * Sets id. Packets with no id are anonymous.
+     *
+     * @param id
+     * @return
+     */
+    public PacketBuilder setId(int id) {
+        packet.setId(id);
+        return this;
     }
 
     /**

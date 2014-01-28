@@ -18,6 +18,7 @@ import objects.items.ItemEnum;
 import utilities.Materials;
 import utilities.PlayerInfo;
 import utilities.communication.Action;
+import utilities.communication.Packet;
 import utilities.communication.PacketBuilder;
 import utilities.communication.RegistrationForm;
 import utilities.communication.SerializableModel;
@@ -71,17 +72,19 @@ public class ServerCommunication implements Remote, ServerComm {
     }
 
     @Override
-    public void sendAction(int id, Action action) {
+    public void sendAction(Packet packet) {
         TestBody body;
+        Action action = packet.getAction();
+        int id = packet.getId();
         switch (action) {
             case MINE:
                 body = controls.get(id);
                 int x = body.getPosition().x;
-                int y = body.getPosition().y + 1;
-                body.addItem(ServerPanel.getInstance().getItemFactory().get(ItemEnum.BLOCK));
-                ServerPanel.getInstance().change(x, y, Materials.DIRT);
+                int y = body.getPosition().y + 2;
+                ServerPanel.getInstance().change(x, y, Materials.AIR);
+                body.addItem(ServerPanel.getInstance().getItemFactory().get(ItemEnum.METAL));
                 ServerComService.getInstance().broadcast(
-                        new PacketBuilder(Action.ADD_ITEM, id).addInfo(ItemEnum.BLOCK).build());
+                        new PacketBuilder(Action.ADD_ITEM, id).addInfo(ItemEnum.METAL).build());
                 ServerComService.getInstance().broadcast(
                         new PacketBuilder(Action.MINE, id).addInfo(new Point(x, y)).build());
                 break;
@@ -99,6 +102,11 @@ public class ServerCommunication implements Remote, ServerComm {
                     body.control(action);
                 }
                 break;
+            /*case TAKE:
+             body.addItem(ServerPanel.getInstance().getItemFactory().get(ItemEnum.));
+             ServerComService.getInstance().broadcast(
+             new PacketBuilder(Action.ADD_ITEM, id).addInfo(ItemEnum.BLOCK).build());
+             break;*/
         }
     }
 

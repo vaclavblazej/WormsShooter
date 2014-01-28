@@ -20,8 +20,14 @@ public class Packet implements Serializable {
         this.information = new ArrayList<>();
     }
 
-    public void setCount(int count) {
+    public Packet setCount(int count) {
         this.count = count;
+        return this;
+    }
+
+    public Packet setId(int id) {
+        this.id = id;
+        return this;
     }
 
     public Action getAction() {

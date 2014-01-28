@@ -25,19 +25,20 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JPanel;
 import javax.swing.Timer;
-import utilities.CollisionState;
-import utilities.Controls;
-import utilities.ControlsEnum;
 import objects.GraphicComponent;
 import objects.Miscellaneous;
 import objects.TestBody;
 import particles.Particle;
 import particles.Sand;
 import spritesheets.SpriteLoader;
+import utilities.CollisionState;
+import utilities.Controls;
+import utilities.ControlsEnum;
 import utilities.MapInterface;
 import utilities.Materials;
 import utilities.communication.Action;
 import utilities.communication.Model;
+import utilities.communication.PacketBuilder;
 
 /**
  *
@@ -265,10 +266,10 @@ public class MainPanel extends JPanel implements
             try {
                 switch (en) {
                     case MINE:
-                        ClientCommunication.getInstance().sendAction(Action.MINE);
+                        ClientCommunication.getInstance().sendAction(new PacketBuilder(Action.MINE));
                         break;
                     case UP:
-                        ClientCommunication.getInstance().sendAction(Action.MOVE_JUMP);
+                        ClientCommunication.getInstance().sendAction(new PacketBuilder(Action.MOVE_JUMP));
                         break;
                     case LEFT:
                     case RIGHT:
@@ -307,13 +308,13 @@ public class MainPanel extends JPanel implements
             }
             switch (d) {
                 case 1:
-                    ClientCommunication.getInstance().sendAction(Action.MOVE_RIGHT);
+                    ClientCommunication.getInstance().sendAction(new PacketBuilder(Action.MOVE_RIGHT));
                     break;
                 case 0:
-                    ClientCommunication.getInstance().sendAction(Action.MOVE_STOP);
+                    ClientCommunication.getInstance().sendAction(new PacketBuilder(Action.MOVE_STOP));
                     break;
                 case -1:
-                    ClientCommunication.getInstance().sendAction(Action.MOVE_LEFT);
+                    ClientCommunication.getInstance().sendAction(new PacketBuilder(Action.MOVE_LEFT));
                     break;
             }
         } catch (RemoteException ex) {

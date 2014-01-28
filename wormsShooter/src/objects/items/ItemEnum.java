@@ -5,5 +5,9 @@ package objects.items;
  * @author Skarab
  */
 public enum ItemEnum {
-    BLOCK;
+    METAL,
+    GUN_POWDER,
+    BULLET,
+    GUN_MAGAZINE,
+    GUN;
 }

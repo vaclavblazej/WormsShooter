@@ -93,7 +93,11 @@ public class ServerPanel extends JPanel implements MapInterface, ActionListener 
 
     private void createItems() {
         itemFactory = new ItemFactory();
-        itemFactory.addItem(ItemEnum.BLOCK, new ItemBlueprint("Block", 1, 1));
+        itemFactory.addItem(ItemEnum.METAL, new ItemBlueprint("Metal", 1, 1));
+        itemFactory.addItem(ItemEnum.BULLET, new ItemBlueprint("Bullet", 1, 1));
+        itemFactory.addItem(ItemEnum.GUN, new ItemBlueprint("Gun", 2, 2));
+        itemFactory.addItem(ItemEnum.GUN_MAGAZINE, new ItemBlueprint("Magazine", 1, 2));
+        itemFactory.addItem(ItemEnum.GUN_POWDER, new ItemBlueprint("Gun powder", 1, 1));
     }
 
     public ItemFactory getItemFactory() {
@@ -101,11 +105,14 @@ public class ServerPanel extends JPanel implements MapInterface, ActionListener 
     }
 
     private void createReceipes() {
-        Recipe r = new Recipe("Block");
-        r.addIngredient(getModel().getFactory().getBlueprint(ItemEnum.BLOCK), 4);
-        r.addProduct(getModel().getFactory().getBlueprint(ItemEnum.BLOCK), 1);
+        Recipe r = new Recipe("Gun");
+        r.addIngredient(getModel().getFactory().getBlueprint(ItemEnum.METAL), 10);
+        r.addProduct(getModel().getFactory().getBlueprint(ItemEnum.GUN), 1);
         Crafting.getInstance().addReceipe(r);
-        r = new Recipe("Gun");
+        r = new Recipe("Bullet");
+        r.addIngredient(getModel().getFactory().getBlueprint(ItemEnum.METAL), 1);
+        r.addIngredient(getModel().getFactory().getBlueprint(ItemEnum.GUN_POWDER), 1);
+        r.addProduct(getModel().getFactory().getBlueprint(ItemEnum.BULLET), 1);
         Crafting.getInstance().addReceipe(r);
     }
 

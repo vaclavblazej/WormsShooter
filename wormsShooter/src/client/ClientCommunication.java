@@ -24,6 +24,7 @@ import utilities.PlayerInfo;
 import utilities.communication.Action;
 import utilities.communication.Model;
 import utilities.communication.Packet;
+import utilities.communication.PacketBuilder;
 import utilities.communication.RegistrationForm;
 
 /**
@@ -74,8 +75,8 @@ public class ClientCommunication {
         return b;
     }
 
-    public void sendAction(Action action) throws RemoteException {
-        serverComm.sendAction(info.getId(), action);
+    public void sendAction(PacketBuilder builder) throws RemoteException {
+        serverComm.sendAction(builder.setId(info.getId()).build());
     }
 
     public void getModel() throws RemoteException {
@@ -123,7 +124,7 @@ public class ClientCommunication {
                                         controls.get(i).control(type);
                                         break;
                                     case MINE:
-                                        MainPanel.getInstance().change((Point) packet.get(0), Materials.DIRT);
+                                        MainPanel.getInstance().change((Point) packet.get(0), Materials.AIR);
                                         break;
                                     case CONNECT:
                                         i = packet.getId();
