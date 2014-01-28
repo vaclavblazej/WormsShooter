@@ -53,9 +53,9 @@ public class ClientCommunication {
         controls = new HashMap<>(20);
     }
 
-    public void init(String ip, String socket) throws NotBoundException, MalformedURLException, RemoteException {
-        serverComm = (ServerComm) Naming.lookup("//" + ip + ":" + socket + "/" + ServerComm.class.getSimpleName());
-        // todo socket should be in settings
+    public void init(String ip, String port) throws NotBoundException, MalformedURLException, RemoteException {
+        serverComm = (ServerComm) Naming.lookup("//" + ip + ":"
+                + port + "/" + ServerComm.class.getSimpleName());
         info = serverComm.register(new RegistrationForm());
         try {
             clientSocket = new Socket(InetAddress.getByName(ip), 4243);

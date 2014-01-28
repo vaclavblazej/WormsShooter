@@ -1,6 +1,11 @@
 package server;
 
 import java.awt.Point;
+import java.net.InetAddress;
+import java.net.MalformedURLException;
+import java.net.UnknownHostException;
+import java.rmi.Naming;
+import java.rmi.Remote;
 import java.rmi.RemoteException;
 import java.rmi.registry.LocateRegistry;
 import java.rmi.server.UnicastRemoteObject;
@@ -22,7 +27,7 @@ import utilities.communication.ServerInfo;
  *
  * @author Skarab
  */
-public class ServerCommunication extends UnicastRemoteObject implements ServerComm {
+public class ServerCommunication implements Remote, ServerComm {
 
     private static ServerCommunication instance;
     private static final long serialVersionUID = 1L;
@@ -40,7 +45,6 @@ public class ServerCommunication extends UnicastRemoteObject implements ServerCo
     private Map<Integer, TestBody> controls;
 
     private ServerCommunication() throws RemoteException {
-        super(0);
         controls = new HashMap<>(20);
     }
 
@@ -48,8 +52,22 @@ public class ServerCommunication extends UnicastRemoteObject implements ServerCo
         return controls;
     }
 
-    public void init() throws RemoteException {
-        LocateRegistry.createRegistry(4242).rebind(ServerComm.class.getSimpleName(), instance);
+    public void init(int port) throws RemoteException {
+        String local = null;
+        try {
+            local = InetAddress.getLocalHost().getHostAddress();
+        } catch (UnknownHostException ex) {
+            Logger.getLogger(ServerCommunication.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        //System.setProperty("java.rmi.server.hostname", local);
+        UnicastRemoteObject.exportObject(this, port);
+        LocateRegistry.createRegistry(port);
+        try {
+            Naming.rebind("//" + local + ":" + port + "/"
+                    + ServerComm.class.getSimpleName(), instance);
+        } catch (MalformedURLException ex) {
+            Logger.getLogger(ServerCommunication.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
     @Override
