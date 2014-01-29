@@ -1,5 +1,6 @@
-package utilities;
+package utilities.materials;
 
+import utilities.materials.Material;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.Serializable;
@@ -21,13 +22,13 @@ public class MaterialVisuals implements Serializable {
         SpriteLoader.set(20, 20);
 //        images.put(Materials.AIR);
 //        addMaterial(WATER);
-        addImage(Material.DIRT, 7, 2);
-        addImage(Material.GRASS, 0, 3);
-        addImage(Material.STONE, 4, 2);
-        addImage(Material.SAND, 8, 2);
+        addImage(MaterialEnum.DIRT, 7, 2);
+        addImage(MaterialEnum.GRASS, 0, 3);
+        addImage(MaterialEnum.STONE, 4, 2);
+        addImage(MaterialEnum.SAND, 8, 2);
     }
 
-    private static void addImage(Material mat, int x, int y) {
+    private static void addImage(MaterialEnum mat, int x, int y) {
         images.put(mat.getColor().getRGB(), SpriteLoader.getRawSprite(x, y));
     }
 

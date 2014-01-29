@@ -32,6 +32,9 @@ public class ComponentTableModel extends AbstractTableModel implements Serializa
     }
 
     public void add(ComponentTableModel table) {
+        if (table == null) {
+            return;
+        }
         List<Elem> com = table.getComponents();
         int idx;
         for (Elem elem : com) {

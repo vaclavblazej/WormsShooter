@@ -35,11 +35,12 @@ import utilities.CollisionState;
 import utilities.Controls;
 import utilities.ControlsEnum;
 import utilities.MapInterface;
-import utilities.MaterialVisuals;
-import utilities.Material;
+import utilities.materials.MaterialVisuals;
+import utilities.materials.Material;
 import utilities.communication.Action;
 import utilities.communication.Model;
 import utilities.communication.PacketBuilder;
+import utilities.materials.MaterialEnum;
 
 /**
  *
@@ -120,7 +121,7 @@ public class MainPanel extends JPanel implements
         this.model = model;
     }
 
-    public void change(Point point, Material mat) {
+    public void change(Point point, MaterialEnum mat) {
         Graphics g = map.getGraphics();
         g.setColor(mat.getColor());
         g.drawLine(point.x, point.y, point.x, point.y);

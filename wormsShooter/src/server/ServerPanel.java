@@ -29,8 +29,9 @@ import particles.Sand;
 import spritesheets.SpriteLoader;
 import utilities.CollisionState;
 import utilities.MapInterface;
-import utilities.Material;
+import utilities.materials.Material;
 import utilities.communication.Model;
+import utilities.materials.MaterialEnum;
 
 /**
  *
@@ -146,10 +147,12 @@ public class ServerPanel extends JPanel implements MapInterface, ActionListener 
         SpriteLoader.saveSprite("Map", map);
     }
 
-    public void change(int x, int y, Material mat) {
+    public MaterialEnum change(int x, int y, MaterialEnum mat) {
         Graphics g = map.getGraphics();
+        MaterialEnum ret = Material.getMaterial(map.getRGB(x, y));
         g.setColor(mat.getColor());
         g.drawLine(x, y, x, y);
+        return ret;
     }
 
     public Model getModel() {

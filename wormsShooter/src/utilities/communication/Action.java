@@ -12,6 +12,7 @@ public enum Action {
     MOVE_JUMP,
     ADD_ITEM,
     CRAFT,
+    OBTAIN,
     CONFIRM,
     CONNECT,
     DISCONNECT,

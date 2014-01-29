@@ -15,9 +15,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import objects.TestBody;
 import objects.items.ComponentTableModel;
-import objects.items.ItemEnum;
 import objects.items.Recipe;
-import utilities.Material;
 import utilities.PlayerInfo;
 import utilities.communication.Action;
 import utilities.communication.Packet;
@@ -25,16 +23,18 @@ import utilities.communication.PacketBuilder;
 import utilities.communication.RegistrationForm;
 import utilities.communication.SerializableModel;
 import utilities.communication.ServerInfo;
+import utilities.materials.Material;
+import utilities.materials.MaterialEnum;
 
 /**
  *
  * @author Skarab
  */
 public class ServerCommunication implements Remote, ServerComm {
-
+    
     private static ServerCommunication instance;
     private static final long serialVersionUID = 1L;
-
+    
     public static ServerCommunication getInstance() {
         if (instance == null) {
             try {
@@ -46,15 +46,15 @@ public class ServerCommunication implements Remote, ServerComm {
         return instance;
     }
     private Map<Integer, TestBody> controls;
-
+    
     private ServerCommunication() throws RemoteException {
         controls = new HashMap<>(20);
     }
-
+    
     public Map<Integer, TestBody> getControls() {
         return controls;
     }
-
+    
     public void init(int port) throws RemoteException {
         String local = null;
         try {
@@ -72,23 +72,22 @@ public class ServerCommunication implements Remote, ServerComm {
             Logger.getLogger(ServerCommunication.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-
+    
     @Override
     public void sendAction(Packet packet) {
         TestBody body;
         Action action = packet.getAction();
         int id = packet.getId();
+        ServerComService service = ServerComService.getInstance();
         switch (action) {
             case MINE:
                 body = controls.get(id);
                 int x = body.getPosition().x;
                 int y = body.getPosition().y + 2;
-                ServerPanel.getInstance().change(x, y, Material.AIR);
-                body.addItem(ServerPanel.getInstance().getItemFactory().get(ItemEnum.METAL));
-                ServerComService.getInstance().broadcast(
-                        new PacketBuilder(Action.ADD_ITEM, id).addInfo(ItemEnum.METAL).build());
-                ServerComService.getInstance().broadcast(
-                        new PacketBuilder(Action.MINE, id).addInfo(new Point(x, y)).build());
+                MaterialEnum mat = ServerPanel.getInstance().change(x, y, MaterialEnum.AIR);
+                body.getInventory().add(Material.getComponents(mat));
+                service.broadcast(new PacketBuilder(Action.OBTAIN, id).addInfo(mat).build());
+                service.broadcast(new PacketBuilder(Action.MINE, id).addInfo(new Point(x, y)).build());
                 break;
             case MOVE_LEFT:
             case MOVE_RIGHT:
@@ -98,8 +97,7 @@ public class ServerCommunication implements Remote, ServerComm {
                 if (body != null) {
                     Point pos = body.getPosition();
                     Point.Double vel = body.getVelocity();
-                    ServerComService.getInstance().broadcast(
-                            new PacketBuilder(action, id).addInfo(pos)
+                    service.broadcast(new PacketBuilder(action, id).addInfo(pos)
                             .addInfo(vel.x).addInfo(vel.y).build());
                     body.control(action);
                 }
@@ -109,14 +107,9 @@ public class ServerCommunication implements Remote, ServerComm {
                 ComponentTableModel inventory = controls.get(id).getInventory();
                 Recipe receipe = ServerPanel.getInstance().getModel().getFactory()
                         .getRecipes().getReceipe(idx);
-                System.out.println("server: " + idx);
                 inventory.remove(receipe.getIngredients());
                 inventory.add(receipe.getProducts());
-                ServerComService.getInstance().broadcast(
-                        new PacketBuilder(Action.CRAFT, id).addInfo(idx).build());
-                //inventory.remove(ingredientsModel);
-                //inventory.add(productsModel);
-                //inventory.fireTableDataChanged();
+                service.broadcast(new PacketBuilder(Action.CRAFT, id).addInfo(idx).build());
                 break;
             /*case TAKE:
              body.addItem(ServerPanel.getInstance().getItemFactory().get(ItemEnum.));
@@ -125,21 +118,21 @@ public class ServerCommunication implements Remote, ServerComm {
              break;*/
         }
     }
-
+    
     public void bindBody(int id, TestBody body) {
         controls.put(id, body);
     }
-
+    
     @Override
     public PlayerInfo register(RegistrationForm form) {
         return ServerComService.getInstance().registerPlayer(form);
     }
-
+    
     @Override
     public ServerInfo getServerInfo() {
         return ServerComService.getInstance().getServerInfo();
     }
-
+    
     @Override
     public SerializableModel getModel(int id) throws RemoteException {
         return ServerPanel.getInstance().getModel().serialize();

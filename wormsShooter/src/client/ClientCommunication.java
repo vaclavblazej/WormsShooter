@@ -21,13 +21,14 @@ import objects.items.ItemFactory;
 import objects.items.Recipe;
 import server.ServerComService;
 import server.ServerComm;
-import utilities.Material;
 import utilities.PlayerInfo;
 import utilities.communication.Action;
 import utilities.communication.Model;
 import utilities.communication.Packet;
 import utilities.communication.PacketBuilder;
 import utilities.communication.RegistrationForm;
+import utilities.materials.Material;
+import utilities.materials.MaterialEnum;
 
 /**
  *
@@ -127,16 +128,20 @@ public class ClientCommunication {
                                         controls.get(i).control(type);
                                         break;
                                     case MINE:
-                                        MainPanel.getInstance().change((Point) packet.get(0), Material.AIR);
+                                        MainPanel.getInstance().change((Point) packet.get(0), MaterialEnum.AIR);
                                         break;
                                     case CRAFT:
                                         ComponentTableModel inventory = controls.get(packet.getId()).getInventory();
                                         int idx = (Integer) packet.get(0);
-                                        System.out.println("client: " + idx);
                                         Recipe receipe = factory.getRecipes().getReceipe(idx);
                                         inventory.remove(receipe.getIngredients());
                                         inventory.add(receipe.getProducts());
                                         inventory.fireTableDataChanged();
+                                        break;
+                                    case OBTAIN:
+                                        ComponentTableModel inv = controls.get(packet.getId()).getInventory();
+                                        MaterialEnum en = (MaterialEnum) packet.get(0);
+                                        inv.add(Material.getComponents(en));
                                         break;
                                     case CONNECT:
                                         i = packet.getId();
