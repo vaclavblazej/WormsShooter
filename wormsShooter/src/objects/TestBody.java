@@ -1,14 +1,14 @@
 package objects;
 
-import utilities.CollisionState;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.Point2D;
-import static utilities.CollisionState.GAS;
 import objects.items.ComponentTableModel;
 import objects.items.Item;
+import utilities.CollisionState;
+import static utilities.CollisionState.GAS;
 import utilities.MapInterface;
 import utilities.communication.Action;
 import utilities.communication.SerializableBody;
@@ -78,8 +78,11 @@ public class TestBody implements GraphicComponent {
 
     public void fallBy(double y) {
         int directionY = (velocity.y >= 0) ? 1 : -1;
-        double absoluteY = Math.abs(y) + 0.00001;
+        double absoluteY = Math.abs(y);
         int i;
+        if (absoluteY < 0.01) { // helps but does not fix completely
+            return;
+        }
         for (i = 1; i <= absoluteY; i++) {
             if (map.check((int) position.x, (int) position.y + REAL_SIZE.height + i * directionY)
                     == CollisionState.SOLID) {

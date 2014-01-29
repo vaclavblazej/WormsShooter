@@ -31,10 +31,10 @@ import utilities.materials.MaterialEnum;
  * @author Skarab
  */
 public class ServerCommunication implements Remote, ServerComm {
-    
+
     private static ServerCommunication instance;
     private static final long serialVersionUID = 1L;
-    
+
     public static ServerCommunication getInstance() {
         if (instance == null) {
             try {
@@ -46,15 +46,15 @@ public class ServerCommunication implements Remote, ServerComm {
         return instance;
     }
     private Map<Integer, TestBody> controls;
-    
+
     private ServerCommunication() throws RemoteException {
         controls = new HashMap<>(20);
     }
-    
+
     public Map<Integer, TestBody> getControls() {
         return controls;
     }
-    
+
     public void init(int port) throws RemoteException {
         String local = null;
         try {
@@ -72,7 +72,7 @@ public class ServerCommunication implements Remote, ServerComm {
             Logger.getLogger(ServerCommunication.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
-    
+
     @Override
     public void sendAction(Packet packet) {
         TestBody body;
@@ -81,13 +81,18 @@ public class ServerCommunication implements Remote, ServerComm {
         ServerComService service = ServerComService.getInstance();
         switch (action) {
             case MINE:
+                Point p = (Point) packet.get(0);
+                int x = p.x;
+                int y = p.y;
                 body = controls.get(id);
-                int x = body.getPosition().x;
-                int y = body.getPosition().y + 2;
-                MaterialEnum mat = ServerPanel.getInstance().change(x, y, MaterialEnum.AIR);
-                body.getInventory().add(Material.getComponents(mat));
-                service.broadcast(new PacketBuilder(Action.OBTAIN, id).addInfo(mat).build());
-                service.broadcast(new PacketBuilder(Action.MINE, id).addInfo(new Point(x, y)).build());
+                int distance = Math.abs(body.getPosition().x - x)
+                        + Math.abs(body.getPosition().y - y);
+                if (distance < 6) {
+                    MaterialEnum mat = ServerPanel.getInstance().change(x, y, MaterialEnum.AIR);
+                    body.getInventory().add(Material.getComponents(mat));
+                    service.broadcast(new PacketBuilder(Action.OBTAIN, id).addInfo(mat).build());
+                    service.broadcast(new PacketBuilder(Action.MINE, id).addInfo(new Point(x, y)).build());
+                }
                 break;
             case MOVE_LEFT:
             case MOVE_RIGHT:
@@ -118,21 +123,21 @@ public class ServerCommunication implements Remote, ServerComm {
              break;*/
         }
     }
-    
+
     public void bindBody(int id, TestBody body) {
         controls.put(id, body);
     }
-    
+
     @Override
     public PlayerInfo register(RegistrationForm form) {
         return ServerComService.getInstance().registerPlayer(form);
     }
-    
+
     @Override
     public ServerInfo getServerInfo() {
         return ServerComService.getInstance().getServerInfo();
     }
-    
+
     @Override
     public SerializableModel getModel(int id) throws RemoteException {
         return ServerPanel.getInstance().getModel().serialize();

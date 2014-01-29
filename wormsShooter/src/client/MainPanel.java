@@ -69,7 +69,6 @@ public class MainPanel extends JPanel implements
         return instance;
     }
     private Timer timer;
-    private Timer rBrushTimer;
     private TestBody body;
     private EnumSet<ControlsEnum> controlSet;
     private Collection<TestBody> bodies;
@@ -199,26 +198,9 @@ public class MainPanel extends JPanel implements
         objects.add(comp);
     }
 
-    public void newSand(int x, int y) {
-        grains.add(new Sand(
-                x + random.nextInt(10) - 5,
-                y + random.nextInt(20) - 10,
-                (random.nextInt(RNG) - RNG / 2) / 10.,
-                -(random.nextInt(RNG) - RNG / 2) / 10.,
-                Color.CYAN));
-    }
-
     public void init() {
         Dimension mapSize = SIZE;
         timer = new Timer(40, this);
-        rBrushTimer = new Timer(40, new ActionListener() {
-            @Override
-            public void actionPerformed(ActionEvent e) {
-                for (int i = 0; i < 10; i++) {
-                    newSand(mouse.x, mouse.y);
-                }
-            }
-        });
         controls = Settings.getInstance().getControls();
         Settings.getInstance().setControls(controls);
         repaint();
@@ -267,9 +249,9 @@ public class MainPanel extends JPanel implements
         if (en != null && controlSet.add(en)) {
             try {
                 switch (en) {
-                    case MINE:
+                    /*case MINE:
                         ClientCommunication.getInstance().sendAction(new PacketBuilder(Action.MINE));
-                        break;
+                        break;*/
                     case UP:
                         ClientCommunication.getInstance().sendAction(new PacketBuilder(Action.MOVE_JUMP));
                         break;
@@ -338,7 +320,14 @@ public class MainPanel extends JPanel implements
         mouse.y = e.getY();
         switch (e.getButton()) {
             case MouseEvent.BUTTON1:
-                rBrushTimer.start();
+                int x = currentPosition.x + e.getX() / RATIO;
+                int y = currentPosition.y + e.getY() / RATIO;
+                try {
+                    ClientCommunication.getInstance().sendAction(
+                            new PacketBuilder(Action.MINE).addInfo(new Point(x, y)));
+                } catch (RemoteException ex) {
+                    Logger.getLogger(MainPanel.class.getName()).log(Level.SEVERE, null, ex);
+                }
                 break;
         }
     }
@@ -347,7 +336,6 @@ public class MainPanel extends JPanel implements
     public void mouseReleased(MouseEvent e) {
         switch (e.getButton()) {
             case MouseEvent.BUTTON1:
-                rBrushTimer.stop();
                 break;
         }
     }
