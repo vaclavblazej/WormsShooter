@@ -105,10 +105,11 @@ public class ServerCommunication implements Remote, ServerComm {
                 }
                 break;
             case CRAFT:
-                int idx = (Integer) packet.getCount();
+                int idx = (Integer) packet.get(0);
                 ComponentTableModel inventory = controls.get(id).getInventory();
                 Recipe receipe = ServerPanel.getInstance().getModel().getFactory()
                         .getRecipes().getReceipe(idx);
+                System.out.println("server: " + idx);
                 inventory.remove(receipe.getIngredients());
                 inventory.add(receipe.getProducts());
                 ServerComService.getInstance().broadcast(
@@ -117,41 +118,6 @@ public class ServerCommunication implements Remote, ServerComm {
                 //inventory.add(productsModel);
                 //inventory.fireTableDataChanged();
                 break;
-            /*case TAKE:
-             body.addItem(ServerPanel.getInstance().getItemFactory().get(ItemEnum.));
-             ServerComService.getInstance().broadcast(
-             new PacketBuilder(Action.ADD_ITEM, id).addInfo(ItemEnum.BLOCK).build());
-             break;*/
-            /*case TAKE:
-             body.addItem(ServerPanel.getInstance().getItemFactory().get(ItemEnum.));
-             ServerComService.getInstance().broadcast(
-             new PacketBuilder(Action.ADD_ITEM, id).addInfo(ItemEnum.BLOCK).build());
-             break;*/
-            /*case TAKE:
-             body.addItem(ServerPanel.getInstance().getItemFactory().get(ItemEnum.));
-             ServerComService.getInstance().broadcast(
-             new PacketBuilder(Action.ADD_ITEM, id).addInfo(ItemEnum.BLOCK).build());
-             break;*/
-            /*case TAKE:
-             body.addItem(ServerPanel.getInstance().getItemFactory().get(ItemEnum.));
-             ServerComService.getInstance().broadcast(
-             new PacketBuilder(Action.ADD_ITEM, id).addInfo(ItemEnum.BLOCK).build());
-             break;*/
-            /*case TAKE:
-             body.addItem(ServerPanel.getInstance().getItemFactory().get(ItemEnum.));
-             ServerComService.getInstance().broadcast(
-             new PacketBuilder(Action.ADD_ITEM, id).addInfo(ItemEnum.BLOCK).build());
-             break;*/
-            /*case TAKE:
-             body.addItem(ServerPanel.getInstance().getItemFactory().get(ItemEnum.));
-             ServerComService.getInstance().broadcast(
-             new PacketBuilder(Action.ADD_ITEM, id).addInfo(ItemEnum.BLOCK).build());
-             break;*/
-            /*case TAKE:
-             body.addItem(ServerPanel.getInstance().getItemFactory().get(ItemEnum.));
-             ServerComService.getInstance().broadcast(
-             new PacketBuilder(Action.ADD_ITEM, id).addInfo(ItemEnum.BLOCK).build());
-             break;*/
             /*case TAKE:
              body.addItem(ServerPanel.getInstance().getItemFactory().get(ItemEnum.));
              ServerComService.getInstance().broadcast(

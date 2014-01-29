@@ -3,7 +3,6 @@ package server;
 import java.rmi.Remote;
 import java.rmi.RemoteException;
 import utilities.PlayerInfo;
-import utilities.communication.Action;
 import utilities.communication.Packet;
 import utilities.communication.RegistrationForm;
 import utilities.communication.SerializableModel;

@@ -21,7 +21,6 @@ import objects.items.ItemFactory;
 import objects.items.Recipe;
 import server.ServerComService;
 import server.ServerComm;
-import utilities.MaterialVisuals;
 import utilities.Material;
 import utilities.PlayerInfo;
 import utilities.communication.Action;
@@ -83,6 +82,7 @@ public class ClientCommunication {
     }
 
     public void getModel() throws RemoteException {
+        System.out.println("Transmission: model");
         Model model = serverComm.getModel(info.getId()).deserialize(MainPanel.getInstance());
         MainPanel.getInstance().setModel(model);
         controls = model.getControls();
@@ -132,8 +132,8 @@ public class ClientCommunication {
                                     case CRAFT:
                                         ComponentTableModel inventory = controls.get(packet.getId()).getInventory();
                                         int idx = (Integer) packet.get(0);
-                                        Recipe receipe = MainPanel.getInstance().getModel()
-                                                .getFactory().getRecipes().getReceipe(idx);
+                                        System.out.println("client: " + idx);
+                                        Recipe receipe = factory.getRecipes().getReceipe(idx);
                                         inventory.remove(receipe.getIngredients());
                                         inventory.add(receipe.getProducts());
                                         inventory.fireTableDataChanged();

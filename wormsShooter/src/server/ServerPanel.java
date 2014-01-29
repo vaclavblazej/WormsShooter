@@ -29,7 +29,6 @@ import particles.Sand;
 import spritesheets.SpriteLoader;
 import utilities.CollisionState;
 import utilities.MapInterface;
-import utilities.MaterialVisuals;
 import utilities.Material;
 import utilities.communication.Model;
 
@@ -95,10 +94,14 @@ public class ServerPanel extends JPanel implements MapInterface, ActionListener 
     private void createItems() {
         itemFactory = new ItemFactory();
         itemFactory.addItem(ItemEnum.METAL, new ItemBlueprint("Metal", 1, 1));
-        itemFactory.addItem(ItemEnum.BULLET, new ItemBlueprint("Bullet", 1, 1));
-        itemFactory.addItem(ItemEnum.GUN, new ItemBlueprint("Gun", 2, 2));
-        itemFactory.addItem(ItemEnum.GUN_MAGAZINE, new ItemBlueprint("Magazine", 1, 2));
         itemFactory.addItem(ItemEnum.GUN_POWDER, new ItemBlueprint("Gun powder", 1, 1));
+        itemFactory.addItem(ItemEnum.BULLET, new ItemBlueprint("Bullet", 1, 1));
+        itemFactory.addItem(ItemEnum.HANDGUN, new ItemBlueprint("Gun", 2, 2));
+        itemFactory.addItem(ItemEnum.HANDGUN_MAGAZINE, new ItemBlueprint("Magazine", 1, 2));
+        itemFactory.addItem(ItemEnum.HANDGUN_BARREL, new ItemBlueprint("Barrel", 2, 1));
+        itemFactory.addItem(ItemEnum.HANDGUN_MECHANISM, new ItemBlueprint("Mechanism", 1, 1));
+        itemFactory.addItem(ItemEnum.HANDGUN_HANDLE, new ItemBlueprint("Handle", 2, 2));
+        itemFactory.addItem(ItemEnum.HANDGUN_OPTICS, new ItemBlueprint("Optics", 2, 1));
     }
 
     public ItemFactory getItemFactory() {
@@ -108,9 +111,29 @@ public class ServerPanel extends JPanel implements MapInterface, ActionListener 
     private void createReceipes() {
         ItemFactory fac = getModel().getFactory();
         Crafting rec = fac.getRecipes();
-        Recipe r = new Recipe("Gun");
-        r.addIngredient(fac.getBlueprint(ItemEnum.METAL), 10);
-        r.addProduct(fac.getBlueprint(ItemEnum.GUN), 1);
+        Recipe r = new Recipe("Gun assemble");
+        r.addIngredient(fac.getBlueprint(ItemEnum.HANDGUN_BARREL), 1);
+        r.addIngredient(fac.getBlueprint(ItemEnum.HANDGUN_HANDLE), 1);
+        r.addIngredient(fac.getBlueprint(ItemEnum.HANDGUN_MECHANISM), 1);
+        r.addProduct(fac.getBlueprint(ItemEnum.HANDGUN), 1);
+        rec.addReceipe(r);
+        r = new Recipe("Gun disassemble");
+        r.addIngredient(fac.getBlueprint(ItemEnum.HANDGUN), 1);
+        r.addProduct(fac.getBlueprint(ItemEnum.HANDGUN_BARREL), 1);
+        r.addProduct(fac.getBlueprint(ItemEnum.HANDGUN_HANDLE), 1);
+        r.addProduct(fac.getBlueprint(ItemEnum.HANDGUN_MECHANISM), 1);
+        rec.addReceipe(r);
+        r = new Recipe("Gun barrel");
+        r.addIngredient(fac.getBlueprint(ItemEnum.METAL), 4);
+        r.addProduct(fac.getBlueprint(ItemEnum.HANDGUN_BARREL), 1);
+        rec.addReceipe(r);
+        r = new Recipe("Gun handle");
+        r.addIngredient(fac.getBlueprint(ItemEnum.METAL), 8);
+        r.addProduct(fac.getBlueprint(ItemEnum.HANDGUN_HANDLE), 1);
+        rec.addReceipe(r);
+        r = new Recipe("Gun mechanism");
+        r.addIngredient(fac.getBlueprint(ItemEnum.METAL), 4);
+        r.addProduct(fac.getBlueprint(ItemEnum.HANDGUN_MECHANISM), 1);
         rec.addReceipe(r);
         r = new Recipe("Bullet");
         r.addIngredient(fac.getBlueprint(ItemEnum.METAL), 1);
