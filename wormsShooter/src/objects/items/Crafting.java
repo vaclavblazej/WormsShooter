@@ -1,5 +1,6 @@
 package objects.items;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.List;
 import javax.swing.table.AbstractTableModel;
@@ -8,20 +9,12 @@ import javax.swing.table.AbstractTableModel;
  *
  * @author Skarab
  */
-public class Crafting extends AbstractTableModel {
+public class Crafting extends AbstractTableModel implements Serializable{
 
-    private static Crafting instance;
-
-    public static Crafting getInstance() {
-        if (instance == null) {
-            instance = new Crafting();
-        }
-        return instance;
-    }
     private List<Recipe> recepies;
     private String[] columnName = {"Recipes"};
 
-    private Crafting() {
+    public Crafting() {
         this.recepies = new ArrayList<>();
     }
 

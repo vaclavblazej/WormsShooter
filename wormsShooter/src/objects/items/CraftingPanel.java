@@ -1,9 +1,13 @@
 package objects.items;
 
+import client.ClientCommunication;
 import client.MainPanel;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
+import java.rmi.RemoteException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -12,6 +16,8 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
+import utilities.communication.Action;
+import utilities.communication.PacketBuilder;
 
 /**
  *
@@ -21,6 +27,7 @@ public class CraftingPanel extends JPanel implements ListSelectionListener {
 
     private JScrollPane recepiesScroll;
     private JTable recepies;
+    private Crafting recepiesModel;
     private JScrollPane ingredientsScroll;
     private JTable ingredients;
     private ComponentTableModel ingredientsModel;
@@ -28,12 +35,13 @@ public class CraftingPanel extends JPanel implements ListSelectionListener {
     private JTable products;
     private ComponentTableModel productsModel;
     private JButton craftButton;
+    private int lastIndex;
 
     public CraftingPanel() {
         super();
-
         setLayout(new BorderLayout());
-        recepies = new JTable(Crafting.getInstance());
+        recepiesModel = MainPanel.getInstance().getModel().getFactory().getRecipes();
+        recepies = new JTable(recepiesModel);
         recepiesScroll = new JScrollPane(recepies);
         recepiesScroll.setPreferredSize(new Dimension(200, 100));
         ingredients = new JTable();
@@ -47,13 +55,16 @@ public class CraftingPanel extends JPanel implements ListSelectionListener {
             public void actionPerformed(ActionEvent e) {
                 ComponentTableModel inventory = MainPanel.getInstance().getMyBody().getInventory();
                 if (inventory.contains(ingredientsModel)) {
-                    inventory.remove(ingredientsModel);
-                    inventory.add(productsModel);
-                    inventory.fireTableDataChanged();
+                    try {
+                        ClientCommunication.getInstance().sendAction(new PacketBuilder(Action.CRAFT).addInfo(lastIndex));
+                    } catch (RemoteException ex) {
+                        Logger.getLogger(CraftingPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    }
                 }
             }
         });
         craftButton.setText("Craft");
+        craftButton.setEnabled(false);
 
         JPanel container = new JPanel(new BorderLayout());
         container.add(ingredientsScroll, BorderLayout.NORTH);
@@ -70,11 +81,12 @@ public class CraftingPanel extends JPanel implements ListSelectionListener {
 
     @Override
     public void valueChanged(ListSelectionEvent e) {
+        craftButton.setEnabled(true);
         ListSelectionModel lsm = (ListSelectionModel) e.getSource();
         //boolean isAdjusting = e.getValueIsAdjusting();
         //int minIndex = lsm.getMinSelectionIndex();
-        int maxIndex = lsm.getMaxSelectionIndex();
-        Recipe recipe = Crafting.getInstance().getReceipe(maxIndex);
+        lastIndex = lsm.getMaxSelectionIndex();
+        Recipe recipe = recepiesModel.getReceipe(lastIndex);
         ingredientsModel = recipe.getIngredients();
         ingredients.setModel(ingredientsModel);
         productsModel = recipe.getProducts();

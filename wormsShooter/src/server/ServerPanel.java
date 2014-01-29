@@ -72,6 +72,7 @@ public class ServerPanel extends JPanel implements MapInterface, ActionListener 
                 ServerCommunication.getInstance().getControls(),
                 itemFactory,
                 ServerComService.getInstance().getCounter());
+        createReceipes();
 
         setFocusable(true);
         setPreferredSize(SIZE);
@@ -88,7 +89,6 @@ public class ServerPanel extends JPanel implements MapInterface, ActionListener 
                 init();
             }
         });
-        createReceipes();
     }
 
     private void createItems() {
@@ -105,15 +105,17 @@ public class ServerPanel extends JPanel implements MapInterface, ActionListener 
     }
 
     private void createReceipes() {
+        ItemFactory fac = getModel().getFactory();
+        Crafting rec = fac.getRecipes();
         Recipe r = new Recipe("Gun");
-        r.addIngredient(getModel().getFactory().getBlueprint(ItemEnum.METAL), 10);
-        r.addProduct(getModel().getFactory().getBlueprint(ItemEnum.GUN), 1);
-        Crafting.getInstance().addReceipe(r);
+        r.addIngredient(fac.getBlueprint(ItemEnum.METAL), 10);
+        r.addProduct(fac.getBlueprint(ItemEnum.GUN), 1);
+        rec.addReceipe(r);
         r = new Recipe("Bullet");
-        r.addIngredient(getModel().getFactory().getBlueprint(ItemEnum.METAL), 1);
-        r.addIngredient(getModel().getFactory().getBlueprint(ItemEnum.GUN_POWDER), 1);
-        r.addProduct(getModel().getFactory().getBlueprint(ItemEnum.BULLET), 1);
-        Crafting.getInstance().addReceipe(r);
+        r.addIngredient(fac.getBlueprint(ItemEnum.METAL), 1);
+        r.addIngredient(fac.getBlueprint(ItemEnum.GUN_POWDER), 1);
+        r.addProduct(fac.getBlueprint(ItemEnum.BULLET), 1);
+        rec.addReceipe(r);
     }
 
     public void save() {

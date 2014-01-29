@@ -4,6 +4,7 @@ import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.Map;
 import objects.TestBody;
+import objects.items.Crafting;
 import objects.items.ItemFactory;
 
 /**
@@ -17,7 +18,11 @@ public class Model {
     private ItemFactory factory;
     private int counter;
 
-    public Model(BufferedImage map, Map<Integer, TestBody> controls, ItemFactory factory, int counter) {
+    public Model(
+            BufferedImage map,
+            Map<Integer, TestBody> controls,
+            ItemFactory factory,
+            int counter) {
         this.map = map;
         this.controls = controls;
         this.factory = factory;

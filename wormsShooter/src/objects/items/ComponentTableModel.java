@@ -1,5 +1,6 @@
 package objects.items;
 
+import java.io.Serializable;
 import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
@@ -9,7 +10,7 @@ import javax.swing.table.AbstractTableModel;
  *
  * @author Skarab
  */
-public class ComponentTableModel extends AbstractTableModel {
+public class ComponentTableModel extends AbstractTableModel implements Serializable {
 
     private ArrayList<Elem> components;
     private String[] columnNames;
@@ -99,7 +100,7 @@ public class ComponentTableModel extends AbstractTableModel {
         return columnNames[column];
     }
 
-    private class Elem implements Comparable<Elem> {
+    private class Elem implements Comparable<Elem>, Serializable {
 
         public ItemBlueprint item;
         public int count;

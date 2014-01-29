@@ -15,8 +15,10 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import objects.TestBody;
+import objects.items.ComponentTableModel;
 import objects.items.ItemEnum;
 import objects.items.ItemFactory;
+import objects.items.Recipe;
 import server.ServerComService;
 import server.ServerComm;
 import utilities.Materials;
@@ -125,6 +127,15 @@ public class ClientCommunication {
                                         break;
                                     case MINE:
                                         MainPanel.getInstance().change((Point) packet.get(0), Materials.AIR);
+                                        break;
+                                    case CRAFT:
+                                        ComponentTableModel inventory = controls.get(packet.getId()).getInventory();
+                                        int idx = (Integer) packet.get(0);
+                                        Recipe receipe = MainPanel.getInstance().getModel()
+                                                .getFactory().getRecipes().getReceipe(idx);
+                                        inventory.remove(receipe.getIngredients());
+                                        inventory.add(receipe.getProducts());
+                                        inventory.fireTableDataChanged();
                                         break;
                                     case CONNECT:
                                         i = packet.getId();

@@ -1,10 +1,12 @@
 package objects.items;
 
+import java.io.Serializable;
+
 /**
  *
  * @author Skarab
  */
-public class Recipe {
+public class Recipe implements Serializable{
 
     private ComponentTableModel ingredients;
     private ComponentTableModel products;

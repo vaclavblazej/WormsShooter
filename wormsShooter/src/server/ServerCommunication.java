@@ -14,7 +14,10 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import objects.TestBody;
+import objects.items.ComponentTableModel;
+import objects.items.Crafting;
 import objects.items.ItemEnum;
+import objects.items.Recipe;
 import utilities.Materials;
 import utilities.PlayerInfo;
 import utilities.communication.Action;
@@ -102,6 +105,54 @@ public class ServerCommunication implements Remote, ServerComm {
                     body.control(action);
                 }
                 break;
+            case CRAFT:
+                int idx = (Integer) packet.getCount();
+                ComponentTableModel inventory = controls.get(id).getInventory();
+                Recipe receipe = ServerPanel.getInstance().getModel().getFactory()
+                        .getRecipes().getReceipe(idx);
+                inventory.remove(receipe.getIngredients());
+                inventory.add(receipe.getProducts());
+                ServerComService.getInstance().broadcast(
+                        new PacketBuilder(Action.CRAFT, id).addInfo(idx).build());
+                //inventory.remove(ingredientsModel);
+                //inventory.add(productsModel);
+                //inventory.fireTableDataChanged();
+                break;
+            /*case TAKE:
+             body.addItem(ServerPanel.getInstance().getItemFactory().get(ItemEnum.));
+             ServerComService.getInstance().broadcast(
+             new PacketBuilder(Action.ADD_ITEM, id).addInfo(ItemEnum.BLOCK).build());
+             break;*/
+            /*case TAKE:
+             body.addItem(ServerPanel.getInstance().getItemFactory().get(ItemEnum.));
+             ServerComService.getInstance().broadcast(
+             new PacketBuilder(Action.ADD_ITEM, id).addInfo(ItemEnum.BLOCK).build());
+             break;*/
+            /*case TAKE:
+             body.addItem(ServerPanel.getInstance().getItemFactory().get(ItemEnum.));
+             ServerComService.getInstance().broadcast(
+             new PacketBuilder(Action.ADD_ITEM, id).addInfo(ItemEnum.BLOCK).build());
+             break;*/
+            /*case TAKE:
+             body.addItem(ServerPanel.getInstance().getItemFactory().get(ItemEnum.));
+             ServerComService.getInstance().broadcast(
+             new PacketBuilder(Action.ADD_ITEM, id).addInfo(ItemEnum.BLOCK).build());
+             break;*/
+            /*case TAKE:
+             body.addItem(ServerPanel.getInstance().getItemFactory().get(ItemEnum.));
+             ServerComService.getInstance().broadcast(
+             new PacketBuilder(Action.ADD_ITEM, id).addInfo(ItemEnum.BLOCK).build());
+             break;*/
+            /*case TAKE:
+             body.addItem(ServerPanel.getInstance().getItemFactory().get(ItemEnum.));
+             ServerComService.getInstance().broadcast(
+             new PacketBuilder(Action.ADD_ITEM, id).addInfo(ItemEnum.BLOCK).build());
+             break;*/
+            /*case TAKE:
+             body.addItem(ServerPanel.getInstance().getItemFactory().get(ItemEnum.));
+             ServerComService.getInstance().broadcast(
+             new PacketBuilder(Action.ADD_ITEM, id).addInfo(ItemEnum.BLOCK).build());
+             break;*/
             /*case TAKE:
              body.addItem(ServerPanel.getInstance().getItemFactory().get(ItemEnum.));
              ServerComService.getInstance().broadcast(
