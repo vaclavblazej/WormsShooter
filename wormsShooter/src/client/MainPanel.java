@@ -35,7 +35,8 @@ import utilities.CollisionState;
 import utilities.Controls;
 import utilities.ControlsEnum;
 import utilities.MapInterface;
-import utilities.Materials;
+import utilities.MaterialVisuals;
+import utilities.Material;
 import utilities.communication.Action;
 import utilities.communication.Model;
 import utilities.communication.PacketBuilder;
@@ -119,7 +120,7 @@ public class MainPanel extends JPanel implements
         this.model = model;
     }
 
-    public void change(Point point, Materials mat) {
+    public void change(Point point, Material mat) {
         Graphics g = map.getGraphics();
         g.setColor(mat.getColor());
         g.drawLine(point.x, point.y, point.x, point.y);
@@ -150,7 +151,7 @@ public class MainPanel extends JPanel implements
 
     @Override
     public CollisionState check(int x, int y) {
-        return Materials.check(getPixel(x, y));
+        return Material.check(getPixel(x, y));
     }
 
     public Color getPixel(int x, int y) {
@@ -235,7 +236,7 @@ public class MainPanel extends JPanel implements
         }
         try {
             curentView = map.getSubimage(currentPosition.x, currentPosition.y, VIEW_SIZE.width, VIEW_SIZE.height);
-            Materials.redraw(curentView, realView);
+            MaterialVisuals.redraw(curentView, realView);
         } catch (RasterFormatException ex) {
         }
         // todo - fix exception when you are near end of the map

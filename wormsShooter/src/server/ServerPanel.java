@@ -29,7 +29,8 @@ import particles.Sand;
 import spritesheets.SpriteLoader;
 import utilities.CollisionState;
 import utilities.MapInterface;
-import utilities.Materials;
+import utilities.MaterialVisuals;
+import utilities.Material;
 import utilities.communication.Model;
 
 /**
@@ -122,7 +123,7 @@ public class ServerPanel extends JPanel implements MapInterface, ActionListener 
         SpriteLoader.saveSprite("Map", map);
     }
 
-    public void change(int x, int y, Materials mat) {
+    public void change(int x, int y, Material mat) {
         Graphics g = map.getGraphics();
         g.setColor(mat.getColor());
         g.drawLine(x, y, x, y);
@@ -143,7 +144,7 @@ public class ServerPanel extends JPanel implements MapInterface, ActionListener 
     }
 
     public CollisionState check(int x, int y) {
-        return Materials.check(getPixel(x, y));
+        return Material.check(getPixel(x, y));
     }
 
     public Color getPixel(int x, int y) {

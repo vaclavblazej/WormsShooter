@@ -15,10 +15,9 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import objects.TestBody;
 import objects.items.ComponentTableModel;
-import objects.items.Crafting;
 import objects.items.ItemEnum;
 import objects.items.Recipe;
-import utilities.Materials;
+import utilities.Material;
 import utilities.PlayerInfo;
 import utilities.communication.Action;
 import utilities.communication.Packet;
@@ -84,7 +83,7 @@ public class ServerCommunication implements Remote, ServerComm {
                 body = controls.get(id);
                 int x = body.getPosition().x;
                 int y = body.getPosition().y + 2;
-                ServerPanel.getInstance().change(x, y, Materials.AIR);
+                ServerPanel.getInstance().change(x, y, Material.AIR);
                 body.addItem(ServerPanel.getInstance().getItemFactory().get(ItemEnum.METAL));
                 ServerComService.getInstance().broadcast(
                         new PacketBuilder(Action.ADD_ITEM, id).addInfo(ItemEnum.METAL).build());

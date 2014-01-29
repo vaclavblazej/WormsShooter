@@ -6,5 +6,6 @@ package utilities;
  */
 public enum CollisionState {
     SOLID,
-    FREE;
+    LIQUID,
+    GAS;
 }

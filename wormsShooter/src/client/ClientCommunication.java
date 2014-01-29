@@ -21,7 +21,8 @@ import objects.items.ItemFactory;
 import objects.items.Recipe;
 import server.ServerComService;
 import server.ServerComm;
-import utilities.Materials;
+import utilities.MaterialVisuals;
+import utilities.Material;
 import utilities.PlayerInfo;
 import utilities.communication.Action;
 import utilities.communication.Model;
@@ -126,7 +127,7 @@ public class ClientCommunication {
                                         controls.get(i).control(type);
                                         break;
                                     case MINE:
-                                        MainPanel.getInstance().change((Point) packet.get(0), Materials.AIR);
+                                        MainPanel.getInstance().change((Point) packet.get(0), Material.AIR);
                                         break;
                                     case CRAFT:
                                         ComponentTableModel inventory = controls.get(packet.getId()).getInventory();

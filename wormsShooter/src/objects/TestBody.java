@@ -6,7 +6,7 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.Point2D;
-import static utilities.CollisionState.FREE;
+import static utilities.CollisionState.GAS;
 import objects.items.ComponentTableModel;
 import objects.items.Item;
 import utilities.MapInterface;
@@ -29,6 +29,7 @@ public class TestBody implements GraphicComponent {
     private boolean jump;
     private MapInterface map;
     private ComponentTableModel inventory;
+    private CollisionState state;
 
     public TestBody(Point2D.Double position, Point2D.Double velocity,
             Action movement, Dimension REAL_SIZE,
@@ -91,22 +92,28 @@ public class TestBody implements GraphicComponent {
 
     public void tick() {
         int directionY = (velocity.y >= 0) ? 1 : -1;
-        switch (map.check((int) position.x, (int) position.y + REAL_SIZE.height - 1 + directionY)) {
-            case FREE:
+        state = map.check((int) position.x, (int) position.y + REAL_SIZE.height - 1 + directionY);
+        switch (state) {
+            case GAS:
                 velocity.y += 0.1;
                 fallBy(velocity.y);
+                break;
+            case LIQUID:
+                velocity.y += 0.04;
+                fallBy(velocity.y);
+                jump = true;
                 break;
             case SOLID:
                 velocity.y = 0;
                 jump = true;
                 break;
         }
-        if (map.check((int) position.x + 1, (int) position.y + 1) == CollisionState.FREE) {
+        if (map.check((int) position.x + 1, (int) position.y + 1) != CollisionState.SOLID) {
             if (movement.equals(Action.MOVE_RIGHT)) {
                 position.x += 1;
             }
         }
-        if (map.check((int) position.x - 1, (int) position.y + 1) == CollisionState.FREE) {
+        if (map.check((int) position.x - 1, (int) position.y + 1) != CollisionState.SOLID) {
             if (movement.equals(Action.MOVE_LEFT)) {
                 position.x -= 1;
             }
