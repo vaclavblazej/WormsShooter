@@ -1,9 +1,13 @@
 package client.menu;
 
+import client.ClientCommunication;
 import client.ClientWindow;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
+import java.rmi.RemoteException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
@@ -11,6 +15,8 @@ import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 import main.Main;
 import utilities.Message;
+import utilities.communication.Action;
+import utilities.communication.PacketBuilder;
 
 /**
  *
@@ -66,6 +72,11 @@ public class GameWindowMenu extends JMenuBar {
         item.setAction(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                try {
+                    ClientCommunication.getInstance().sendAction(new PacketBuilder(Action.DISCONNECT));
+                } catch (RemoteException ex) {
+                    Logger.getLogger(GameWindowMenu.class.getName()).log(Level.SEVERE, null, ex);
+                }
             }
         });
         item.setText(Message.MENU_DISCONNECT.cm());

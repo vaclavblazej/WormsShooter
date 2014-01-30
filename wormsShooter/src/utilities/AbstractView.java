@@ -10,6 +10,8 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 import objects.GraphicComponent;
@@ -26,7 +28,7 @@ import utilities.materials.MaterialEnum;
  *
  * @author Skarab
  */
-public abstract class ViewInterface extends JPanel implements ActionListener {
+public abstract class AbstractView extends JPanel implements ActionListener {
 
     private static final int RNG = 20;
     protected Model model;
@@ -38,17 +40,23 @@ public abstract class ViewInterface extends JPanel implements ActionListener {
     protected Timer tickTimer;
     private final int ratio;
     private final Dimension size;
+    private boolean check;
 
-    public ViewInterface(int width, int height, int ratio) {
+    public AbstractView(int width, int height, int ratio) {
         this.ratio = ratio;
         this.size = new Dimension(width, height);
         tickTimer = new Timer(40, this);
-        bodies = new ArrayList<>(10);
         random = new Random();
-        grains = new CopyOnWriteArrayList<>();
-        objects = new CopyOnWriteArrayList<>();
         setPreferredSize(size);
         setFocusable(true);
+        check = false;
+        reset();
+        if (!check) {
+            Logger.getLogger(AbstractView.class.getName())
+                    .log(Level.SEVERE, null, new Exception(
+                    "Every " + AbstractView.class.getSimpleName()
+                    + " should call super.reset() in its reset!"));
+        }
     }
 
     public CollisionState check(int x, int y) {
@@ -75,6 +83,14 @@ public abstract class ViewInterface extends JPanel implements ActionListener {
         tickTimer.start();
     }
 
+    public void reset() {
+        check = true;
+        bodies = new ArrayList<>(10);
+        grains = new CopyOnWriteArrayList<>();
+        objects = new CopyOnWriteArrayList<>();
+        tickTimer.stop();
+    }
+
     @Override
     public void actionPerformed(ActionEvent ae) {
         for (TestBody b : bodies) {
@@ -95,6 +111,10 @@ public abstract class ViewInterface extends JPanel implements ActionListener {
         TestBody b = new TestBody(100, 100, this);
         bodies.add(b);
         return b;
+    }
+
+    public void removeBody(TestBody b) {
+        bodies.remove(b);
     }
 
     private void addObject(GraphicComponent comp) {

@@ -10,14 +10,14 @@ import objects.items.ItemEnum;
 import objects.items.ItemFactory;
 import objects.items.Recipe;
 import spritesheets.SpriteLoader;
-import utilities.ViewInterface;
+import utilities.AbstractView;
 import utilities.communication.Model;
 
 /**
  *
  * @author Skarab
  */
-public class ServerView extends ViewInterface {
+public class ServerView extends AbstractView {
 
     private static ServerView instance;
 

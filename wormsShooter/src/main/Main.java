@@ -1,5 +1,6 @@
 package main;
 
+import client.ClientView;
 import client.ClientWindow;
 import java.rmi.RemoteException;
 import java.util.logging.Level;
@@ -28,28 +29,18 @@ public class Main {
 
     public static void startGame() {
         ClientWindow.getInstance().launch();
-        /*GameWindow.getInstance();
-         Main.startServer();
-         try {
-         ClientCommunication.getInstance().init("localhost", "4242");
-         } catch (NotBoundException ex) {
-         Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-         } catch (MalformedURLException ex) {
-         Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-         } catch (RemoteException ex) {
-         Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-         }
-         MainPanel.getInstance().init();*/
     }
 
     public static void startServer(int port) {
-        try {
-            ServerCommunication.getInstance().init(port);
-        } catch (RemoteException ex) {
-            Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+        if (server == false) {
+            try {
+                ServerCommunication.getInstance().init(port);
+            } catch (RemoteException ex) {
+                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            new ServerWindow();
+            server = true;
         }
-        new ServerWindow();
-        server = true;
     }
 
     public static void exit() {

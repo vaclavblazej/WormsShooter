@@ -24,7 +24,7 @@ import particles.Particle;
 import spritesheets.SpriteLoader;
 import utilities.Controls;
 import utilities.ControlsEnum;
-import utilities.ViewInterface;
+import utilities.AbstractView;
 import utilities.communication.Action;
 import utilities.communication.Model;
 import utilities.communication.PacketBuilder;
@@ -34,7 +34,7 @@ import utilities.materials.MaterialVisuals;
  *
  * @author Skarab
  */
-public class ClientView extends ViewInterface implements
+public class ClientView extends AbstractView implements
         ActionListener,
         KeyListener,
         MouseMotionListener,
@@ -104,6 +104,7 @@ public class ClientView extends ViewInterface implements
         objects.add(comp);
     }
 
+    @Override
     public void init() {
         super.init();
         controls = Settings.getInstance().getControls();
@@ -112,6 +113,16 @@ public class ClientView extends ViewInterface implements
         addMouseListener(this);
         addMouseMotionListener(this);
         addKeyListener(this);
+    }
+
+    @Override
+    public void reset() {
+        super.reset();
+        removeMouseListener(this);
+        removeMouseMotionListener(this);
+        removeKeyListener(this);
+        body = null;
+        repaint();
     }
 
     @Override

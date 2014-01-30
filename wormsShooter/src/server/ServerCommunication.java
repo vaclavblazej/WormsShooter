@@ -124,11 +124,19 @@ public class ServerCommunication implements Remote, ServerComm {
              ServerComService.getInstance().broadcast(
              new PacketBuilder(Action.ADD_ITEM, id).addInfo(ItemEnum.BLOCK).build());
              break;*/
+            case DISCONNECT:
+                ServerComService.getInstance().disconnect(id);
+                break;
         }
     }
 
     public void bindBody(int id, TestBody body) {
         controls.put(id, body);
+    }
+
+    public void unbindBody(int id) {
+        ServerView.getInstance().removeBody(controls.get(id));
+        controls.remove(id);
     }
 
     @Override

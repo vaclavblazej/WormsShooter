@@ -8,7 +8,7 @@ import java.awt.geom.Point2D;
 import objects.items.ComponentTableModel;
 import objects.items.Item;
 import utilities.CollisionState;
-import utilities.ViewInterface;
+import utilities.AbstractView;
 import utilities.communication.Action;
 import utilities.communication.SerializableBody;
 
@@ -27,7 +27,7 @@ public class TestBody implements GraphicComponent {
     private Dimension REAL_SIZE;
     private int ratio;
     private boolean jump;
-    private ViewInterface map;
+    private AbstractView map;
     private ComponentTableModel inventory;
     private CollisionState state;
     private boolean alive;
@@ -35,7 +35,7 @@ public class TestBody implements GraphicComponent {
 
     public TestBody(Point2D.Double position, Point2D.Double velocity,
             Action movement, Dimension REAL_SIZE,
-            boolean jump, ViewInterface map) {
+            boolean jump, AbstractView map) {
         this.position = position;
         this.velocity = velocity;
         this.movement = movement;
@@ -48,7 +48,7 @@ public class TestBody implements GraphicComponent {
         this.alive = false;
     }
 
-    public TestBody(int x, int y, ViewInterface map) {
+    public TestBody(int x, int y, AbstractView map) {
         this(new Point.Double(x, y), new Point.Double(0, 0),
                 Action.MOVE_STOP, new Dimension(1, 2), false, map);
     }

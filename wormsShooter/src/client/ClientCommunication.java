@@ -3,10 +3,10 @@ package client;
 import java.awt.Point;
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
 import java.net.Socket;
-import java.net.UnknownHostException;
 import java.rmi.Naming;
 import java.rmi.NotBoundException;
 import java.rmi.RemoteException;
@@ -51,6 +51,7 @@ public class ClientCommunication {
     private Map<Integer, TestBody> controls;
     private int counter;
     private ItemFactory factory;
+    private volatile boolean running;
 
     private ClientCommunication() {
         listening = false;
@@ -61,15 +62,7 @@ public class ClientCommunication {
         serverComm = (ServerComm) Naming.lookup("//" + ip + ":"
                 + port + "/" + ServerComm.class.getSimpleName());
         info = serverComm.register(new RegistrationForm());
-        try {
-            clientSocket = new Socket(InetAddress.getByName(ip), 4243);
-            clientSocket.getOutputStream().write(("" + info.getId() + "\n").getBytes());
-            startSocket();
-        } catch (UnknownHostException ex) {
-            ClientWindow.getInstance().showError(new Exception("Could not connect to the Server"));
-        } catch (IOException ex) {
-            ClientWindow.getInstance().showError(new Exception("IOException in ClientCommunication init"));
-        }
+        startSocket(ip);
     }
 
     private TestBody createPlayer(int id) {
@@ -96,7 +89,20 @@ public class ClientCommunication {
         controls.put(id, body);
     }
 
-    private void startSocket() {
+    public void unbindBody(int id) {
+        ClientView.getInstance().removeBody(controls.get(id));
+        controls.remove(id);
+    }
+
+    private void startSocket(String ip) {
+        System.out.println("starting client socket");
+        try {
+            clientSocket = new Socket(InetAddress.getByName(ip), 4243);
+            new ObjectOutputStream(clientSocket.getOutputStream())
+                    .writeObject(new PacketBuilder(Action.CONFIRM).setId(info.getId()).build());
+        } catch (IOException ex) {
+            Logger.getLogger(ClientCommunication.class.getName()).log(Level.SEVERE, null, ex);
+        }
         if (clientSocket != null && listening == false) {
             listening = true;
             new Thread(new Runnable() {
@@ -109,27 +115,27 @@ public class ClientCommunication {
                     } catch (IOException ex) {
                         Logger.getLogger(ClientCommunication.class.getName()).log(Level.SEVERE, null, ex);
                     }
-                    while (true) {
+                    running = true;
+                    while (running) {
                         try {
                             packet = (Packet) objectInput.readObject();
                             Action type = packet.getAction();
                             int count = packet.getCount();
-                            int i;
+                            int id = packet.getId();;
                             if (count - counter <= 1) {
                                 switch (type) {
                                     case MOVE_LEFT:
                                     case MOVE_RIGHT:
                                     case MOVE_STOP:
                                     case MOVE_JUMP:
-                                        i = packet.getId();
-                                        controls.get(i).setPosition((Point) packet.get(0));
-                                        controls.get(i).setVelocity(
+                                        controls.get(id).setPosition((Point) packet.get(0));
+                                        controls.get(id).setVelocity(
                                                 new Point.Double((Double) packet.get(1), (Double) packet.get(2)));
-                                        controls.get(i).control(type);
+                                        controls.get(id).control(type);
                                         break;
                                     case MINE:
                                         Point p = (Point) packet.get(0);
-                                        ClientView.getInstance().change(p.x, p.y, (MaterialEnum)packet.get(1));
+                                        ClientView.getInstance().change(p.x, p.y, (MaterialEnum) packet.get(1));
                                         break;
                                     case CRAFT:
                                         ComponentTableModel inventory = controls.get(packet.getId()).getInventory();
@@ -144,17 +150,25 @@ public class ClientCommunication {
                                         MaterialEnum en = (MaterialEnum) packet.get(0);
                                         inv.add(Material.getComponents(en));
                                         break;
-                                    case CONNECT:
-                                        i = packet.getId();
-                                        if (i == 0) {
-                                            createPlayer(info.getId());
-                                        }
-                                        break;
                                     case ADD_ITEM:
                                         ClientView.getInstance().getMyBody().addItem(factory.get((ItemEnum) packet.get(0)));
                                         break;
+                                    case CONNECT:
+                                        if (id == 0) {
+                                            createPlayer(info.getId());
+                                        }
+                                        break;
                                     case CONFIRM:
                                         getModel();
+                                        break;
+                                    case DISCONNECT:
+                                        if (id == info.getId()) {
+                                            serverComm = null;
+                                            ClientView.getInstance().reset();
+                                            running = false;
+                                        } else {
+                                            unbindBody(id);
+                                        }
                                         break;
                                 }
                             } else {

@@ -1,8 +1,7 @@
 package server;
 
-import java.io.BufferedReader;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.io.OutputStream;
 import java.net.Inet4Address;
@@ -31,7 +30,7 @@ import utilities.communication.ServerInfo;
  *
  * @author plach_000
  */
-public class ServerComService {
+public final class ServerComService {
 
     private static ServerComService instance;
 
@@ -58,6 +57,9 @@ public class ServerComService {
             @Override
             public void run() {
                 ServerSocket ss = null;
+                ObjectInputStream objectInput;
+                Packet packet;
+                int id;
                 try {
                     ss = new ServerSocket(4243);
                 } catch (IOException ex) {
@@ -66,12 +68,15 @@ public class ServerComService {
                 while (true) {
                     try {
                         Socket socket = ss.accept();
-                        BufferedReader br = new BufferedReader(new InputStreamReader(socket.getInputStream()));
-                        int id = Integer.parseInt(br.readLine());
+                        objectInput = new ObjectInputStream(socket.getInputStream());
+                        packet = (Packet) objectInput.readObject();
+                        id = packet.getId();
                         if (ServerComService.getInstance().waitingRegistrations.containsKey(id)) {
                             ServerComService.getInstance().completeRegistration(id, new PlayerComInfo(socket));
                         }
                     } catch (IOException ex) {
+                        Logger.getLogger(ServerComService.class.getName()).log(Level.SEVERE, null, ex);
+                    } catch (ClassNotFoundException ex) {
                         Logger.getLogger(ServerComService.class.getName()).log(Level.SEVERE, null, ex);
                     }
                 }
@@ -141,6 +146,12 @@ public class ServerComService {
         players.put(id, pci);
         ServerCommunication.getInstance().bindBody(id, ServerView.getInstance().newBody());
         send(id, new PacketBuilder(Action.CONFIRM, id));
+    }
+
+    public void disconnect(int id) {
+        broadcast(new PacketBuilder(Action.DISCONNECT, id));
+        players.remove(id);
+        ServerCommunication.getInstance().unbindBody(id);
     }
 
     private class PlayerComInfo {
