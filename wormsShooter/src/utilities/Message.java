@@ -55,12 +55,10 @@ public enum Message {
     MENU_DISCONNECT;
 
     public String cm() {
-        Properties prop = new Properties();
-        InputStream input = null;
         try {
-            URL url = Message.class.getResource("messages.properties");
-            prop.load(new FileInputStream(url.getPath()));
-            return prop.getProperty(name());
+            Properties properties = new Properties();
+            properties.load(this.getClass().getResourceAsStream("messages.properties"));
+            return properties.getProperty(name());
         } catch (IOException ex) {
             ex.printStackTrace();
         }
