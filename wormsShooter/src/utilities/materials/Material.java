@@ -6,7 +6,7 @@ import java.util.Map;
 import objects.items.ComponentTableModel;
 import objects.items.ItemEnum;
 import objects.items.ItemFactory;
-import server.ServerPanel;
+import server.ServerView;
 import utilities.CollisionState;
 
 /**
@@ -23,7 +23,7 @@ public class Material {
         material = new HashMap<>();
         colors = new HashMap<>();
         ComponentTableModel ctm;
-        ItemFactory factory = ServerPanel.getInstance().getItemFactory();
+        ItemFactory factory = ServerView.getInstance().getItemFactory();
         addMaterial(MaterialEnum.AIR, "#00AAFF", CollisionState.GAS, null);
         addMaterial(MaterialEnum.WATER, "#0000FF", CollisionState.LIQUID, null);
         addMaterial(MaterialEnum.DIRT, "#804000", CollisionState.SOLID, null);

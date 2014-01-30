@@ -17,7 +17,7 @@ public class ServerWindow extends JFrame {
         setResizable(false);
 
         setLayout(new BorderLayout());
-        add(ServerPanel.getInstance(), BorderLayout.CENTER);
+        add(ServerView.getInstance(), BorderLayout.CENTER);
         pack();
         //setLocationRelativeTo(null);
         setLocation(70, 10);

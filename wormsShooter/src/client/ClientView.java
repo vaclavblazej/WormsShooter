@@ -1,12 +1,10 @@
 package client;
 
 import client.menu.Settings;
-import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.Point;
-import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -16,91 +14,59 @@ import java.awt.event.MouseMotionListener;
 import java.awt.image.BufferedImage;
 import java.awt.image.RasterFormatException;
 import java.rmi.RemoteException;
-import java.util.ArrayList;
-import java.util.Collection;
 import java.util.EnumSet;
-import java.util.Random;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import javax.swing.JPanel;
-import javax.swing.Timer;
 import objects.GraphicComponent;
 import objects.Miscellaneous;
 import objects.TestBody;
 import particles.Particle;
-import particles.Sand;
 import spritesheets.SpriteLoader;
-import utilities.CollisionState;
 import utilities.Controls;
 import utilities.ControlsEnum;
-import utilities.MapInterface;
-import utilities.materials.MaterialVisuals;
-import utilities.materials.Material;
+import utilities.ViewInterface;
 import utilities.communication.Action;
 import utilities.communication.Model;
 import utilities.communication.PacketBuilder;
-import utilities.materials.MaterialEnum;
+import utilities.materials.MaterialVisuals;
 
 /**
  *
  * @author Skarab
  */
-public class MainPanel extends JPanel implements
-        MapInterface,
+public class ClientView extends ViewInterface implements
         ActionListener,
         KeyListener,
         MouseMotionListener,
         MouseListener {
 
-    public static final int RATIO = 20;
-    public static final Dimension SIZE = new Dimension(800, 600);
-    public static final Dimension VIEW_SIZE = new Dimension(SIZE.width / RATIO, SIZE.height / RATIO);
-    private static final int RNG = 20;
+    private final Dimension VIEW_SIZE;
     private static Controls controls;
-    private static CopyOnWriteArrayList<Particle> grains;
     private static Point mouse;
-    private static MainPanel instance;
+    private static ClientView instance;
 
-    public static MainPanel getInstance() {
+    public static ClientView getInstance() {
         if (instance == null) {
-            instance = new MainPanel();
+            instance = new ClientView();
         }
         return instance;
     }
-    private Timer timer;
     private TestBody body;
     private EnumSet<ControlsEnum> controlSet;
-    private Collection<TestBody> bodies;
-    private CopyOnWriteArrayList<GraphicComponent> objects;
-    private BufferedImage map;
     private BufferedImage curentView;
     private BufferedImage realView;
     private Point currentPosition;
-    private Random random;
-    private Model model;
 
-    private MainPanel() {
-        random = new Random();
+    private ClientView() {
+        super(800, 600, 20);
         map = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
-        realView = new BufferedImage(SIZE.width, SIZE.height, BufferedImage.TYPE_INT_RGB);
+        realView = new BufferedImage(800, 600, BufferedImage.TYPE_INT_RGB);
+        VIEW_SIZE = new Dimension(800 / getRatio(), 600 / getRatio());
         curentView = new BufferedImage(VIEW_SIZE.width, VIEW_SIZE.height, BufferedImage.TYPE_INT_RGB);
         currentPosition = new Point(30, 20);
         controlSet = EnumSet.noneOf(ControlsEnum.class);
         body = new TestBody(100, 100, this);
         mouse = new Point();
-        grains = new CopyOnWriteArrayList<>();
-        objects = new CopyOnWriteArrayList<>();
-        bodies = new ArrayList<>(10);
-        setFocusable(true);
-        setPreferredSize(SIZE);
-        /*SwingUtilities.invokeLater(new Runnable() {
-         @Override
-         public void run() {
-         init();
-         }
-         });*/
-        //test();
     }
 
     private void test() {
@@ -110,30 +76,20 @@ public class MainPanel extends JPanel implements
         addObject(m);
     }
 
+    @Override
     public Model getModel() {
         return model;
     }
 
+    @Override
     public void setModel(Model model) {
+        super.setModel(model);
         map = model.getMap();
         bodies = model.getControls().values();
-        this.model = model;
-    }
-
-    public void change(Point point, MaterialEnum mat) {
-        Graphics g = map.getGraphics();
-        g.setColor(mat.getColor());
-        g.drawLine(point.x, point.y, point.x, point.y);
     }
 
     public void addBody(TestBody body) {
         bodies.add(body);
-    }
-
-    public TestBody newBody() {
-        TestBody body = new TestBody(100, 100, this);
-        bodies.add(body);
-        return body;
     }
 
     public void setMyBody(TestBody body) {
@@ -144,70 +100,18 @@ public class MainPanel extends JPanel implements
         return body;
     }
 
-    @Override
-    public int getRatio() {
-        return RATIO;
-    }
-
-    @Override
-    public CollisionState check(int x, int y) {
-        return Material.check(getPixel(x, y));
-    }
-
-    public Color getPixel(int x, int y) {
-        try {
-            return new Color(map.getRGB(x, y));
-        } catch (ArrayIndexOutOfBoundsException ex) {
-            return Color.BLACK;
-        }
-    }
-
-    public void imprint(Particle gr) {
-        destroy(gr);
-        Graphics g = map.getGraphics();
-        g.setColor(gr.color);
-        gr.draw(g);
-    }
-
-    public void imprint(int x, int y, Color color) {
-        Graphics g = map.getGraphics();
-        g.setColor(color);
-        g.drawLine(x, y, x, y);
-    }
-
-    public void swap(int x, int y, int sx, int sy) {
-        Color first = getPixel(x, y);
-        Color second = getPixel(sx, sy);
-        imprint(x, y, second);
-        imprint(sx, sy, first);
-    }
-
-    private void erase(int x, int y, int r) {
-        for (int i = 0; i < r; i++) {
-            for (int j = 0; j < r; j++) {
-                imprint(x + i, y + j, Color.BLACK);
-            }
-        }
-    }
-
-    public void destroy(Particle gr) {
-        grains.remove(gr);
-    }
-
     private void addObject(GraphicComponent comp) {
         objects.add(comp);
     }
 
     public void init() {
-        Dimension mapSize = SIZE;
-        timer = new Timer(40, this);
+        super.init();
         controls = Settings.getInstance().getControls();
         Settings.getInstance().setControls(controls);
         repaint();
         addMouseListener(this);
         addMouseMotionListener(this);
         addKeyListener(this);
-        timer.start();
     }
 
     @Override
@@ -218,28 +122,21 @@ public class MainPanel extends JPanel implements
             currentPosition.y = body.getPosition().y - VIEW_SIZE.height / 2;
         }
         try {
-            curentView = map.getSubimage(currentPosition.x, currentPosition.y, VIEW_SIZE.width, VIEW_SIZE.height);
+            curentView = map.getSubimage(currentPosition.x, currentPosition.y,
+                    VIEW_SIZE.width, VIEW_SIZE.height);
             MaterialVisuals.redraw(curentView, realView);
         } catch (RasterFormatException ex) {
+            // todo - fix exception when you are near end of the map
         }
-        // todo - fix exception when you are near end of the map
         Graphics2D g = (Graphics2D) grphcs;
         g.drawImage(realView, 0, 0, getWidth(), getHeight(), null);
-        g.translate(RATIO * VIEW_SIZE.width / 2, RATIO * VIEW_SIZE.height / 2);
-        for (TestBody b : bodies) {
-            b.drawRelative(g);
+        g.translate(getRatio() * VIEW_SIZE.width / 2, getRatio() * VIEW_SIZE.height / 2);
+        if (body != null) {
+            body.drawRelative(g);
         }
         for (GraphicComponent o : objects) {
             o.draw(g);
         }
-    }
-
-    @Override
-    public void actionPerformed(ActionEvent ae) {
-        for (TestBody b : bodies) {
-            b.tick();
-        }
-        repaint();
     }
 
     @Override
@@ -249,9 +146,6 @@ public class MainPanel extends JPanel implements
         if (en != null && controlSet.add(en)) {
             try {
                 switch (en) {
-                    /*case MINE:
-                        ClientCommunication.getInstance().sendAction(new PacketBuilder(Action.MINE));
-                        break;*/
                     case UP:
                         ClientCommunication.getInstance().sendAction(new PacketBuilder(Action.MOVE_JUMP));
                         break;
@@ -262,7 +156,7 @@ public class MainPanel extends JPanel implements
                 }
 
             } catch (RemoteException ex) {
-                Logger.getLogger(MainPanel.class.getName()).log(Level.SEVERE, null, ex);
+                Logger.getLogger(ClientView.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }
@@ -302,7 +196,7 @@ public class MainPanel extends JPanel implements
                     break;
             }
         } catch (RemoteException ex) {
-            Logger.getLogger(MainPanel.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(ClientView.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
@@ -320,13 +214,13 @@ public class MainPanel extends JPanel implements
         mouse.y = e.getY();
         switch (e.getButton()) {
             case MouseEvent.BUTTON1:
-                int x = currentPosition.x + e.getX() / RATIO;
-                int y = currentPosition.y + e.getY() / RATIO;
+                int x = currentPosition.x + e.getX() / getRatio();
+                int y = currentPosition.y + e.getY() / getRatio();
                 try {
                     ClientCommunication.getInstance().sendAction(
                             new PacketBuilder(Action.MINE).addInfo(new Point(x, y)));
                 } catch (RemoteException ex) {
-                    Logger.getLogger(MainPanel.class.getName()).log(Level.SEVERE, null, ex);
+                    Logger.getLogger(ClientView.class.getName()).log(Level.SEVERE, null, ex);
                 }
                 break;
         }

@@ -54,6 +54,7 @@ public class MaterialVisuals implements Serializable {
                 }
             }
         }
+        g.dispose();
     }
 
     private MaterialVisuals() {

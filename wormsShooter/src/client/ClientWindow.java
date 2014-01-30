@@ -13,20 +13,20 @@ import utilities.Message;
  *
  * @author Skarab
  */
-public class GameWindow extends JFrame {
+public class ClientWindow extends JFrame {
 
-    private static GameWindow instance;
+    private static ClientWindow instance;
 
-    public static GameWindow getInstance() {
+    public static ClientWindow getInstance() {
         if (instance == null) {
-            instance = new GameWindow(Message.CLIENT_WINDOW_TITLE.cm());
+            instance = new ClientWindow(Message.CLIENT_WINDOW_TITLE.cm());
         }
         return instance;
     }
-    private MainPanel gamePlane;
+    private ClientView gamePlane;
     private JMenuBar menuBar;
 
-    public GameWindow(String title) {
+    public ClientWindow(String title) {
         super(title);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
@@ -36,7 +36,7 @@ public class GameWindow extends JFrame {
         setJMenuBar(menuBar);
 
         setLayout(new BorderLayout());
-        gamePlane = MainPanel.getInstance();
+        gamePlane = ClientView.getInstance();
         add(gamePlane, BorderLayout.CENTER);
         pack();
         //setLocationRelativeTo(null);

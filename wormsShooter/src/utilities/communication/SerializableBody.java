@@ -5,7 +5,7 @@ import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.io.Serializable;
 import objects.TestBody;
-import utilities.MapInterface;
+import utilities.ViewInterface;
 
 /**
  *
@@ -29,7 +29,7 @@ public class SerializableBody implements Serializable {
         this.jump = jump;
     }
 
-    public TestBody deserialize(MapInterface map) {
+    public TestBody deserialize(ViewInterface map) {
         return new TestBody(position, velocity, movement, REAL_SIZE, jump, map);
     }
 }

@@ -79,19 +79,22 @@ public class ServerCommunication implements Remote, ServerComm {
         Action action = packet.getAction();
         int id = packet.getId();
         ServerComService service = ServerComService.getInstance();
+        Point pos;
         switch (action) {
             case MINE:
                 Point p = (Point) packet.get(0);
                 int x = p.x;
                 int y = p.y;
                 body = controls.get(id);
-                int distance = Math.abs(body.getPosition().x - x)
-                        + Math.abs(body.getPosition().y - y);
+                pos = body.getPosition();
+                int distance = Math.abs(pos.x - x) + Math.abs(pos.y - y);
                 if (distance < 6) {
-                    MaterialEnum mat = ServerPanel.getInstance().change(x, y, MaterialEnum.AIR);
+                    MaterialEnum to = MaterialEnum.AIR;
+                    MaterialEnum mat = ServerView.getInstance().change(x, y, to);
                     body.getInventory().add(Material.getComponents(mat));
                     service.broadcast(new PacketBuilder(Action.OBTAIN, id).addInfo(mat).build());
-                    service.broadcast(new PacketBuilder(Action.MINE, id).addInfo(new Point(x, y)).build());
+                    service.broadcast(new PacketBuilder(Action.MINE, id)
+                            .addInfo(new Point(x, y)).addInfo(to).build());
                 }
                 break;
             case MOVE_LEFT:
@@ -100,7 +103,7 @@ public class ServerCommunication implements Remote, ServerComm {
             case MOVE_JUMP:
                 body = controls.get(id);
                 if (body != null) {
-                    Point pos = body.getPosition();
+                    pos = body.getPosition();
                     Point.Double vel = body.getVelocity();
                     service.broadcast(new PacketBuilder(action, id).addInfo(pos)
                             .addInfo(vel.x).addInfo(vel.y).build());
@@ -110,7 +113,7 @@ public class ServerCommunication implements Remote, ServerComm {
             case CRAFT:
                 int idx = (Integer) packet.get(0);
                 ComponentTableModel inventory = controls.get(id).getInventory();
-                Recipe receipe = ServerPanel.getInstance().getModel().getFactory()
+                Recipe receipe = ServerView.getInstance().getModel().getFactory()
                         .getRecipes().getReceipe(idx);
                 inventory.remove(receipe.getIngredients());
                 inventory.add(receipe.getProducts());
@@ -140,6 +143,6 @@ public class ServerCommunication implements Remote, ServerComm {
 
     @Override
     public SerializableModel getModel(int id) throws RemoteException {
-        return ServerPanel.getInstance().getModel().serialize();
+        return ServerView.getInstance().getModel().serialize();
     }
 }

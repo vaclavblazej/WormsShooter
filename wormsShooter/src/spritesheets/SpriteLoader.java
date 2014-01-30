@@ -4,7 +4,7 @@ package spritesheets;
  *
  * @author Skarab
  */
-import client.GameWindow;
+import client.ClientWindow;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
@@ -46,7 +46,7 @@ public class SpriteLoader {
                 sprite = ImageIO.read(serverUrl);
                 saveSprite(file, sprite);
             } catch (IllegalArgumentException | IOException ex) {
-                GameWindow.getInstance().showError(new Exception(
+                ClientWindow.getInstance().showError(new Exception(
                         Message.IMAGE_LOAD_ERROR.cm()
                         + Message.IMAGE_FOLDER.cm()
                         + file

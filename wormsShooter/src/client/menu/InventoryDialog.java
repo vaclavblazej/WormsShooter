@@ -1,6 +1,6 @@
 package client.menu;
 
-import client.MainPanel;
+import client.ClientView;
 import javax.swing.JFrame;
 import javax.swing.JScrollPane;
 import javax.swing.JSplitPane;
@@ -23,7 +23,7 @@ public class InventoryDialog extends AbstractDialog {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-        items = new JTable(MainPanel.getInstance().getMyBody().getInventory());
+        items = new JTable(ClientView.getInstance().getMyBody().getInventory());
         split.add(new JScrollPane(items), 1);
         split.add(new CraftingPanel(), 2);
         getContent().add(split);

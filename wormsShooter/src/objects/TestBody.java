@@ -8,8 +8,7 @@ import java.awt.geom.Point2D;
 import objects.items.ComponentTableModel;
 import objects.items.Item;
 import utilities.CollisionState;
-import static utilities.CollisionState.GAS;
-import utilities.MapInterface;
+import utilities.ViewInterface;
 import utilities.communication.Action;
 import utilities.communication.SerializableBody;
 
@@ -20,6 +19,7 @@ import utilities.communication.SerializableBody;
 public class TestBody implements GraphicComponent {
 
     private static final double JUMP = 0.6;
+    private static final int INITIAL_HEALTH = 100;
     private Point.Double position;
     private Point.Double velocity;
     private Action movement;
@@ -27,13 +27,15 @@ public class TestBody implements GraphicComponent {
     private Dimension REAL_SIZE;
     private int ratio;
     private boolean jump;
-    private MapInterface map;
+    private ViewInterface map;
     private ComponentTableModel inventory;
     private CollisionState state;
+    private boolean alive;
+    private int health;
 
     public TestBody(Point2D.Double position, Point2D.Double velocity,
             Action movement, Dimension REAL_SIZE,
-            boolean jump, MapInterface map) {
+            boolean jump, ViewInterface map) {
         this.position = position;
         this.velocity = velocity;
         this.movement = movement;
@@ -43,9 +45,10 @@ public class TestBody implements GraphicComponent {
         this.jump = jump;
         this.map = map;
         this.inventory = new ComponentTableModel("Item", "Count");
+        this.alive = false;
     }
 
-    public TestBody(int x, int y, MapInterface map) {
+    public TestBody(int x, int y, ViewInterface map) {
         this(new Point.Double(x, y), new Point.Double(0, 0),
                 Action.MOVE_STOP, new Dimension(1, 2), false, map);
     }
@@ -136,6 +139,30 @@ public class TestBody implements GraphicComponent {
                     jump = false;
                 }
                 break;
+        }
+    }
+
+    public boolean isAlive() {
+        return alive;
+    }
+
+    public void spawn() {
+        alive = true;
+        health = INITIAL_HEALTH;
+    }
+
+    public void die() {
+        alive = false;
+    }
+
+    public void heal(int heal) {
+        health += heal;
+    }
+
+    public void damage(int damage) {
+        health -= damage;
+        if (health <= 0) {
+            die();
         }
     }
 

@@ -1,10 +1,9 @@
 package utilities;
 
-import java.io.FileInputStream;
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
 import java.util.Properties;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  *
@@ -53,14 +52,17 @@ public enum Message {
     MENU_CONNECTION,
     MENU_CONNECT,
     MENU_DISCONNECT;
+    private static Properties properties;
 
     public String cm() {
         try {
-            Properties properties = new Properties();
-            properties.load(this.getClass().getResourceAsStream("messages.properties"));
+            if (properties == null) {
+                properties = new Properties();
+                properties.load(this.getClass().getResourceAsStream("messages.properties"));
+            }
             return properties.getProperty(name());
         } catch (IOException ex) {
-            ex.printStackTrace();
+            Logger.getLogger(Message.class.getName()).log(Level.SEVERE, null, ex);
         }
         return "ERROR";
     }

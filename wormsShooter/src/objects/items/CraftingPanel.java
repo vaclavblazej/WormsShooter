@@ -1,7 +1,7 @@
 package objects.items;
 
 import client.ClientCommunication;
-import client.MainPanel;
+import client.ClientView;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -40,7 +40,7 @@ public class CraftingPanel extends JPanel implements ListSelectionListener {
     public CraftingPanel() {
         super();
         setLayout(new BorderLayout());
-        recepiesModel = MainPanel.getInstance().getModel().getFactory().getRecipes();
+        recepiesModel = ClientView.getInstance().getModel().getFactory().getRecipes();
         recepies = new JTable(recepiesModel);
         recepiesScroll = new JScrollPane(recepies);
         recepiesScroll.setPreferredSize(new Dimension(200, 100));
@@ -53,7 +53,7 @@ public class CraftingPanel extends JPanel implements ListSelectionListener {
         craftButton = new JButton(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ComponentTableModel inventory = MainPanel.getInstance().getMyBody().getInventory();
+                ComponentTableModel inventory = ClientView.getInstance().getMyBody().getInventory();
                 if (inventory.contains(ingredientsModel)) {
                     try {
                         ClientCommunication.getInstance().sendAction(new PacketBuilder(Action.CRAFT).addInfo(new Integer(lastIndex)));

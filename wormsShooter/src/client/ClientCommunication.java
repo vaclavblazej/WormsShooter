@@ -66,14 +66,14 @@ public class ClientCommunication {
             clientSocket.getOutputStream().write(("" + info.getId() + "\n").getBytes());
             startSocket();
         } catch (UnknownHostException ex) {
-            GameWindow.getInstance().showError(new Exception("Could not connect to the Server"));
+            ClientWindow.getInstance().showError(new Exception("Could not connect to the Server"));
         } catch (IOException ex) {
-            GameWindow.getInstance().showError(new Exception("IOException in ClientCommunication init"));
+            ClientWindow.getInstance().showError(new Exception("IOException in ClientCommunication init"));
         }
     }
 
     private TestBody createPlayer(int id) {
-        TestBody b = MainPanel.getInstance().newBody();
+        TestBody b = ClientView.getInstance().newBody();
         bindBody(id, b);
         return b;
     }
@@ -84,12 +84,12 @@ public class ClientCommunication {
 
     public void getModel() throws RemoteException {
         System.out.println("Transmission: model");
-        Model model = serverComm.getModel(info.getId()).deserialize(MainPanel.getInstance());
-        MainPanel.getInstance().setModel(model);
+        Model model = serverComm.getModel(info.getId()).deserialize(ClientView.getInstance());
+        ClientView.getInstance().setModel(model);
         controls = model.getControls();
         counter = model.getCounter();
         factory = model.getFactory();
-        MainPanel.getInstance().setMyBody(controls.get(info.getId()));
+        ClientView.getInstance().setMyBody(controls.get(info.getId()));
     }
 
     public void bindBody(int id, TestBody body) {
@@ -128,7 +128,8 @@ public class ClientCommunication {
                                         controls.get(i).control(type);
                                         break;
                                     case MINE:
-                                        MainPanel.getInstance().change((Point) packet.get(0), MaterialEnum.AIR);
+                                        Point p = (Point) packet.get(0);
+                                        ClientView.getInstance().change(p.x, p.y, (MaterialEnum)packet.get(1));
                                         break;
                                     case CRAFT:
                                         ComponentTableModel inventory = controls.get(packet.getId()).getInventory();
@@ -150,7 +151,7 @@ public class ClientCommunication {
                                         }
                                         break;
                                     case ADD_ITEM:
-                                        MainPanel.getInstance().getMyBody().addItem(factory.get((ItemEnum) packet.get(0)));
+                                        ClientView.getInstance().getMyBody().addItem(factory.get((ItemEnum) packet.get(0)));
                                         break;
                                     case CONFIRM:
                                         getModel();

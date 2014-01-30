@@ -1,7 +1,7 @@
 package client.menu;
 
 import client.ClientCommunication;
-import client.MainPanel;
+import client.ClientView;
 import java.awt.GridBagLayout;
 import java.net.InetAddress;
 import java.net.MalformedURLException;
@@ -67,7 +67,7 @@ public class GameLauncher extends AbstractDialog {
                 Main.startServer(Integer.parseInt(serverSocket.getText()));
             }
             ClientCommunication.getInstance().init(address.getText(), clientSocket.getText());
-            MainPanel.getInstance().init();
+            ClientView.getInstance().init();
         } catch (NotBoundException ex) {
             Logger.getLogger(GameLauncher.class.getName()).log(Level.SEVERE, null, ex);
             //todo exception dialog

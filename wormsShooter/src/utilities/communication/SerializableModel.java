@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 import objects.TestBody;
 import objects.items.ItemFactory;
-import utilities.MapInterface;
+import utilities.ViewInterface;
 
 /**
  *
@@ -25,7 +25,7 @@ public class SerializableModel implements Serializable {
         this.counter = counter;
     }
 
-    public Model deserialize(MapInterface listener) {
+    public Model deserialize(ViewInterface listener) {
         Map<Integer, TestBody> arr = new HashMap<>();
         for (Integer i : controls.keySet()) {
             arr.put(i, controls.get(i).deserialize(listener));

@@ -1,6 +1,6 @@
 package client.menu;
 
-import client.GameWindow;
+import client.ClientWindow;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -24,7 +24,7 @@ public class GameWindowMenu extends JMenuBar {
         item.setAction(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new SettingsDialog(GameWindow.getInstance());
+                new SettingsDialog(ClientWindow.getInstance());
             }
         });
         item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_O, 0));
@@ -34,7 +34,7 @@ public class GameWindowMenu extends JMenuBar {
         item.setAction(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                new InventoryDialog(GameWindow.getInstance());
+                new InventoryDialog(ClientWindow.getInstance());
             }
         });
         item.setAccelerator(KeyStroke.getKeyStroke(KeyEvent.VK_I, 0));
@@ -57,7 +57,7 @@ public class GameWindowMenu extends JMenuBar {
         item.setAction(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                GameWindow.getInstance().launch();
+                ClientWindow.getInstance().launch();
             }
         });
         item.setText(Message.MENU_CONNECT.cm());

@@ -1,9 +1,10 @@
 package particles;
 
+import client.ClientView;
 import java.awt.Color;
+import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Point;
-import client.MainPanel;
 
 /**
  *
@@ -29,6 +30,6 @@ public abstract class Particle {
     public abstract void draw(Graphics g);
 
     public boolean clear() {
-        return position.x < 0 || position.y < 0 || position.x > MainPanel.SIZE.width || position.y > MainPanel.SIZE.height;
+        return false;//position.x < 0 || position.y < 0 || position.x > ClientView.SIZE.width || position.y > ClientView.SIZE.height;
     }
 }

@@ -1,12 +1,12 @@
 package main;
 
-import client.GameWindow;
+import client.ClientWindow;
 import java.rmi.RemoteException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import server.ServerCommunication;
-import server.ServerPanel;
+import server.ServerView;
 import server.ServerWindow;
 
 /**
@@ -27,7 +27,7 @@ public class Main {
     }
 
     public static void startGame() {
-        GameWindow.getInstance().launch();
+        ClientWindow.getInstance().launch();
         /*GameWindow.getInstance();
          Main.startServer();
          try {
@@ -54,7 +54,7 @@ public class Main {
 
     public static void exit() {
         if (server) {
-            ServerPanel.getInstance().save();
+            ServerView.getInstance().save();
         }
         System.exit(0);
     }

@@ -139,7 +139,7 @@ public class ServerComService {
     private void completeRegistration(int id, PlayerComInfo pci) {
         broadcast(new PacketBuilder(Action.CONNECT, id).build());
         players.put(id, pci);
-        ServerCommunication.getInstance().bindBody(id, ServerPanel.getInstance().newBody());
+        ServerCommunication.getInstance().bindBody(id, ServerView.getInstance().newBody());
         send(id, new PacketBuilder(Action.CONFIRM, id).build());
     }
 

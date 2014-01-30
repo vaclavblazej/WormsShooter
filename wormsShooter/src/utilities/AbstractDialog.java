@@ -1,6 +1,6 @@
 package utilities;
 
-import client.GameWindow;
+import client.ClientWindow;
 import java.awt.BorderLayout;
 import java.awt.Color;
 import java.awt.Dimension;
@@ -80,7 +80,7 @@ public abstract class AbstractDialog extends JDialog implements Validator {
                     AbstractDialog.this.cancelAction();
                     AbstractDialog.this.dispose();
                 } catch (Exception ex) {
-                    GameWindow.getInstance().showError(ex);
+                    ClientWindow.getInstance().showError(ex);
                 }
             }
         }));
@@ -92,7 +92,7 @@ public abstract class AbstractDialog extends JDialog implements Validator {
                     AbstractDialog.this.okAction();
                     AbstractDialog.this.dispose();
                 } catch (Exception ex) {
-                    GameWindow.getInstance().showError(ex);
+                    ClientWindow.getInstance().showError(ex);
                 }
             }
         };
