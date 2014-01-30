@@ -22,9 +22,9 @@ import objects.Miscellaneous;
 import objects.TestBody;
 import particles.Particle;
 import spritesheets.SpriteLoader;
+import utilities.AbstractView;
 import utilities.Controls;
 import utilities.ControlsEnum;
-import utilities.AbstractView;
 import utilities.communication.Action;
 import utilities.communication.Model;
 import utilities.communication.PacketBuilder;
@@ -65,7 +65,6 @@ public class ClientView extends AbstractView implements
         curentView = new BufferedImage(VIEW_SIZE.width, VIEW_SIZE.height, BufferedImage.TYPE_INT_RGB);
         currentPosition = new Point(30, 20);
         controlSet = EnumSet.noneOf(ControlsEnum.class);
-        body = new TestBody(100, 100, this);
         mouse = new Point();
     }
 

@@ -54,8 +54,6 @@ public class ClientCommunication {
     private volatile boolean running;
 
     private ClientCommunication() {
-        listening = false;
-        controls = new HashMap<>(20);
     }
 
     public void init(String ip, String port) throws NotBoundException, MalformedURLException, RemoteException {
@@ -63,6 +61,8 @@ public class ClientCommunication {
                 + port + "/" + ServerComm.class.getSimpleName());
         info = serverComm.register(new RegistrationForm());
         startSocket(ip);
+        listening = false;
+        controls = new HashMap<>(20);
     }
 
     private TestBody createPlayer(int id) {
@@ -76,7 +76,7 @@ public class ClientCommunication {
     }
 
     public void getModel() throws RemoteException {
-        System.out.println("Transmission: model");
+        System.out.println("Client: getting model");
         Model model = serverComm.getModel(info.getId()).deserialize(ClientView.getInstance());
         ClientView.getInstance().setModel(model);
         controls = model.getControls();
@@ -95,7 +95,7 @@ public class ClientCommunication {
     }
 
     private void startSocket(String ip) {
-        System.out.println("starting client socket");
+        System.out.println("Client: starting socket");
         try {
             clientSocket = new Socket(InetAddress.getByName(ip), 4243);
             new ObjectOutputStream(clientSocket.getOutputStream())
@@ -181,7 +181,8 @@ public class ClientCommunication {
                             Logger.getLogger(ClientCommunication.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
-
+                    System.out.println("Client: terminating socket");
+                    listening = false;
                 }
             }).start();
         }
