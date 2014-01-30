@@ -92,9 +92,9 @@ public class ServerCommunication implements Remote, ServerComm {
                     MaterialEnum to = MaterialEnum.AIR;
                     MaterialEnum mat = ServerView.getInstance().change(x, y, to);
                     body.getInventory().add(Material.getComponents(mat));
-                    service.broadcast(new PacketBuilder(Action.OBTAIN, id).addInfo(mat).build());
+                    service.broadcast(new PacketBuilder(Action.OBTAIN, id).addInfo(mat));
                     service.broadcast(new PacketBuilder(Action.MINE, id)
-                            .addInfo(new Point(x, y)).addInfo(to).build());
+                            .addInfo(new Point(x, y)).addInfo(to));
                 }
                 break;
             case MOVE_LEFT:
@@ -106,7 +106,7 @@ public class ServerCommunication implements Remote, ServerComm {
                     pos = body.getPosition();
                     Point.Double vel = body.getVelocity();
                     service.broadcast(new PacketBuilder(action, id).addInfo(pos)
-                            .addInfo(vel.x).addInfo(vel.y).build());
+                            .addInfo(vel.x).addInfo(vel.y));
                     body.control(action);
                 }
                 break;
@@ -117,7 +117,7 @@ public class ServerCommunication implements Remote, ServerComm {
                         .getRecipes().getReceipe(idx);
                 inventory.remove(receipe.getIngredients());
                 inventory.add(receipe.getProducts());
-                service.broadcast(new PacketBuilder(Action.CRAFT, id).addInfo(idx).build());
+                service.broadcast(new PacketBuilder(Action.CRAFT, id).addInfo(idx));
                 break;
             /*case TAKE:
              body.addItem(ServerPanel.getInstance().getItemFactory().get(ItemEnum.));

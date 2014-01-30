@@ -79,19 +79,19 @@ public class ServerComService {
         }).start();
     }
 
-    public void send(int id, Packet packet) {
+    public void send(int id, PacketBuilder pb) {
         try {
-            packet.setCount(counter);
-            players.get(id).objectOutput.writeObject(packet);
+            pb.setCount(counter);
+            players.get(id).objectOutput.writeObject(pb.build());
         } catch (IOException ex) {
             Logger.getLogger(ServerComService.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    public void broadcast(Packet packet) {
+    public void broadcast(PacketBuilder pb) {
         counter++;
         for (Integer player : players.keySet()) {
-            send(player, packet);
+            send(player, pb);
         }
     }
 
@@ -137,10 +137,10 @@ public class ServerComService {
     }
 
     private void completeRegistration(int id, PlayerComInfo pci) {
-        broadcast(new PacketBuilder(Action.CONNECT, id).build());
+        broadcast(new PacketBuilder(Action.CONNECT, id));
         players.put(id, pci);
         ServerCommunication.getInstance().bindBody(id, ServerView.getInstance().newBody());
-        send(id, new PacketBuilder(Action.CONFIRM, id).build());
+        send(id, new PacketBuilder(Action.CONFIRM, id));
     }
 
     private class PlayerComInfo {
