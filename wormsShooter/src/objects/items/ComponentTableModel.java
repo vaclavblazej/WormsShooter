@@ -77,6 +77,10 @@ public class ComponentTableModel extends AbstractTableModel implements Serializa
         return Collections.unmodifiableList(components);
     }
 
+    public boolean isUsable(int index) {
+        return components.get(index).item.isUsable();
+    }
+
     @Override
     public int getRowCount() {
         return components.size();

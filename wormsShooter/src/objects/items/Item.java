@@ -9,8 +9,8 @@ import java.io.Serializable;
  */
 public class Item extends ItemBlueprint implements Serializable {
 
-    public Item(String name, Point size) {
-        super(name, size);
+    public Item(String name, boolean usable, Point size) {
+        super(name, usable, size);
     }
 
     @Override

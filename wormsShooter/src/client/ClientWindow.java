@@ -41,7 +41,7 @@ public class ClientWindow extends JFrame {
 
         itemBar = GameWindowItemBar.getInstance();
         add(itemBar, BorderLayout.SOUTH);
-        
+
         gamePlane = ClientView.getInstance();
         add(gamePlane, BorderLayout.CENTER);
         pack();

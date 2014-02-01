@@ -50,15 +50,15 @@ public class ServerView extends AbstractView {
 
     private ItemFactory createItems() {
         ItemFactory itemFactory = new ItemFactory();
-        itemFactory.addItem(ItemEnum.METAL, new ItemBlueprint("Metal", 1, 1));
-        itemFactory.addItem(ItemEnum.GUN_POWDER, new ItemBlueprint("Gun powder", 1, 1));
-        itemFactory.addItem(ItemEnum.BULLET, new ItemBlueprint("Bullet", 1, 1));
-        itemFactory.addItem(ItemEnum.HANDGUN, new ItemBlueprint("Gun", 2, 2));
-        itemFactory.addItem(ItemEnum.HANDGUN_MAGAZINE, new ItemBlueprint("Magazine", 1, 2));
-        itemFactory.addItem(ItemEnum.HANDGUN_BARREL, new ItemBlueprint("Barrel", 2, 1));
-        itemFactory.addItem(ItemEnum.HANDGUN_MECHANISM, new ItemBlueprint("Mechanism", 1, 1));
-        itemFactory.addItem(ItemEnum.HANDGUN_HANDLE, new ItemBlueprint("Handle", 2, 2));
-        itemFactory.addItem(ItemEnum.HANDGUN_OPTICS, new ItemBlueprint("Optics", 2, 1));
+        itemFactory.addItem(ItemEnum.METAL, new ItemBlueprint("Metal", false, 1, 1));
+        itemFactory.addItem(ItemEnum.GUN_POWDER, new ItemBlueprint("Gun powder", true, 1, 1));
+        itemFactory.addItem(ItemEnum.BULLET, new ItemBlueprint("Bullet", false, 1, 1));
+        itemFactory.addItem(ItemEnum.HANDGUN, new ItemBlueprint("Gun", true, 2, 2));
+        itemFactory.addItem(ItemEnum.HANDGUN_MAGAZINE, new ItemBlueprint("Magazine", false, 1, 2));
+        itemFactory.addItem(ItemEnum.HANDGUN_BARREL, new ItemBlueprint("Barrel", false, 2, 1));
+        itemFactory.addItem(ItemEnum.HANDGUN_MECHANISM, new ItemBlueprint("Mechanism", false, 1, 1));
+        itemFactory.addItem(ItemEnum.HANDGUN_HANDLE, new ItemBlueprint("Handle", false, 2, 2));
+        itemFactory.addItem(ItemEnum.HANDGUN_OPTICS, new ItemBlueprint("Optics", true, 2, 1));
         return itemFactory;
     }
 

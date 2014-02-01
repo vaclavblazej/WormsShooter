@@ -145,13 +145,13 @@ public class ClientCommunication {
                                         inventory.remove(receipe.getIngredients());
                                         inventory.add(receipe.getProducts());
                                         inventory.fireTableDataChanged();
-                                        /*-->*/GameWindowItemBar.getInstance().refreshBar(inventory);
+                                        GameWindowItemBar.getInstance().refreshBar(inventory);
                                         break;
                                     case OBTAIN:
                                         ComponentTableModel inv = controls.get(packet.getId()).getInventory();
                                         MaterialEnum en = (MaterialEnum) packet.get(0);
                                         inv.add(Material.getComponents(en));
-                                        /*-->*/GameWindowItemBar.getInstance().refreshBar(inv);
+                                        GameWindowItemBar.getInstance().refreshBar(inv);
                                         break;
                                     case ADD_ITEM:
                                         ClientView.getInstance().getMyBody().addItem(factory.get((ItemEnum) packet.get(0)));
