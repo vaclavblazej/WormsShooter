@@ -35,6 +35,7 @@ public class ServerView extends AbstractView {
         map = SpriteLoader.getSprite().getFrame();
         model = new Model(map,
                 ServerCommunication.getInstance().getControls(),
+                objects,
                 createItems(),
                 ServerComService.getInstance().getCounter());
         createReceipes();

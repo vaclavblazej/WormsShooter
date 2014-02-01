@@ -8,18 +8,17 @@ import java.awt.event.ActionListener;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.List;
 import java.util.Random;
-import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JPanel;
 import javax.swing.Timer;
-import objects.GraphicComponent;
+import objects.Miscellaneous;
 import objects.TestBody;
 import objects.items.Crafting;
 import objects.items.ItemFactory;
 import particles.Particle;
-import particles.Sand;
 import utilities.communication.Model;
 import utilities.materials.Material;
 import utilities.materials.MaterialEnum;
@@ -34,8 +33,7 @@ public abstract class AbstractView extends JPanel implements ActionListener {
     protected Model model;
     protected BufferedImage map;
     protected Collection<TestBody> bodies;
-    protected static CopyOnWriteArrayList<Particle> grains;
-    protected CopyOnWriteArrayList<GraphicComponent> objects;
+    protected List<Miscellaneous> objects;
     protected Random random;
     protected Timer tickTimer;
     private final int ratio;
@@ -86,8 +84,7 @@ public abstract class AbstractView extends JPanel implements ActionListener {
     public void reset() {
         check = true;
         bodies = new ArrayList<>(10);
-        grains = new CopyOnWriteArrayList<>();
-        objects = new CopyOnWriteArrayList<>();
+        objects = new ArrayList<>(10);
         tickTimer.stop();
     }
 
@@ -117,13 +114,8 @@ public abstract class AbstractView extends JPanel implements ActionListener {
         bodies.remove(b);
     }
 
-    private void addObject(GraphicComponent comp) {
+    public void addObject(Miscellaneous comp) {
         objects.add(comp);
-    }
-
-    @Override
-    public void paint(Graphics grphcs) {
-        super.paint(grphcs);
     }
 
     public Color getPixel(int x, int y) {
@@ -163,19 +155,19 @@ public abstract class AbstractView extends JPanel implements ActionListener {
     }
 
     public void destroy(Particle gr) {
-        grains.remove(gr);
+        //grains.remove(gr);
     }
 
     public void update(int x, int y) {
     }
 
     public void newSand(int x, int y) {
-        grains.add(new Sand(
-                x + random.nextInt(10) - 5,
-                y + random.nextInt(20) - 10,
-                (random.nextInt(RNG) - RNG / 2) / 10.,
-                -(random.nextInt(RNG) - RNG / 2) / 10.,
-                Color.CYAN));
+        /*grains.add(new Sand(
+         x + random.nextInt(10) - 5,
+         y + random.nextInt(20) - 10,
+         (random.nextInt(RNG) - RNG / 2) / 10.,
+         -(random.nextInt(RNG) - RNG / 2) / 10.,
+         Color.CYAN));*/
     }
 
     public int getRatio() {

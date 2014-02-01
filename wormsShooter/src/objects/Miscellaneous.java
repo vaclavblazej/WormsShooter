@@ -13,7 +13,7 @@ public class Miscellaneous implements GraphicComponent {
 
     private Frame image;
     private Point position;
-    AffineTransform tr;
+    private AffineTransform tr;
 
     public Miscellaneous(Frame image, int x, int y) {
         this.image = image;

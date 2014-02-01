@@ -20,7 +20,6 @@ import java.util.logging.Logger;
 import objects.GraphicComponent;
 import objects.Miscellaneous;
 import objects.TestBody;
-import particles.Particle;
 import spritesheets.SpriteLoader;
 import utilities.AbstractView;
 import utilities.Controls;
@@ -97,10 +96,6 @@ public class ClientView extends AbstractView implements
 
     public TestBody getMyBody() {
         return body;
-    }
-
-    private void addObject(GraphicComponent comp) {
-        objects.add(comp);
     }
 
     @Override
@@ -207,14 +202,6 @@ public class ClientView extends AbstractView implements
             }
         } catch (RemoteException ex) {
             Logger.getLogger(ClientView.class.getName()).log(Level.SEVERE, null, ex);
-        }
-    }
-
-    public void clear() {
-        for (Particle grain : grains) {
-            if (grain.clear()) {
-                grains.remove(grain);
-            }
         }
     }
 
