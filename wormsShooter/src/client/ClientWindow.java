@@ -1,11 +1,13 @@
 package client;
 
 import client.menu.GameLauncher;
+import client.menu.GameWindowItemBar;
 import client.menu.GameWindowMenu;
 import java.awt.BorderLayout;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
+import javax.swing.JToolBar;
 import main.Main;
 import utilities.Message;
 
@@ -25,17 +27,21 @@ public class ClientWindow extends JFrame {
     }
     private ClientView gamePlane;
     private JMenuBar menuBar;
+    private JToolBar itemBar;
 
     public ClientWindow(String title) {
         super(title);
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
         setResizable(false);
+        setLayout(new BorderLayout());
 
         menuBar = new GameWindowMenu();
         setJMenuBar(menuBar);
 
-        setLayout(new BorderLayout());
+        itemBar = GameWindowItemBar.getInstance();
+        add(itemBar, BorderLayout.SOUTH);
+        
         gamePlane = ClientView.getInstance();
         add(gamePlane, BorderLayout.CENTER);
         pack();
