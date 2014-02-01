@@ -1,5 +1,6 @@
 package client;
 
+import client.menu.GameWindowItemBar;
 import java.awt.Point;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -144,11 +145,13 @@ public class ClientCommunication {
                                         inventory.remove(receipe.getIngredients());
                                         inventory.add(receipe.getProducts());
                                         inventory.fireTableDataChanged();
+                                        /*-->*/GameWindowItemBar.getInstance().refreshBar(inventory);
                                         break;
                                     case OBTAIN:
                                         ComponentTableModel inv = controls.get(packet.getId()).getInventory();
                                         MaterialEnum en = (MaterialEnum) packet.get(0);
                                         inv.add(Material.getComponents(en));
+                                        /*-->*/GameWindowItemBar.getInstance().refreshBar(inv);
                                         break;
                                     case ADD_ITEM:
                                         ClientView.getInstance().getMyBody().addItem(factory.get((ItemEnum) packet.get(0)));
@@ -181,6 +184,7 @@ public class ClientCommunication {
                             Logger.getLogger(ClientCommunication.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
+                    GameWindowItemBar.getInstance().clearBar();
                     System.out.println("Client: terminating socket");
                     listening = false;
                 }
