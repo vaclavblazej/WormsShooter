@@ -9,11 +9,13 @@ import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
 import java.util.Random;
+import java.util.concurrent.CopyOnWriteArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 import objects.Body;
+import objects.Bullet;
 import objects.GraphicComponent;
 import objects.items.Crafting;
 import objects.items.ItemFactory;
@@ -83,7 +85,7 @@ public abstract class AbstractView extends JPanel implements ActionListener {
     public void reset() {
         check = true;
         bodies = new ArrayList<>(10);
-        objects = new ArrayList<>(10);
+        objects = new CopyOnWriteArrayList<>();
         tickTimer.stop();
     }
 
@@ -118,6 +120,10 @@ public abstract class AbstractView extends JPanel implements ActionListener {
 
     public void addObject(GraphicComponent comp) {
         objects.add(comp);
+    }
+
+    public void removeObject(GraphicComponent comp) {
+        objects.remove(comp);
     }
 
     public Color getPixel(int x, int y) {

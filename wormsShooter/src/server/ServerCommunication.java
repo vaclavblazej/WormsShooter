@@ -18,6 +18,7 @@ import objects.Body;
 import objects.Bullet;
 import objects.items.ComponentTableModel;
 import objects.items.Recipe;
+import org.w3c.dom.views.AbstractView;
 import utilities.PlayerInfo;
 import utilities.communication.Action;
 import utilities.communication.Packet;
@@ -119,7 +120,7 @@ public class ServerCommunication implements Remote, ServerComm {
                 pos.x *= Main.RATIO;
                 pos.y *= Main.RATIO;
                 double rad = Math.atan2(p.y - pos.y, p.x - pos.x);
-                ServerView.getInstance().addObject(new Bullet(pos, rad));
+                ServerView.getInstance().addObject(new Bullet(pos, rad, ServerView.getInstance()));
                 ServerComService.getInstance().broadcast(
                         new PacketBuilder(Action.SHOOT).addInfo(pos).addInfo(rad));
                 break;

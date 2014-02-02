@@ -21,6 +21,7 @@ import objects.items.InventoryTableModel;
 import objects.items.ItemEnum;
 import objects.items.ItemFactory;
 import objects.items.Recipe;
+import org.w3c.dom.views.AbstractView;
 import server.ServerComService;
 import server.ServerComm;
 import utilities.PlayerInfo;
@@ -144,7 +145,7 @@ public class ClientCommunication {
                                     case SHOOT:
                                         p = (Point) packet.get(0);
                                         double d = (Double) packet.get(1);
-                                        ClientView.getInstance().addObject(new Bullet(p, d));
+                                        ClientView.getInstance().addObject(new Bullet(p, d, ClientView.getInstance()));
                                         break;
                                     case CRAFT:
                                         InventoryTableModel inventory = controls.get(packet.getId()).getInventory();

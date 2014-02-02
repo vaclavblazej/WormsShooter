@@ -8,6 +8,9 @@ import java.awt.geom.NoninvertibleTransformException;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import main.Main;
+import utilities.AbstractView;
+import utilities.CollisionState;
+import utilities.materials.Material;
 
 /**
  *
@@ -15,14 +18,16 @@ import main.Main;
  */
 public class Bullet implements GraphicComponent {
 
-    private static final int velocity = 2;
+    private static final int velocity = 20;
     private AffineTransform tr;
     private Point.Double position;
     private double rotation;
+    private AbstractView view;
 
-    public Bullet(Point position, double rotation) {
+    public Bullet(Point position, double rotation, AbstractView view) {
         this.position = new Point.Double(position.x, position.y);
         this.rotation = rotation;
+        this.view = view;
     }
 
     @Override
@@ -54,5 +59,10 @@ public class Bullet implements GraphicComponent {
     public void tick() {
         position.x += velocity * Math.cos(rotation);
         position.y += velocity * Math.sin(rotation);
+        Color pixel = view.getPixel((int) (position.x / Main.RATIO), (int) (position.y / Main.RATIO));
+        CollisionState check = Material.check(pixel);
+        if (check != CollisionState.GAS) {
+            view.removeObject(this);
+        }
     }
 }
