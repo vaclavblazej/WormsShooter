@@ -1,11 +1,10 @@
 package client.menu;
 
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
-import javax.swing.AbstractAction;
+import java.util.List;
 import javax.swing.JButton;
 import javax.swing.JToolBar;
-import objects.items.ComponentTableModel;
+import objects.items.InventoryTableModel;
 
 /**
  *
@@ -32,20 +31,11 @@ public class GameWindowItemBar extends JToolBar {
         repaint();
     }
 
-    public void refreshBar(ComponentTableModel ctm) {
+    public void refreshBar(InventoryTableModel itm) {
         clearBar();
-        for (int i = 0; i < ctm.getRowCount(); i++) {
-            if (ctm.isUsable(i)) {
-                JButton btn = new JButton(new AbstractAction() {
-                    @Override
-                    public void actionPerformed(ActionEvent e) {
-                        //todo - set this item as chosen. highlight this button
-                    }
-                });
-                btn.setText(ctm.getValueAt(i, 0).toString() + ": " + ctm.getValueAt(i, 1).toString());
-                btn.setFocusable(false);
-                add(btn);
-            }
+        List<JButton> toolbar = itm.generateToolbar();
+        for (JButton jButton : toolbar) {
+            add(jButton);
         }
     }
 }

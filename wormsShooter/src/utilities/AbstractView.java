@@ -14,7 +14,7 @@ import java.util.logging.Logger;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 import objects.Miscellaneous;
-import objects.TestBody;
+import objects.Body;
 import objects.items.Crafting;
 import objects.items.ItemFactory;
 import particles.Particle;
@@ -31,7 +31,7 @@ public abstract class AbstractView extends JPanel implements ActionListener {
     private static final int RNG = 20;
     protected Model model;
     protected MapClass map;
-    protected Collection<TestBody> bodies;
+    protected Collection<Body> bodies;
     protected List<Miscellaneous> objects;
     protected Random random;
     protected Timer tickTimer;
@@ -89,7 +89,7 @@ public abstract class AbstractView extends JPanel implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent ae) {
-        for (TestBody b : bodies) {
+        for (Body b : bodies) {
             b.tick();
         }
         repaint();
@@ -103,13 +103,13 @@ public abstract class AbstractView extends JPanel implements ActionListener {
         return ret;
     }
 
-    public TestBody newBody() {
-        TestBody b = new TestBody(100, 200, this);
+    public Body newBody() {
+        Body b = new Body(100, 200, this);
         bodies.add(b);
         return b;
     }
 
-    public void removeBody(TestBody b) {
+    public void removeBody(Body b) {
         bodies.remove(b);
     }
 

@@ -19,7 +19,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import objects.GraphicComponent;
 import objects.Miscellaneous;
-import objects.TestBody;
+import objects.Body;
 import spritesheets.SpriteLoader;
 import utilities.AbstractView;
 import utilities.Controls;
@@ -51,7 +51,7 @@ public class ClientView extends AbstractView implements
         return instance;
     }
     private final Dimension VIEW_SIZE;
-    private TestBody body;
+    private Body body;
     private EnumSet<ControlsEnum> controlSet;
     private MapClass curentView;
     private BufferedImage realView;
@@ -88,15 +88,15 @@ public class ClientView extends AbstractView implements
         bodies = model.getControls().values();
     }
 
-    public void addBody(TestBody body) {
+    public void addBody(Body body) {
         bodies.add(body);
     }
 
-    public void setMyBody(TestBody body) {
+    public void setMyBody(Body body) {
         this.body = body;
     }
 
-    public TestBody getMyBody() {
+    public Body getMyBody() {
         return body;
     }
 

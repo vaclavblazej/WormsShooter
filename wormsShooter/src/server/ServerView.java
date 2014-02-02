@@ -3,7 +3,7 @@ package server;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.SwingUtilities;
-import objects.TestBody;
+import objects.Body;
 import objects.items.Crafting;
 import objects.items.ItemBlueprint;
 import objects.items.ItemEnum;
@@ -51,7 +51,7 @@ public class ServerView extends AbstractView {
 
     private ItemFactory createItems() {
         ItemFactory itemFactory = new ItemFactory();
-        itemFactory.addItem(ItemEnum.METAL, new ItemBlueprint("Metal", false, 1, 1));
+        itemFactory.addItem(ItemEnum.METAL, new ItemBlueprint("Metal", true, 1, 1));
         itemFactory.addItem(ItemEnum.GUN_POWDER, new ItemBlueprint("Gun powder", true, 1, 1));
         itemFactory.addItem(ItemEnum.BULLET, new ItemBlueprint("Bullet", false, 1, 1));
         itemFactory.addItem(ItemEnum.HANDGUN, new ItemBlueprint("Gun", true, 2, 2));
@@ -106,7 +106,7 @@ public class ServerView extends AbstractView {
         super.paint(graphics);
         Graphics2D g = (Graphics2D) graphics;
         g.drawImage(map.getImage(), 0, 0, getWidth(), getHeight(), null);
-        for (TestBody b : bodies) {
+        for (Body b : bodies) {
             b.draw(g);
         }
     }

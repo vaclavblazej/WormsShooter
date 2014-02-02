@@ -13,7 +13,7 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import objects.TestBody;
+import objects.Body;
 import objects.items.ComponentTableModel;
 import objects.items.Recipe;
 import utilities.PlayerInfo;
@@ -45,13 +45,13 @@ public class ServerCommunication implements Remote, ServerComm {
         }
         return instance;
     }
-    private Map<Integer, TestBody> controls;
+    private Map<Integer, Body> controls;
 
     private ServerCommunication() throws RemoteException {
         controls = new HashMap<>(20);
     }
 
-    public Map<Integer, TestBody> getControls() {
+    public Map<Integer, Body> getControls() {
         return controls;
     }
 
@@ -75,7 +75,7 @@ public class ServerCommunication implements Remote, ServerComm {
 
     @Override
     public void sendAction(Packet packet) {
-        TestBody body;
+        Body body;
         Action action = packet.getAction();
         int id = packet.getId();
         ServerComService service = ServerComService.getInstance();
@@ -130,7 +130,7 @@ public class ServerCommunication implements Remote, ServerComm {
         }
     }
 
-    public void bindBody(int id, TestBody body) {
+    public void bindBody(int id, Body body) {
         controls.put(id, body);
     }
 

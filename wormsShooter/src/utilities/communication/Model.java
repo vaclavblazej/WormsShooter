@@ -4,7 +4,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import objects.Miscellaneous;
-import objects.TestBody;
+import objects.Body;
 import objects.items.ItemFactory;
 import utilities.MapClass;
 
@@ -15,14 +15,14 @@ import utilities.MapClass;
 public class Model {
 
     private MapClass map;
-    private Map<Integer, TestBody> controls;
+    private Map<Integer, Body> controls;
     private List<Miscellaneous> objects;
     private ItemFactory factory;
     private int counter;
 
     public Model(
             MapClass map,
-            Map<Integer, TestBody> controls,
+            Map<Integer, Body> controls,
             List<Miscellaneous> objects,
             ItemFactory factory,
             int counter) {
@@ -37,7 +37,7 @@ public class Model {
         return map;
     }
 
-    public Map<Integer, TestBody> getControls() {
+    public Map<Integer, Body> getControls() {
         return controls;
     }
 

@@ -15,8 +15,8 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import objects.TestBody;
-import objects.items.ComponentTableModel;
+import objects.Body;
+import objects.items.InventoryTableModel;
 import objects.items.ItemEnum;
 import objects.items.ItemFactory;
 import objects.items.Recipe;
@@ -49,7 +49,7 @@ public class ClientCommunication {
     private PlayerInfo info;
     private boolean listening;
     private Socket clientSocket;
-    private Map<Integer, TestBody> controls;
+    private Map<Integer, Body> controls;
     private int counter;
     private ItemFactory factory;
     private volatile boolean running;
@@ -66,8 +66,8 @@ public class ClientCommunication {
         controls = new HashMap<>(20);
     }
 
-    private TestBody createPlayer(int id) {
-        TestBody b = ClientView.getInstance().newBody();
+    private Body createPlayer(int id) {
+        Body b = ClientView.getInstance().newBody();
         bindBody(id, b);
         return b;
     }
@@ -86,7 +86,7 @@ public class ClientCommunication {
         ClientView.getInstance().setMyBody(controls.get(info.getId()));
     }
 
-    public void bindBody(int id, TestBody body) {
+    public void bindBody(int id, Body body) {
         controls.put(id, body);
     }
 
@@ -140,7 +140,7 @@ public class ClientCommunication {
                                         ClientView.getInstance().getModel().getMap().recalculateShadows(p);
                                         break;
                                     case CRAFT:
-                                        ComponentTableModel inventory = controls.get(packet.getId()).getInventory();
+                                        InventoryTableModel inventory = controls.get(packet.getId()).getInventory();
                                         int idx = (Integer) packet.get(0);
                                         Recipe receipe = factory.getRecipes().getReceipe(idx);
                                         inventory.remove(receipe.getIngredients());
@@ -149,7 +149,7 @@ public class ClientCommunication {
                                         GameWindowItemBar.getInstance().refreshBar(inventory);
                                         break;
                                     case OBTAIN:
-                                        ComponentTableModel inv = controls.get(packet.getId()).getInventory();
+                                        InventoryTableModel inv = controls.get(packet.getId()).getInventory();
                                         MaterialEnum en = (MaterialEnum) packet.get(0);
                                         inv.add(Material.getComponents(en));
                                         GameWindowItemBar.getInstance().refreshBar(inv);

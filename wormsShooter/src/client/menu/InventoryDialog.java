@@ -9,6 +9,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import javax.swing.table.TableCellRenderer;
 import objects.items.CraftingPanel;
+import objects.items.InventoryTableModel;
 import utilities.AbstractDialog;
 import utilities.Message;
 
@@ -32,7 +33,14 @@ public class InventoryDialog extends AbstractDialog {
             @Override
             public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
                 Component c = super.prepareRenderer(renderer, row, column);
-                if (isRowSelected(row)) {
+                InventoryTableModel it = (InventoryTableModel) getModel();
+                if (it.isHeldItem(row)) {
+                    if (isRowSelected(row)) {
+                        c.setBackground(Color.GREEN);
+                    } else {
+                        c.setBackground(Color.decode("#00AA00"));
+                    }
+                } else if (isRowSelected(row)) {
                     c.setBackground(Color.LIGHT_GRAY);
                 } else {
                     c.setBackground(Color.WHITE);

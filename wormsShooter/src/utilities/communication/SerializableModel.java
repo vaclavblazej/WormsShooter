@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import objects.Miscellaneous;
-import objects.TestBody;
+import objects.Body;
 import objects.items.ItemFactory;
 import utilities.AbstractView;
 
@@ -39,7 +39,7 @@ public class SerializableModel implements Serializable {
     }
 
     public Model deserialize(AbstractView listener) {
-        Map<Integer, TestBody> arr = new HashMap<>();
+        Map<Integer, Body> arr = new HashMap<>();
         for (Integer i : controls.keySet()) {
             arr.put(i, controls.get(i).deserialize(listener));
         }
