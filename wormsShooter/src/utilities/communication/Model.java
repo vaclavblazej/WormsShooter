@@ -1,13 +1,12 @@
 package utilities.communication;
 
-import java.awt.image.BufferedImage;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 import objects.Miscellaneous;
 import objects.TestBody;
-import objects.items.Crafting;
 import objects.items.ItemFactory;
+import utilities.MapClass;
 
 /**
  *
@@ -15,14 +14,14 @@ import objects.items.ItemFactory;
  */
 public class Model {
 
-    private BufferedImage map;
+    private MapClass map;
     private Map<Integer, TestBody> controls;
     private List<Miscellaneous> objects;
     private ItemFactory factory;
     private int counter;
 
     public Model(
-            BufferedImage map,
+            MapClass map,
             Map<Integer, TestBody> controls,
             List<Miscellaneous> objects,
             ItemFactory factory,
@@ -34,7 +33,7 @@ public class Model {
         this.counter = counter;
     }
 
-    public BufferedImage getMap() {
+    public MapClass getMap() {
         return map;
     }
 
@@ -59,6 +58,6 @@ public class Model {
         for (Integer i : controls.keySet()) {
             arr.put(i, controls.get(i).serialize());
         }
-        return new SerializableModel(new SerializableBufferedImage(map), factory, objects, arr, counter);
+        return new SerializableModel(map.serialize(), factory, objects, arr, counter);
     }
 }

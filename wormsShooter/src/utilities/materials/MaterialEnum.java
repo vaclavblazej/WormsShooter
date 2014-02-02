@@ -1,6 +1,7 @@
 package utilities.materials;
 
 import java.awt.Color;
+import utilities.CollisionState;
 
 /**
  *
@@ -12,11 +13,16 @@ public enum MaterialEnum {
     WOOD,
     WATER,
     SAND,
+    VINE,
     DIRT,
     GRASS,
     STONE;
 
     public Color getColor() {
         return Material.getColor(this);
+    }
+    
+    public CollisionState getState(){
+        return Material.check(this);
     }
 }

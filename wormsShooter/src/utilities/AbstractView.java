@@ -5,7 +5,6 @@ import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.Collection;
 import java.util.List;
@@ -31,7 +30,7 @@ public abstract class AbstractView extends JPanel implements ActionListener {
 
     private static final int RNG = 20;
     protected Model model;
-    protected BufferedImage map;
+    protected MapClass map;
     protected Collection<TestBody> bodies;
     protected List<Miscellaneous> objects;
     protected Random random;
@@ -105,7 +104,7 @@ public abstract class AbstractView extends JPanel implements ActionListener {
     }
 
     public TestBody newBody() {
-        TestBody b = new TestBody(100, 100, this);
+        TestBody b = new TestBody(100, 200, this);
         bodies.add(b);
         return b;
     }

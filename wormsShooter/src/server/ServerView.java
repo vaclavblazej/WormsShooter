@@ -11,6 +11,7 @@ import objects.items.ItemFactory;
 import objects.items.Recipe;
 import spritesheets.SpriteLoader;
 import utilities.AbstractView;
+import utilities.MapClass;
 import utilities.communication.Model;
 
 /**
@@ -32,7 +33,7 @@ public class ServerView extends AbstractView {
         super(400, 300, 1);
         SpriteLoader.loadSprite("Map");
         SpriteLoader.set(400, 300);
-        map = SpriteLoader.getSprite().getFrame();
+        map = new MapClass(SpriteLoader.getSprite().getFrame());
         model = new Model(map,
                 ServerCommunication.getInstance().getControls(),
                 objects,
@@ -97,14 +98,14 @@ public class ServerView extends AbstractView {
     }
 
     public void save() {
-        SpriteLoader.saveSprite("Map", map);
+        SpriteLoader.saveSprite("Map", map.getImage());
     }
 
     @Override
     public void paint(Graphics graphics) {
         super.paint(graphics);
         Graphics2D g = (Graphics2D) graphics;
-        g.drawImage(map, 0, 0, getWidth(), getHeight(), null);
+        g.drawImage(map.getImage(), 0, 0, getWidth(), getHeight(), null);
         for (TestBody b : bodies) {
             b.draw(g);
         }

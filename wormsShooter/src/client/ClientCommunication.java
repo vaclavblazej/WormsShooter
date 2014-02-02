@@ -137,6 +137,7 @@ public class ClientCommunication {
                                     case MINE:
                                         Point p = (Point) packet.get(0);
                                         ClientView.getInstance().change(p.x, p.y, (MaterialEnum) packet.get(1));
+                                        ClientView.getInstance().getModel().getMap().recalculateShadows(p);
                                         break;
                                     case CRAFT:
                                         ComponentTableModel inventory = controls.get(packet.getId()).getInventory();

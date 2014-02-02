@@ -24,6 +24,7 @@ import spritesheets.SpriteLoader;
 import utilities.AbstractView;
 import utilities.Controls;
 import utilities.ControlsEnum;
+import utilities.MapClass;
 import utilities.communication.Action;
 import utilities.communication.Model;
 import utilities.communication.PacketBuilder;
@@ -39,7 +40,6 @@ public class ClientView extends AbstractView implements
         MouseMotionListener,
         MouseListener {
 
-    private final Dimension VIEW_SIZE;
     private static Controls controls;
     private static Point mouse;
     private static ClientView instance;
@@ -50,18 +50,19 @@ public class ClientView extends AbstractView implements
         }
         return instance;
     }
+    private final Dimension VIEW_SIZE;
     private TestBody body;
     private EnumSet<ControlsEnum> controlSet;
-    private BufferedImage curentView;
+    private MapClass curentView;
     private BufferedImage realView;
     private Point currentPosition;
 
     private ClientView() {
         super(800, 600, 20);
-        map = new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB);
+        map = new MapClass(new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB));
         realView = new BufferedImage(800, 600, BufferedImage.TYPE_INT_RGB);
         VIEW_SIZE = new Dimension(800 / getRatio(), 600 / getRatio());
-        curentView = new BufferedImage(VIEW_SIZE.width, VIEW_SIZE.height, BufferedImage.TYPE_INT_RGB);
+        curentView = null;
         currentPosition = new Point(30, 20);
         controlSet = EnumSet.noneOf(ControlsEnum.class);
         mouse = new Point();
@@ -83,6 +84,7 @@ public class ClientView extends AbstractView implements
     public void setModel(Model model) {
         super.setModel(model);
         map = model.getMap();
+        map.calculateShadows();
         bodies = model.getControls().values();
     }
 
@@ -127,10 +129,10 @@ public class ClientView extends AbstractView implements
             currentPosition.y = body.getPosition().y - VIEW_SIZE.height / 2;
         }
         try {
-            curentView = map.getSubimage(currentPosition.x, currentPosition.y,
+            curentView = map.getSubmap(currentPosition.x, currentPosition.y,
                     VIEW_SIZE.width, VIEW_SIZE.height);
             MaterialVisuals.redraw(curentView, realView);
-        } catch (RasterFormatException ex) {
+        } catch (RasterFormatException | ArrayIndexOutOfBoundsException ex) {
             // todo - fix exception when you are near end of the map
         }
         Graphics2D g = (Graphics2D) grphcs;

@@ -1,12 +1,13 @@
 package utilities.materials;
 
-import utilities.materials.Material;
+import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
 import spritesheets.SpriteLoader;
+import utilities.MapClass;
 
 /**
  *
@@ -15,6 +16,7 @@ import spritesheets.SpriteLoader;
 public class MaterialVisuals implements Serializable {
 
     private static Map<Integer, BufferedImage> images;
+    private static final int SIZE = 20;
 
     static {
         images = new HashMap<>();
@@ -39,11 +41,12 @@ public class MaterialVisuals implements Serializable {
         return null;
     }
 
-    public static void redraw(BufferedImage source, BufferedImage dest) {
+    public static void redraw(MapClass source, BufferedImage dest) {
         Graphics g = dest.getGraphics();
-        g.drawImage(source, 0, 0, dest.getWidth(), dest.getHeight(), null);
-        int w = source.getWidth();
-        int h = source.getHeight();
+        BufferedImage sourceImage = source.getImage();
+        g.drawImage(sourceImage, 0, 0, dest.getWidth(), dest.getHeight(), null);
+        int w = sourceImage.getWidth();
+        int h = sourceImage.getHeight();
         int ratio = dest.getWidth() / w;
         BufferedImage b;
         for (int j = 0; j < h; j++) {
@@ -52,6 +55,8 @@ public class MaterialVisuals implements Serializable {
                 if (b != null) {
                     g.drawImage(b, i * ratio, j * ratio, b.getWidth(), b.getHeight(), null);
                 }
+                g.setColor(new Color(0, 0, 0, source.getShadow(i, j)));
+                g.fillRect(i * ratio, j * ratio, SIZE, SIZE);
             }
         }
         g.dispose();

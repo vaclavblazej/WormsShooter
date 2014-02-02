@@ -15,14 +15,14 @@ import utilities.AbstractView;
  */
 public class SerializableModel implements Serializable {
 
-    private SerializableBufferedImage map;
+    private SerializableMapClass map;
     private Map<Integer, SerializableBody> controls;
     private List<Miscellaneous> objects;
     private ItemFactory factory;
     private int counter;
 
     public SerializableModel(
-            SerializableBufferedImage map,
+            SerializableMapClass map,
             ItemFactory factory,
             List<Miscellaneous> objects,
             Map<Integer, SerializableBody> controls,
@@ -34,11 +34,15 @@ public class SerializableModel implements Serializable {
         this.counter = counter;
     }
 
+    SerializableModel(SerializableBufferedImage serialize, ItemFactory factory, List<Miscellaneous> objects, Map<Integer, SerializableBody> arr, int counter) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
+    }
+
     public Model deserialize(AbstractView listener) {
         Map<Integer, TestBody> arr = new HashMap<>();
         for (Integer i : controls.keySet()) {
             arr.put(i, controls.get(i).deserialize(listener));
         }
-        return new Model(map.getImage(), arr, objects, factory, counter);
+        return new Model(map.deserialize(), arr, objects, factory, counter);
     }
 }
