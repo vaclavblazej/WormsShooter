@@ -13,8 +13,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JPanel;
 import javax.swing.Timer;
-import objects.Miscellaneous;
 import objects.Body;
+import objects.GraphicComponent;
 import objects.items.Crafting;
 import objects.items.ItemFactory;
 import particles.Particle;
@@ -32,7 +32,7 @@ public abstract class AbstractView extends JPanel implements ActionListener {
     protected Model model;
     protected MapClass map;
     protected Collection<Body> bodies;
-    protected List<Miscellaneous> objects;
+    protected List<GraphicComponent> objects;
     protected Random random;
     protected Timer tickTimer;
     private final int ratio;
@@ -92,6 +92,9 @@ public abstract class AbstractView extends JPanel implements ActionListener {
         for (Body b : bodies) {
             b.tick();
         }
+        for (GraphicComponent g : objects) {
+            g.tick();
+        }
         repaint();
     }
 
@@ -113,7 +116,7 @@ public abstract class AbstractView extends JPanel implements ActionListener {
         bodies.remove(b);
     }
 
-    public void addObject(Miscellaneous comp) {
+    public void addObject(GraphicComponent comp) {
         objects.add(comp);
     }
 

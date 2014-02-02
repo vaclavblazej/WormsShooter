@@ -11,16 +11,18 @@ import java.awt.event.KeyListener;
 import java.awt.event.MouseEvent;
 import java.awt.event.MouseListener;
 import java.awt.event.MouseMotionListener;
+import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.image.RasterFormatException;
 import java.rmi.RemoteException;
 import java.util.EnumSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import objects.GraphicComponent;
-import objects.Miscellaneous;
+import main.Main;
 import objects.Body;
-import spritesheets.SpriteLoader;
+import objects.GraphicComponent;
+import objects.items.ItemBlueprint;
+import objects.items.itemActions.ItemAction;
 import utilities.AbstractView;
 import utilities.Controls;
 import utilities.ControlsEnum;
@@ -56,6 +58,7 @@ public class ClientView extends AbstractView implements
     private MapClass curentView;
     private BufferedImage realView;
     private Point currentPosition;
+    private AffineTransform tr;
 
     private ClientView() {
         super(800, 600, 20);
@@ -66,13 +69,8 @@ public class ClientView extends AbstractView implements
         currentPosition = new Point(30, 20);
         controlSet = EnumSet.noneOf(ControlsEnum.class);
         mouse = new Point();
-    }
-
-    private void test() {
-        SpriteLoader.loadSprite("Campfire");
-        SpriteLoader.set(20, 20);
-        Miscellaneous m = new Miscellaneous(SpriteLoader.getSprite(), 100, 100);
-        addObject(m);
+        tr = new AffineTransform();
+        tr.setToScale(20, 20);
     }
 
     @Override
@@ -128,6 +126,7 @@ public class ClientView extends AbstractView implements
             currentPosition.x = body.getPosition().x - VIEW_SIZE.width / 2;
             currentPosition.y = body.getPosition().y - VIEW_SIZE.height / 2;
         }
+        tr.setToTranslation(currentPosition.x * Main.RATIO, currentPosition.y * Main.RATIO);
         try {
             curentView = map.getSubmap(currentPosition.x, currentPosition.y,
                     VIEW_SIZE.width, VIEW_SIZE.height);
@@ -142,7 +141,7 @@ public class ClientView extends AbstractView implements
             body.drawRelative(g);
         }
         for (GraphicComponent o : objects) {
-            o.draw(g);
+            o.drawRelative(g, tr);
         }
     }
 
@@ -213,13 +212,14 @@ public class ClientView extends AbstractView implements
         mouse.y = e.getY();
         switch (e.getButton()) {
             case MouseEvent.BUTTON1:
-                int x = currentPosition.x + e.getX() / getRatio();
-                int y = currentPosition.y + e.getY() / getRatio();
-                try {
-                    ClientCommunication.getInstance().sendAction(
-                            new PacketBuilder(Action.MINE).addInfo(new Point(x, y)));
-                } catch (RemoteException ex) {
-                    Logger.getLogger(ClientView.class.getName()).log(Level.SEVERE, null, ex);
+                Point p = new Point(currentPosition.x * Main.RATIO + e.getX(),
+                        currentPosition.y * Main.RATIO + e.getY());
+                ItemBlueprint heldItem = getMyBody().getInventory().getHeldItem();
+                if (heldItem != null) {
+                    ItemAction action = heldItem.getAction();
+                    if (action != null) {
+                        action.action(p);
+                    }
                 }
                 break;
         }

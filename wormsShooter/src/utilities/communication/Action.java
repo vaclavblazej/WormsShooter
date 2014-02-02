@@ -16,5 +16,6 @@ public enum Action {
     CONFIRM,
     CONNECT,
     DISCONNECT,
-    MINE;
+    MINE,
+    SHOOT;
 }

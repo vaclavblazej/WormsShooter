@@ -4,10 +4,10 @@ import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
+import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
-import objects.items.ComponentTableModel;
 import objects.items.InventoryTableModel;
-import objects.items.Item;
+import objects.items.ItemBlueprint;
 import utilities.CollisionState;
 import utilities.AbstractView;
 import utilities.communication.Action;
@@ -58,7 +58,7 @@ public class Body implements GraphicComponent {
         return inventory;
     }
 
-    public void addItem(Item item) {
+    public void addItem(ItemBlueprint item) {
         inventory.add(item, 1);
     }
 
@@ -176,6 +176,11 @@ public class Body implements GraphicComponent {
     public void drawRelative(Graphics2D g) {
         g.setColor(Color.RED);
         g.fillRect(0, 0, SIZE.width, SIZE.height);
+    }
+
+    @Override
+    public void drawRelative(Graphics2D g, AffineTransform trans) {
+        drawRelative(g);
     }
 
     public SerializableBody serialize() {

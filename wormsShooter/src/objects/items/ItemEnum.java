@@ -14,5 +14,6 @@ public enum ItemEnum {
     HANDGUN_HANDLE,
     HANDGUN_OPTICS,
     HANDGUN_MAGAZINE,
-    HANDGUN;
+    HANDGUN,
+    SHOVEL;
 }

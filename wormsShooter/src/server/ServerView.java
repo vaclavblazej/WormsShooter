@@ -4,6 +4,7 @@ import java.awt.Graphics;
 import java.awt.Graphics2D;
 import javax.swing.SwingUtilities;
 import objects.Body;
+import objects.GraphicComponent;
 import objects.items.Crafting;
 import objects.items.ItemBlueprint;
 import objects.items.ItemEnum;
@@ -60,6 +61,7 @@ public class ServerView extends AbstractView {
         itemFactory.addItem(ItemEnum.HANDGUN_MECHANISM, new ItemBlueprint("Mechanism", false, 1, 1));
         itemFactory.addItem(ItemEnum.HANDGUN_HANDLE, new ItemBlueprint("Handle", false, 2, 2));
         itemFactory.addItem(ItemEnum.HANDGUN_OPTICS, new ItemBlueprint("Optics", true, 2, 1));
+        itemFactory.addItem(ItemEnum.SHOVEL, new ItemBlueprint("Shovel", true, 1, 4));
         return itemFactory;
     }
 
@@ -95,6 +97,9 @@ public class ServerView extends AbstractView {
         r.addIngredient(fac.getBlueprint(ItemEnum.GUN_POWDER), 1);
         r.addProduct(fac.getBlueprint(ItemEnum.BULLET), 1);
         rec.addReceipe(r);
+        r = new Recipe("Shovel");
+        r.addProduct(fac.getBlueprint(ItemEnum.SHOVEL), 1);
+        rec.addReceipe(r);
     }
 
     public void save() {
@@ -108,6 +113,9 @@ public class ServerView extends AbstractView {
         g.drawImage(map.getImage(), 0, 0, getWidth(), getHeight(), null);
         for (Body b : bodies) {
             b.draw(g);
+        }
+        for (GraphicComponent c : objects) {
+            c.draw(g);
         }
     }
 }
