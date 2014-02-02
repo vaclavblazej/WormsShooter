@@ -48,7 +48,6 @@ public class Bullet implements GraphicComponent {
         g.setTransform(tr);
         g.setColor(Color.RED);
         g.fillRect(0, 0, 10, 3);
-        System.out.println(tr.getTranslateX() + " " + tr.getTranslateY());
     }
 
     @Override

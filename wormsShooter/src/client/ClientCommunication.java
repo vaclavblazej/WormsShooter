@@ -16,6 +16,7 @@ import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import objects.Body;
+import objects.Bullet;
 import objects.items.InventoryTableModel;
 import objects.items.ItemEnum;
 import objects.items.ItemFactory;
@@ -117,6 +118,7 @@ public class ClientCommunication {
                         Logger.getLogger(ClientCommunication.class.getName()).log(Level.SEVERE, null, ex);
                     }
                     running = true;
+                    Point p;
                     while (running) {
                         try {
                             packet = (Packet) objectInput.readObject();
@@ -135,9 +137,14 @@ public class ClientCommunication {
                                         controls.get(id).control(type);
                                         break;
                                     case MINE:
-                                        Point p = (Point) packet.get(0);
+                                        p = (Point) packet.get(0);
                                         ClientView.getInstance().change(p.x, p.y, (MaterialEnum) packet.get(1));
                                         ClientView.getInstance().getModel().getMap().recalculateShadows(p);
+                                        break;
+                                    case SHOOT:
+                                        p = (Point) packet.get(0);
+                                        double d = (Double) packet.get(1);
+                                        ClientView.getInstance().addObject(new Bullet(p, d));
                                         break;
                                     case CRAFT:
                                         InventoryTableModel inventory = controls.get(packet.getId()).getInventory();

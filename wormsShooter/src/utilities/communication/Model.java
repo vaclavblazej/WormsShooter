@@ -3,8 +3,8 @@ package utilities.communication;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
-import objects.Miscellaneous;
 import objects.Body;
+import objects.GraphicComponent;
 import objects.items.ItemFactory;
 import utilities.MapClass;
 
@@ -16,14 +16,14 @@ public class Model {
 
     private MapClass map;
     private Map<Integer, Body> controls;
-    private List<Miscellaneous> objects;
+    private List<GraphicComponent> objects;
     private ItemFactory factory;
     private int counter;
 
     public Model(
             MapClass map,
             Map<Integer, Body> controls,
-            List<Miscellaneous> objects,
+            List<GraphicComponent> objects,
             ItemFactory factory,
             int counter) {
         this.map = map;
@@ -41,7 +41,7 @@ public class Model {
         return controls;
     }
 
-    public List<Miscellaneous> getObjects() {
+    public List<GraphicComponent> getObjects() {
         return objects;
     }
 

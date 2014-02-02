@@ -1,6 +1,5 @@
 package main;
 
-import client.ClientView;
 import client.ClientWindow;
 import java.rmi.RemoteException;
 import java.util.logging.Level;
@@ -17,6 +16,7 @@ import server.ServerWindow;
 public class Main {
 
     private static boolean server = false;
+    public static final int RATIO = 20;
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {

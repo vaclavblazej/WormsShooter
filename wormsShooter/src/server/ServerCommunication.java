@@ -13,7 +13,9 @@ import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import main.Main;
 import objects.Body;
+import objects.Bullet;
 import objects.items.ComponentTableModel;
 import objects.items.Recipe;
 import utilities.PlayerInfo;
@@ -79,24 +81,8 @@ public class ServerCommunication implements Remote, ServerComm {
         Action action = packet.getAction();
         int id = packet.getId();
         ServerComService service = ServerComService.getInstance();
-        Point pos;
+        Point pos, p;
         switch (action) {
-            case MINE:
-                Point p = (Point) packet.get(0);
-                int x = p.x;
-                int y = p.y;
-                body = controls.get(id);
-                pos = body.getPosition();
-                int distance = Math.abs(pos.x - x) + Math.abs(pos.y - y);
-                if (distance < 6) {
-                    MaterialEnum to = MaterialEnum.AIR;
-                    MaterialEnum mat = ServerView.getInstance().change(x, y, to);
-                    body.getInventory().add(Material.getComponents(mat));
-                    service.broadcast(new PacketBuilder(Action.OBTAIN, id).addInfo(mat));
-                    service.broadcast(new PacketBuilder(Action.MINE, id)
-                            .addInfo(new Point(x, y)).addInfo(to));
-                }
-                break;
             case MOVE_LEFT:
             case MOVE_RIGHT:
             case MOVE_STOP:
@@ -109,6 +95,33 @@ public class ServerCommunication implements Remote, ServerComm {
                             .addInfo(vel.x).addInfo(vel.y));
                     body.control(action);
                 }
+                break;
+            case MINE:
+                p = (Point) packet.get(0);
+                int x = p.x / Main.RATIO;
+                int y = p.y / Main.RATIO;
+                body = controls.get(id);
+                pos = body.getPosition();
+                int distance = Math.abs(pos.x - x) + Math.abs(pos.y - y);
+                if (distance < 6) {
+                    MaterialEnum to = MaterialEnum.AIR;
+                    MaterialEnum mat = ServerView.getInstance().change(x, y, to);
+                    body.getInventory().add(Material.getComponents(mat));
+                    service.broadcast(new PacketBuilder(Action.OBTAIN, id).addInfo(mat));
+                    service.broadcast(new PacketBuilder(Action.MINE, id)
+                            .addInfo(new Point(x, y)).addInfo(to));
+                }
+                break;
+            case SHOOT:
+                p = (Point) packet.get(0);
+                body = controls.get(id);
+                pos = (Point) body.getPosition().clone();
+                pos.x *= Main.RATIO;
+                pos.y *= Main.RATIO;
+                double rad = Math.atan2(p.y - pos.y, p.x - pos.x);
+                ServerView.getInstance().addObject(new Bullet(pos, rad));
+                ServerComService.getInstance().broadcast(
+                        new PacketBuilder(Action.SHOOT).addInfo(pos).addInfo(rad));
                 break;
             case CRAFT:
                 int idx = (Integer) packet.get(0);
