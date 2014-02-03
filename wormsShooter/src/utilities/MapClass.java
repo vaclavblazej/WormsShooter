@@ -15,15 +15,17 @@ public class MapClass {
 
     private BufferedImage map;
     private int[][] shadows;
+    private AbstractView view;
     private int width;
     private int height;
 
-    public MapClass(BufferedImage map) {
-        this(map, new int[map.getWidth()][map.getHeight()]);
+    public MapClass(BufferedImage map, AbstractView view) {
+        this(map, view, new int[map.getWidth()][map.getHeight()]);
     }
 
-    private MapClass(BufferedImage map, int[][] shadows) {
+    private MapClass(BufferedImage map, AbstractView view, int[][] shadows) {
         this.map = map;
+        this.view = view;
         width = map.getWidth();
         height = map.getHeight();
         this.shadows = shadows;
@@ -49,7 +51,7 @@ public class MapClass {
                 ns[i][j] = shadows[x + i][y + j];
             }
         }
-        return new MapClass(map.getSubimage(x, y, width, height), ns);
+        return new MapClass(map.getSubimage(x, y, width, height), view, ns);
     }
 
     public void calculateShadows() {
@@ -98,8 +100,9 @@ public class MapClass {
     }
 
     private void procShadow(int x, int y, LinkedList<Point> samples, double sh) {
-        CollisionState state = Material.getMaterial(map.getRGB(x, y)).getState();
-        sh += Material.getTransparency(Material.getMaterial(map.getRGB(x, y)));
+        Material mat = view.getMaterial();
+        CollisionState state = mat.getState(mat.getMaterial(map.getRGB(x, y)));
+        sh += mat.getTransparency(mat.getMaterial(map.getRGB(x, y)));
         if (sh > 0xFF) {
             sh = 0xFF;
         }

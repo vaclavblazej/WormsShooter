@@ -18,7 +18,6 @@ import objects.Body;
 import objects.Bullet;
 import objects.items.ComponentTableModel;
 import objects.items.Recipe;
-import org.w3c.dom.views.AbstractView;
 import utilities.PlayerInfo;
 import utilities.communication.Action;
 import utilities.communication.Packet;
@@ -107,7 +106,7 @@ public class ServerCommunication implements Remote, ServerComm {
                 if (distance < 6) {
                     MaterialEnum to = MaterialEnum.AIR;
                     MaterialEnum mat = ServerView.getInstance().change(x, y, to);
-                    body.getInventory().add(Material.getComponents(mat));
+                    body.getInventory().add(ServerView.getInstance().getMaterial().getComponents(mat));
                     service.broadcast(new PacketBuilder(Action.OBTAIN, id).addInfo(mat));
                     service.broadcast(new PacketBuilder(Action.MINE, id)
                             .addInfo(new Point(x, y)).addInfo(to));

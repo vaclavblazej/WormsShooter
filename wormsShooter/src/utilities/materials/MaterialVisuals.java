@@ -1,5 +1,6 @@
 package utilities.materials;
 
+import client.ClientView;
 import java.awt.Color;
 import java.awt.Graphics;
 import java.awt.image.BufferedImage;
@@ -31,7 +32,8 @@ public class MaterialVisuals implements Serializable {
     }
 
     private static void addImage(MaterialEnum mat, int x, int y) {
-        images.put(mat.getColor().getRGB(), SpriteLoader.getRawSprite(x, y));
+        images.put(ClientView.getInstance().getMaterial().getColor(mat).getRGB(),
+                SpriteLoader.getRawSprite(x, y));
     }
 
     private static BufferedImage getImage(int rgb) {

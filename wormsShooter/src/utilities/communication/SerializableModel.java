@@ -34,11 +34,11 @@ public class SerializableModel implements Serializable {
         this.counter = counter;
     }
 
-    public Model deserialize(AbstractView listener) {
+    public Model deserialize(AbstractView view) {
         Map<Integer, Body> arr = new HashMap<>();
         for (Integer i : controls.keySet()) {
-            arr.put(i, controls.get(i).deserialize(listener));
+            arr.put(i, controls.get(i).deserialize(view));
         }
-        return new Model(map.deserialize(), arr, objects, factory, counter);
+        return new Model(map.deserialize(view), arr, objects, factory, counter);
     }
 }

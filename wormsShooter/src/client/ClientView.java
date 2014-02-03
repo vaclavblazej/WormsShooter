@@ -15,6 +15,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.image.RasterFormatException;
 import java.rmi.RemoteException;
+import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -62,7 +63,7 @@ public class ClientView extends AbstractView implements
 
     private ClientView() {
         super(800, 600, 20);
-        map = new MapClass(new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB));
+        map = new MapClass(new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB), this);
         realView = new BufferedImage(800, 600, BufferedImage.TYPE_INT_RGB);
         VIEW_SIZE = new Dimension(800 / getRatio(), 600 / getRatio());
         curentView = null;
@@ -83,7 +84,7 @@ public class ClientView extends AbstractView implements
         super.setModel(model);
         map = model.getMap();
         map.calculateShadows();
-        bodies = model.getControls().values();
+        bodies = new ArrayList<>(model.getControls().values());
     }
 
     public void addBody(Body body) {
@@ -138,7 +139,7 @@ public class ClientView extends AbstractView implements
         g.drawImage(realView, 0, 0, getWidth(), getHeight(), null);
         g.translate(getRatio() * VIEW_SIZE.width / 2, getRatio() * VIEW_SIZE.height / 2);
         if (body != null) {
-            body.drawRelative(g);
+            body.drawRelative(g, tr);
         }
         for (GraphicComponent o : objects) {
             o.drawRelative(g, tr);

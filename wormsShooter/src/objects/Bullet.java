@@ -60,7 +60,7 @@ public class Bullet implements GraphicComponent {
         position.x += velocity * Math.cos(rotation);
         position.y += velocity * Math.sin(rotation);
         Color pixel = view.getPixel((int) (position.x / Main.RATIO), (int) (position.y / Main.RATIO));
-        CollisionState check = Material.check(pixel);
+        CollisionState check = view.getMaterial().getState(pixel);
         if (check != CollisionState.GAS) {
             view.removeObject(this);
         }

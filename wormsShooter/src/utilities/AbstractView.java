@@ -6,7 +6,6 @@ import java.awt.Graphics;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
-import java.util.Collection;
 import java.util.List;
 import java.util.Random;
 import java.util.concurrent.CopyOnWriteArrayList;
@@ -15,7 +14,6 @@ import java.util.logging.Logger;
 import javax.swing.JPanel;
 import javax.swing.Timer;
 import objects.Body;
-import objects.Bullet;
 import objects.GraphicComponent;
 import objects.items.Crafting;
 import objects.items.ItemFactory;
@@ -32,8 +30,9 @@ public abstract class AbstractView extends JPanel implements ActionListener {
 
     private static final int RNG = 20;
     protected Model model;
+    protected Material material;
     protected MapClass map;
-    protected Collection<Body> bodies;
+    protected List<Body> bodies;
     protected List<GraphicComponent> objects;
     protected Random random;
     protected Timer tickTimer;
@@ -59,7 +58,7 @@ public abstract class AbstractView extends JPanel implements ActionListener {
     }
 
     public CollisionState check(int x, int y) {
-        return Material.check(getPixel(x, y));
+        return material.getState(getPixel(x, y));
     }
 
     public Model getModel() {
@@ -68,6 +67,11 @@ public abstract class AbstractView extends JPanel implements ActionListener {
 
     public void setModel(Model model) {
         this.model = model;
+        material = new Material(this);
+    }
+
+    public Material getMaterial() {
+        return material;
     }
 
     public ItemFactory getItemFactory() {
@@ -102,8 +106,8 @@ public abstract class AbstractView extends JPanel implements ActionListener {
 
     public MaterialEnum change(int x, int y, MaterialEnum mat) {
         Graphics g = map.getGraphics();
-        MaterialEnum ret = Material.getMaterial(map.getRGB(x, y));
-        g.setColor(mat.getColor());
+        MaterialEnum ret = material.getMaterial(map.getRGB(x, y));
+        g.setColor(getMaterial().getColor(mat));
         g.drawLine(x, y, x, y);
         return ret;
     }

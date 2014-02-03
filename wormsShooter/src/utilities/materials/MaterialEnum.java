@@ -17,12 +17,4 @@ public enum MaterialEnum {
     DIRT,
     GRASS,
     STONE;
-
-    public Color getColor() {
-        return Material.getColor(this);
-    }
-    
-    public CollisionState getState(){
-        return Material.check(this);
-    }
 }

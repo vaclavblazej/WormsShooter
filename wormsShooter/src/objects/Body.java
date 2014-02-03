@@ -5,7 +5,11 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
+import java.util.logging.Level;
+import java.util.logging.Logger;
+import main.Main;
 import objects.items.InventoryTableModel;
 import objects.items.ItemBlueprint;
 import utilities.CollisionState;
@@ -173,14 +177,19 @@ public class Body implements GraphicComponent {
         g.fillRect((int) position.x, (int) position.y, SIZE.width, SIZE.height);
     }
 
-    public void drawRelative(Graphics2D g) {
-        g.setColor(Color.RED);
-        g.fillRect(0, 0, SIZE.width, SIZE.height);
-    }
-
     @Override
     public void drawRelative(Graphics2D g, AffineTransform trans) {
-        drawRelative(g);
+        AffineTransform tr = (AffineTransform) trans.clone();
+        try {
+            tr.invert();
+        } catch (NoninvertibleTransformException ex) {
+            Logger.getLogger(Bullet.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        tr.translate(position.x * Main.RATIO, position.y * Main.RATIO);
+        //tr.rotate(rotation);
+        g.setTransform(tr);
+        g.setColor(Color.RED);
+        g.fillRect(0, 0, SIZE.width, SIZE.height);
     }
 
     public SerializableBody serialize() {

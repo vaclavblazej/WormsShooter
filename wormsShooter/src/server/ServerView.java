@@ -14,6 +14,7 @@ import spritesheets.SpriteLoader;
 import utilities.AbstractView;
 import utilities.MapClass;
 import utilities.communication.Model;
+import utilities.materials.Material;
 
 /**
  *
@@ -34,12 +35,13 @@ public class ServerView extends AbstractView {
         super(400, 300, 1);
         SpriteLoader.loadSprite("Map");
         SpriteLoader.set(400, 300);
-        map = new MapClass(SpriteLoader.getSprite().getFrame());
+        map = new MapClass(SpriteLoader.getSprite().getFrame(), this);
         model = new Model(map,
                 ServerCommunication.getInstance().getControls(),
                 objects,
                 createItems(),
                 ServerComService.getInstance().getCounter());
+        material = new Material(this);
         createReceipes();
 
         SwingUtilities.invokeLater(new Runnable() {

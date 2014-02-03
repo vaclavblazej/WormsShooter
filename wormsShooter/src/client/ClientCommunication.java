@@ -159,16 +159,14 @@ public class ClientCommunication {
                                     case OBTAIN:
                                         InventoryTableModel inv = controls.get(packet.getId()).getInventory();
                                         MaterialEnum en = (MaterialEnum) packet.get(0);
-                                        inv.add(Material.getComponents(en));
+                                        inv.add(ClientView.getInstance().getMaterial().getComponents(en));
                                         GameWindowItemBar.getInstance().refreshBar(inv);
                                         break;
                                     case ADD_ITEM:
                                         ClientView.getInstance().getMyBody().addItem(factory.get((ItemEnum) packet.get(0)));
                                         break;
                                     case CONNECT:
-                                        if (id == 0) {
-                                            createPlayer(info.getId());
-                                        }
+                                        createPlayer(id);
                                         break;
                                     case CONFIRM:
                                         getModel();
