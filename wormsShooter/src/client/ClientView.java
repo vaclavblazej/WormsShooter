@@ -138,8 +138,8 @@ public class ClientView extends AbstractView implements
         Graphics2D g = (Graphics2D) grphcs;
         g.drawImage(realView, 0, 0, getWidth(), getHeight(), null);
         g.translate(getRatio() * VIEW_SIZE.width / 2, getRatio() * VIEW_SIZE.height / 2);
-        if (body != null) {
-            body.drawRelative(g, tr);
+        for (Body b : bodies) {
+            b.drawRelative(g, tr);
         }
         for (GraphicComponent o : objects) {
             o.drawRelative(g, tr);
