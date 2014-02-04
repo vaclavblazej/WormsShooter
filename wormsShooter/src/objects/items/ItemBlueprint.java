@@ -17,17 +17,17 @@ public class ItemBlueprint implements Serializable, Comparable<ItemBlueprint> {
     private Point size;
     private boolean usable;
     private ItemAction action;
-    private BufferedImage image;
+    private SerializableBufferedImage image;
 
-    public ItemBlueprint(String name, boolean usable, int x, int y, SerializableBufferedImage img) {
+    public ItemBlueprint(String name, boolean usable, int x, int y, BufferedImage img) {
         this(name, usable, new Point(x, y), img);
     }
 
-    public ItemBlueprint(String name, boolean usable, Point size, SerializableBufferedImage img) {
+    public ItemBlueprint(String name, boolean usable, Point size, BufferedImage img) {
         this.name = name;
         this.usable = usable;
         this.size = size;
-        this.image = img.getImage();
+        this.image = new SerializableBufferedImage(img);
         action = new ItemActionShoot();
     }
 
@@ -36,11 +36,11 @@ public class ItemBlueprint implements Serializable, Comparable<ItemBlueprint> {
     }
 
     public Item getInstance() {
-        return new Item(name, usable, size, image);
+        return new Item(name, usable, size, image.getImage());
     }
-    
+
     public BufferedImage getImage() {
-        return image;
+        return image.getImage();
     }
 
     public String getName() {
