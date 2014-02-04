@@ -4,7 +4,6 @@ import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import objects.items.itemActions.ItemAction;
-import objects.items.itemActions.ItemActionShoot;
 import utilities.communication.SerializableBufferedImage;
 
 /**
@@ -19,16 +18,16 @@ public class ItemBlueprint implements Serializable, Comparable<ItemBlueprint> {
     private ItemAction action;
     private SerializableBufferedImage image;
 
-    public ItemBlueprint(String name, boolean usable, int x, int y, BufferedImage img) {
-        this(name, usable, new Point(x, y), img);
+    public ItemBlueprint(String name, boolean usable, int x, int y, BufferedImage img, ItemAction action) {
+        this(name, usable, new Point(x, y), img, action);
     }
 
-    public ItemBlueprint(String name, boolean usable, Point size, BufferedImage img) {
+    public ItemBlueprint(String name, boolean usable, Point p, BufferedImage img, ItemAction action) {
         this.name = name;
         this.usable = usable;
-        this.size = size;
+        this.size = p;
         this.image = new SerializableBufferedImage(img);
-        action = new ItemActionShoot();
+        this.action = action;
     }
 
     public ItemAction getAction() {
@@ -36,7 +35,7 @@ public class ItemBlueprint implements Serializable, Comparable<ItemBlueprint> {
     }
 
     public Item getInstance() {
-        return new Item(name, usable, size, image.getImage());
+        return new Item(name, usable, size, image.getImage(), action);
     }
 
     public BufferedImage getImage() {

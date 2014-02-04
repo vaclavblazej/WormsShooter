@@ -3,6 +3,7 @@ package objects.items;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
 import java.io.Serializable;
+import objects.items.itemActions.ItemAction;
 
 /**
  *
@@ -10,8 +11,8 @@ import java.io.Serializable;
  */
 public class Item extends ItemBlueprint implements Serializable {
 
-    public Item(String name, boolean usable, Point size, BufferedImage img) {
-        super(name, usable, size, img);
+    public Item(String name, boolean usable, Point p, BufferedImage img, ItemAction action) {
+        super(name, usable, p, img, action);
     }
 
     @Override
