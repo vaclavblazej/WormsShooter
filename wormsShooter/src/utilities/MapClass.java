@@ -31,6 +31,14 @@ public class MapClass {
         this.shadows = shadows;
     }
 
+    public int getWidth() {
+        return map.getWidth();
+    }
+
+    public int getHeight() {
+        return map.getHeight();
+    }
+
     public Graphics getGraphics() {
         return map.getGraphics();
     }

@@ -124,8 +124,19 @@ public class ClientView extends AbstractView implements
     public void paint(Graphics grphcs) {
         super.paint(grphcs);
         if (body != null) {
-            currentPosition.x = body.getPosition().x - VIEW_SIZE.width / 2;
-            currentPosition.y = body.getPosition().y - VIEW_SIZE.height / 2;
+            Point bodyPosition = body.getPosition();
+            currentPosition.x = bodyPosition.x - VIEW_SIZE.width / 2;
+            currentPosition.y = bodyPosition.y - VIEW_SIZE.height / 2;
+            if (currentPosition.x < 0) {
+                currentPosition.x = 0;
+            } else if (currentPosition.x > map.getWidth() - VIEW_SIZE.width) {
+                currentPosition.x = map.getWidth() - VIEW_SIZE.width;
+            }
+            if (currentPosition.y < 0) {
+                currentPosition.y = 0;
+            } else if (currentPosition.y > map.getHeight() - VIEW_SIZE.height) {
+                currentPosition.y = map.getHeight() - VIEW_SIZE.height;
+            }
         }
         tr.setToTranslation(currentPosition.x * Main.RATIO, currentPosition.y * Main.RATIO);
         try {
