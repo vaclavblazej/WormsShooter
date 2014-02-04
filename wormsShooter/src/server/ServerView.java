@@ -14,6 +14,7 @@ import spritesheets.SpriteLoader;
 import utilities.AbstractView;
 import utilities.MapClass;
 import utilities.communication.Model;
+import utilities.communication.SerializableBufferedImage;
 import utilities.materials.Material;
 
 /**
@@ -53,17 +54,19 @@ public class ServerView extends AbstractView {
     }
 
     private ItemFactory createItems() {
+        SpriteLoader.loadSprite("Materials");
+        SpriteLoader.set(16, 16);
         ItemFactory itemFactory = new ItemFactory();
-        itemFactory.addItem(ItemEnum.METAL, new ItemBlueprint("Metal", true, 1, 1));
-        itemFactory.addItem(ItemEnum.GUN_POWDER, new ItemBlueprint("Gun powder", true, 1, 1));
-        itemFactory.addItem(ItemEnum.BULLET, new ItemBlueprint("Bullet", false, 1, 1));
-        itemFactory.addItem(ItemEnum.HANDGUN, new ItemBlueprint("Gun", true, 2, 2));
-        itemFactory.addItem(ItemEnum.HANDGUN_MAGAZINE, new ItemBlueprint("Magazine", false, 1, 2));
-        itemFactory.addItem(ItemEnum.HANDGUN_BARREL, new ItemBlueprint("Barrel", false, 2, 1));
-        itemFactory.addItem(ItemEnum.HANDGUN_MECHANISM, new ItemBlueprint("Mechanism", false, 1, 1));
-        itemFactory.addItem(ItemEnum.HANDGUN_HANDLE, new ItemBlueprint("Handle", false, 2, 2));
-        itemFactory.addItem(ItemEnum.HANDGUN_OPTICS, new ItemBlueprint("Optics", true, 2, 1));
-        itemFactory.addItem(ItemEnum.SHOVEL, new ItemBlueprint("Shovel", true, 1, 4));
+        itemFactory.addItem(ItemEnum.METAL, new ItemBlueprint("Metal", true, 1, 1, new SerializableBufferedImage(SpriteLoader.getRawSprite(4, 4))));
+        itemFactory.addItem(ItemEnum.GUN_POWDER, new ItemBlueprint("Gun powder", true, 1, 1, new SerializableBufferedImage(SpriteLoader.getRawSprite(4, 4))));
+        itemFactory.addItem(ItemEnum.BULLET, new ItemBlueprint("Bullet", false, 1, 1, new SerializableBufferedImage(SpriteLoader.getRawSprite(4, 4))));
+        itemFactory.addItem(ItemEnum.HANDGUN, new ItemBlueprint("Gun", true, 2, 2, new SerializableBufferedImage(SpriteLoader.getRawSprite(4, 4))));
+        itemFactory.addItem(ItemEnum.HANDGUN_MAGAZINE, new ItemBlueprint("Magazine", false, 1, 2, new SerializableBufferedImage(SpriteLoader.getRawSprite(4, 4))));
+        itemFactory.addItem(ItemEnum.HANDGUN_BARREL, new ItemBlueprint("Barrel", false, 2, 1, new SerializableBufferedImage(SpriteLoader.getRawSprite(4, 4))));
+        itemFactory.addItem(ItemEnum.HANDGUN_MECHANISM, new ItemBlueprint("Mechanism", false, 1, 1, new SerializableBufferedImage(SpriteLoader.getRawSprite(4, 4))));
+        itemFactory.addItem(ItemEnum.HANDGUN_HANDLE, new ItemBlueprint("Handle", false, 2, 2, new SerializableBufferedImage(SpriteLoader.getRawSprite(4, 4))));
+        itemFactory.addItem(ItemEnum.HANDGUN_OPTICS, new ItemBlueprint("Optics", true, 2, 1, new SerializableBufferedImage(SpriteLoader.getRawSprite(4, 4))));
+        itemFactory.addItem(ItemEnum.SHOVEL, new ItemBlueprint("Shovel", true, 1, 4, new SerializableBufferedImage(SpriteLoader.getRawSprite(4, 4))));
         return itemFactory;
     }
 
