@@ -21,12 +21,10 @@ public class InventoryDialog extends AbstractDialog {
 
     private JSplitPane split;
     private JTable items;
-    private Integer hightlight;
 
     public InventoryDialog(JFrame owner) {
         super(owner, Message.INVENTORY_WINDOW_TITLE.cm(), false);
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-        hightlight = -1;
 
         split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
         items = new JTable(ClientView.getInstance().getMyBody().getInventory()) {
@@ -45,7 +43,6 @@ public class InventoryDialog extends AbstractDialog {
                 } else {
                     c.setBackground(Color.WHITE);
                 }
-                //c.setBackground((row == hightlight) ? Color.GREEN : Color.WHITE);
                 return c;
             }
         };

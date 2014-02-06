@@ -1,21 +1,24 @@
 package objects.items;
 
 import java.io.Serializable;
+import java.util.EnumSet;
 
 /**
  *
  * @author Skarab
  */
-public class Recipe implements Serializable{
+public class Recipe implements Serializable {
 
     private ComponentTableModel ingredients;
     private ComponentTableModel products;
+    private EnumSet<SituationProperty> conditions;
     private String name;
 
     public Recipe(String name) {
         this.name = name;
         ingredients = new ComponentTableModel("Ingredients", "Count");
         products = new ComponentTableModel("Products", "Count");
+        conditions = EnumSet.noneOf(SituationProperty.class);
     }
 
     public String getName() {
@@ -28,6 +31,10 @@ public class Recipe implements Serializable{
 
     public void addProduct(ItemBlueprint item, int count) {
         products.add(item, count);
+    }
+
+    public void addCondition(SituationProperty prop) {
+        conditions.add(prop);
     }
 
     public ComponentTableModel getIngredients() {

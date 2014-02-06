@@ -7,7 +7,7 @@ import java.awt.image.BufferedImage;
 import java.io.Serializable;
 import java.util.HashMap;
 import java.util.Map;
-import spritesheets.SpriteLoader;
+import utilities.spritesheets.SpriteLoader;
 import utilities.MapClass;
 
 /**

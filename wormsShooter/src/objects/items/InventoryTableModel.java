@@ -6,6 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
+import javax.swing.Icon;
 import javax.swing.ImageIcon;
 import javax.swing.JButton;
 
@@ -53,6 +54,7 @@ public class InventoryTableModel extends ComponentTableModel {
                 btn.item = getItem(i);
                 btn.setText(getValueAt(i, 0).toString() + ": " + getValueAt(i, 1).toString());
                 btn.setFocusable(false);
+                btn.setIcon(new ImageIcon(btn.item.getImage()));
                 toolbar.add(btn);
             }
         }

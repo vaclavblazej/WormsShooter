@@ -12,11 +12,10 @@ import objects.items.ItemFactory;
 import objects.items.Recipe;
 import objects.items.itemActions.ItemActionMine;
 import objects.items.itemActions.ItemActionShoot;
-import spritesheets.SpriteLoader;
+import utilities.spritesheets.SpriteLoader;
 import utilities.AbstractView;
 import utilities.MapClass;
 import utilities.communication.Model;
-import utilities.communication.SerializableBufferedImage;
 import utilities.materials.Material;
 
 /**

@@ -42,7 +42,7 @@ public class Bullet implements GraphicComponent {
 
     @Override
     public void drawRelative(Graphics2D g, AffineTransform trans) {
-        AffineTransform tr = (AffineTransform) trans.clone();
+        tr = (AffineTransform) trans.clone();
         try {
             tr.invert();
         } catch (NoninvertibleTransformException ex) {
