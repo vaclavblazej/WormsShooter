@@ -43,8 +43,6 @@ public class ClientView extends AbstractView implements
         MouseMotionListener,
         MouseListener {
 
-    private static Controls controls;
-    private static Point mouse;
     private static ClientView instance;
 
     public static ClientView getInstance() {
@@ -53,6 +51,7 @@ public class ClientView extends AbstractView implements
         }
         return instance;
     }
+    private static final int SCALE = 20;
     private final Dimension VIEW_SIZE;
     private Body body;
     private EnumSet<ControlsEnum> controlSet;
@@ -60,23 +59,20 @@ public class ClientView extends AbstractView implements
     private BufferedImage realView;
     private Point currentPosition;
     private AffineTransform tr;
+    private Controls controls;
+    private Point mouse;
 
     private ClientView() {
-        super(800, 600, 20);
+        super(800, 600, SCALE);
         map = new MapClass(new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB), this);
         realView = new BufferedImage(800, 600, BufferedImage.TYPE_INT_RGB);
         VIEW_SIZE = new Dimension(800 / getRatio(), 600 / getRatio());
         curentView = null;
-        currentPosition = new Point(30, 20);
+        currentPosition = new Point();
         controlSet = EnumSet.noneOf(ControlsEnum.class);
         mouse = new Point();
         tr = new AffineTransform();
-        tr.setToScale(20, 20);
-    }
-
-    @Override
-    public Model getModel() {
-        return model;
+        tr.setToScale(SCALE, SCALE);
     }
 
     @Override
@@ -85,10 +81,6 @@ public class ClientView extends AbstractView implements
         map = model.getMap();
         map.calculateShadows();
         bodies = new ArrayList<>(model.getControls().values());
-    }
-
-    public void addBody(Body body) {
-        bodies.add(body);
     }
 
     public void setMyBody(Body body) {
@@ -103,7 +95,6 @@ public class ClientView extends AbstractView implements
     public void init() {
         super.init();
         controls = Settings.getInstance().getControls();
-        Settings.getInstance().setControls(controls);
         repaint();
         addMouseListener(this);
         addMouseMotionListener(this);
@@ -117,6 +108,7 @@ public class ClientView extends AbstractView implements
         removeMouseMotionListener(this);
         removeKeyListener(this);
         body = null;
+        controls = null;
         repaint();
     }
 
@@ -144,7 +136,6 @@ public class ClientView extends AbstractView implements
                     VIEW_SIZE.width, VIEW_SIZE.height);
             MaterialVisuals.redraw(curentView, realView);
         } catch (RasterFormatException | ArrayIndexOutOfBoundsException ex) {
-            // todo - fix exception when you are near end of the map
         }
         Graphics2D g = (Graphics2D) grphcs;
         g.drawImage(realView, 0, 0, getWidth(), getHeight(), null);

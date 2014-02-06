@@ -36,6 +36,10 @@ public class InventoryTableModel extends ComponentTableModel {
         return getItem(i) == heldItem;
     }
 
+    public Color getColor(int i) {
+        return getItem(i).getCategory().gc();
+    }
+
     public List<JButton> generateToolbar() {
         List<JButton> toolbar = new ArrayList<>();
         for (int i = 0; i < getRowCount(); i++) {

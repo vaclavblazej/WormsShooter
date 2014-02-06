@@ -17,17 +17,25 @@ public class ItemBlueprint implements Serializable, Comparable<ItemBlueprint> {
     private boolean usable;
     private ItemAction action;
     private SerializableBufferedImage image;
+    private ItemCategory category;
 
-    public ItemBlueprint(String name, boolean usable, int x, int y, BufferedImage img, ItemAction action) {
-        this(name, usable, new Point(x, y), img, action);
+    public ItemBlueprint(String name, boolean usable, int x, int y,
+            ItemCategory category, BufferedImage img, ItemAction action) {
+        this(name, usable, new Point(x, y), category, img, action);
     }
 
-    public ItemBlueprint(String name, boolean usable, Point p, BufferedImage img, ItemAction action) {
+    public ItemBlueprint(String name, boolean usable, Point p,
+            ItemCategory category, BufferedImage img, ItemAction action) {
         this.name = name;
         this.usable = usable;
         this.size = p;
+        this.category = category;
         this.image = new SerializableBufferedImage(img);
         this.action = action;
+    }
+
+    public ItemCategory getCategory() {
+        return category;
     }
 
     public ItemAction getAction() {
@@ -35,7 +43,7 @@ public class ItemBlueprint implements Serializable, Comparable<ItemBlueprint> {
     }
 
     public Item getInstance() {
-        return new Item(name, usable, size, image.getImage(), action);
+        return new Item(name, usable, size, category, image.getImage(), action);
     }
 
     public BufferedImage getImage() {

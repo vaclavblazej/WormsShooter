@@ -13,13 +13,13 @@ import java.util.logging.Logger;
 import main.Main;
 import objects.items.InventoryTableModel;
 import objects.items.ItemBlueprint;
+import utilities.AbstractView;
+import utilities.CollisionState;
+import utilities.communication.Action;
+import utilities.communication.SerializableBody;
 import utilities.spritesheets.Animation;
 import utilities.spritesheets.Frame;
 import utilities.spritesheets.SpriteLoader;
-import utilities.CollisionState;
-import utilities.AbstractView;
-import utilities.communication.Action;
-import utilities.communication.SerializableBody;
 
 /**
  *

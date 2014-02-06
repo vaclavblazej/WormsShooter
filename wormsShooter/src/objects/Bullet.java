@@ -10,7 +10,6 @@ import java.util.logging.Logger;
 import main.Main;
 import utilities.AbstractView;
 import utilities.CollisionState;
-import utilities.materials.Material;
 
 /**
  *

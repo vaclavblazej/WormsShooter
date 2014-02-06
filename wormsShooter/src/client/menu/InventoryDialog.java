@@ -32,6 +32,7 @@ public class InventoryDialog extends AbstractDialog {
             public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
                 Component c = super.prepareRenderer(renderer, row, column);
                 InventoryTableModel it = (InventoryTableModel) getModel();
+                c.setForeground(it.getColor(row));
                 if (it.isHeldItem(row)) {
                     if (isRowSelected(row)) {
                         c.setBackground(Color.GREEN);

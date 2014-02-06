@@ -1,9 +1,9 @@
 package client.menu;
 
-import utilities.FileManager;
 import java.io.Serializable;
 import utilities.Controls;
 import utilities.ControlsEnum;
+import utilities.FileManager;
 
 /**
  *
