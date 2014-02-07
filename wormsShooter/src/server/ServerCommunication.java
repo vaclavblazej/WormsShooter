@@ -2,20 +2,24 @@ package server;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
+import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import main.Main;
+import utilities.PlayerInfo;
 import utilities.communication.Action;
 import utilities.communication.Packet;
+import utilities.communication.RegistrationForm;
 
 /**
  *
  * @author plach_000
  */
-public class ServerCommunication implements Runnable {
+public class ServerCommunication {
 
     private static ServerCommunication instance;
 
@@ -25,32 +29,57 @@ public class ServerCommunication implements Runnable {
         }
         return instance;
     }
-    private ServerSocket ss;
+    private ServerSocket serverSocket;
     private boolean running;
     private Map<Action, Performable> performables;
 
     private ServerCommunication() {
+        serverSocket = null;
+        running = false;
+        performables = null;
     }
 
     public void init(int port) {
+        performables = new HashMap<>(Action.values().length);
+        load();
         try {
-            ss = new ServerSocket(port);
+            serverSocket = new ServerSocket(port);
         } catch (IOException ex) {
+            Logger.getLogger(ServerCommunication.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        run();
+    }
+
+    public void load() {
+        ClassLoader classLoader = Main.class.getClassLoader();
+        try {
+            for (Action action : Action.values()) {
+                Class<?> loader = classLoader.loadClass("dynamic.communication." + action.name().toLowerCase());
+                //System.out.println("Dynamic loading: " + loader.getCanonicalName());
+                Packet dc = (Packet) loader.newInstance();
+                performables.put(action, dc);
+            }
+        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
             Logger.getLogger(ServerCommunication.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    @Override
     public void run() {
-        running = true;
-        while (running) {
-            try {
-                Socket s = ss.accept();
-                new Thread(new CommunicationHandler(s)).start();
-            } catch (IOException ex) {
-                Logger.getLogger(ServerCommunication.class.getName()).log(Level.SEVERE, null, ex);
+        System.out.println("Server: starting");
+        new Thread(new Runnable() {
+            @Override
+            public void run() {
+                running = true;
+                while (running) {
+                    try {
+                        Socket s = serverSocket.accept();
+                        new Thread(new CommunicationHandler(s)).start();
+                    } catch (IOException ex) {
+                        Logger.getLogger(ServerCommunication.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                }
             }
-        }
+        }).start();
     }
 
     public void shutdown() {
@@ -61,38 +90,26 @@ public class ServerCommunication implements Runnable {
 
         private Socket socket;
 
-        public CommunicationHandler(Socket socket) {
+        CommunicationHandler(Socket socket) {
             this.socket = socket;
         }
 
         @Override
         public void run() {
             try {
-                ObjectInputStream ois = new ObjectInputStream(socket.getInputStream());
+                System.out.println("Server: Client handler started");
+                ObjectInputStream is = new ObjectInputStream(socket.getInputStream());
+                ObjectOutputStream os = new ObjectOutputStream(socket.getOutputStream());
+                PlayerInfo registerPlayer = ServerComService.getInstance()
+                        .registerPlayer((RegistrationForm) ((Packet) is.readObject()).get(0));
+                os.writeObject(registerPlayer);
                 while (running) {
-                    Packet p = ((Packet) ois.readObject());
-                    performables.get(p.getAction()).perform(socket, p);
+                    Packet p = ((Packet) is.readObject());
+                    performables.get(p.getAction()).perform(os, p, ServerView.getInstance().getModel());
                 }
             } catch (IOException | ClassNotFoundException ex) {
                 Logger.getLogger(ServerCommunication.class.getName()).log(Level.SEVERE, null, ex);
             }
-        }
-    }
-
-    public void load() {
-        ClassLoader classLoader = Main.class.getClassLoader();
-        try {
-            for (Action action : Action.values()) {
-                Class<?> loader = classLoader.loadClass("dynamic.communication." + action.name().toLowerCase());
-                Packet dc = (Packet) loader.newInstance();
-                performables.put(action, dc);
-            }
-        } catch (ClassNotFoundException e) {
-            e.printStackTrace();
-        } catch (InstantiationException ex) {
-            Logger.getLogger(ServerCommunication.class.getName()).log(Level.SEVERE, null, ex);
-        } catch (IllegalAccessException ex) {
-            Logger.getLogger(ServerCommunication.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 }

@@ -1,7 +1,8 @@
 package dynamic.communication;
 
-import java.net.Socket;
-import utilities.communication.Action;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import utilities.communication.Model;
 import utilities.communication.Packet;
 
 /**
@@ -10,11 +11,9 @@ import utilities.communication.Packet;
  */
 public class add_item extends Packet {
 
-    public add_item(Action action, int id) {
-        super(action, id);
-    }
-
     @Override
-    public void perform(Socket socket, Packet packet) {
+    public void perform(ObjectOutputStream os, Packet packet, Model model) throws IOException {
+        super.perform(os, packet, model);
+        // todo
     }
 }

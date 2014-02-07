@@ -6,13 +6,14 @@ package utilities.communication;
  */
 public enum Action {
 
-    MOVE,
     ADD_ITEM,
-    CRAFT,
-    OBTAIN,
     CONFIRM,
     CONNECT,
+    CRAFT,
     DISCONNECT,
+    GET_MODEL,
     MINE,
+    MOVE,
+    OBTAIN,
     SHOOT;
 }

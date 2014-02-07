@@ -9,12 +9,11 @@ import utilities.communication.Packet;
  *
  * @author Skarab
  */
-public class disconnect extends Packet {
+public class get_model extends Packet {
 
     @Override
     public void perform(ObjectOutputStream os, Packet packet, Model model) throws IOException {
         super.perform(os, packet, model);
-        System.out.println("disconnect");
-        // todo
+        os.writeObject(model.serialize());
     }
 }

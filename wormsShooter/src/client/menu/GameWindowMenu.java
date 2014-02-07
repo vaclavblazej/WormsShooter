@@ -72,7 +72,7 @@ public class GameWindowMenu extends JMenuBar {
         item.setAction(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ClientCommunication.getInstance().sendAction(new PacketBuilder(Action.DISCONNECT));
+                ClientCommunication.getInstance().send(new PacketBuilder(Action.DISCONNECT));
             }
         });
         item.setText(Message.MENU_DISCONNECT.cm());

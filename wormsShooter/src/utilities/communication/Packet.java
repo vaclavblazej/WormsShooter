@@ -1,7 +1,8 @@
 package utilities.communication;
 
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.net.Socket;
 import java.util.ArrayList;
 import server.Performable;
 
@@ -15,6 +16,10 @@ public class Packet implements Serializable, Performable {
     private int count;
     private int id;
     private ArrayList<Object> information;
+
+    public Packet() {
+        this(null, 0);
+    }
 
     public Packet(Action action, int id) {
         this.action = action;
@@ -53,6 +58,6 @@ public class Packet implements Serializable, Performable {
     }
 
     @Override
-    public void perform(Socket socket, Packet packet) {
+    public void perform(ObjectOutputStream os, Packet packet, Model model) throws IOException {
     }
 }

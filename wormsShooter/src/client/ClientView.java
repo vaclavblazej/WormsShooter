@@ -154,7 +154,7 @@ public class ClientView extends AbstractView implements
         if (en != null && controlSet.add(en)) {
             switch (en) {
                 case UP:
-                    ClientCommunication.getInstance().sendAction(
+                    ClientCommunication.getInstance().send(
                             new PacketBuilder(Action.MOVE).addInfo(MoveAction.JUMP));
                     break;
                 case LEFT:
@@ -189,13 +189,13 @@ public class ClientView extends AbstractView implements
         }
         switch (d) {
             case 1:
-                ClientCommunication.getInstance().sendAction(new PacketBuilder(Action.MOVE).addInfo(MoveAction.RIGHT));
+                ClientCommunication.getInstance().send(new PacketBuilder(Action.MOVE).addInfo(MoveAction.RIGHT));
                 break;
             case 0:
-                ClientCommunication.getInstance().sendAction(new PacketBuilder(Action.MOVE).addInfo(MoveAction.STOP));
+                ClientCommunication.getInstance().send(new PacketBuilder(Action.MOVE).addInfo(MoveAction.STOP));
                 break;
             case -1:
-                ClientCommunication.getInstance().sendAction(new PacketBuilder(Action.MOVE).addInfo(MoveAction.LEFT));
+                ClientCommunication.getInstance().send(new PacketBuilder(Action.MOVE).addInfo(MoveAction.LEFT));
                 break;
         }
     }

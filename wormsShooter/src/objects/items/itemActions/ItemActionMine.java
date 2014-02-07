@@ -13,7 +13,7 @@ public class ItemActionMine implements ItemAction {
 
     @Override
     public void action(Point point) {
-        ClientCommunication.getInstance().sendAction(
+        ClientCommunication.getInstance().send(
                 new PacketBuilder(Action.MINE).addInfo(point));
     }
 }

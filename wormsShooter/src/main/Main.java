@@ -1,5 +1,7 @@
 package main;
 
+import client.ClientCommunication;
+import client.ClientView;
 import client.ClientWindow;
 import javax.swing.SwingUtilities;
 import server.ServerCommunication;
@@ -26,6 +28,11 @@ public class Main {
 
     public static void startGame() {
         ClientWindow.getInstance().launch();
+    }
+
+    public static void startClient(String address, String socket) {
+        ClientCommunication.getInstance().init(address, socket);
+        ClientView.getInstance().init();
     }
 
     public static void startServer(int port) {

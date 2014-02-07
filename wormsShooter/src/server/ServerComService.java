@@ -118,6 +118,7 @@ public final class ServerComService {
 
     public PlayerInfo registerPlayer(RegistrationForm form) {
         int id = new Random().nextInt();
+        System.out.println("Server: registering player: " + id);
         waitingRegistrations.put(id, form);
         return new PlayerInfo(id);
     }

@@ -1,15 +1,8 @@
 package client.menu;
 
-import client.ClientCommunication;
-import client.ClientView;
 import java.awt.GridBagLayout;
 import java.net.InetAddress;
-import java.net.MalformedURLException;
 import java.net.UnknownHostException;
-import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.JCheckBox;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
@@ -65,8 +58,7 @@ public class GameLauncher extends AbstractDialog {
         if (newServer.isSelected()) {
             Main.startServer(Integer.parseInt(serverSocket.getText()));
         }
-        ClientCommunication.getInstance().init(address.getText(), clientSocket.getText());
-        ClientView.getInstance().init();
+        Main.startClient(address.getText(), clientSocket.getText());
     }
 
     @Override

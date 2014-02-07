@@ -1,19 +1,19 @@
 package dynamic.communication;
 
-import java.awt.Point;
-import java.net.Socket;
-import server.Performable;
+import java.io.IOException;
+import java.io.ObjectOutputStream;
+import utilities.communication.Model;
 import utilities.communication.Packet;
-import utilities.communication.PacketBuilder;
 
 /**
  *
  * @author Skarab
  */
-public class move implements Performable {
+public class move extends Packet {
 
     @Override
-    public void perform(Socket socket, Packet packet) {
+    public void perform(ObjectOutputStream os, Packet packet, Model model) throws IOException {
+        super.perform(os, packet, model);
         /*
          body = controls.get(id);
          if (body != null) {

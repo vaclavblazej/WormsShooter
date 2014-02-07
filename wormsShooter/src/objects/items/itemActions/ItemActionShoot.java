@@ -13,7 +13,7 @@ public class ItemActionShoot implements ItemAction {
 
     @Override
     public void action(Point point) {
-        ClientCommunication.getInstance().sendAction(
+        ClientCommunication.getInstance().send(
                 new PacketBuilder(Action.SHOOT).addInfo(point));
     }
 }
