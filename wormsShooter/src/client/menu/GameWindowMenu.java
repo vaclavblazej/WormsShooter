@@ -72,11 +72,7 @@ public class GameWindowMenu extends JMenuBar {
         item.setAction(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                try {
-                    ClientCommunication.getInstance().sendAction(new PacketBuilder(Action.DISCONNECT));
-                } catch (RemoteException ex) {
-                    Logger.getLogger(GameWindowMenu.class.getName()).log(Level.SEVERE, null, ex);
-                }
+                ClientCommunication.getInstance().sendAction(new PacketBuilder(Action.DISCONNECT));
             }
         });
         item.setText(Message.MENU_DISCONNECT.cm());

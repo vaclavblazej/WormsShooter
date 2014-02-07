@@ -55,11 +55,7 @@ public class CraftingPanel extends JPanel implements ListSelectionListener {
             public void actionPerformed(ActionEvent e) {
                 ComponentTableModel inventory = ClientView.getInstance().getMyBody().getInventory();
                 if (inventory.contains(ingredientsModel)) {
-                    try {
-                        ClientCommunication.getInstance().sendAction(new PacketBuilder(Action.CRAFT).addInfo(new Integer(lastIndex)));
-                    } catch (RemoteException ex) {
-                        Logger.getLogger(CraftingPanel.class.getName()).log(Level.SEVERE, null, ex);
-                    }
+                    ClientCommunication.getInstance().sendAction(new PacketBuilder(Action.CRAFT).addInfo(new Integer(lastIndex)));
                 }
             }
         });

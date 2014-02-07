@@ -1,15 +1,13 @@
-/*
- * To change this template, choose Tools | Templates
- * and open the template in the editor.
- */
 package server;
 
 import java.net.Socket;
+import utilities.communication.Packet;
 
 /**
  *
  * @author plach_000
  */
 public interface Performable {
-    public void perform(Socket socket);
+
+    public void perform(Socket socket, Packet packet);
 }

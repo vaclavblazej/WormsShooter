@@ -1,9 +1,6 @@
 package main;
 
 import client.ClientWindow;
-import java.rmi.RemoteException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import server.ServerCommunication;
 import server.ServerView;
@@ -33,11 +30,7 @@ public class Main {
 
     public static void startServer(int port) {
         if (server == false) {
-            try {
-                ServerCommunication.getInstance().init(port);
-            } catch (RemoteException ex) {
-                Logger.getLogger(Main.class.getName()).log(Level.SEVERE, null, ex);
-            }
+            ServerCommunication.getInstance().init(port);
             new ServerWindow();
             server = true;
         }

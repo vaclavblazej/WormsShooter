@@ -2,6 +2,7 @@ package server;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.util.HashMap;
 import javax.swing.SwingUtilities;
 import objects.Body;
 import objects.GraphicComponent;
@@ -40,7 +41,7 @@ public class ServerView extends AbstractView {
         SpriteLoader.set(400, 300);
         map = new MapClass(SpriteLoader.getSprite().getFrame(), this);
         model = new Model(map,
-                ServerCommunication.getInstance().getControls(),
+                new HashMap<Integer, Body>(20),
                 objects,
                 createItems(),
                 ServerComService.getInstance().getCounter());

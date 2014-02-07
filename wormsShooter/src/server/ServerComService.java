@@ -145,7 +145,7 @@ public final class ServerComService {
         System.out.println("Server: client " + id + " registered");
         broadcast(new PacketBuilder(Action.CONNECT, id));
         players.put(id, pci);
-        ServerCommunication.getInstance().bindBody(id, ServerView.getInstance().newBody());
+        //ServerCommunication.getInstance().bindBody(id, ServerView.getInstance().newBody());
         send(id, new PacketBuilder(Action.CONFIRM, id));
     }
 
@@ -153,7 +153,7 @@ public final class ServerComService {
         System.out.println("Server: client " + id + " disconnected");
         broadcast(new PacketBuilder(Action.DISCONNECT, id));
         players.remove(id);
-        ServerCommunication.getInstance().unbindBody(id);
+        //ServerCommunication.getInstance().unbindBody(id);
     }
 
     private class PlayerComInfo {

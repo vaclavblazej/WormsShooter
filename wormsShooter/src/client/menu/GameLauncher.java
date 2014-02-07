@@ -62,22 +62,11 @@ public class GameLauncher extends AbstractDialog {
 
     @Override
     public void okAction() throws Exception {
-        try {
-            if (newServer.isSelected()) {
-                Main.startServer(Integer.parseInt(serverSocket.getText()));
-            }
-            ClientCommunication.getInstance().init(address.getText(), clientSocket.getText());
-            ClientView.getInstance().init();
-        } catch (NotBoundException ex) {
-            Logger.getLogger(GameLauncher.class.getName()).log(Level.SEVERE, null, ex);
-            //todo exception dialog
-        } catch (MalformedURLException ex) {
-            Logger.getLogger(GameLauncher.class.getName()).log(Level.SEVERE, null, ex);
-            //todo exception dialog
-        } catch (RemoteException ex) {
-            Logger.getLogger(GameLauncher.class.getName()).log(Level.SEVERE, null, ex);
-            //todo exception dialog
+        if (newServer.isSelected()) {
+            Main.startServer(Integer.parseInt(serverSocket.getText()));
         }
+        ClientCommunication.getInstance().init(address.getText(), clientSocket.getText());
+        ClientView.getInstance().init();
     }
 
     @Override

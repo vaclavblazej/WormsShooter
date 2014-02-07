@@ -1,13 +1,15 @@
 package utilities.communication;
 
 import java.io.Serializable;
+import java.net.Socket;
 import java.util.ArrayList;
+import server.Performable;
 
 /**
  *
  * @author Skarab
  */
-public class Packet implements Serializable {
+public class Packet implements Serializable, Performable {
 
     private Action action;
     private int count;
@@ -48,5 +50,9 @@ public class Packet implements Serializable {
 
     public Object get(int index) {
         return information.get(index);
+    }
+
+    @Override
+    public void perform(Socket socket, Packet packet) {
     }
 }

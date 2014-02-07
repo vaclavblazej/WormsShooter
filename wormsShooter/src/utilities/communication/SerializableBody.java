@@ -5,6 +5,7 @@ import java.awt.Point;
 import java.awt.geom.Point2D;
 import java.io.Serializable;
 import objects.Body;
+import objects.MoveAction;
 import utilities.AbstractView;
 
 /**
@@ -15,12 +16,12 @@ public class SerializableBody implements Serializable {
 
     private Point.Double position;
     private Point.Double velocity;
-    private Action movement;
+    private MoveAction movement;
     private Dimension REAL_SIZE;
     private boolean jump;
 
     public SerializableBody(Point2D.Double position, Point2D.Double velocity,
-            Action movement, Dimension REAL_SIZE,
+            MoveAction movement, Dimension REAL_SIZE,
             boolean jump) {
         this.position = position;
         this.velocity = velocity;

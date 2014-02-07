@@ -22,6 +22,7 @@ import java.util.logging.Logger;
 import main.Main;
 import objects.Body;
 import objects.GraphicComponent;
+import objects.MoveAction;
 import objects.items.ItemBlueprint;
 import objects.items.itemActions.ItemAction;
 import utilities.AbstractView;
@@ -151,19 +152,15 @@ public class ClientView extends AbstractView implements
         int i = ke.getKeyCode();
         ControlsEnum en = controls.get(i);
         if (en != null && controlSet.add(en)) {
-            try {
-                switch (en) {
-                    case UP:
-                        ClientCommunication.getInstance().sendAction(new PacketBuilder(Action.MOVE_JUMP));
-                        break;
-                    case LEFT:
-                    case RIGHT:
-                        changeMovement();
-                        break;
-                }
-
-            } catch (RemoteException ex) {
-                Logger.getLogger(ClientView.class.getName()).log(Level.SEVERE, null, ex);
+            switch (en) {
+                case UP:
+                    ClientCommunication.getInstance().sendAction(
+                            new PacketBuilder(Action.MOVE).addInfo(MoveAction.JUMP));
+                    break;
+                case LEFT:
+                case RIGHT:
+                    changeMovement();
+                    break;
             }
         }
     }
@@ -183,27 +180,23 @@ public class ClientView extends AbstractView implements
     }
 
     public void changeMovement() {
-        try {
-            int d = 0;
-            if (controlSet.contains(ControlsEnum.LEFT)) {
-                d--;
-            }
-            if (controlSet.contains(ControlsEnum.RIGHT)) {
-                d++;
-            }
-            switch (d) {
-                case 1:
-                    ClientCommunication.getInstance().sendAction(new PacketBuilder(Action.MOVE_RIGHT));
-                    break;
-                case 0:
-                    ClientCommunication.getInstance().sendAction(new PacketBuilder(Action.MOVE_STOP));
-                    break;
-                case -1:
-                    ClientCommunication.getInstance().sendAction(new PacketBuilder(Action.MOVE_LEFT));
-                    break;
-            }
-        } catch (RemoteException ex) {
-            Logger.getLogger(ClientView.class.getName()).log(Level.SEVERE, null, ex);
+        int d = 0;
+        if (controlSet.contains(ControlsEnum.LEFT)) {
+            d--;
+        }
+        if (controlSet.contains(ControlsEnum.RIGHT)) {
+            d++;
+        }
+        switch (d) {
+            case 1:
+                ClientCommunication.getInstance().sendAction(new PacketBuilder(Action.MOVE).addInfo(MoveAction.RIGHT));
+                break;
+            case 0:
+                ClientCommunication.getInstance().sendAction(new PacketBuilder(Action.MOVE).addInfo(MoveAction.STOP));
+                break;
+            case -1:
+                ClientCommunication.getInstance().sendAction(new PacketBuilder(Action.MOVE).addInfo(MoveAction.LEFT));
+                break;
         }
     }
 
