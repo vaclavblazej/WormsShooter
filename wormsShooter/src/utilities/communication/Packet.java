@@ -1,18 +1,26 @@
 package utilities.communication;
 
+import java.io.IOException;
+import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
+import server.Performable;
+import utilities.AbstractView;
 
 /**
  *
  * @author Skarab
  */
-public class Packet implements Serializable {
+public class Packet implements Serializable, Performable {
 
     private Action action;
     private int count;
     private int id;
     private ArrayList<Object> information;
+
+    public Packet() {
+        this(null, 0);
+    }
 
     public Packet(Action action, int id) {
         this.action = action;
@@ -48,5 +56,17 @@ public class Packet implements Serializable {
 
     public Object get(int index) {
         return information.get(index);
+    }
+
+    @Override
+    public void perform(Packet packet, AbstractView view) {
+    }
+
+    @Override
+    public void performServer(ObjectOutputStream os, Packet packet, AbstractView view) throws IOException {
+    }
+
+    @Override
+    public void performClient(ObjectOutputStream os, Packet packet, AbstractView view) throws IOException {
     }
 }

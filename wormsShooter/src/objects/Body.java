@@ -15,7 +15,6 @@ import objects.items.InventoryTableModel;
 import objects.items.ItemBlueprint;
 import utilities.AbstractView;
 import utilities.CollisionState;
-import utilities.communication.Action;
 import utilities.communication.SerializableBody;
 import utilities.spritesheets.Animation;
 import utilities.spritesheets.Frame;
@@ -31,7 +30,7 @@ public class Body implements GraphicComponent {
     private static final int INITIAL_HEALTH = 100;
     private Point.Double position;
     private Point.Double velocity;
-    private Action movement;
+    private MoveAction movement;
     private Dimension SIZE;
     private Dimension REAL_SIZE;
     private int ratio;
@@ -44,7 +43,7 @@ public class Body implements GraphicComponent {
     private Animation animation;
 
     public Body(Point2D.Double position, Point2D.Double velocity,
-            Action movement, Dimension REAL_SIZE,
+            MoveAction movement, Dimension REAL_SIZE,
             boolean jump, AbstractView map) {
         this.position = position;
         this.velocity = velocity;
@@ -68,7 +67,7 @@ public class Body implements GraphicComponent {
 
     public Body(int x, int y, AbstractView map) {
         this(new Point.Double(x, y), new Point.Double(0, 0),
-                Action.MOVE_STOP, new Dimension(1, 2), false, map);
+                MoveAction.STOP, new Dimension(1, 2), false, map);
     }
 
     public InventoryTableModel getInventory() {
@@ -133,14 +132,14 @@ public class Body implements GraphicComponent {
                 break;
         }
         if (map.check((int) position.x + 1, (int) position.y + 1) != CollisionState.SOLID) {
-            if (movement.equals(Action.MOVE_RIGHT)) {
+            if (movement.equals(MoveAction.RIGHT)) {
                 position.x += 1;
                 animation.setDirection(1);
                 animation.update();
             }
         }
         if (map.check((int) position.x - 1, (int) position.y + 1) != CollisionState.SOLID) {
-            if (movement.equals(Action.MOVE_LEFT)) {
+            if (movement.equals(MoveAction.LEFT)) {
                 position.x -= 1;
                 animation.setDirection(-1);
                 animation.update();
@@ -148,14 +147,14 @@ public class Body implements GraphicComponent {
         }
     }
 
-    public void control(Action action) {
+    public void control(MoveAction action) {
         switch (action) {
-            case MOVE_RIGHT:
-            case MOVE_LEFT:
-            case MOVE_STOP:
+            case RIGHT:
+            case LEFT:
+            case STOP:
                 movement = action;
                 break;
-            case MOVE_JUMP:
+            case JUMP:
                 if (jump == true) {
                     velocity.y -= JUMP;
                     jump = false;

@@ -118,6 +118,7 @@ public final class ServerComService {
 
     public PlayerInfo registerPlayer(RegistrationForm form) {
         int id = new Random().nextInt();
+        System.out.println("Server: registering player: " + id);
         waitingRegistrations.put(id, form);
         return new PlayerInfo(id);
     }
@@ -146,6 +147,7 @@ public final class ServerComService {
         broadcast(new PacketBuilder(Action.CONNECT, id));
         players.put(id, pci);
         ServerCommunication.getInstance().bindBody(id, ServerView.getInstance().newBody());
+        System.out.println(ServerView.getInstance().getModel().getControls());
         send(id, new PacketBuilder(Action.CONFIRM, id));
     }
 

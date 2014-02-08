@@ -1,41 +1,30 @@
 package client;
 
 import client.menu.GameWindowItemBar;
+import dynamic.communication.DynamicLoader;
 import java.awt.Point;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.InetAddress;
-import java.net.MalformedURLException;
 import java.net.Socket;
-import java.rmi.Naming;
-import java.rmi.NotBoundException;
-import java.rmi.RemoteException;
-import java.util.HashMap;
+import java.net.UnknownHostException;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import objects.Body;
-import objects.Bullet;
-import objects.items.InventoryTableModel;
-import objects.items.ItemEnum;
 import objects.items.ItemFactory;
-import objects.items.Recipe;
-import org.w3c.dom.views.AbstractView;
-import server.ServerComService;
-import server.ServerComm;
 import utilities.PlayerInfo;
 import utilities.communication.Action;
 import utilities.communication.Model;
 import utilities.communication.Packet;
 import utilities.communication.PacketBuilder;
 import utilities.communication.RegistrationForm;
-import utilities.materials.Material;
-import utilities.materials.MaterialEnum;
+import utilities.communication.SerializableModel;
 
 /**
  *
- * @author Skarab
+ * @author plach_000
  */
 public class ClientCommunication {
 
@@ -47,40 +36,81 @@ public class ClientCommunication {
         }
         return instance;
     }
-    private ServerComm serverComm;
+    private ObjectOutputStream os;
+    private ObjectInputStream is;
     private PlayerInfo info;
     private boolean listening;
-    private Socket clientSocket;
+    private Socket inputSocket;
     private Map<Integer, Body> controls;
     private int counter;
     private ItemFactory factory;
     private volatile boolean running;
 
-    private ClientCommunication() {
-    }
-
-    public void init(String ip, String port) throws NotBoundException, MalformedURLException, RemoteException {
-        serverComm = (ServerComm) Naming.lookup("//" + ip + ":"
-                + port + "/" + ServerComm.class.getSimpleName());
-        info = serverComm.register(new RegistrationForm());
-        startSocket(ip);
+    public void init(String ip, String port) {
+        info = new PlayerInfo(0);
         listening = false;
-        controls = new HashMap<>(20);
+        try {
+            System.out.println("Client: connecting to: " + InetAddress.getByName(ip)
+                    + " " + Integer.parseInt(port));
+            Socket socket = new Socket(InetAddress.getByName(ip), Integer.parseInt(port));
+            os = new ObjectOutputStream(socket.getOutputStream());
+            is = new ObjectInputStream(socket.getInputStream());
+            System.out.println("Client: socket obtained");
+            register();
+            startSocket(ip);
+        } catch (UnknownHostException ex) {
+            Logger.getLogger(ClientCommunication.class.getName()).log(Level.SEVERE, null, ex);
+        } catch (IOException ex) {
+            Logger.getLogger(ClientCommunication.class.getName()).log(Level.SEVERE, null, ex);
+        }
     }
 
-    private Body createPlayer(int id) {
-        Body b = ClientView.getInstance().newBody();
-        bindBody(id, b);
-        return b;
+    public void reset() {
+        info = new PlayerInfo(0);
+        running = false;
+        listening = false;
+        is = null;
+        os = null;
     }
 
-    public void sendAction(PacketBuilder builder) throws RemoteException {
-        serverComm.sendAction(builder.setId(info.getId()).build());
+    public void bindBody(int id, Body body) {
+        //Map<Integer, Body> controls = ClientView.getInstance().getModel().getControls();
+        controls.put(id, body);
     }
 
-    public void getModel() throws RemoteException {
+    public void unbindBody(int id) {
+        //Map<Integer, Body> controls = ClientView.getInstance().getModel().getControls();
+        ClientView.getInstance().removeBody(controls.get(id));
+        controls.remove(id);
+    }
+
+    public void send(PacketBuilder object) {
+        try {
+            os.writeObject(object.setId(info.getId()).build());
+        } catch (IOException ex) {
+            Logger.getLogger(ClientCommunication.class.getName()).log(Level.SEVERE, null, ex);
+        }
+    }
+
+    public Object receive() {
+        try {
+            return is.readObject();
+        } catch (IOException | ClassNotFoundException ex) {
+            Logger.getLogger(ClientCommunication.class.getName()).log(Level.SEVERE, null, ex);
+        }
+        return null;
+    }
+
+    public void register() {
+        send(new PacketBuilder(Action.CONNECT).addInfo(new RegistrationForm()));
+        info = (PlayerInfo) receive();
+        System.out.println("Client: registration complete (id: " + info.getId() + ")");
+    }
+
+    public void getModel() {
         System.out.println("Client: getting model");
-        Model model = serverComm.getModel(info.getId()).deserialize(ClientView.getInstance());
+        send(new PacketBuilder(Action.GET_MODEL));
+        Model model = ((SerializableModel) receive()).deserialize(ClientView.getInstance());
         ClientView.getInstance().setModel(model);
         controls = model.getControls();
         counter = model.getCounter();
@@ -88,25 +118,20 @@ public class ClientCommunication {
         ClientView.getInstance().setMyBody(controls.get(info.getId()));
     }
 
-    public void bindBody(int id, Body body) {
-        controls.put(id, body);
-    }
-
-    public void unbindBody(int id) {
-        ClientView.getInstance().removeBody(controls.get(id));
-        controls.remove(id);
+    public PlayerInfo getInfo() {
+        return info;
     }
 
     private void startSocket(String ip) {
         System.out.println("Client: starting socket");
         try {
-            clientSocket = new Socket(InetAddress.getByName(ip), 4243);
-            new ObjectOutputStream(clientSocket.getOutputStream())
-                    .writeObject(new PacketBuilder(Action.CONFIRM).setId(info.getId()).build());
-        } catch (IOException ex) {
+            inputSocket = new Socket(InetAddress.getByName(ip), 4243);
+            ObjectOutputStream outs = new ObjectOutputStream(inputSocket.getOutputStream());
+            outs.writeObject(new PacketBuilder(Action.CONFIRM).setId(info.getId()).build());
+        } catch (Exception ex) {
             Logger.getLogger(ClientCommunication.class.getName()).log(Level.SEVERE, null, ex);
         }
-        if (clientSocket != null && listening == false) {
+        if (inputSocket != null && listening == false) {
             listening = true;
             new Thread(new Runnable() {
                 @Override
@@ -114,7 +139,7 @@ public class ClientCommunication {
                     ObjectInputStream objectInput = null;
                     Packet packet;
                     try {
-                        objectInput = new ObjectInputStream(clientSocket.getInputStream());
+                        objectInput = new ObjectInputStream(inputSocket.getInputStream());
                     } catch (IOException ex) {
                         Logger.getLogger(ClientCommunication.class.getName()).log(Level.SEVERE, null, ex);
                     }
@@ -125,69 +150,15 @@ public class ClientCommunication {
                             packet = (Packet) objectInput.readObject();
                             Action type = packet.getAction();
                             int count = packet.getCount();
-                            int id = packet.getId();;
+                            int id = packet.getId();
                             if (count - counter <= 1) {
-                                switch (type) {
-                                    case MOVE_LEFT:
-                                    case MOVE_RIGHT:
-                                    case MOVE_STOP:
-                                    case MOVE_JUMP:
-                                        controls.get(id).setPosition((Point) packet.get(0));
-                                        controls.get(id).setVelocity(
-                                                new Point.Double((Double) packet.get(1), (Double) packet.get(2)));
-                                        controls.get(id).control(type);
-                                        break;
-                                    case MINE:
-                                        p = (Point) packet.get(0);
-                                        ClientView.getInstance().change(p.x, p.y, (MaterialEnum) packet.get(1));
-                                        ClientView.getInstance().getModel().getMap().recalculateShadows(p);
-                                        break;
-                                    case SHOOT:
-                                        p = (Point) packet.get(0);
-                                        double d = (Double) packet.get(1);
-                                        ClientView.getInstance().addObject(new Bullet(p, d, ClientView.getInstance()));
-                                        break;
-                                    case CRAFT:
-                                        InventoryTableModel inventory = controls.get(packet.getId()).getInventory();
-                                        int idx = (Integer) packet.get(0);
-                                        Recipe receipe = factory.getRecipes().getReceipe(idx);
-                                        inventory.remove(receipe.getIngredients());
-                                        inventory.add(receipe.getProducts());
-                                        inventory.fireTableDataChanged();
-                                        GameWindowItemBar.getInstance().refreshBar(inventory);
-                                        break;
-                                    case OBTAIN:
-                                        InventoryTableModel inv = controls.get(packet.getId()).getInventory();
-                                        MaterialEnum en = (MaterialEnum) packet.get(0);
-                                        inv.add(ClientView.getInstance().getMaterial().getComponents(en));
-                                        GameWindowItemBar.getInstance().refreshBar(inv);
-                                        break;
-                                    case ADD_ITEM:
-                                        ClientView.getInstance().getMyBody().addItem(factory.get((ItemEnum) packet.get(0)));
-                                        break;
-                                    case CONNECT:
-                                        createPlayer(id);
-                                        break;
-                                    case CONFIRM:
-                                        getModel();
-                                        break;
-                                    case DISCONNECT:
-                                        if (id == info.getId()) {
-                                            serverComm = null;
-                                            ClientView.getInstance().reset();
-                                            running = false;
-                                        } else {
-                                            unbindBody(id);
-                                        }
-                                        break;
-                                }
+                                DynamicLoader.getInstance().get(packet.getAction()).
+                                        performClient(os, packet, ClientView.getInstance());
                             } else {
                                 getModel();
                             }
                             counter = count;
-                        } catch (IOException ex) {
-                            Logger.getLogger(ServerComService.class.getName()).log(Level.SEVERE, null, ex);
-                        } catch (ClassNotFoundException ex) {
+                        } catch (ClassNotFoundException | IOException ex) {
                             Logger.getLogger(ClientCommunication.class.getName()).log(Level.SEVERE, null, ex);
                         }
                     }
