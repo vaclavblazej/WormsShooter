@@ -17,7 +17,6 @@ import spritesheets.SpriteLoader;
 import utilities.AbstractView;
 import utilities.MapClass;
 import utilities.communication.Model;
-import utilities.communication.SerializableBufferedImage;
 import utilities.materials.Material;
 
 /**

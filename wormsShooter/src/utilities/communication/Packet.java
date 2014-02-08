@@ -5,6 +5,7 @@ import java.io.ObjectOutputStream;
 import java.io.Serializable;
 import java.util.ArrayList;
 import server.Performable;
+import utilities.AbstractView;
 
 /**
  *
@@ -58,6 +59,14 @@ public class Packet implements Serializable, Performable {
     }
 
     @Override
-    public void perform(ObjectOutputStream os, Packet packet, Model model) throws IOException {
+    public void perform(Packet packet, AbstractView view) {
+    }
+
+    @Override
+    public void performServer(ObjectOutputStream os, Packet packet, AbstractView view) throws IOException {
+    }
+
+    @Override
+    public void performClient(ObjectOutputStream os, Packet packet, AbstractView view) throws IOException {
     }
 }

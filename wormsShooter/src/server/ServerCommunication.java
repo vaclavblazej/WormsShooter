@@ -1,17 +1,16 @@
 package server;
 
+import dynamic.communication.DynamicLoader;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
 import java.net.ServerSocket;
 import java.net.Socket;
-import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import main.Main;
+import objects.Body;
 import utilities.PlayerInfo;
-import utilities.communication.Action;
 import utilities.communication.Packet;
 import utilities.communication.RegistrationForm;
 
@@ -31,37 +30,19 @@ public class ServerCommunication {
     }
     private ServerSocket serverSocket;
     private boolean running;
-    private Map<Action, Performable> performables;
 
     private ServerCommunication() {
         serverSocket = null;
         running = false;
-        performables = null;
     }
 
     public void init(int port) {
-        performables = new HashMap<>(Action.values().length);
-        load();
         try {
             serverSocket = new ServerSocket(port);
         } catch (IOException ex) {
             Logger.getLogger(ServerCommunication.class.getName()).log(Level.SEVERE, null, ex);
         }
         run();
-    }
-
-    public void load() {
-        ClassLoader classLoader = Main.class.getClassLoader();
-        try {
-            for (Action action : Action.values()) {
-                Class<?> loader = classLoader.loadClass("dynamic.communication." + action.name().toLowerCase());
-                //System.out.println("Dynamic loading: " + loader.getCanonicalName());
-                Packet dc = (Packet) loader.newInstance();
-                performables.put(action, dc);
-            }
-        } catch (ClassNotFoundException | InstantiationException | IllegalAccessException ex) {
-            Logger.getLogger(ServerCommunication.class.getName()).log(Level.SEVERE, null, ex);
-        }
     }
 
     public void run() {
@@ -86,6 +67,17 @@ public class ServerCommunication {
         running = false;
     }
 
+    public void bindBody(int id, Body body) {
+        Map<Integer, Body> controls = ServerView.getInstance().getModel().getControls();
+        controls.put(id, body);
+    }
+
+    public void unbindBody(int id) {
+        Map<Integer, Body> controls = ServerView.getInstance().getModel().getControls();
+        ServerView.getInstance().removeBody(controls.get(id));
+        controls.remove(id);
+    }
+
     private class CommunicationHandler implements Runnable {
 
         private Socket socket;
@@ -105,7 +97,8 @@ public class ServerCommunication {
                 os.writeObject(registerPlayer);
                 while (running) {
                     Packet p = ((Packet) is.readObject());
-                    performables.get(p.getAction()).perform(os, p, ServerView.getInstance().getModel());
+                    System.out.println("Server: got " + p.getAction().name());
+                    DynamicLoader.getInstance().get(p.getAction()).performServer(os, p, ServerView.getInstance());
                 }
             } catch (IOException | ClassNotFoundException ex) {
                 Logger.getLogger(ServerCommunication.class.getName()).log(Level.SEVERE, null, ex);

@@ -1,8 +1,11 @@
 package dynamic.communication;
 
+import client.ClientCommunication;
+import client.ClientView;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import utilities.communication.Model;
+import server.ServerComService;
+import utilities.AbstractView;
 import utilities.communication.Packet;
 
 /**
@@ -12,9 +15,18 @@ import utilities.communication.Packet;
 public class disconnect extends Packet {
 
     @Override
-    public void perform(ObjectOutputStream os, Packet packet, Model model) throws IOException {
-        super.perform(os, packet, model);
-        System.out.println("disconnect");
-        // todo
+    public void performClient(ObjectOutputStream os, Packet packet, AbstractView view) throws IOException {
+        int id = packet.getId();
+        if (id == ClientCommunication.getInstance().getInfo().getId()) {
+            ClientView.getInstance().reset();
+        } else {
+            ClientCommunication.getInstance().unbindBody(id);
+        }
+    }
+
+    @Override
+    public void performServer(ObjectOutputStream os, Packet packet, AbstractView view) throws IOException {
+        os.writeObject(packet);
+        ServerComService.getInstance().disconnect(packet.getId());
     }
 }

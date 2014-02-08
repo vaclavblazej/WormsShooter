@@ -1,8 +1,10 @@
 package dynamic.communication;
 
+import client.ClientView;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import utilities.communication.Model;
+import objects.Body;
+import utilities.AbstractView;
 import utilities.communication.Packet;
 
 /**
@@ -12,8 +14,9 @@ import utilities.communication.Packet;
 public class connect extends Packet {
 
     @Override
-    public void perform(ObjectOutputStream os, Packet packet, Model model) throws IOException{
-        super.perform(os, packet, model);
-        // todo
+    public void performClient(ObjectOutputStream os, Packet packet, AbstractView view) throws IOException {
+        Body b = ClientView.getInstance().newBody();
+        view.getModel().getControls().put(packet.getId(), b);
+        System.out.println("client connect");
     }
 }

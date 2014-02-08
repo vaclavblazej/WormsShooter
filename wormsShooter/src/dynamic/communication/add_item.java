@@ -2,7 +2,7 @@ package dynamic.communication;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import utilities.communication.Model;
+import utilities.AbstractView;
 import utilities.communication.Packet;
 
 /**
@@ -12,8 +12,8 @@ import utilities.communication.Packet;
 public class add_item extends Packet {
 
     @Override
-    public void perform(ObjectOutputStream os, Packet packet, Model model) throws IOException {
-        super.perform(os, packet, model);
+    public void performServer(ObjectOutputStream os, Packet packet, AbstractView view) throws IOException {
+        super.performServer(os, packet, view);
         // todo
     }
 }

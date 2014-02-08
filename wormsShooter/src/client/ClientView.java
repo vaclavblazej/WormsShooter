@@ -14,11 +14,8 @@ import java.awt.event.MouseMotionListener;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.image.RasterFormatException;
-import java.rmi.RemoteException;
 import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import main.Main;
 import objects.Body;
 import objects.GraphicComponent;
@@ -53,6 +50,10 @@ public class ClientView extends AbstractView implements
             instance = new ClientView();
         }
         return instance;
+    }
+
+    public static void unbindBody(int id) {
+        throw new UnsupportedOperationException("Not supported yet."); //To change body of generated methods, choose Tools | Templates.
     }
     private final Dimension VIEW_SIZE;
     private Body body;

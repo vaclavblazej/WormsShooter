@@ -1,8 +1,9 @@
 package dynamic.communication;
 
+import client.ClientCommunication;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import utilities.communication.Model;
+import utilities.AbstractView;
 import utilities.communication.Packet;
 
 /**
@@ -12,8 +13,11 @@ import utilities.communication.Packet;
 public class confirm extends Packet {
 
     @Override
-    public void perform(ObjectOutputStream os, Packet packet, Model model) throws IOException{
-        super.perform(os, packet, model);
-        // todo
+    public void performClient(ObjectOutputStream os, Packet packet, AbstractView view) throws IOException {
+        ClientCommunication.getInstance().getModel();
+    }
+
+    @Override
+    public void performServer(ObjectOutputStream os, Packet packet, AbstractView view) throws IOException {
     }
 }

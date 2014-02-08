@@ -1,6 +1,7 @@
 package client;
 
 import client.menu.GameWindowItemBar;
+import dynamic.communication.DynamicLoader;
 import java.awt.Point;
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -46,6 +47,7 @@ public class ClientCommunication {
     private volatile boolean running;
 
     public void init(String ip, String port) {
+        info = new PlayerInfo(0);
         listening = false;
         try {
             System.out.println("Client: connecting to: " + InetAddress.getByName(ip)
@@ -55,7 +57,6 @@ public class ClientCommunication {
             is = new ObjectInputStream(socket.getInputStream());
             System.out.println("Client: socket obtained");
             register();
-            getModel();
             startSocket(ip);
         } catch (UnknownHostException ex) {
             Logger.getLogger(ClientCommunication.class.getName()).log(Level.SEVERE, null, ex);
@@ -64,9 +65,28 @@ public class ClientCommunication {
         }
     }
 
+    public void reset() {
+        info = new PlayerInfo(0);
+        running = false;
+        listening = false;
+        is = null;
+        os = null;
+    }
+
+    public void bindBody(int id, Body body) {
+        //Map<Integer, Body> controls = ClientView.getInstance().getModel().getControls();
+        controls.put(id, body);
+    }
+
+    public void unbindBody(int id) {
+        //Map<Integer, Body> controls = ClientView.getInstance().getModel().getControls();
+        ClientView.getInstance().removeBody(controls.get(id));
+        controls.remove(id);
+    }
+
     public void send(PacketBuilder object) {
         try {
-            os.writeObject(object.build());
+            os.writeObject(object.addInfo(info.getId()).build());
         } catch (IOException ex) {
             Logger.getLogger(ClientCommunication.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -90,7 +110,16 @@ public class ClientCommunication {
     public void getModel() {
         System.out.println("Client: getting model");
         send(new PacketBuilder(Action.GET_MODEL));
-        ClientView.getInstance().setModel(((SerializableModel) receive()).deserialize(ClientView.getInstance()));
+        Model model = ((SerializableModel) receive()).deserialize(ClientView.getInstance());
+        ClientView.getInstance().setModel(model);
+        controls = model.getControls();
+        counter = model.getCounter();
+        factory = model.getFactory();
+        ClientView.getInstance().setMyBody(controls.get(info.getId()));
+    }
+
+    public PlayerInfo getInfo() {
+        return info;
     }
 
     private void startSocket(String ip) {
@@ -120,12 +149,12 @@ public class ClientCommunication {
                         try {
                             packet = (Packet) objectInput.readObject();
                             Action type = packet.getAction();
+                            System.out.println("Client: got " + type.name());
                             int count = packet.getCount();
                             int id = packet.getId();
                             if (count - counter <= 1) {
-                                switch (type) {
-
-                                }
+                                DynamicLoader.getInstance().get(packet.getAction()).
+                                        performClient(os, packet, ClientView.getInstance());
                             } else {
                                 getModel();
                             }

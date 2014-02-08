@@ -2,7 +2,7 @@ package server;
 
 import java.io.IOException;
 import java.io.ObjectOutputStream;
-import utilities.communication.Model;
+import utilities.AbstractView;
 import utilities.communication.Packet;
 
 /**
@@ -11,5 +11,9 @@ import utilities.communication.Packet;
  */
 public interface Performable {
 
-    public void perform(ObjectOutputStream os, Packet packet, Model model) throws IOException;
+    public void perform(Packet packet, AbstractView view);
+
+    public void performServer(ObjectOutputStream os, Packet packet, AbstractView view) throws IOException;
+
+    public void performClient(ObjectOutputStream os, Packet packet, AbstractView view) throws IOException;
 }
