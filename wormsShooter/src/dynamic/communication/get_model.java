@@ -13,7 +13,6 @@ public class get_model extends Packet {
 
     @Override
     public void performServer(ObjectOutputStream os, Packet packet, AbstractView view) throws IOException {
-        super.performServer(os, packet, view);
         os.writeObject(view.getModel().serialize());
     }
 }

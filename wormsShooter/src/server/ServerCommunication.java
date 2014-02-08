@@ -97,7 +97,6 @@ public class ServerCommunication {
                 os.writeObject(registerPlayer);
                 while (running) {
                     Packet p = ((Packet) is.readObject());
-                    System.out.println("Server: got " + p.getAction().name());
                     DynamicLoader.getInstance().get(p.getAction()).performServer(os, p, ServerView.getInstance());
                 }
             } catch (IOException | ClassNotFoundException ex) {

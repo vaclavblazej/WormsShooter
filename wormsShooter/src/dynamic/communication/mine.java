@@ -20,12 +20,13 @@ public class mine extends Packet {
 
     @Override
     public void performClient(ObjectOutputStream os, Packet packet, AbstractView view) throws IOException {
-        System.out.println("client mine");
+        Point p = (Point) packet.get(0);
+        view.change(p.x, p.y, (MaterialEnum) packet.get(1));
+        view.getModel().getMap().recalculateShadows(p);
     }
 
     @Override
     public void performServer(ObjectOutputStream os, Packet packet, AbstractView view) throws IOException {
-        super.performServer(os, packet, view);
         Point p = (Point) packet.get(0);
         int id = packet.getId();
         int x = p.x / Main.RATIO;

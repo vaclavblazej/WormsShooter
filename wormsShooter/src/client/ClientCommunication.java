@@ -86,7 +86,7 @@ public class ClientCommunication {
 
     public void send(PacketBuilder object) {
         try {
-            os.writeObject(object.addInfo(info.getId()).build());
+            os.writeObject(object.setId(info.getId()).build());
         } catch (IOException ex) {
             Logger.getLogger(ClientCommunication.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -149,7 +149,6 @@ public class ClientCommunication {
                         try {
                             packet = (Packet) objectInput.readObject();
                             Action type = packet.getAction();
-                            System.out.println("Client: got " + type.name());
                             int count = packet.getCount();
                             int id = packet.getId();
                             if (count - counter <= 1) {

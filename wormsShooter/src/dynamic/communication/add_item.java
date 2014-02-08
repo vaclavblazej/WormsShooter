@@ -10,10 +10,4 @@ import utilities.communication.Packet;
  * @author Skarab
  */
 public class add_item extends Packet {
-
-    @Override
-    public void performServer(ObjectOutputStream os, Packet packet, AbstractView view) throws IOException {
-        super.performServer(os, packet, view);
-        // todo
-    }
 }

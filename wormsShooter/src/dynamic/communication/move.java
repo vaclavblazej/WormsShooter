@@ -17,6 +17,16 @@ import utilities.communication.PacketBuilder;
 public class move extends Packet {
 
     @Override
+    public void performClient(ObjectOutputStream os, Packet packet, AbstractView view) throws IOException {
+        Body body = view.getModel().getControls().get(packet.getId());
+        if (body != null) {
+            body.setPosition((Point) packet.get(1));
+            body.setVelocity(new Point.Double((Double) packet.get(2), (Double) packet.get(3)));
+            body.control((MoveAction) packet.get(0));
+        }
+    }
+
+    @Override
     public void performServer(ObjectOutputStream os, Packet packet, AbstractView view) throws IOException {
         Body body = view.getModel().getControls().get(packet.getId());
         if (body != null) {
@@ -24,10 +34,10 @@ public class move extends Packet {
             Point.Double vel = body.getVelocity();
             ServerComService.getInstance().broadcast(
                     new PacketBuilder(packet.getAction(), packet.getId())
+                    .addInfo(packet.get(0))
                     .addInfo(pos)
                     .addInfo(vel.x)
                     .addInfo(vel.y));
-            System.out.println((MoveAction) packet.get(0));
             body.control((MoveAction) packet.get(0));
         }
     }
