@@ -115,8 +115,8 @@ public class ClientView extends AbstractView implements
         super.paint(grphcs);
         if (body != null) {
             Point bodyPosition = body.getPosition();
-            currentPosition.x = bodyPosition.x - VIEW_SIZE.width / 2;
-            currentPosition.y = bodyPosition.y - VIEW_SIZE.height / 2;
+            currentPosition.x = (int) ((bodyPosition.x / Main.RATIO - VIEW_SIZE.width / 2));
+            currentPosition.y = (int) ((bodyPosition.y / Main.RATIO - VIEW_SIZE.height / 2));
             if (currentPosition.x < 0) {
                 currentPosition.x = 0;
             } else if (currentPosition.x > map.getWidth() - VIEW_SIZE.width) {
@@ -205,8 +205,8 @@ public class ClientView extends AbstractView implements
         mouse.y = e.getY();
         switch (e.getButton()) {
             case MouseEvent.BUTTON1:
-                Point p = new Point(currentPosition.x * Main.RATIO + e.getX(),
-                        currentPosition.y * Main.RATIO + e.getY());
+                Point p = new Point((int) (currentPosition.x * Main.RATIO) + e.getX(),
+                        (int) (currentPosition.y * Main.RATIO) + e.getY());
                 ItemBlueprint heldItem = getMyBody().getInventory().getHeldItem();
                 if (heldItem != null) {
                     ItemAction action = heldItem.getAction();

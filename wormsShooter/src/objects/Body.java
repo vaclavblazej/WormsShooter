@@ -26,16 +26,17 @@ import utilities.spritesheets.SpriteLoader;
  */
 public class Body implements GraphicComponent {
 
-    private static final double JUMP = 0.6;
+    private static final double JUMP = 6;
+    private static final double GRAVITY = 0.1;
     private static final int INITIAL_HEALTH = 100;
-    private Point.Double position;
+    private Point position;
     private Point.Double velocity;
     private MoveAction movement;
     private Dimension SIZE;
     private Dimension REAL_SIZE;
     private int ratio;
     private boolean jump;
-    private AbstractView map;
+    private AbstractView view;
     private InventoryTableModel inventory;
     private CollisionState state;
     private boolean alive;
@@ -44,15 +45,16 @@ public class Body implements GraphicComponent {
 
     public Body(Point2D.Double position, Point2D.Double velocity,
             MoveAction movement, Dimension REAL_SIZE,
-            boolean jump, AbstractView map) {
-        this.position = position;
+            boolean jump, AbstractView view) {
+        this.position = new Point((int) (position.x * Main.RATIO),
+                (int) (position.y * Main.RATIO));
         this.velocity = velocity;
         this.movement = movement;
         this.REAL_SIZE = REAL_SIZE;
-        this.ratio = map.getRatio();
+        this.ratio = view.getRatio();
         this.SIZE = new Dimension(REAL_SIZE.width * ratio, REAL_SIZE.height * ratio);
         this.jump = jump;
-        this.map = map;
+        this.view = view;
         this.inventory = new InventoryTableModel("Item", "Count");
         this.alive = false;
         SpriteLoader.loadSprite("Materials");
@@ -79,12 +81,11 @@ public class Body implements GraphicComponent {
     }
 
     public void setPosition(Point point) {
-        this.position.x = point.x;
-        this.position.y = point.y;
+        this.position = point;
     }
 
     public Point getPosition() {
-        return new Point((int) position.x, (int) position.y);
+        return position;
     }
 
     public Point2D.Double getVelocity() {
@@ -104,43 +105,44 @@ public class Body implements GraphicComponent {
             return;
         }
         for (i = 1; i <= absoluteY; i++) {
-            if (map.check((int) position.x, (int) position.y + REAL_SIZE.height + i * directionY)
+            if (view.check(position.x, position.y + REAL_SIZE.height
+                    + (int) (i * directionY * Main.RATIO))
                     == CollisionState.SOLID) {
                 velocity.y = 0;
                 break;
             }
         }
-        position.y += i * directionY;
+        position.y += i * directionY * Main.RATIO;
     }
 
     public void tick() {
-        int directionY = (velocity.y >= 0) ? 1 : -1;
-        state = map.check((int) position.x, (int) position.y + REAL_SIZE.height - 1 + directionY);
-        switch (state) {
-            case GAS:
-                velocity.y += 0.1;
-                fallBy(velocity.y);
-                break;
-            case LIQUID:
-                velocity.y += 0.04;
-                fallBy(velocity.y);
-                jump = true;
-                break;
-            case SOLID:
-                velocity.y = 0;
-                jump = true;
-                break;
-        }
-        if (map.check((int) position.x + 1, (int) position.y + 1) != CollisionState.SOLID) {
+        /*int directionY = (velocity.y >= 0) ? 1 : -1;
+         state = view.check(position.x, position.y + REAL_SIZE.height - 1 + directionY);
+         switch (state) {
+         case GAS:
+         velocity.y += GRAVITY;
+         fallBy(velocity.y);
+         break;
+         case LIQUID:
+         velocity.y += GRAVITY / 4;
+         fallBy(velocity.y);
+         jump = true;
+         break;
+         case SOLID:
+         velocity.y = 0;
+         jump = true;
+         break;
+         }*/
+        if (view.check(position.x + 1, position.y + 1) != CollisionState.SOLID) {
             if (movement.equals(MoveAction.RIGHT)) {
-                position.x += 1;
+                position.x += 5;
                 animation.setDirection(1);
                 animation.update();
             }
         }
-        if (map.check((int) position.x - 1, (int) position.y + 1) != CollisionState.SOLID) {
+        if (view.check(position.x - 1, position.y + 1) != CollisionState.SOLID) {
             if (movement.equals(MoveAction.LEFT)) {
-                position.x -= 1;
+                position.x -= 5;
                 animation.setDirection(-1);
                 animation.update();
             }
@@ -190,7 +192,10 @@ public class Body implements GraphicComponent {
     @Override
     public void draw(Graphics2D g) {
         g.setColor(Color.RED);
-        g.fillRect((int) position.x, (int) position.y, SIZE.width, SIZE.height);
+        g.fillRect(
+                (int) (position.x / Main.RATIO),
+                (int) (position.y / Main.RATIO),
+                SIZE.width, SIZE.height);
     }
 
     @Override
@@ -201,7 +206,7 @@ public class Body implements GraphicComponent {
         } catch (NoninvertibleTransformException ex) {
             Logger.getLogger(Bullet.class.getName()).log(Level.SEVERE, null, ex);
         }
-        tr.translate(position.x * Main.RATIO, position.y * Main.RATIO);
+        tr.translate(position.x, position.y);
         //tr.rotate(rotation);
         g.setTransform(tr);
         g.setColor(Color.RED);
@@ -210,6 +215,8 @@ public class Body implements GraphicComponent {
     }
 
     public SerializableBody serialize() {
-        return new SerializableBody(position, velocity, movement, REAL_SIZE, jump);
+        return new SerializableBody(
+                new Point.Double(position.x / Main.RATIO, position.y / Main.RATIO),
+                velocity, movement, REAL_SIZE, jump);
     }
 }
