@@ -1,17 +1,9 @@
 package client.menu;
 
-import java.io.BufferedInputStream;
-import java.io.File;
-import java.io.FileInputStream;
-import java.io.FileOutputStream;
-import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import utilities.Controls;
 import utilities.ControlsEnum;
+import utilities.FileManager;
 
 /**
  *
@@ -24,26 +16,16 @@ public class Settings implements Serializable {
 
     public static Settings getInstance() {
         if (instance == null) {
-            //default settings if it fails to obtain controls from a file.
-            if (!loadSettings()) {
-                instance = new Settings();
-            }
+            loadSettings();
         }
         return instance;
     }
 
-    private static boolean loadSettings() {
-        try {
-            File f = new File(SAVE_FILE);
-            if (!f.exists()) {
-                return false;
-            }
-            FileInputStream file = new FileInputStream(f);
-            ObjectInputStream input = new ObjectInputStream(new BufferedInputStream(file));
-            instance = (Settings) input.readObject();
-            return true;
-        } catch (IOException | ClassNotFoundException ex) {
-            return false;
+    private static void loadSettings() {
+        //default settings if it fails to obtain controls from a file.
+        instance = (Settings) FileManager.load(SAVE_FILE);
+        if (instance == null) {
+            instance = new Settings();
         }
     }
     private int quality;
@@ -85,12 +67,6 @@ public class Settings implements Serializable {
     }
 
     public void saveSettings() {
-        try {
-            FileOutputStream file = new FileOutputStream(SAVE_FILE);
-            ObjectOutputStream output = new ObjectOutputStream(file);
-            output.writeObject(instance);
-        } catch (IOException ex) {
-            Logger.getLogger(Settings.class.getName()).log(Level.SEVERE, null, ex);
-        }
+        FileManager.save(SAVE_FILE, this);
     }
 }

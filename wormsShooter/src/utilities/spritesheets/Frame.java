@@ -1,4 +1,4 @@
-package spritesheets;
+package utilities.spritesheets;
 
 /**
  *

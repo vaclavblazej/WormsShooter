@@ -11,8 +11,9 @@ import objects.items.itemActions.ItemAction;
  */
 public class Item extends ItemBlueprint implements Serializable {
 
-    public Item(String name, boolean usable, Point p, BufferedImage img, ItemAction action) {
-        super(name, usable, p, img, action);
+    public Item(String name, boolean usable, Point p, ItemCategory category,
+            BufferedImage img, ItemAction action) {
+        super(name, usable, p, category, img, action);
     }
 
     @Override

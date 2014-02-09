@@ -7,6 +7,7 @@ import java.awt.Point;
 import java.awt.geom.AffineTransform;
 import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
+import java.util.ArrayList;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import main.Main;
@@ -15,6 +16,9 @@ import objects.items.ItemBlueprint;
 import utilities.AbstractView;
 import utilities.CollisionState;
 import utilities.communication.SerializableBody;
+import utilities.spritesheets.Animation;
+import utilities.spritesheets.Frame;
+import utilities.spritesheets.SpriteLoader;
 
 /**
  *
@@ -36,6 +40,7 @@ public class Body implements GraphicComponent {
     private CollisionState state;
     private boolean alive;
     private int health;
+    private Animation animation;
 
     public Body(Point2D.Double position, Point2D.Double velocity,
             MoveAction movement, Dimension REAL_SIZE,
@@ -50,6 +55,14 @@ public class Body implements GraphicComponent {
         this.map = map;
         this.inventory = new InventoryTableModel("Item", "Count");
         this.alive = false;
+        SpriteLoader.loadSprite("Materials");
+        SpriteLoader.set(20, 40);
+        ArrayList<Frame> frames = new ArrayList<>();
+        for (int i = 0; i < 6; i++) {
+            frames.add(SpriteLoader.getSprite(i, 0));
+        }
+        this.animation = new Animation(frames);
+        animation.start();
     }
 
     public Body(int x, int y, AbstractView map) {
@@ -121,11 +134,15 @@ public class Body implements GraphicComponent {
         if (map.check((int) position.x + 1, (int) position.y + 1) != CollisionState.SOLID) {
             if (movement.equals(MoveAction.RIGHT)) {
                 position.x += 1;
+                animation.setDirection(1);
+                animation.update();
             }
         }
         if (map.check((int) position.x - 1, (int) position.y + 1) != CollisionState.SOLID) {
             if (movement.equals(MoveAction.LEFT)) {
                 position.x -= 1;
+                animation.setDirection(-1);
+                animation.update();
             }
         }
     }
@@ -189,6 +206,7 @@ public class Body implements GraphicComponent {
         g.setTransform(tr);
         g.setColor(Color.RED);
         g.fillRect(0, 0, SIZE.width, SIZE.height);
+        g.drawImage(animation.getSprite(), null, null);
     }
 
     public SerializableBody serialize() {
