@@ -56,6 +56,10 @@ public class InventoryTableModel extends ComponentTableModel {
                     }
                 });
                 btn.item = getItem(i);
+                if (heldItem != null && heldItem.equals(btn.item)) {
+                    btn.setBackground(Color.GREEN);
+                    hightlight = btn;
+                }
                 btn.setText(getValueAt(i, 0).toString() + ": " + getValueAt(i, 1).toString());
                 btn.setFocusable(false);
                 btn.setIcon(new ImageIcon(btn.item.getImage()));
