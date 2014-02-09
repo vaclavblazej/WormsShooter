@@ -1,5 +1,6 @@
 package dynamic.communication;
 
+import client.ClientCommunication;
 import client.menu.GameWindowItemBar;
 import java.io.IOException;
 import java.io.ObjectOutputStream;
@@ -16,9 +17,12 @@ public class obtain extends Packet {
 
     @Override
     public void performClient(ObjectOutputStream os, Packet packet, AbstractView view) throws IOException {
-        InventoryTableModel inv = view.getModel().getControls().get(packet.getId()).getInventory();
+        int id = packet.getId();
+        InventoryTableModel inv = view.getModel().getControls().get(id).getInventory();
         MaterialEnum en = (MaterialEnum) packet.get(0);
         inv.add(view.getMaterial().getComponents(en));
-        GameWindowItemBar.getInstance().refreshBar(inv);
+        if (ClientCommunication.getInstance().getInfo().getId() == id) {
+            GameWindowItemBar.getInstance().refreshBar(inv);
+        }
     }
 }

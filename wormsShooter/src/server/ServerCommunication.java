@@ -81,6 +81,7 @@ public class ServerCommunication {
     private class CommunicationHandler implements Runnable {
 
         private Socket socket;
+        private int id;
 
         CommunicationHandler(Socket socket) {
             this.socket = socket;
@@ -94,12 +95,15 @@ public class ServerCommunication {
                 ObjectOutputStream os = new ObjectOutputStream(socket.getOutputStream());
                 PlayerInfo registerPlayer = ServerComService.getInstance()
                         .registerPlayer((RegistrationForm) ((Packet) is.readObject()).get(0));
+                id = registerPlayer.getId();
                 os.writeObject(registerPlayer);
                 while (running) {
                     Packet p = ((Packet) is.readObject());
                     DynamicLoader.getInstance().get(p.getAction()).performServer(os, p, ServerView.getInstance());
                 }
             } catch (IOException | ClassNotFoundException ex) {
+                System.out.println("Disconnect exception!");
+                //ServerComService.getInstance().disconnect(id);
                 Logger.getLogger(ServerCommunication.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
