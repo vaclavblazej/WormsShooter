@@ -7,6 +7,7 @@ import objects.Body;
 import objects.MoveAction;
 import server.ServerComService;
 import utilities.AbstractView;
+import utilities.communication.Action;
 import utilities.communication.Packet;
 import utilities.communication.PacketBuilder;
 
@@ -33,7 +34,7 @@ public class move extends Packet {
             Point pos = body.getPosition();
             Point.Double vel = body.getVelocity();
             ServerComService.getInstance().broadcast(
-                    new PacketBuilder(packet.getAction(), packet.getId())
+                    new PacketBuilder(Action.MOVE, packet.getId())
                     .addInfo(packet.get(0))
                     .addInfo(pos)
                     .addInfo(vel.x)

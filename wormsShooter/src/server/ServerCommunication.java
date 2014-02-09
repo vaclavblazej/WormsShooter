@@ -102,9 +102,8 @@ public class ServerCommunication {
                     DynamicLoader.getInstance().get(p.getAction()).performServer(os, p, ServerView.getInstance());
                 }
             } catch (IOException | ClassNotFoundException ex) {
-                System.out.println("Disconnect exception!");
-                //ServerComService.getInstance().disconnect(id);
-                Logger.getLogger(ServerCommunication.class.getName()).log(Level.SEVERE, null, ex);
+                ServerComService.getInstance().disconnect(id);
+                //Logger.getLogger(ServerCommunication.class.getName()).log(Level.SEVERE, null, ex);
             }
         }
     }

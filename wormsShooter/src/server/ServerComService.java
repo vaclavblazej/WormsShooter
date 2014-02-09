@@ -153,9 +153,9 @@ public final class ServerComService {
 
     public void disconnect(int id) {
         System.out.println("Server: client " + id + " disconnected");
-        broadcast(new PacketBuilder(Action.DISCONNECT, id));
         players.remove(id);
         ServerCommunication.getInstance().unbindBody(id);
+        broadcast(new PacketBuilder(Action.DISCONNECT, id));
     }
 
     private class PlayerComInfo {
