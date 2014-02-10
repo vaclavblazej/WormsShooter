@@ -140,7 +140,6 @@ public class ClientView extends AbstractView implements
         g.translate(getRatio() * VIEW_SIZE.width / 2, getRatio() * VIEW_SIZE.height / 2);
         for (GraphicComponent gc : map.getActiveObjects()) {
             gc.drawRelative(g, tr);
-            gc.draw(g);
         }
         for (Body b : bodies) {
             b.drawRelative(g, tr);

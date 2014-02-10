@@ -8,8 +8,8 @@ import java.awt.geom.NoninvertibleTransformException;
 import java.awt.image.BufferedImage;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import main.Main;
 import utilities.communication.SerializableBufferedImage;
-import utilities.spritesheets.Animation;
 
 /**
  *
@@ -17,41 +17,26 @@ import utilities.spritesheets.Animation;
  */
 public class Thing implements GraphicComponent {
 
-    private Animation animation;
     private Point size;
     private Point position;
     private AffineTransform tr;
     private SerializableBufferedImage image;
-    private boolean hasImage;
-
-    public Thing(Animation animation, Point size, Point position) {
-        this.animation = animation;
-        this.size = size;
-        this.position = position;
-        this.animation.start();
-        hasImage = false;
-    }
+    private transient BufferedImage cache = null;
 
     public Thing(SerializableBufferedImage img, Point size, Point position) {
         this.image = img;
         this.size = size;
         this.position = position;
-        hasImage = true;
     }
 
     @Override
     public void draw(Graphics2D g) {
-        if (hasImage) {
-            BufferedImage img = image.getImage();
-            g.drawImage(img, null, null);
-        } else {
-            g.drawImage(animation.getSprite(), null, null);
-        }
+        g.setColor(Color.YELLOW);
+        g.drawRect(position.x / Main.RATIO, position.y / Main.RATIO, size.x, size.y);
     }
 
     @Override
     public void tick() {
-        animation.update();
     }
 
     @Override
@@ -64,7 +49,9 @@ public class Thing implements GraphicComponent {
         }
         tr.translate(position.x, position.y);
         g.setTransform(tr);
-        g.setColor(Color.RED);
-        g.fillRect(0, 0, 10, 3);
+        if (cache == null) {
+            cache = image.getImage();
+        }
+        g.drawImage(cache, null, null);
     }
 }

@@ -144,8 +144,12 @@ public class ServerView extends AbstractView {
         for (Body b : bodies) {
             b.draw(g);
         }
+        for (GraphicComponent a : map.getActiveObjects()) {
+            a.draw(g);
+        }
         for (GraphicComponent c : objects) {
             c.draw(g);
         }
+
     }
 }
