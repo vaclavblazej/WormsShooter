@@ -153,7 +153,7 @@ public class ClientCommunication {
                             Action type = packet.getAction();
                             int count = packet.getCount();
                             int id = packet.getId();
-                            System.out.println("Client: " + type);
+                            //System.out.println("Client: " + type);
                             if (count - counter <= 1) {
                                 DynamicLoader.getInstance().get(packet.getAction()).
                                         performClient(os, packet, ClientView.getInstance());
