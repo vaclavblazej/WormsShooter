@@ -62,7 +62,7 @@ public class ClientView extends AbstractView implements
 
     private ClientView() {
         super(800, 600, SCALE);
-        map = new MapClass(new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB), this);
+        map = new MapClass(new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB), this, new ArrayList<GraphicComponent>());
         realView = new BufferedImage(800, 600, BufferedImage.TYPE_INT_RGB);
         VIEW_SIZE = new Dimension(800 / getRatio(), 600 / getRatio());
         curentView = null;
@@ -138,6 +138,10 @@ public class ClientView extends AbstractView implements
         Graphics2D g = (Graphics2D) grphcs;
         g.drawImage(realView, 0, 0, getWidth(), getHeight(), null);
         g.translate(getRatio() * VIEW_SIZE.width / 2, getRatio() * VIEW_SIZE.height / 2);
+        for (GraphicComponent gc : map.getActiveObjects()) {
+            gc.drawRelative(g, tr);
+            gc.draw(g);
+        }
         for (Body b : bodies) {
             b.drawRelative(g, tr);
         }

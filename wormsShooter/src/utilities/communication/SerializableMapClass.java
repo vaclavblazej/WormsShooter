@@ -2,6 +2,8 @@ package utilities.communication;
 
 import java.awt.image.BufferedImage;
 import java.io.Serializable;
+import java.util.ArrayList;
+import objects.GraphicComponent;
 import utilities.AbstractView;
 import utilities.MapClass;
 
@@ -12,12 +14,14 @@ import utilities.MapClass;
 public class SerializableMapClass implements Serializable {
 
     private SerializableBufferedImage map;
+    private ArrayList<GraphicComponent> activeObjs;
 
-    public SerializableMapClass(BufferedImage map) {
+    public SerializableMapClass(BufferedImage map, ArrayList<GraphicComponent> activeObjects) {
         this.map = new SerializableBufferedImage(map);
+        this.activeObjs = activeObjects;
     }
 
-    MapClass deserialize(AbstractView view) {
-        return new MapClass(map.getImage(), view);
+    public MapClass deserialize(AbstractView view) {
+        return new MapClass(map.getImage(), view, activeObjs);
     }
 }

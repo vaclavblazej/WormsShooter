@@ -3,7 +3,9 @@ package utilities;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import objects.GraphicComponent;
 import utilities.communication.SerializableMapClass;
 import utilities.materials.Material;
 
@@ -13,22 +15,24 @@ import utilities.materials.Material;
  */
 public class MapClass {
 
+    private ArrayList<GraphicComponent> activeObjects;
     private BufferedImage map;
     private int[][] shadows;
     private AbstractView view;
     private int width;
     private int height;
 
-    public MapClass(BufferedImage map, AbstractView view) {
-        this(map, view, new int[map.getWidth()][map.getHeight()]);
+    public MapClass(BufferedImage map, AbstractView view, ArrayList<GraphicComponent> actObjects) {
+        this(map, view, new int[map.getWidth()][map.getHeight()], actObjects);
     }
 
-    private MapClass(BufferedImage map, AbstractView view, int[][] shadows) {
+    private MapClass(BufferedImage map, AbstractView view, int[][] shadows, ArrayList<GraphicComponent> actObjs) {
         this.map = map;
         this.view = view;
         width = map.getWidth();
         height = map.getHeight();
         this.shadows = shadows;
+        this.activeObjects = actObjs;
     }
 
     public int getWidth() {
@@ -51,6 +55,10 @@ public class MapClass {
         return shadows[x][y];
     }
 
+    public ArrayList<GraphicComponent> getActiveObjects() {
+        return activeObjects;
+    }
+
     public MapClass getSubmap(int x, int y, int width, int height)
             throws ArrayIndexOutOfBoundsException {
         int[][] ns = new int[width][height];
@@ -59,7 +67,7 @@ public class MapClass {
                 ns[i][j] = shadows[x + i][y + j];
             }
         }
-        return new MapClass(map.getSubimage(x, y, width, height), view, ns);
+        return new MapClass(map.getSubimage(x, y, width, height), view, ns, activeObjects);
     }
 
     public void calculateShadows() {
@@ -129,6 +137,6 @@ public class MapClass {
     }
 
     public SerializableMapClass serialize() {
-        return new SerializableMapClass(map);
+        return new SerializableMapClass(map, activeObjects);
     }
 }

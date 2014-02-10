@@ -2,10 +2,13 @@ package server;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Point;
+import java.util.ArrayList;
 import java.util.HashMap;
 import javax.swing.SwingUtilities;
 import objects.Body;
 import objects.GraphicComponent;
+import objects.Thing;
 import objects.items.Crafting;
 import objects.items.ItemBlueprint;
 import objects.items.ItemCategory;
@@ -15,8 +18,10 @@ import objects.items.Recipe;
 import objects.items.itemActions.ItemActionMine;
 import objects.items.itemActions.ItemActionShoot;
 import utilities.AbstractView;
+import utilities.FileManager;
 import utilities.MapClass;
 import utilities.communication.Model;
+import utilities.communication.SerializableBufferedImage;
 import utilities.materials.Material;
 import utilities.spritesheets.SpriteLoader;
 
@@ -39,7 +44,14 @@ public class ServerView extends AbstractView {
         super(400, 300, 1);
         SpriteLoader.loadSprite("Map");
         SpriteLoader.set(400, 300);
-        map = new MapClass(SpriteLoader.getSprite().getFrame(), this);
+        MapClass loadedMap = (MapClass) FileManager.load("mapClass");
+
+        if (loadedMap != null) {
+            map = loadedMap;
+        } else {
+            map = new MapClass(SpriteLoader.getSprite().getFrame(), this, createObjects());
+        }
+
         model = new Model(map,
                 new HashMap<Integer, Body>(20),
                 objects,
@@ -54,6 +66,15 @@ public class ServerView extends AbstractView {
                 init();
             }
         });
+    }
+
+    private ArrayList<GraphicComponent> createObjects() {
+        SpriteLoader.loadSprite("tree");
+        SpriteLoader.set(512, 512);
+        ArrayList<GraphicComponent> objList = new ArrayList<>();
+        objList.add(new Thing(new SerializableBufferedImage(SpriteLoader.getRawSprite()),
+                new Point(30, 30), new Point(1927, 4208)));
+        return objList;
     }
 
     private ItemFactory createItems() {
@@ -111,6 +132,7 @@ public class ServerView extends AbstractView {
     }
 
     public void save() {
+        FileManager.save("mapClass", map);
         SpriteLoader.saveSprite("Map", map.getImage());
     }
 
