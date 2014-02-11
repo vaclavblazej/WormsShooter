@@ -16,6 +16,8 @@ import java.awt.image.BufferedImage;
 import java.awt.image.RasterFormatException;
 import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import main.Main;
 import objects.Body;
 import objects.GraphicComponent;
@@ -42,6 +44,7 @@ public class ClientView extends AbstractView implements
         MouseListener {
 
     private static ClientView instance;
+    private static final int SCALE = 20;
 
     public static ClientView getInstance() {
         if (instance == null) {
@@ -49,13 +52,13 @@ public class ClientView extends AbstractView implements
         }
         return instance;
     }
-    private static final int SCALE = 20;
-    private final Dimension VIEW_SIZE;
+    private final Dimension TILE_VIEW_SIZE;
+    private final Dimension REAL_VIEW_SIZE;
     private Body body;
     private EnumSet<ControlsEnum> controlSet;
     private MapClass curentView;
     private BufferedImage realView;
-    private Point currentPosition;
+    private Point viewTilePos;
     private AffineTransform tr;
     private Controls controls;
     private Point mouse;
@@ -63,10 +66,16 @@ public class ClientView extends AbstractView implements
     private ClientView() {
         super(800, 600, SCALE);
         map = new MapClass(new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB), this);
-        realView = new BufferedImage(800, 600, BufferedImage.TYPE_INT_RGB);
-        VIEW_SIZE = new Dimension(800 / getRatio(), 600 / getRatio());
+        REAL_VIEW_SIZE = new Dimension(800, 600);
+        realView = new BufferedImage(
+                REAL_VIEW_SIZE.width + (int) Main.RATIO,
+                REAL_VIEW_SIZE.height + (int) Main.RATIO,
+                BufferedImage.TYPE_INT_RGB);
+        TILE_VIEW_SIZE = new Dimension(
+                REAL_VIEW_SIZE.width / getRatio(),
+                REAL_VIEW_SIZE.height / getRatio());
         curentView = null;
-        currentPosition = new Point();
+        viewTilePos = new Point();
         controlSet = EnumSet.noneOf(ControlsEnum.class);
         mouse = new Point();
         tr = new AffineTransform();
@@ -113,31 +122,44 @@ public class ClientView extends AbstractView implements
     @Override
     public void paint(Graphics grphcs) {
         super.paint(grphcs);
+        Point harmony = new Point(0, 0);
+        Point viewRealPos = new Point(0, 0);
         if (body != null) {
             Point bodyPosition = body.getPosition();
-            currentPosition.x = (int) ((bodyPosition.x / Main.RATIO - VIEW_SIZE.width / 2));
-            currentPosition.y = (int) ((bodyPosition.y / Main.RATIO - VIEW_SIZE.height / 2));
-            if (currentPosition.x < 0) {
-                currentPosition.x = 0;
-            } else if (currentPosition.x > map.getWidth() - VIEW_SIZE.width) {
-                currentPosition.x = map.getWidth() - VIEW_SIZE.width;
+            harmony.x = (int) (bodyPosition.x % Main.RATIO);
+            harmony.y = (int) (bodyPosition.y % Main.RATIO);
+            viewTilePos.x = (int) ((bodyPosition.x / Main.RATIO - TILE_VIEW_SIZE.width / 2));
+            viewTilePos.y = (int) ((bodyPosition.y / Main.RATIO - TILE_VIEW_SIZE.height / 2));
+            viewRealPos.x = (int) (bodyPosition.x - Main.RATIO * TILE_VIEW_SIZE.width / 2);
+            viewRealPos.y = (int) (bodyPosition.y - Main.RATIO * TILE_VIEW_SIZE.height / 2);
+            if (viewRealPos.x < 0) {
+                viewRealPos.x = 0;
+                harmony.x = 0;
+            } else if (viewRealPos.x > map.getWidth() * Main.RATIO - REAL_VIEW_SIZE.width) {
+                viewRealPos.x = (int) (map.getWidth() * Main.RATIO) - REAL_VIEW_SIZE.width;
+                harmony.x = (int) Main.RATIO;
+            }//todo
+            if (viewTilePos.x < 0) {
+                viewTilePos.x = 0;
+            } else if (viewTilePos.x > map.getWidth() - TILE_VIEW_SIZE.width) {
+                viewTilePos.x = map.getWidth() - TILE_VIEW_SIZE.width;
             }
-            if (currentPosition.y < 0) {
-                currentPosition.y = 0;
-            } else if (currentPosition.y > map.getHeight() - VIEW_SIZE.height) {
-                currentPosition.y = map.getHeight() - VIEW_SIZE.height;
+            if (viewTilePos.y < 0) {
+                viewTilePos.y = 0;
+            } else if (viewTilePos.y > map.getHeight() - TILE_VIEW_SIZE.height) {
+                viewTilePos.y = map.getHeight() - TILE_VIEW_SIZE.height;
             }
         }
-        tr.setToTranslation(currentPosition.x * Main.RATIO, currentPosition.y * Main.RATIO);
+        tr.setToTranslation(viewRealPos.x, viewRealPos.y);
         try {
-            curentView = map.getSubmap(currentPosition.x, currentPosition.y,
-                    VIEW_SIZE.width, VIEW_SIZE.height);
+            curentView = map.getSubmap(viewTilePos.x, viewTilePos.y,
+                    TILE_VIEW_SIZE.width + 1, TILE_VIEW_SIZE.height + 1);
             MaterialVisuals.redraw(curentView, realView);
         } catch (RasterFormatException | ArrayIndexOutOfBoundsException ex) {
+            //Logger.getLogger(ClientView.class.getName()).log(Level.SEVERE, null, ex);
         }
         Graphics2D g = (Graphics2D) grphcs;
-        g.drawImage(realView, 0, 0, getWidth(), getHeight(), null);
-        g.translate(getRatio() * VIEW_SIZE.width / 2, getRatio() * VIEW_SIZE.height / 2);
+        g.drawImage(realView, -harmony.x, -harmony.y, realView.getWidth(), realView.getHeight(), null);
         for (Body b : bodies) {
             b.drawRelative(g, tr);
         }
@@ -205,8 +227,8 @@ public class ClientView extends AbstractView implements
         mouse.y = e.getY();
         switch (e.getButton()) {
             case MouseEvent.BUTTON1:
-                Point p = new Point((int) (currentPosition.x * Main.RATIO) + e.getX(),
-                        (int) (currentPosition.y * Main.RATIO) + e.getY());
+                Point p = new Point((int) (viewTilePos.x * Main.RATIO) + e.getX(),
+                        (int) (viewTilePos.y * Main.RATIO) + e.getY());
                 ItemBlueprint heldItem = getMyBody().getInventory().getHeldItem();
                 if (heldItem != null) {
                     ItemAction action = heldItem.getAction();

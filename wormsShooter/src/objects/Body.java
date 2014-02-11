@@ -27,7 +27,7 @@ import utilities.spritesheets.SpriteLoader;
 public class Body implements GraphicComponent {
 
     private static final double JUMP = 6;
-    private static final double GRAVITY = 0.1;
+    private static final double GRAVITY = 1;
     private static final int SPEED = 8;
     private static final int INITIAL_HEALTH = 100;
     private Point position;
@@ -99,68 +99,37 @@ public class Body implements GraphicComponent {
         this.velocity.y = point.y;
     }
 
-    public void fallBy(double y) {
-        int directionY = (velocity.y >= 0) ? 1 : -1;
-        double absoluteY = Math.abs(y);
-        int i;
-        if (absoluteY < 0.01) { // helps but does not fix completely
-            return;
-        }
-        for (i = 1; i <= absoluteY; i++) {
-            if (view.check(position.x, position.y + REAL_SIZE.height
-                    + (int) (i * directionY * Main.RATIO))
-                    == CollisionState.SOLID) {
-                velocity.y = 0;
-                break;
-            }
-        }
-        position.y += i * directionY * Main.RATIO;
-    }
-
     public void tick() {
         int directionY = (velocity.y >= 0) ? 1 : -1;
-        state = view.check(position.x, position.y + REAL_SIZE.height);
-        belowState = view.check(position.x, position.y + REAL_SIZE.height - 1 + directionY);
-        /*switch (belowState) {
-            case GAS:
-                //velocity.y += GRAVITY;
-                fallBy(velocity.y);
-                break;
-            case LIQUID:
-                //velocity.y += GRAVITY / 4;
-                fallBy(velocity.y);
-                jump = true;
-                break;
-            case SOLID:
-                velocity.y = 0;
-                jump = true;
-                break;
-        }*/
-        if (view.check(position.x , position.y + 1) != CollisionState.SOLID &&
-                view.check(position.x , position.y + 1) != CollisionState.SOLID) {
-            if (movement.equals(MoveAction.RIGHT)) {
-                position.x += SPEED;
-                animation.setDirection(1);
-                animation.update();
-            }
+        state = view.check(position.x, position.y + SIZE.height);
+        belowState = view.check(position.x, position.y + SIZE.height);
+        if (state == CollisionState.GAS) {
+            velocity.y += GRAVITY;
+            velocity.y *= 0.98;
         }
-        if (view.check(position.x, position.y + 1) != CollisionState.SOLID) {
-            if (movement.equals(MoveAction.LEFT)) {
-                position.x -= SPEED;
-                animation.setDirection(-1);
-                animation.update();
-            }
+        if (velocity.y > 0 && belowState == CollisionState.SOLID) {
+            velocity.y = 0;
         }
+        position.x += velocity.x;
+        position.y += velocity.y;
     }
 
     public void control(MoveAction action) {
         switch (action) {
             case RIGHT:
+                movement = action;
+                velocity.x = SPEED;
+                break;
             case LEFT:
+                movement = action;
+                velocity.x = -SPEED;
+                break;
             case STOP:
                 movement = action;
+                velocity.x = 0;
                 break;
             case JUMP:
+                jump = true;
                 if (jump == true) {
                     velocity.y -= JUMP;
                     jump = false;
@@ -208,14 +177,14 @@ public class Body implements GraphicComponent {
         try {
             tr.invert();
         } catch (NoninvertibleTransformException ex) {
-            Logger.getLogger(Bullet.class.getName()).log(Level.SEVERE, null, ex);
+            Logger.getLogger(Body.class.getName()).log(Level.SEVERE, null, ex);
         }
         tr.translate(position.x, position.y);
-        //tr.rotate(rotation);
+//        tr.rotate(rotation);
         g.setTransform(tr);
         g.setColor(Color.RED);
         g.fillRect(0, 0, SIZE.width, SIZE.height);
-        g.drawImage(animation.getSprite(), null, null);
+//        g.drawImage(animation.getSprite(), null, null);
     }
 
     public SerializableBody serialize() {
