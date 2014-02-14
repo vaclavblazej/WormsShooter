@@ -16,8 +16,6 @@ import java.awt.image.BufferedImage;
 import java.awt.image.RasterFormatException;
 import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import main.Main;
 import objects.Body;
 import objects.GraphicComponent;
@@ -79,7 +77,7 @@ public class ClientView extends AbstractView implements
         controlSet = EnumSet.noneOf(ControlsEnum.class);
         mouse = new Point();
         tr = new AffineTransform();
-        tr.setToScale(SCALE, SCALE);
+        tr.setToScale(1.0 / SCALE, 1.0 / SCALE);
     }
 
     @Override
@@ -132,25 +130,30 @@ public class ClientView extends AbstractView implements
             viewTilePos.y = (int) ((bodyPosition.y / Main.RATIO - TILE_VIEW_SIZE.height / 2));
             viewRealPos.x = (int) (bodyPosition.x - Main.RATIO * TILE_VIEW_SIZE.width / 2);
             viewRealPos.y = (int) (bodyPosition.y - Main.RATIO * TILE_VIEW_SIZE.height / 2);
+            int ubX = (int) (map.getWidth() * Main.RATIO) - REAL_VIEW_SIZE.width - 1;
+            int tubX = map.getWidth() - TILE_VIEW_SIZE.width - 1;
+            int ubY = (int) (map.getHeight() * Main.RATIO) - REAL_VIEW_SIZE.height - 1;
+            int tubY = map.getHeight() - TILE_VIEW_SIZE.height - 1;
             if (viewRealPos.x < 0) {
                 viewRealPos.x = 0;
-                harmony.x = 0;
-            } else if (viewRealPos.x > map.getWidth() * Main.RATIO - REAL_VIEW_SIZE.width) {
-                viewRealPos.x = (int) (map.getWidth() * Main.RATIO) - REAL_VIEW_SIZE.width;
-                harmony.x = (int) Main.RATIO;
-            }//todo
-            if (viewTilePos.x < 0) {
                 viewTilePos.x = 0;
-            } else if (viewTilePos.x > map.getWidth() - TILE_VIEW_SIZE.width) {
-                viewTilePos.x = map.getWidth() - TILE_VIEW_SIZE.width;
+                harmony.x = 0;
+            } else if (viewRealPos.x > ubX) {
+                viewRealPos.x = ubX;
+                harmony.x = (int) Main.RATIO;
+                viewTilePos.x = tubX;
             }
-            if (viewTilePos.y < 0) {
+            if (viewRealPos.y < 0) {
+                viewRealPos.y = 0;
                 viewTilePos.y = 0;
-            } else if (viewTilePos.y > map.getHeight() - TILE_VIEW_SIZE.height) {
-                viewTilePos.y = map.getHeight() - TILE_VIEW_SIZE.height;
+                harmony.y = 0;
+            } else if (viewRealPos.y > ubY) {
+                viewRealPos.y = ubY;
+                harmony.y = (int) Main.RATIO;
+                viewTilePos.y = tubY;
             }
         }
-        tr.setToTranslation(viewRealPos.x, viewRealPos.y);
+        tr.setToTranslation(-viewRealPos.x, -viewRealPos.y);
         try {
             curentView = map.getSubmap(viewTilePos.x, viewTilePos.y,
                     TILE_VIEW_SIZE.width + 1, TILE_VIEW_SIZE.height + 1);

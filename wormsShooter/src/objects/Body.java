@@ -5,11 +5,8 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import main.Main;
 import objects.items.InventoryTableModel;
 import objects.items.ItemBlueprint;
@@ -26,7 +23,7 @@ import utilities.spritesheets.SpriteLoader;
  */
 public class Body implements GraphicComponent {
 
-    private static final double JUMP = 6;
+    private static final double JUMP = 12;
     private static final double GRAVITY = 1;
     private static final int SPEED = 8;
     private static final int INITIAL_HEALTH = 100;
@@ -100,18 +97,33 @@ public class Body implements GraphicComponent {
     }
 
     public void tick() {
-        int directionY = (velocity.y >= 0) ? 1 : -1;
         state = view.check(position.x, position.y + SIZE.height);
-        belowState = view.check(position.x, position.y + SIZE.height);
         if (state == CollisionState.GAS) {
             velocity.y += GRAVITY;
             velocity.y *= 0.98;
         }
-        if (velocity.y > 0 && belowState == CollisionState.SOLID) {
-            velocity.y = 0;
+        int fall = 0;
+        if (velocity.y >= 0) {
+            while (fall < velocity.y) {
+                belowState = view.check(position.x, position.y + SIZE.height + 1);
+                if (belowState == CollisionState.SOLID) {
+                    velocity.y = 0;
+                    break;
+                }
+                fall++;
+            }
+        } else {
+            while (fall > velocity.y) {
+                belowState = view.check(position.x, position.y - 1);
+                if (belowState == CollisionState.SOLID) {
+                    velocity.y = 0;
+                    break;
+                }
+                fall--;
+            }
         }
         position.x += velocity.x;
-        position.y += velocity.y;
+        position.y += fall;
     }
 
     public void control(MoveAction action) {
@@ -174,11 +186,6 @@ public class Body implements GraphicComponent {
     @Override
     public void drawRelative(Graphics2D g, AffineTransform trans) {
         AffineTransform tr = (AffineTransform) trans.clone();
-        try {
-            tr.invert();
-        } catch (NoninvertibleTransformException ex) {
-            Logger.getLogger(Body.class.getName()).log(Level.SEVERE, null, ex);
-        }
         tr.translate(position.x, position.y);
 //        tr.rotate(rotation);
         g.setTransform(tr);
