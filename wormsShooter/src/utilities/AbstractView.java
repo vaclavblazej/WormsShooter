@@ -13,6 +13,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+import main.Main;
 import objects.Body;
 import objects.GraphicComponent;
 import objects.items.Crafting;
@@ -58,7 +59,7 @@ public abstract class AbstractView extends JPanel implements ActionListener {
     }
 
     public CollisionState check(int x, int y) {
-        return material.getState(getPixel(x, y));
+        return material.getState(getPixel((int) (x / Main.RATIO), (int) (y / Main.RATIO)));
     }
 
     public Model getModel() {

@@ -111,10 +111,12 @@ public class ClientCommunication {
         System.out.println("Client: getting model");
         send(new PacketBuilder(Action.GET_MODEL));
         Model model = ((SerializableModel) receive()).deserialize(ClientView.getInstance());
+        System.out.println("model received");
         ClientView.getInstance().setModel(model);
         controls = model.getControls();
         counter = model.getCounter();
         factory = model.getFactory();
+        System.out.println("Controls: " + controls);
         ClientView.getInstance().setMyBody(controls.get(info.getId()));
     }
 
@@ -151,6 +153,7 @@ public class ClientCommunication {
                             Action type = packet.getAction();
                             int count = packet.getCount();
                             int id = packet.getId();
+                            //System.out.println("Client: " + type);
                             if (count - counter <= 1) {
                                 DynamicLoader.getInstance().get(packet.getAction()).
                                         performClient(os, packet, ClientView.getInstance());

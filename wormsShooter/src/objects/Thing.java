@@ -41,11 +41,6 @@ public class Thing implements GraphicComponent {
     @Override
     public void drawRelative(Graphics2D g, AffineTransform trans) {
         tr = (AffineTransform) trans.clone();
-        try {
-            tr.invert();
-        } catch (NoninvertibleTransformException ex) {
-            Logger.getLogger(Bullet.class.getName()).log(Level.SEVERE, null, ex);
-        }
         tr.translate(position.x, position.y);
         g.setTransform(tr);
         g.setColor(Color.RED);

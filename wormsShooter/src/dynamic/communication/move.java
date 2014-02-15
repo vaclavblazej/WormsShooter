@@ -22,6 +22,13 @@ public class move extends Packet {
         Body body = view.getModel().getControls().get(packet.getId());
         if (body != null) {
             body.setPosition((Point) packet.get(1));
+//            Exception in thread "Thread-6" java.lang.IndexOutOfBoundsException: Index: 1, Size: 1
+//	at java.util.ArrayList.rangeCheck(ArrayList.java:604)
+//	at java.util.ArrayList.get(ArrayList.java:382)
+//	at utilities.communication.Packet.get(Packet.java:58)
+//	at dynamic.communication.move.performClient(move.java:23)
+//	at client.ClientCommunication$1.run(ClientCommunication.java:158)
+//	at java.lang.Thread.run(Thread.java:724)
             body.setVelocity(new Point.Double((Double) packet.get(2), (Double) packet.get(3)));
             body.control((MoveAction) packet.get(0));
         }

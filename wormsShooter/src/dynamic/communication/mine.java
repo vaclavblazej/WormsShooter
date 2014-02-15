@@ -29,8 +29,8 @@ public class mine extends Packet {
     public void performServer(ObjectOutputStream os, Packet packet, AbstractView view) throws IOException {
         Point p = (Point) packet.get(0);
         int id = packet.getId();
-        int x = p.x / Main.RATIO;
-        int y = p.y / Main.RATIO;
+        int x = (int) (p.x / Main.RATIO);
+        int y = (int) (p.y / Main.RATIO);
         ServerComService service = ServerComService.getInstance();
         Body body = view.getModel().getControls().get(id);
         Point pos = body.getPosition();

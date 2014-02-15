@@ -15,7 +15,7 @@ import server.ServerWindow;
 public class Main {
 
     private static boolean server = false;
-    public static final int RATIO = 20;
+    public static final double RATIO = 20;
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
