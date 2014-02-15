@@ -37,7 +37,10 @@ public class Body implements GraphicComponent {
     private AbstractView view;
     private InventoryTableModel inventory;
     private CollisionState state;
-    private CollisionState belowState;
+    private CollisionState leftVerticalCollision;
+    private CollisionState rightVerticalCollision;
+    private CollisionState topSideCollision;
+    private CollisionState bottomSideCollision;
     private boolean alive;
     private int health;
     private Animation animation;
@@ -96,17 +99,60 @@ public class Body implements GraphicComponent {
         this.velocity.y = point.y;
     }
 
+    @Override
     public void tick() {
         state = view.check(position.x, position.y + SIZE.height);
         if (state == CollisionState.GAS) {
             velocity.y += GRAVITY;
             velocity.y *= 0.98;
         }
+        switch (movement) {
+            case RIGHT:
+                velocity.x = SPEED;
+                break;
+            case LEFT:
+                velocity.x = -SPEED;
+                break;
+            case STOP:
+                velocity.x = 0;
+                break;
+        }
+        int x;
+        int slide = 0;
+        if (velocity.x >= 0) {
+            while (slide < velocity.x) {
+                x = position.x + slide + SIZE.width;
+                topSideCollision = view.check(x, position.y);
+                bottomSideCollision = view.check(x, position.y + SIZE.height - 1);
+                if (topSideCollision == CollisionState.SOLID
+                        || bottomSideCollision == CollisionState.SOLID) {
+                    velocity.x = 0;
+                    break;
+                }
+                slide++;
+            }
+        } else {
+            while (slide > velocity.x) {
+                x = position.x + slide - 1;
+                topSideCollision = view.check(x, position.y);
+                bottomSideCollision = view.check(x, position.y + SIZE.height - 1);
+                if (topSideCollision == CollisionState.SOLID
+                        || bottomSideCollision == CollisionState.SOLID) {
+                    velocity.x = 0;
+                    break;
+                }
+                slide--;
+            }
+        }
+        int y;
         int fall = 0;
         if (velocity.y >= 0) {
             while (fall < velocity.y) {
-                belowState = view.check(position.x, position.y + SIZE.height + 1);
-                if (belowState == CollisionState.SOLID) {
+                y = position.y + fall + SIZE.height;
+                leftVerticalCollision = view.check(position.x, y);
+                rightVerticalCollision = view.check(position.x + SIZE.width - 1, y);
+                if (leftVerticalCollision == CollisionState.SOLID
+                        || rightVerticalCollision == CollisionState.SOLID) {
                     velocity.y = 0;
                     break;
                 }
@@ -114,31 +160,27 @@ public class Body implements GraphicComponent {
             }
         } else {
             while (fall > velocity.y) {
-                belowState = view.check(position.x, position.y - 1);
-                if (belowState == CollisionState.SOLID) {
+                y = position.y + fall - 1;
+                leftVerticalCollision = view.check(position.x, y);
+                rightVerticalCollision = view.check(position.x + SIZE.width - 1, y);
+                if (leftVerticalCollision == CollisionState.SOLID
+                        || rightVerticalCollision == CollisionState.SOLID) {
                     velocity.y = 0;
                     break;
                 }
                 fall--;
             }
         }
-        position.x += velocity.x;
+        position.x += slide;
         position.y += fall;
     }
 
     public void control(MoveAction action) {
         switch (action) {
             case RIGHT:
-                movement = action;
-                velocity.x = SPEED;
-                break;
             case LEFT:
-                movement = action;
-                velocity.x = -SPEED;
-                break;
             case STOP:
                 movement = action;
-                velocity.x = 0;
                 break;
             case JUMP:
                 jump = true;

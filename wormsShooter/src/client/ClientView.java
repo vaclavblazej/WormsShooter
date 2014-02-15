@@ -57,7 +57,7 @@ public class ClientView extends AbstractView implements
     private MapClass curentView;
     private BufferedImage realView;
     private Point viewTilePos;
-    private AffineTransform tr;
+    private AffineTransform tr;         // Defines view position and size. Is inversed already.
     private Controls controls;
     private Point mouse;
 
