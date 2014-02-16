@@ -32,6 +32,9 @@ public class Main {
 
     public static void startClient(String address, String socket) {
         ClientCommunication.getInstance().init(address, socket);
+    }
+
+    public static void startClientView() {
         ClientView.getInstance().init();
     }
 

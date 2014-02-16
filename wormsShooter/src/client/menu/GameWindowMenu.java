@@ -2,6 +2,7 @@ package client.menu;
 
 import client.ClientCommunication;
 import client.ClientWindow;
+import communication.client.DisconnectAction;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
@@ -12,8 +13,6 @@ import javax.swing.JMenuItem;
 import javax.swing.KeyStroke;
 import main.Main;
 import utilities.Message;
-import utilities.communication.Action;
-import utilities.communication.PacketBuilder;
 
 /**
  *
@@ -69,7 +68,7 @@ public class GameWindowMenu extends JMenuBar {
         item.setAction(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ClientCommunication.getInstance().send(new PacketBuilder(Action.DISCONNECT));
+                ClientCommunication.getInstance().send(new DisconnectAction());
             }
         });
         item.setText(Message.MENU_DISCONNECT.cm());

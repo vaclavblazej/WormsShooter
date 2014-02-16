@@ -1,6 +1,6 @@
 package server;
 
-import dynamic.communication.DynamicLoader;
+import communication.client.ConnectAction;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -11,7 +11,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import objects.Body;
 import utilities.PlayerInfo;
-import utilities.communication.Packet;
+import utilities.communication.PerformablePacket;
 import utilities.communication.RegistrationForm;
 
 /**
@@ -80,31 +80,50 @@ public class ServerCommunication {
 
     private class CommunicationHandler implements Runnable {
 
+        private boolean run;
         private Socket socket;
         private int id;
+        private ObjectInputStream is;
+        private ObjectOutputStream os;
 
         CommunicationHandler(Socket socket) {
+            System.out.println("Server: got client socket");
             this.socket = socket;
+            this.run = true;
+        }
+
+        public Object receive() {
+            try {
+                return is.readObject();
+            } catch (IOException | ClassNotFoundException ex) {
+                run = false;
+                Logger.getLogger(ServerCommunication.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            return null;
         }
 
         @Override
         public void run() {
             try {
-                System.out.println("Server: Client handler started");
-                ObjectInputStream is = new ObjectInputStream(socket.getInputStream());
-                ObjectOutputStream os = new ObjectOutputStream(socket.getOutputStream());
-                PlayerInfo registerPlayer = ServerComService.getInstance()
-                        .registerPlayer((RegistrationForm) ((Packet) is.readObject()).get(0));
-                id = registerPlayer.getId();
-                os.writeObject(registerPlayer);
-                while (running) {
-                    Packet p = ((Packet) is.readObject());
-                    //System.out.println("Server: " + p.getId() + " " + p.getAction());
-                    DynamicLoader.getInstance().get(p.getAction()).performServer(os, p, ServerView.getInstance());
-                }
-            } catch (IOException | ClassNotFoundException ex) {
-                ServerComService.getInstance().disconnect(id);
-                //Logger.getLogger(ServerCommunication.class.getName()).log(Level.SEVERE, null, ex);
+                is = new ObjectInputStream(socket.getInputStream());
+                os = new ObjectOutputStream(socket.getOutputStream());
+            } catch (IOException ex) {
+                Logger.getLogger(ServerCommunication.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            ConnectAction action = ((ConnectAction) receive());
+            action.perform(ServerView.getInstance());
+            RegistrationForm form = action.getForm();
+            PlayerInfo info = ServerComService.getInstance().registerPlayer(form);
+            id = info.getId();
+            try {
+                os.writeObject(info);
+            } catch (IOException ex) {
+                Logger.getLogger(ServerCommunication.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            while (run) {
+                PerformablePacket packet = ((PerformablePacket) receive());
+                System.out.println("Server: packet " + packet);
+                packet.perform(ServerView.getInstance());
             }
         }
     }

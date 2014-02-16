@@ -1,6 +1,7 @@
 package client;
 
 import client.menu.Settings;
+import communication.client.MoveAction;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -19,16 +20,14 @@ import java.util.EnumSet;
 import main.Main;
 import objects.Body;
 import objects.GraphicComponent;
-import objects.MoveAction;
+import objects.MoveEnum;
 import objects.items.ItemBlueprint;
 import objects.items.itemActions.ItemAction;
 import utilities.AbstractView;
 import utilities.Controls;
 import utilities.ControlsEnum;
 import utilities.MapClass;
-import utilities.communication.Action;
 import utilities.communication.Model;
-import utilities.communication.PacketBuilder;
 import utilities.materials.MaterialVisuals;
 
 /**
@@ -100,7 +99,7 @@ public class ClientView extends AbstractView implements
     public void init() {
         super.init();
         controls = Settings.getInstance().getControls();
-        repaint();
+        //repaint();
         addMouseListener(this);
         addMouseMotionListener(this);
         addKeyListener(this);
@@ -178,8 +177,7 @@ public class ClientView extends AbstractView implements
         if (en != null && controlSet.add(en)) {
             switch (en) {
                 case UP:
-                    ClientCommunication.getInstance().send(
-                            new PacketBuilder(Action.MOVE).addInfo(MoveAction.JUMP));
+                    ClientCommunication.getInstance().send(new MoveAction(MoveEnum.JUMP));
                     break;
                 case LEFT:
                 case RIGHT:
@@ -213,13 +211,13 @@ public class ClientView extends AbstractView implements
         }
         switch (d) {
             case 1:
-                ClientCommunication.getInstance().send(new PacketBuilder(Action.MOVE).addInfo(MoveAction.RIGHT));
+                ClientCommunication.getInstance().send(new MoveAction(MoveEnum.RIGHT));
                 break;
             case 0:
-                ClientCommunication.getInstance().send(new PacketBuilder(Action.MOVE).addInfo(MoveAction.STOP));
+                ClientCommunication.getInstance().send(new MoveAction(MoveEnum.STOP));
                 break;
             case -1:
-                ClientCommunication.getInstance().send(new PacketBuilder(Action.MOVE).addInfo(MoveAction.LEFT));
+                ClientCommunication.getInstance().send(new MoveAction(MoveEnum.LEFT));
                 break;
         }
     }

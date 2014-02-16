@@ -1,31 +1,22 @@
 package utilities.communication;
 
-import java.io.IOException;
-import java.io.ObjectOutputStream;
 import java.io.Serializable;
-import java.util.ArrayList;
-import server.Performable;
-import utilities.AbstractView;
 
 /**
  *
  * @author Skarab
  */
-public class Packet implements Serializable, Performable {
+public class Packet implements Serializable {
 
-    private Action action;
     private int count;
-    private int id;
-    private ArrayList<Object> information;
+    protected int id;
 
     public Packet() {
-        this(null, 0);
+        this(0);
     }
 
-    public Packet(Action action, int id) {
-        this.action = action;
+    public Packet(int id) {
         this.id = id;
-        this.information = new ArrayList<>();
     }
 
     public Packet setCount(int count) {
@@ -38,35 +29,11 @@ public class Packet implements Serializable, Performable {
         return this;
     }
 
-    public Action getAction() {
-        return action;
-    }
-
     public int getCount() {
         return count;
     }
 
     public int getId() {
         return id;
-    }
-
-    public void addInfo(Object object) {
-        information.add(object);
-    }
-
-    public Object get(int index) {
-        return information.get(index);
-    }
-
-    @Override
-    public void perform(Packet packet, AbstractView view) {
-    }
-
-    @Override
-    public void performServer(ObjectOutputStream os, Packet packet, AbstractView view) throws IOException {
-    }
-
-    @Override
-    public void performClient(ObjectOutputStream os, Packet packet, AbstractView view) throws IOException {
     }
 }

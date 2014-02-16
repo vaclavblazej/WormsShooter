@@ -6,23 +6,21 @@ import java.util.Map;
 import objects.items.ComponentTableModel;
 import objects.items.ItemEnum;
 import objects.items.ItemFactory;
-import server.ServerView;
 import utilities.AbstractView;
 import utilities.CollisionState;
-import utilities.communication.Model;
 
 /**
  *
  * @author Skarab
  */
 public class Material {
-
-    private final Map<MaterialEnum, Elem> material;
-    private final Map<Integer, MaterialEnum> colors;
     public static final CollisionState DEFAULT = CollisionState.SOLID;
     private static final int SOLID_LIGHT = 30;
     private static final int LIQUID_LIGHT = 5;
     private static final int GAS_LIGHT = 0;
+
+    private final Map<MaterialEnum, Elem> material;
+    private final Map<Integer, MaterialEnum> colors;
 
     public Material(AbstractView view) {
         material = new HashMap<>();

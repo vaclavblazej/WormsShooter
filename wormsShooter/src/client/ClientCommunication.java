@@ -1,8 +1,9 @@
 package client;
 
 import client.menu.GameWindowItemBar;
-import dynamic.communication.DynamicLoader;
-import java.awt.Point;
+import communication.client.ConfirmAction;
+import communication.client.ConnectAction;
+import communication.client.GetModelAction;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -12,15 +13,11 @@ import java.net.UnknownHostException;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
+import main.Main;
 import objects.Body;
-import objects.items.ItemFactory;
 import utilities.PlayerInfo;
-import utilities.communication.Action;
-import utilities.communication.Model;
-import utilities.communication.Packet;
-import utilities.communication.PacketBuilder;
+import utilities.communication.PerformablePacket;
 import utilities.communication.RegistrationForm;
-import utilities.communication.SerializableModel;
 
 /**
  *
@@ -41,21 +38,19 @@ public class ClientCommunication {
     private PlayerInfo info;
     private boolean listening;
     private Socket inputSocket;
-    private Map<Integer, Body> controls;
     private int counter;
-    private ItemFactory factory;
     private volatile boolean running;
 
     public void init(String ip, String port) {
+        System.out.println("Client: starting");
         info = new PlayerInfo(0);
         listening = false;
         try {
-            System.out.println("Client: connecting to: " + InetAddress.getByName(ip)
-                    + " " + Integer.parseInt(port));
+            System.out.println("Client: connecting to: " + ip + " " + port);
             Socket socket = new Socket(InetAddress.getByName(ip), Integer.parseInt(port));
             os = new ObjectOutputStream(socket.getOutputStream());
             is = new ObjectInputStream(socket.getInputStream());
-            System.out.println("Client: socket obtained");
+            System.out.println("Client: got server socket");
             register();
             startSocket(ip);
         } catch (UnknownHostException ex) {
@@ -73,20 +68,24 @@ public class ClientCommunication {
         os = null;
     }
 
+    public void setCounter(int counter) {
+        this.counter = counter;
+    }
+
     public void bindBody(int id, Body body) {
-        //Map<Integer, Body> controls = ClientView.getInstance().getModel().getControls();
-        controls.put(id, body);
+        /*Map<Integer, Body> controls = ClientView.getInstance().getModel().getControls();
+        controls.put(id, body);*/
     }
 
     public void unbindBody(int id) {
-        //Map<Integer, Body> controls = ClientView.getInstance().getModel().getControls();
+        Map<Integer, Body> controls = ClientView.getInstance().getModel().getControls();
         ClientView.getInstance().removeBody(controls.get(id));
         controls.remove(id);
     }
 
-    public void send(PacketBuilder object) {
+    public void send(PerformablePacket object) {
         try {
-            os.writeObject(object.setId(info.getId()).build());
+            os.writeObject(object.setId(info.getId()));
         } catch (IOException ex) {
             Logger.getLogger(ClientCommunication.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -102,22 +101,16 @@ public class ClientCommunication {
     }
 
     public void register() {
-        send(new PacketBuilder(Action.CONNECT).addInfo(new RegistrationForm()));
+        send(new ConnectAction(new RegistrationForm()));
         info = (PlayerInfo) receive();
-        System.out.println("Client: registration complete (id: " + info.getId() + ")");
+        System.out.println("Client: registration id received (id: " + info.getId() + ")");
     }
 
     public void getModel() {
         System.out.println("Client: getting model");
-        send(new PacketBuilder(Action.GET_MODEL));
-        Model model = ((SerializableModel) receive()).deserialize(ClientView.getInstance());
-        System.out.println("model received");
-        ClientView.getInstance().setModel(model);
-        controls = model.getControls();
-        counter = model.getCounter();
-        factory = model.getFactory();
-        System.out.println("Controls: " + controls);
-        ClientView.getInstance().setMyBody(controls.get(info.getId()));
+        send(new GetModelAction());
+        //((PerformablePacket) receive()).perform(ClientView.getInstance());
+        //Model model = ((SerializableModel) receive()).deserialize(ClientView.getInstance());
     }
 
     public PlayerInfo getInfo() {
@@ -129,7 +122,7 @@ public class ClientCommunication {
         try {
             inputSocket = new Socket(InetAddress.getByName(ip), 4243);
             ObjectOutputStream outs = new ObjectOutputStream(inputSocket.getOutputStream());
-            outs.writeObject(new PacketBuilder(Action.CONFIRM).setId(info.getId()).build());
+            outs.writeObject(new ConfirmAction(info.getId()));
         } catch (Exception ex) {
             Logger.getLogger(ClientCommunication.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -139,24 +132,27 @@ public class ClientCommunication {
                 @Override
                 public void run() {
                     ObjectInputStream objectInput = null;
-                    Packet packet;
+                    PerformablePacket packet;
                     try {
                         objectInput = new ObjectInputStream(inputSocket.getInputStream());
                     } catch (IOException ex) {
                         Logger.getLogger(ClientCommunication.class.getName()).log(Level.SEVERE, null, ex);
                     }
+                    try {
+                        PerformablePacket a = (PerformablePacket) objectInput.readObject();
+                        Main.startClientView();
+                    } catch (IOException | ClassNotFoundException ex) {
+                        Logger.getLogger(ClientCommunication.class.getName()).log(Level.SEVERE, null, ex);
+                    }
+                    getModel();
                     running = true;
-                    Point p;
                     while (running) {
                         try {
-                            packet = (Packet) objectInput.readObject();
-                            Action type = packet.getAction();
+                            packet = (PerformablePacket) objectInput.readObject();
                             int count = packet.getCount();
-                            int id = packet.getId();
-                            //System.out.println("Client: " + type);
                             if (count - counter <= 1) {
-                                DynamicLoader.getInstance().get(packet.getAction()).
-                                        performClient(os, packet, ClientView.getInstance());
+                                System.out.println("Client: packet " + packet);
+                                packet.perform(ClientView.getInstance());
                             } else {
                                 getModel();
                             }

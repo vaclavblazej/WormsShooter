@@ -1,5 +1,8 @@
 package server;
 
+import communication.client.ConfirmAction;
+import communication.server.ConnectServerAction;
+import communication.server.DisconnectServerAction;
 import java.io.IOException;
 import java.io.ObjectInputStream;
 import java.io.ObjectOutputStream;
@@ -20,9 +23,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import utilities.Message;
 import utilities.PlayerInfo;
-import utilities.communication.Action;
 import utilities.communication.Packet;
-import utilities.communication.PacketBuilder;
+import utilities.communication.PerformablePacket;
 import utilities.communication.RegistrationForm;
 import utilities.communication.ServerInfo;
 
@@ -58,7 +60,7 @@ public final class ServerComService {
             public void run() {
                 ServerSocket ss = null;
                 ObjectInputStream objectInput;
-                Packet packet;
+                PerformablePacket packet;
                 int id;
                 try {
                     ss = new ServerSocket(4243);
@@ -69,7 +71,7 @@ public final class ServerComService {
                     try {
                         Socket socket = ss.accept();
                         objectInput = new ObjectInputStream(socket.getInputStream());
-                        packet = (Packet) objectInput.readObject();
+                        packet = (PerformablePacket) objectInput.readObject();
                         id = packet.getId();
                         if (ServerComService.getInstance().waitingRegistrations.containsKey(id)) {
                             ServerComService.getInstance().completeRegistration(id, new PlayerComInfo(socket));
@@ -84,19 +86,19 @@ public final class ServerComService {
         }).start();
     }
 
-    public void send(int id, PacketBuilder pb) {
+    public void send(int id, PerformablePacket pb) {
         try {
             pb.setCount(counter);
-            players.get(id).objectOutput.writeObject(pb.build());
+            players.get(id).objectOutput.writeObject(pb);
         } catch (IOException ex) {
             Logger.getLogger(ServerComService.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    public void broadcast(PacketBuilder pb) {
+    public void broadcast(PerformablePacket pp) {
         counter++;
         for (Integer player : players.keySet()) {
-            send(player, pb);
+            send(player, pp);
         }
     }
 
@@ -144,18 +146,18 @@ public final class ServerComService {
 
     private void completeRegistration(int id, PlayerComInfo pci) {
         System.out.println("Server: client " + id + " registered");
-        broadcast(new PacketBuilder(Action.CONNECT, id));
+        broadcast(new ConnectServerAction(new RegistrationForm(), id));
         players.put(id, pci);
         ServerCommunication.getInstance().bindBody(id, ServerView.getInstance().newBody());
         System.out.println(ServerView.getInstance().getModel().getControls());
-        send(id, new PacketBuilder(Action.CONFIRM, id));
+        send(id, new ConfirmAction(id));
     }
 
     public void disconnect(int id) {
         System.out.println("Server: client " + id + " disconnected");
         players.remove(id);
         ServerCommunication.getInstance().unbindBody(id);
-        broadcast(new PacketBuilder(Action.DISCONNECT, id));
+        broadcast(new DisconnectServerAction(id));
     }
 
     private class PlayerComInfo {

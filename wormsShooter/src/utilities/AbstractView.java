@@ -59,7 +59,11 @@ public abstract class AbstractView extends JPanel implements ActionListener {
     }
 
     public CollisionState check(int x, int y) {
-        return material.getState(getPixel((int) (x / Main.RATIO), (int) (y / Main.RATIO)));
+        if (material != null) {
+            return material.getState(getPixel((int) (x / Main.RATIO), (int) (y / Main.RATIO)));
+        } else {
+            return Material.DEFAULT;
+        }
     }
 
     public Model getModel() {

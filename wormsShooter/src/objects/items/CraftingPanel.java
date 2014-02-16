@@ -2,12 +2,10 @@ package objects.items;
 
 import client.ClientCommunication;
 import client.ClientView;
+import communication.client.CraftAction;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
-import java.rmi.RemoteException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.JButton;
 import javax.swing.JPanel;
@@ -16,8 +14,6 @@ import javax.swing.JTable;
 import javax.swing.ListSelectionModel;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
-import utilities.communication.Action;
-import utilities.communication.PacketBuilder;
 
 /**
  *
@@ -55,7 +51,7 @@ public class CraftingPanel extends JPanel implements ListSelectionListener {
             public void actionPerformed(ActionEvent e) {
                 ComponentTableModel inventory = ClientView.getInstance().getMyBody().getInventory();
                 if (inventory.contains(ingredientsModel)) {
-                    ClientCommunication.getInstance().send(new PacketBuilder(Action.CRAFT).addInfo(new Integer(lastIndex)));
+                    ClientCommunication.getInstance().send(new CraftAction(lastIndex));
                 }
             }
         });
