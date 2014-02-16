@@ -1,5 +1,6 @@
 package utilities;
 
+import utilities.properties.Message;
 import client.ClientWindow;
 import java.awt.BorderLayout;
 import java.awt.Color;

@@ -9,7 +9,8 @@ import javax.swing.JLabel;
 import main.Main;
 import utilities.AbstractDialog;
 import utilities.GBCBuilder;
-import utilities.Message;
+import utilities.properties.Message;
+import utilities.properties.Paths;
 import utilities.ValidatedTF;
 
 /**
@@ -32,9 +33,9 @@ public class GameLauncher extends AbstractDialog {
         serverSocket = new ValidatedTF(this);
         address = new ValidatedTF(this);
         clientSocket = new ValidatedTF(this);
-        serverSocket.setText(Message.SERVER_PORT_INITIAL.cm());
-        address.setText(Message.ADDRESS_INITIAL.cm());
-        clientSocket.setText(Message.CLIENT_PORT_INITIAL.cm());
+        serverSocket.setText(Paths.SERVER_PORT_INITIAL.cm());
+        address.setText(Paths.ADDRESS_INITIAL.cm());
+        clientSocket.setText(Paths.CLIENT_PORT_INITIAL.cm());
         getContent().setLayout(new GridBagLayout());
         int i = 0;
         getContent().add(new JLabel(Message.CREATE_SERVER.cm() + ": "), new GBCBuilder().setY(i).build());

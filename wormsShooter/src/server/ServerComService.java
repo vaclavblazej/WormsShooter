@@ -21,7 +21,7 @@ import java.util.Map;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import utilities.Message;
+import utilities.properties.Message;
 import utilities.PlayerInfo;
 import utilities.communication.Packet;
 import utilities.communication.PerformablePacket;

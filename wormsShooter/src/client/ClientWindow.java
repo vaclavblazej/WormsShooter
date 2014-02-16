@@ -9,7 +9,7 @@ import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
 import javax.swing.JToolBar;
 import main.Main;
-import utilities.Message;
+import utilities.properties.Message;
 
 /**
  *
