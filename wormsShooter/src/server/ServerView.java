@@ -15,7 +15,6 @@ import objects.items.ItemCategory;
 import objects.items.ItemEnum;
 import objects.items.ItemFactory;
 import objects.items.Recipe;
-import objects.items.itemActions.ItemActionGetWood;
 import objects.items.itemActions.ItemActionMine;
 import objects.items.itemActions.ItemActionShoot;
 import utilities.AbstractView;
@@ -76,7 +75,7 @@ public class ServerView extends AbstractView {
                 SpriteLoader.getRawSprite(),
                 new Point(30, 30),
                 new Point(96, 210),
-                new ItemActionGetWood()));
+                null));
         return objList;
     }
 

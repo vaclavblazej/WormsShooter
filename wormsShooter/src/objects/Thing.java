@@ -4,10 +4,7 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.NoninvertibleTransformException;
 import java.awt.image.BufferedImage;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import main.Main;
 import objects.items.itemActions.ItemAction;
 import utilities.communication.SerializableBufferedImage;
@@ -20,9 +17,8 @@ public class Thing implements GraphicComponent {
 
     private Point size;
     private Point position;
-    private AffineTransform tr;
     private SerializableBufferedImage image;
-    private ItemAction action;
+    private transient ItemAction action = null;
     private transient BufferedImage cache = null;
 
     public Thing(BufferedImage img, Point size, Point position, ItemAction action) {
@@ -52,9 +48,8 @@ public class Thing implements GraphicComponent {
 
     @Override
     public void drawRelative(Graphics2D g, AffineTransform trans) {
-        tr = (AffineTransform) trans.clone();
-        tr.translate(position.x * Main.RATIO, position.y * Main.RATIO);
-        g.setTransform(tr);
+        g.setTransform(trans);
+        g.translate(position.x * Main.RATIO, position.y * Main.RATIO);
         if (cache == null) {
             cache = image.getImage();
         }
