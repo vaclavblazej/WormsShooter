@@ -1,12 +1,14 @@
 package client;
 
 import client.menu.GameLauncher;
+import client.menu.GameWindowChat;
 import client.menu.GameWindowItemBar;
 import client.menu.GameWindowMenu;
 import java.awt.BorderLayout;
 import javax.swing.JFrame;
 import javax.swing.JMenuBar;
 import javax.swing.JOptionPane;
+import javax.swing.JPanel;
 import javax.swing.JToolBar;
 import main.Main;
 import utilities.properties.Message;
@@ -27,6 +29,8 @@ public class ClientWindow extends JFrame {
     }
     private ClientView gamePlane;
     private JMenuBar menuBar;
+    private JPanel bottomPanel;
+    private JPanel chatBar;
     private JToolBar itemBar;
 
     public ClientWindow(String title) {
@@ -39,8 +43,12 @@ public class ClientWindow extends JFrame {
         menuBar = new GameWindowMenu();
         setJMenuBar(menuBar);
 
+        chatBar = GameWindowChat.getInstance();
         itemBar = GameWindowItemBar.getInstance();
-        add(itemBar, BorderLayout.SOUTH);
+        bottomPanel = new JPanel(new BorderLayout());
+        bottomPanel.add(chatBar, BorderLayout.WEST);
+        bottomPanel.add(itemBar, BorderLayout.CENTER);
+        add(bottomPanel, BorderLayout.SOUTH);
 
         gamePlane = ClientView.getInstance();
         add(gamePlane, BorderLayout.CENTER);

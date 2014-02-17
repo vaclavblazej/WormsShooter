@@ -77,6 +77,7 @@ public class ClientView extends AbstractView implements
         mouse = new Point();
         tr = new AffineTransform();
         tr.setToScale(1.0 / SCALE, 1.0 / SCALE);
+        setFocusable(true);
     }
 
     @Override
@@ -168,6 +169,7 @@ public class ClientView extends AbstractView implements
         for (GraphicComponent o : objects) {
             o.drawRelative(g, tr);
         }
+        chatLog.draw(g);
     }
 
     @Override
