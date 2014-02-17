@@ -9,7 +9,7 @@ import javax.swing.table.AbstractTableModel;
  *
  * @author Skarab
  */
-public class Crafting extends AbstractTableModel implements Serializable{
+public class Crafting extends AbstractTableModel implements Serializable {
 
     private List<Recipe> recepies;
     private String[] columnName = {"Recipes"};
@@ -23,6 +23,9 @@ public class Crafting extends AbstractTableModel implements Serializable{
     }
 
     public Recipe getReceipe(int index) {
+        if (index == -1) {
+            return null;
+        }
         return recepies.get(index);
     }
 

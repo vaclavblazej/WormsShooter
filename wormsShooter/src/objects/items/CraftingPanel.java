@@ -79,9 +79,11 @@ public class CraftingPanel extends JPanel implements ListSelectionListener {
         //int minIndex = lsm.getMinSelectionIndex();
         lastIndex = lsm.getMaxSelectionIndex();
         Recipe recipe = recepiesModel.getReceipe(lastIndex);
-        ingredientsModel = recipe.getIngredients();
-        ingredients.setModel(ingredientsModel);
-        productsModel = recipe.getProducts();
-        products.setModel(productsModel);
+        if (recipe != null) {
+            ingredientsModel = recipe.getIngredients();
+            ingredients.setModel(ingredientsModel);
+            productsModel = recipe.getProducts();
+            products.setModel(productsModel);
+        }
     }
 }

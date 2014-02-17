@@ -84,7 +84,7 @@ public class ClientView extends AbstractView implements
     public void setModel(Model model) {
         super.setModel(model);
         map = model.getMap();
-        map.calculateShadows();
+        map.calculateShadows(material);
         bodies = new ArrayList<>(model.getControls().values());
     }
 

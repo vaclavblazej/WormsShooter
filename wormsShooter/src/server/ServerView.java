@@ -2,10 +2,12 @@ package server;
 
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.util.ArrayList;
 import java.util.HashMap;
 import javax.swing.SwingUtilities;
 import objects.Body;
 import objects.GraphicComponent;
+import objects.LightSource;
 import objects.items.Crafting;
 import objects.items.ItemBlueprint;
 import objects.items.ItemCategory;
@@ -39,7 +41,11 @@ public class ServerView extends AbstractView {
         super(400, 300, 1);
         SpriteLoader.loadSprite("Map");
         SpriteLoader.set(400, 300);
-        map = new MapClass(SpriteLoader.getSprite().getFrame(), this);
+        ArrayList<LightSource> lights = new ArrayList<>(10);
+        lights.add(new LightSource(100, 200, 5));
+        lights.add(new LightSource(200, 200, 5));
+        lights.add(new LightSource(300, 200, 5));
+        map = new MapClass(SpriteLoader.getSprite().getFrame(), this, lights);
         model = new Model(map,
                 new HashMap<Integer, Body>(20),
                 objects,

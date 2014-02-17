@@ -17,7 +17,7 @@ public class Material {
     public static final CollisionState DEFAULT = CollisionState.SOLID;
     private static final int SOLID_LIGHT = 30;
     private static final int LIQUID_LIGHT = 5;
-    private static final int GAS_LIGHT = 0;
+    private static final int GAS_LIGHT = 2;
 
     private final Map<MaterialEnum, Elem> material;
     private final Map<Integer, MaterialEnum> colors;

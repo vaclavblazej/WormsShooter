@@ -3,7 +3,9 @@ package utilities;
 import java.awt.Graphics;
 import java.awt.Point;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.LinkedList;
+import objects.LightSource;
 import utilities.communication.SerializableMapClass;
 import utilities.materials.Material;
 
@@ -18,17 +20,27 @@ public class MapClass {
     private AbstractView view;
     private int width;
     private int height;
+    private ArrayList<LightSource> lights;
 
     public MapClass(BufferedImage map, AbstractView view) {
-        this(map, view, new int[map.getWidth()][map.getHeight()]);
+        this(map, view, null);
     }
 
-    private MapClass(BufferedImage map, AbstractView view, int[][] shadows) {
+    public MapClass(BufferedImage map, AbstractView view, ArrayList<LightSource> lights) {
+        this(map, view, lights, new int[map.getWidth()][map.getHeight()]);
+    }
+
+    private MapClass(BufferedImage map, AbstractView view, ArrayList<LightSource> lights, int[][] shadows) {
         this.map = map;
         this.view = view;
         width = map.getWidth();
         height = map.getHeight();
         this.shadows = shadows;
+        if (lights != null) {
+            this.lights = lights;
+        } else {
+            this.lights = new ArrayList<>(10);
+        }
     }
 
     public int getWidth() {
@@ -59,16 +71,21 @@ public class MapClass {
                 ns[i][j] = shadows[x + i][y + j];
             }
         }
-        return new MapClass(map.getSubimage(x, y, width, height), view, ns);
+        return new MapClass(map.getSubimage(x, y, width, height), view, lights, ns);
     }
 
-    public void calculateShadows() {
+    public void addLightSource(LightSource source) {
+        lights.add(source);
+        System.out.println("add light source");
+    }
+
+    public void calculateShadows(Material material) {
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 shadows[i][j] = 0xFF;
             }
         }
-        recalculateShadows();
+        recalculateShadows(material);
     }
 
     public void recalculateShadows(Point p) {
@@ -80,11 +97,23 @@ public class MapClass {
         recalculateShadows(samples);
     }
 
-    public void recalculateShadows() {
-        Point sampleLight = new Point(100, 200);
+    public void recalculateShadows(Material material) {
         LinkedList<Point> samples = new LinkedList<>();
-        samples.add(sampleLight);
-        shadows[sampleLight.x][sampleLight.y] = 0;
+        /*for (int i = 0; i < width; i++) {
+         for (int j = 0; j < height; j++) {
+         if (material.getMaterial(map.getRGB(i, j)).equals(MaterialEnum.AIR)) {
+         Point sampleLight = new Point(i, j);
+         samples.add(sampleLight);
+         shadows[sampleLight.x][sampleLight.y] = 0;
+         }
+         }
+         }*/
+        System.out.println("recalculation woth " + lights.size() + " sources");
+        for (LightSource source : lights) {
+            Point sampleLight = source.getPosition();
+            samples.add(sampleLight);
+            shadows[sampleLight.x][sampleLight.y] = 0;
+        }
         recalculateShadows(samples);
     }
 
@@ -129,6 +158,6 @@ public class MapClass {
     }
 
     public SerializableMapClass serialize() {
-        return new SerializableMapClass(map);
+        return new SerializableMapClass(map, lights);
     }
 }
