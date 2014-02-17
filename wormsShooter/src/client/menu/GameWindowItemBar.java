@@ -22,7 +22,7 @@ public class GameWindowItemBar extends JToolBar {
     }
 
     public GameWindowItemBar() {
-        setPreferredSize(new Dimension(800, 26));
+        setPreferredSize(new Dimension(500, 26));
         setFloatable(false);
     }
 

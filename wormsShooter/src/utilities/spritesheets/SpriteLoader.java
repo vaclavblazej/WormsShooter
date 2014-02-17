@@ -11,7 +11,8 @@ import java.io.IOException;
 import java.net.URL;
 import javax.imageio.ImageIO;
 import main.Main;
-import utilities.Message;
+import utilities.properties.Message;
+import utilities.properties.Paths;
 
 public class SpriteLoader {
 
@@ -34,23 +35,23 @@ public class SpriteLoader {
 
     public static BufferedImage loadSprite(String file) {
         BufferedImage sprite = null;
-        URL localUrl = Main.class.getResource(Message.IMAGE_FOLDER.cm() + file + Message.IMAGE_FORMAT.cm());
+        URL localUrl = Main.class.getResource(Paths.IMAGE_FOLDER.cm() + file + Paths.IMAGE_FORMAT.cm());
         try {
             // read image from local source
             sprite = ImageIO.read(localUrl);
         } catch (IllegalArgumentException | IOException e) {
             try {
-                System.out.println("Downloading " + file + Message.IMAGE_FORMAT.cm());
+                System.out.println("Downloading " + file + Paths.IMAGE_FORMAT.cm());
                 //read image from online source
-                URL serverUrl = new URL(Message.IMAGE_ONLINE_FOLDER.cm() + file + Message.IMAGE_FORMAT.cm());
+                URL serverUrl = new URL(Paths.IMAGE_ONLINE_FOLDER.cm() + file + Paths.IMAGE_FORMAT.cm());
                 sprite = ImageIO.read(serverUrl);
                 saveSprite(file, sprite);
             } catch (IllegalArgumentException | IOException ex) {
                 ClientWindow.getInstance().showError(new Exception(
                         Message.IMAGE_LOAD_ERROR.cm()
-                        + Message.IMAGE_FOLDER.cm()
+                        + Paths.IMAGE_FOLDER.cm()
                         + file
-                        + Message.IMAGE_FORMAT.cm()));
+                        + Paths.IMAGE_FORMAT.cm()));
             }
         }
         spriteSheet = sprite;
@@ -58,7 +59,7 @@ public class SpriteLoader {
     }
 
     public static boolean saveSprite(String file, BufferedImage image) {
-        String path = Message.IMAGE_SAVE_FOLDER.cm() + file + Message.IMAGE_FORMAT.cm();
+        String path = Paths.IMAGE_SAVE_FOLDER.cm() + file + Paths.IMAGE_FORMAT.cm();
         try {
             File outputfile = new File(path);
             outputfile.createNewFile();

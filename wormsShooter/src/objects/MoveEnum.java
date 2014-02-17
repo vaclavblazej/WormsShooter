@@ -4,7 +4,7 @@ package objects;
  *
  * @author Skarab
  */
-public enum MoveAction {
+public enum MoveEnum {
 
     RIGHT,
     LEFT,

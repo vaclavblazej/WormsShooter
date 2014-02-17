@@ -1,6 +1,5 @@
 package utilities;
 
-import client.ClientCommunication;
 import client.ClientWindow;
 import java.awt.BorderLayout;
 import java.awt.Color;
@@ -22,6 +21,7 @@ import javax.swing.JDialog;
 import javax.swing.JFrame;
 import javax.swing.JLabel;
 import javax.swing.JPanel;
+import utilities.properties.Message;
 
 /**
  *

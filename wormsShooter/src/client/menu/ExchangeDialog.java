@@ -9,7 +9,7 @@ import javax.swing.JSplitPane;
 import javax.swing.JTable;
 import objects.items.ComponentTableModel;
 import utilities.AbstractDialog;
-import utilities.Message;
+import utilities.properties.Message;
 
 /**
  * Dialog allowing inventory item exchange.

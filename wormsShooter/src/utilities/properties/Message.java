@@ -1,4 +1,4 @@
-package utilities;
+package utilities.properties;
 
 import java.io.IOException;
 import java.util.Properties;
@@ -20,19 +20,12 @@ public enum Message {
     ADDRESS,
     CLIENT_PORT,
     SERVER_PORT,
-    ADDRESS_INITIAL,
-    CLIENT_PORT_INITIAL,
-    SERVER_PORT_INITIAL,
     OK_BUTTON,
     CANCEL_BUTTON,
     ERROR,
     OK_MESSAGE,
     ADDRESS_ERROR_MESSAGE,
     SOCKET_ERROR_MESSAGE,
-    IMAGE_FORMAT,
-    IMAGE_FOLDER,
-    IMAGE_ONLINE_FOLDER,
-    IMAGE_SAVE_FOLDER,
     IMAGE_LOAD_ERROR,
     KEY_SETTINGS,
     LEFT,

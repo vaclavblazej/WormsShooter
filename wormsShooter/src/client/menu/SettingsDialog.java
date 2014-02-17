@@ -10,7 +10,7 @@ import utilities.AbstractDialog;
 import utilities.BindableButton;
 import utilities.ControlsEnum;
 import utilities.GBCBuilder;
-import utilities.Message;
+import utilities.properties.Message;
 
 /**
  *

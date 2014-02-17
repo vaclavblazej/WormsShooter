@@ -15,7 +15,7 @@ import server.ServerWindow;
 public class Main {
 
     private static boolean server = false;
-    public static final int RATIO = 20;
+    public static final double RATIO = 20;
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
@@ -32,6 +32,9 @@ public class Main {
 
     public static void startClient(String address, String socket) {
         ClientCommunication.getInstance().init(address, socket);
+    }
+
+    public static void startClientView() {
         ClientView.getInstance().init();
     }
 

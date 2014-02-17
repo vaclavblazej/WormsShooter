@@ -1,5 +1,6 @@
 package utilities;
 
+import client.ChatLog;
 import java.awt.Color;
 import java.awt.Dimension;
 import java.awt.Graphics;
@@ -13,6 +14,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.swing.JPanel;
 import javax.swing.Timer;
+import main.Main;
 import objects.Body;
 import objects.GraphicComponent;
 import objects.items.Crafting;
@@ -36,6 +38,7 @@ public abstract class AbstractView extends JPanel implements ActionListener {
     protected List<GraphicComponent> objects;
     protected Random random;
     protected Timer tickTimer;
+    protected ChatLog chatLog;
     private final int ratio;
     private final Dimension size;
     private boolean check;
@@ -55,10 +58,15 @@ public abstract class AbstractView extends JPanel implements ActionListener {
                     "Every " + AbstractView.class.getSimpleName()
                     + " should call super.reset() in its reset!"));
         }
+        chatLog = new ChatLog();
     }
 
     public CollisionState check(int x, int y) {
-        return material.getState(getPixel(x, y));
+        if (material != null) {
+            return material.getState(getPixel((int) (x / Main.RATIO), (int) (y / Main.RATIO)));
+        } else {
+            return Material.DEFAULT;
+        }
     }
 
     public Model getModel() {
@@ -80,6 +88,10 @@ public abstract class AbstractView extends JPanel implements ActionListener {
 
     public Crafting getRecipes() {
         return getModel().getFactory().getRecipes();
+    }
+    
+    public void logChat(String string){
+        chatLog.log(string);
     }
 
     public void init() {

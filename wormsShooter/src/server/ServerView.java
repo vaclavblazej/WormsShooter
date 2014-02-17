@@ -100,7 +100,13 @@ public class ServerView extends AbstractView {
     private void createReceipes() {
         ItemFactory fac = getItemFactory();
         Crafting rec = getRecipes();
-        Recipe r = new Recipe("Gun assemble");
+        Recipe r = new Recipe("Free gun");
+        r.addProduct(fac.getBlueprint(ItemEnum.HANDGUN), 1);
+        rec.addReceipe(r);
+        r = new Recipe("Free shovel");
+        r.addProduct(fac.getBlueprint(ItemEnum.SHOVEL), 1);
+        rec.addReceipe(r);
+        r = new Recipe("Gun assemble");
         r.addIngredient(fac.getBlueprint(ItemEnum.HANDGUN_BARREL), 1);
         r.addIngredient(fac.getBlueprint(ItemEnum.HANDGUN_HANDLE), 1);
         r.addIngredient(fac.getBlueprint(ItemEnum.HANDGUN_MECHANISM), 1);
@@ -128,9 +134,6 @@ public class ServerView extends AbstractView {
         r.addIngredient(fac.getBlueprint(ItemEnum.METAL), 1);
         r.addIngredient(fac.getBlueprint(ItemEnum.GUN_POWDER), 1);
         r.addProduct(fac.getBlueprint(ItemEnum.BULLET), 1);
-        rec.addReceipe(r);
-        r = new Recipe("Shovel");
-        r.addProduct(fac.getBlueprint(ItemEnum.SHOVEL), 1);
         rec.addReceipe(r);
     }
 

@@ -2,7 +2,7 @@ package server;
 
 import java.awt.BorderLayout;
 import javax.swing.JFrame;
-import utilities.Message;
+import utilities.properties.Message;
 
 /**
  *

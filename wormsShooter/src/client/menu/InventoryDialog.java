@@ -11,7 +11,7 @@ import javax.swing.table.TableCellRenderer;
 import objects.items.CraftingPanel;
 import objects.items.InventoryTableModel;
 import utilities.AbstractDialog;
-import utilities.Message;
+import utilities.properties.Message;
 
 /**
  *

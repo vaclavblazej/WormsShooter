@@ -53,11 +53,6 @@ public class Thing implements GraphicComponent {
     @Override
     public void drawRelative(Graphics2D g, AffineTransform trans) {
         tr = (AffineTransform) trans.clone();
-        try {
-            tr.invert();
-        } catch (NoninvertibleTransformException ex) {
-            Logger.getLogger(Bullet.class.getName()).log(Level.SEVERE, null, ex);
-        }
         tr.translate(position.x * Main.RATIO, position.y * Main.RATIO);
         g.setTransform(tr);
         if (cache == null) {

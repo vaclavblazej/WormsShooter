@@ -5,11 +5,8 @@ import java.awt.Dimension;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.NoninvertibleTransformException;
 import java.awt.geom.Point2D;
 import java.util.ArrayList;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import main.Main;
 import objects.items.InventoryTableModel;
 import objects.items.ItemBlueprint;
@@ -26,33 +23,42 @@ import utilities.spritesheets.SpriteLoader;
  */
 public class Body implements GraphicComponent {
 
-    private static final double JUMP = 0.6;
+    private static final double JUMP = 12;
+    private static final double GRAVITY = 1;
+    private static final int SPEED = 8;
     private static final int INITIAL_HEALTH = 100;
-    private Point.Double position;
+    private Point position;
     private Point.Double velocity;
-    private MoveAction movement;
-    private Dimension SIZE;
+    private MoveEnum movement;
+    private Dimension PHYSICS_SIZE;
+    private Dimension VIEW_SIZE;
     private Dimension REAL_SIZE;
-    private int ratio;
     private boolean jump;
-    private AbstractView map;
+    private AbstractView view;
     private InventoryTableModel inventory;
     private CollisionState state;
+    private CollisionState leftVerticalCollision;
+    private CollisionState rightVerticalCollision;
+    private CollisionState topSideCollision;
+    private CollisionState bottomSideCollision;
     private boolean alive;
     private int health;
     private Animation animation;
 
     public Body(Point2D.Double position, Point2D.Double velocity,
-            MoveAction movement, Dimension REAL_SIZE,
-            boolean jump, AbstractView map) {
-        this.position = position;
+            MoveEnum movement, Dimension REAL_SIZE,
+            boolean jump, AbstractView view) {
+        this.position = new Point((int) (position.x * Main.RATIO),
+                (int) (position.y * Main.RATIO));
         this.velocity = velocity;
         this.movement = movement;
         this.REAL_SIZE = REAL_SIZE;
-        this.ratio = map.getRatio();
-        this.SIZE = new Dimension(REAL_SIZE.width * ratio, REAL_SIZE.height * ratio);
+        int ratio = view.getRatio();
+        this.PHYSICS_SIZE = new Dimension((int) (REAL_SIZE.width * Main.RATIO),
+                (int) (REAL_SIZE.height * Main.RATIO));
+        this.VIEW_SIZE = new Dimension(REAL_SIZE.width * ratio, REAL_SIZE.height * ratio);
         this.jump = jump;
-        this.map = map;
+        this.view = view;
         this.inventory = new InventoryTableModel("Item", "Count");
         this.alive = false;
         SpriteLoader.loadSprite("Materials");
@@ -67,7 +73,7 @@ public class Body implements GraphicComponent {
 
     public Body(int x, int y, AbstractView map) {
         this(new Point.Double(x, y), new Point.Double(0, 0),
-                MoveAction.STOP, new Dimension(1, 2), false, map);
+                MoveEnum.STOP, new Dimension(1, 2), false, map);
     }
 
     public InventoryTableModel getInventory() {
@@ -79,12 +85,11 @@ public class Body implements GraphicComponent {
     }
 
     public void setPosition(Point point) {
-        this.position.x = point.x;
-        this.position.y = point.y;
+        this.position = point;
     }
 
     public Point getPosition() {
-        return new Point((int) position.x, (int) position.y);
+        return position;
     }
 
     public Point2D.Double getVelocity() {
@@ -96,58 +101,83 @@ public class Body implements GraphicComponent {
         this.velocity.y = point.y;
     }
 
-    public void fallBy(double y) {
-        int directionY = (velocity.y >= 0) ? 1 : -1;
-        double absoluteY = Math.abs(y);
-        int i;
-        if (absoluteY < 0.01) { // helps but does not fix completely
-            return;
-        }
-        for (i = 1; i <= absoluteY; i++) {
-            if (map.check((int) position.x, (int) position.y + REAL_SIZE.height + i * directionY)
-                    == CollisionState.SOLID) {
-                velocity.y = 0;
-                break;
-            }
-        }
-        position.y += i * directionY;
-    }
-
+    @Override
     public void tick() {
-        int directionY = (velocity.y >= 0) ? 1 : -1;
-        state = map.check((int) position.x, (int) position.y + REAL_SIZE.height - 1 + directionY);
-        switch (state) {
-            case GAS:
-                velocity.y += 0.1;
-                fallBy(velocity.y);
+        state = view.check(position.x, position.y + PHYSICS_SIZE.height);
+        if (state == CollisionState.GAS) {
+            velocity.y += GRAVITY;
+            velocity.y *= 0.98;
+        }
+        switch (movement) {
+            case RIGHT:
+                velocity.x = SPEED;
                 break;
-            case LIQUID:
-                velocity.y += 0.04;
-                fallBy(velocity.y);
-                jump = true;
+            case LEFT:
+                velocity.x = -SPEED;
                 break;
-            case SOLID:
-                velocity.y = 0;
-                jump = true;
+            case STOP:
+                velocity.x = 0;
                 break;
         }
-        if (map.check((int) position.x + 1, (int) position.y + 1) != CollisionState.SOLID) {
-            if (movement.equals(MoveAction.RIGHT)) {
-                position.x += 1;
-                animation.setDirection(1);
-                animation.update();
+        int x;
+        int slide = 0;
+        if (velocity.x >= 0) {
+            while (slide < velocity.x) {
+                x = position.x + slide + PHYSICS_SIZE.width;
+                topSideCollision = view.check(x, position.y);
+                bottomSideCollision = view.check(x, position.y + PHYSICS_SIZE.height - 1);
+                if (topSideCollision == CollisionState.SOLID
+                        || bottomSideCollision == CollisionState.SOLID) {
+                    velocity.x = 0;
+                    break;
+                }
+                slide++;
+            }
+        } else {
+            while (slide > velocity.x) {
+                x = position.x + slide - 1;
+                topSideCollision = view.check(x, position.y);
+                bottomSideCollision = view.check(x, position.y + PHYSICS_SIZE.height - 1);
+                if (topSideCollision == CollisionState.SOLID
+                        || bottomSideCollision == CollisionState.SOLID) {
+                    velocity.x = 0;
+                    break;
+                }
+                slide--;
             }
         }
-        if (map.check((int) position.x - 1, (int) position.y + 1) != CollisionState.SOLID) {
-            if (movement.equals(MoveAction.LEFT)) {
-                position.x -= 1;
-                animation.setDirection(-1);
-                animation.update();
+        position.x += slide;
+        int y;
+        int fall = 0;
+        if (velocity.y >= 0) {
+            while (fall < velocity.y) {
+                y = position.y + fall + PHYSICS_SIZE.height;
+                leftVerticalCollision = view.check(position.x, y);
+                rightVerticalCollision = view.check(position.x + PHYSICS_SIZE.width - 1, y);
+                if (leftVerticalCollision == CollisionState.SOLID
+                        || rightVerticalCollision == CollisionState.SOLID) {
+                    velocity.y = 0;
+                    break;
+                }
+                fall++;
+            }
+        } else {
+            while (fall > velocity.y) {
+                y = position.y + fall - 1;
+                leftVerticalCollision = view.check(position.x, y);
+                rightVerticalCollision = view.check(position.x + PHYSICS_SIZE.width - 1, y);
+                if (leftVerticalCollision == CollisionState.SOLID
+                        || rightVerticalCollision == CollisionState.SOLID) {
+                    velocity.y = 0;
+                    break;
+                }
+                fall--;
             }
         }
+        position.y += fall;
     }
 
-    public void control(MoveAction action) {
+    public void control(MoveEnum action) {
         switch (action) {
             case RIGHT:
             case LEFT:
@@ -155,6 +185,7 @@ public class Body implements GraphicComponent {
                 movement = action;
                 break;
             case JUMP:
+                jump = true;
                 if (jump == true) {
                     velocity.y -= JUMP;
                     jump = false;
@@ -190,26 +221,26 @@ public class Body implements GraphicComponent {
     @Override
     public void draw(Graphics2D g) {
         g.setColor(Color.RED);
-        g.fillRect((int) position.x, (int) position.y, SIZE.width, SIZE.height);
+        g.fillRect(
+                (int) (position.x / Main.RATIO),
+                (int) (position.y / Main.RATIO),
+                VIEW_SIZE.width, VIEW_SIZE.height);
     }
 
     @Override
     public void drawRelative(Graphics2D g, AffineTransform trans) {
         AffineTransform tr = (AffineTransform) trans.clone();
-        try {
-            tr.invert();
-        } catch (NoninvertibleTransformException ex) {
-            Logger.getLogger(Bullet.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        tr.translate(position.x * Main.RATIO, position.y * Main.RATIO);
-        //tr.rotate(rotation);
+        tr.translate(position.x, position.y);
+//        tr.rotate(rotation);
         g.setTransform(tr);
         g.setColor(Color.RED);
-        g.fillRect(0, 0, SIZE.width, SIZE.height);
-        g.drawImage(animation.getSprite(), null, null);
+        g.fillRect(0, 0, VIEW_SIZE.width, VIEW_SIZE.height);
+//        g.drawImage(animation.getSprite(), null, null);
     }
 
     public SerializableBody serialize() {
-        return new SerializableBody(position, velocity, movement, REAL_SIZE, jump);
+        return new SerializableBody(
+                new Point.Double(position.x / Main.RATIO, position.y / Main.RATIO),
+                velocity, movement, REAL_SIZE, jump);
     }
 }
