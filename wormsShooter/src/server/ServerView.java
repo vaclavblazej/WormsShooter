@@ -17,6 +17,7 @@ import objects.items.Recipe;
 import objects.items.itemActions.ItemActionMine;
 import objects.items.itemActions.ItemActionShoot;
 import utilities.AbstractView;
+import utilities.FileManager;
 import utilities.MapClass;
 import utilities.communication.Model;
 import utilities.materials.Material;
@@ -45,13 +46,14 @@ public class ServerView extends AbstractView {
         lights.add(new LightSource(100, 200, 5));
         lights.add(new LightSource(200, 200, 5));
         lights.add(new LightSource(300, 200, 5));
-        map = new MapClass(SpriteLoader.getSprite().getFrame(), this, lights);
+        ItemFactory factory = createItems();
+        material = new Material(factory);
+        map = new MapClass(SpriteLoader.getMaterialEnumMap(material), this, lights);
         model = new Model(map,
                 new HashMap<Integer, Body>(20),
                 objects,
-                createItems(),
+                factory,
                 ServerComService.getInstance().getCounter());
-        material = new Material(this);
         createReceipes();
 
         SwingUtilities.invokeLater(new Runnable() {
@@ -120,14 +122,14 @@ public class ServerView extends AbstractView {
     }
 
     public void save() {
-        SpriteLoader.saveSprite("Map", map.getImage());
+        FileManager.save("Map.bin", map.getData());
     }
 
     @Override
     public void paint(Graphics graphics) {
         super.paint(graphics);
         Graphics2D g = (Graphics2D) graphics;
-        g.drawImage(map.getImage(), 0, 0, getWidth(), getHeight(), null);
+        g.drawImage(map.getData(), 0, 0, getWidth(), getHeight(), null);
         for (Body b : bodies) {
             b.draw(g);
         }

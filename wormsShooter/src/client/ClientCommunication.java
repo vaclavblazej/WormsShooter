@@ -41,9 +41,9 @@ public class ClientCommunication {
     private int counter;
     private volatile boolean running;
 
-    public void init(String ip, String port) {
+    public void init(String ip, String port, String name) {
         System.out.println("Client: starting");
-        info = new PlayerInfo(0);
+        info = new PlayerInfo(0, "");
         listening = false;
         try {
             System.out.println("Client: connecting to: " + ip + " " + port);
@@ -51,7 +51,7 @@ public class ClientCommunication {
             os = new ObjectOutputStream(socket.getOutputStream());
             is = new ObjectInputStream(socket.getInputStream());
             System.out.println("Client: got server socket");
-            register();
+            register(name);
             startSocket(ip);
         } catch (UnknownHostException ex) {
             Logger.getLogger(ClientCommunication.class.getName()).log(Level.SEVERE, null, ex);
@@ -61,7 +61,7 @@ public class ClientCommunication {
     }
 
     public void reset() {
-        info = new PlayerInfo(0);
+        info = new PlayerInfo(0, "");
         running = false;
         listening = false;
         is = null;
@@ -74,7 +74,7 @@ public class ClientCommunication {
 
     public void bindBody(int id, Body body) {
         /*Map<Integer, Body> controls = ClientView.getInstance().getModel().getControls();
-        controls.put(id, body);*/
+         controls.put(id, body);*/
     }
 
     public void unbindBody(int id) {
@@ -100,10 +100,12 @@ public class ClientCommunication {
         return null;
     }
 
-    public void register() {
-        send(new ConnectAction(new RegistrationForm()));
+    public void register(String name) {
+        send(new ConnectAction(new RegistrationForm(name)));
         info = (PlayerInfo) receive();
-        System.out.println("Client: registration id received (id: " + info.getId() + ")");
+        System.out.println("Client: registration id received ("
+                + "id: " + info.getId()
+                + ", name: " + info.getName() + ")");
     }
 
     public void getModel() {

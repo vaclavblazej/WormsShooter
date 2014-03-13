@@ -9,6 +9,8 @@ import java.awt.Point;
 import java.awt.event.ActionEvent;
 import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.BorderFactory;
@@ -81,7 +83,7 @@ public abstract class AbstractDialog extends JDialog implements Validator {
                     AbstractDialog.this.cancelAction();
                     AbstractDialog.this.dispose();
                 } catch (Exception ex) {
-                    ClientWindow.getInstance().showError(ex);
+                    Logger.getLogger(AbstractDialog.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         }));
@@ -93,7 +95,7 @@ public abstract class AbstractDialog extends JDialog implements Validator {
                     AbstractDialog.this.okAction();
                     AbstractDialog.this.dispose();
                 } catch (Exception ex) {
-                    ClientWindow.getInstance().showError(ex);
+                    Logger.getLogger(AbstractDialog.class.getName()).log(Level.SEVERE, null, ex);
                 }
             }
         };

@@ -30,8 +30,8 @@ public class Main {
         ClientWindow.getInstance().launch();
     }
 
-    public static void startClient(String address, String socket) {
-        ClientCommunication.getInstance().init(address, socket);
+    public static void startClient(String address, String socket, String name) {
+        ClientCommunication.getInstance().init(address, socket, name);
     }
 
     public static void startClientView() {

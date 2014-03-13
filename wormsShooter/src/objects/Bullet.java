@@ -4,12 +4,10 @@ import java.awt.Color;
 import java.awt.Graphics2D;
 import java.awt.Point;
 import java.awt.geom.AffineTransform;
-import java.awt.geom.NoninvertibleTransformException;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 import main.Main;
 import utilities.AbstractView;
 import utilities.CollisionState;
+import utilities.materials.MaterialEnum;
 
 /**
  *
@@ -53,7 +51,7 @@ public class Bullet implements GraphicComponent {
     public void tick() {
         position.x += velocity * Math.cos(rotation);
         position.y += velocity * Math.sin(rotation);
-        Color pixel = view.getPixel((int) (position.x / Main.RATIO), (int) (position.y / Main.RATIO));
+        MaterialEnum pixel = view.getPixel((int) (position.x / Main.RATIO), (int) (position.y / Main.RATIO));
         CollisionState check = view.getMaterial().getState(pixel);
         if (check != CollisionState.GAS) {
             view.removeObject(this);

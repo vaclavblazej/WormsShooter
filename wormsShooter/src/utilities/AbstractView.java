@@ -75,7 +75,7 @@ public abstract class AbstractView extends JPanel implements ActionListener {
 
     public void setModel(Model model) {
         this.model = model;
-        material = new Material(this);
+        material = new Material(model.getFactory());
     }
 
     public Material getMaterial() {
@@ -117,10 +117,8 @@ public abstract class AbstractView extends JPanel implements ActionListener {
     }
 
     public MaterialEnum change(int x, int y, MaterialEnum mat) {
-        Graphics g = map.getGraphics();
-        MaterialEnum ret = material.getMaterial(map.getRGB(x, y));
-        g.setColor(getMaterial().getColor(mat));
-        g.drawLine(x, y, x, y);
+        MaterialEnum ret = map.getBlock(x, y);
+        map.setBlock(x,y,mat);
         return ret;
     }
 
@@ -146,15 +144,15 @@ public abstract class AbstractView extends JPanel implements ActionListener {
         objects.remove(comp);
     }
 
-    public Color getPixel(int x, int y) {
+    public MaterialEnum getPixel(int x, int y) {
         try {
-            return new Color(map.getRGB(x, y));
+            return map.getBlock(x, y);
         } catch (ArrayIndexOutOfBoundsException ex) {
-            return Color.BLACK;
+            return MaterialEnum.STONE;
         }
     }
 
-    public void imprint(Particle gr) {
+    /*public void imprint(Particle gr) {
         destroy(gr);
         Graphics g = map.getGraphics();
         g.setColor(gr.color);
@@ -190,13 +188,13 @@ public abstract class AbstractView extends JPanel implements ActionListener {
     }
 
     public void newSand(int x, int y) {
-        /*grains.add(new Sand(
+        grains.add(new Sand(
          x + random.nextInt(10) - 5,
          y + random.nextInt(20) - 10,
          (random.nextInt(RNG) - RNG / 2) / 10.,
          -(random.nextInt(RNG) - RNG / 2) / 10.,
-         Color.CYAN));*/
-    }
+         Color.CYAN));
+    }*/
 
     public int getRatio() {
         return ratio;

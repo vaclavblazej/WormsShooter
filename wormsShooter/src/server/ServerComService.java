@@ -21,12 +21,11 @@ import java.util.Map;
 import java.util.Random;
 import java.util.logging.Level;
 import java.util.logging.Logger;
-import utilities.properties.Message;
 import utilities.PlayerInfo;
-import utilities.communication.Packet;
 import utilities.communication.PerformablePacket;
 import utilities.communication.RegistrationForm;
 import utilities.communication.ServerInfo;
+import utilities.properties.Message;
 
 /**
  *
@@ -74,7 +73,11 @@ public final class ServerComService {
                         packet = (PerformablePacket) objectInput.readObject();
                         id = packet.getId();
                         if (ServerComService.getInstance().waitingRegistrations.containsKey(id)) {
-                            ServerComService.getInstance().completeRegistration(id, new PlayerComInfo(socket));
+                            ServerComService.getInstance().completeRegistration(
+                                    new PlayerComInfo(
+                                    id,
+                                    waitingRegistrations.get(id).getName(),
+                                    socket));
                         }
                     } catch (IOException ex) {
                         Logger.getLogger(ServerComService.class.getName()).log(Level.SEVERE, null, ex);
@@ -122,7 +125,7 @@ public final class ServerComService {
         int id = new Random().nextInt();
         System.out.println("Server: registering player: " + id);
         waitingRegistrations.put(id, form);
-        return new PlayerInfo(id);
+        return new PlayerInfo(id, form.getName());
     }
 
     public Collection<Integer> getPlayers() {
@@ -144,9 +147,10 @@ public final class ServerComService {
         return null;
     }
 
-    private void completeRegistration(int id, PlayerComInfo pci) {
+    private void completeRegistration(PlayerComInfo pci) {
+        int id = pci.getId();
         System.out.println("Server: client " + id + " registered");
-        broadcast(new ConnectServerAction(new RegistrationForm(), id));
+        broadcast(new ConnectServerAction((PlayerInfo) pci));
         players.put(id, pci);
         ServerCommunication.getInstance().bindBody(id, ServerView.getInstance().newBody());
         System.out.println(ServerView.getInstance().getModel().getControls());
@@ -160,12 +164,13 @@ public final class ServerComService {
         broadcast(new DisconnectServerAction(id));
     }
 
-    private class PlayerComInfo {
+    private class PlayerComInfo extends PlayerInfo {
 
         public Socket socket;
         public ObjectOutputStream objectOutput;
 
-        private PlayerComInfo(Socket socket) throws IOException {
+        private PlayerComInfo(int id, String name, Socket socket) throws IOException {
+            super(id, name);
             this.socket = socket;
             OutputStream os = socket.getOutputStream();
             objectOutput = new ObjectOutputStream(os);

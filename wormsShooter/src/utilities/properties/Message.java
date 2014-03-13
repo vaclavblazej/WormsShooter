@@ -20,6 +20,7 @@ public enum Message {
     ADDRESS,
     CLIENT_PORT,
     SERVER_PORT,
+    NAME,
     OK_BUTTON,
     CANCEL_BUTTON,
     ERROR,

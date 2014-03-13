@@ -11,6 +11,8 @@ import java.io.IOException;
 import java.net.URL;
 import javax.imageio.ImageIO;
 import main.Main;
+import utilities.materials.Material;
+import utilities.materials.MaterialEnum;
 import utilities.properties.Message;
 import utilities.properties.Paths;
 
@@ -98,6 +100,19 @@ public class SpriteLoader {
             return null;
         }
         return spriteSheet.getSubimage(x + xGrid * tileSizeX, y + yGrid * tileSizeY, tileSizeX, tileSizeY);
+    }
+
+    public static MaterialEnum[][] getMaterialEnumMap(Material mat) {
+        BufferedImage rawSprite = getRawSprite();
+        int width = rawSprite.getWidth(), height = rawSprite.getHeight();
+        MaterialEnum[][] map = new MaterialEnum[width][height];
+        for (int i = 0; i < width; i++) {
+            System.out.println(i);
+            for (int j = 0; j < height; j++) {
+                map[i][j] = mat.getByColor(rawSprite.getRGB(i, j));
+            }
+        }
+        return map;
     }
 
     private SpriteLoader() {

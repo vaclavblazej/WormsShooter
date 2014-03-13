@@ -28,6 +28,7 @@ import utilities.Controls;
 import utilities.ControlsEnum;
 import utilities.MapClass;
 import utilities.communication.Model;
+import utilities.materials.MaterialEnum;
 import utilities.materials.MaterialVisuals;
 
 /**
@@ -62,7 +63,7 @@ public class ClientView extends AbstractView implements
 
     private ClientView() {
         super(800, 600, SCALE);
-        map = new MapClass(new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB), this);
+        map = new MapClass(new MaterialEnum[1][0], this);
         REAL_VIEW_SIZE = new Dimension(800, 600);
         realView = new BufferedImage(
                 REAL_VIEW_SIZE.width + (int) Main.RATIO,
