@@ -1,16 +1,13 @@
-package communication.client;
+package client.actions.impl;
 
-import client.ClientView;
-import objects.Body;
-import utilities.AbstractView;
-import utilities.communication.PerformablePacket;
+import client.actions.ActionClient;
 import utilities.communication.RegistrationForm;
 
 /**
  *
  * @author Skarab
  */
-public class ConnectAction extends PerformablePacket {
+public class ConnectAction extends ActionClient {
 
     private RegistrationForm form;
 
@@ -23,8 +20,8 @@ public class ConnectAction extends PerformablePacket {
     }
 
     @Override
-    public void perform(AbstractView view) {
+    public void perform() {
         /*Body b = ClientView.getInstance().newBody();
-        view.getModel().getControls().put(getId(), b);*/
+         view.getModel().getControls().put(getId(), b);*/
     }
 }

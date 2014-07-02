@@ -1,13 +1,13 @@
-package communication.server;
+package server.actions.impl;
 
+import server.actions.ActionServer;
 import utilities.AbstractView;
-import utilities.communication.PerformablePacket;
 
 /**
  *
  * @author Skarab
  */
-public class SendChatServerAction extends PerformablePacket {
+public class SendChatServerAction extends ActionServer {
 
     private String str;
 
@@ -16,7 +16,7 @@ public class SendChatServerAction extends PerformablePacket {
         this.str = str;
     }
 
-    public void perform(AbstractView view) {
+    public void perform() {
         view.logChat(id + " " + str);
     }
 }

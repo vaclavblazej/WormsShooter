@@ -1,27 +1,22 @@
 package client;
 
-import client.menu.GameWindowItemBar;
-import communication.client.ConfirmAction;
-import communication.client.ConnectAction;
-import communication.client.GetModelAction;
+import client.actions.ActionClient;
+import client.actions.impl.GetModelAction;
+import communication.backend.client.SCommunicationClient;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.InetAddress;
-import java.net.Socket;
-import java.net.UnknownHostException;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import main.Main;
 import objects.Body;
+import server.ServerView;
+import server.actions.ActionServer;
 import utilities.PlayerInfo;
-import utilities.communication.PerformablePacket;
-import utilities.communication.RegistrationForm;
 
 /**
  *
- * @author plach_000
+ * @author Štěpán Plachý
+ * @author Václav Blažej
  */
 public class ClientCommunication {
 
@@ -33,48 +28,38 @@ public class ClientCommunication {
         }
         return instance;
     }
-    private ObjectOutputStream os;
-    private ObjectInputStream is;
     private PlayerInfo info;
+    private SCommunicationClient connection;
     private boolean listening;
-    private Socket inputSocket;
-    private int counter;
     private volatile boolean running;
 
     public void init(String ip, String port) {
         System.out.println("Client: starting");
+        ActionServer.setView(ClientView.getInstance());
         info = new PlayerInfo(0);
         listening = false;
+
+        connection = new SCommunicationClient(new GetModelAction());
         try {
-            System.out.println("Client: connecting to: " + ip + " " + port);
-            Socket socket = new Socket(InetAddress.getByName(ip), Integer.parseInt(port));
-            os = new ObjectOutputStream(socket.getOutputStream());
-            is = new ObjectInputStream(socket.getInputStream());
-            System.out.println("Client: got server socket");
-            register();
+            connection.connect(ip, Integer.parseInt(port));
+            Main.startClientView();
             startSocket(ip);
-        } catch (UnknownHostException ex) {
-            Logger.getLogger(ClientCommunication.class.getName()).log(Level.SEVERE, null, ex);
         } catch (IOException ex) {
             Logger.getLogger(ClientCommunication.class.getName()).log(Level.SEVERE, null, ex);
         }
+        getModel();
     }
 
     public void reset() {
         info = new PlayerInfo(0);
         running = false;
         listening = false;
-        is = null;
-        os = null;
-    }
-
-    public void setCounter(int counter) {
-        this.counter = counter;
+//        connection.reset();
     }
 
     public void bindBody(int id, Body body) {
-        /*Map<Integer, Body> controls = ClientView.getInstance().getModel().getControls();
-        controls.put(id, body);*/
+        Map<Integer, Body> controls = ClientView.getInstance().getModel().getControls();
+        controls.put(id, body);
     }
 
     public void unbindBody(int id) {
@@ -83,89 +68,27 @@ public class ClientCommunication {
         controls.remove(id);
     }
 
-    public void send(PerformablePacket object) {
+    public void send(ActionClient packet) {
+        packet.setId(info.getId());
         try {
-            os.writeObject(object.setId(info.getId()));
+            connection.send(packet);
         } catch (IOException ex) {
             Logger.getLogger(ClientCommunication.class.getName()).log(Level.SEVERE, null, ex);
         }
     }
 
-    public Object receive() {
-        try {
-            return is.readObject();
-        } catch (IOException | ClassNotFoundException ex) {
-            Logger.getLogger(ClientCommunication.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        return null;
-    }
-
-    public void register() {
-        send(new ConnectAction(new RegistrationForm()));
-        info = (PlayerInfo) receive();
-        System.out.println("Client: registration id received (id: " + info.getId() + ")");
-    }
-
     public void getModel() {
         System.out.println("Client: getting model");
         send(new GetModelAction());
-        //((PerformablePacket) receive()).perform(ClientView.getInstance());
-        //Model model = ((SerializableModel) receive()).deserialize(ClientView.getInstance());
     }
 
     public PlayerInfo getInfo() {
         return info;
     }
 
-    private void startSocket(String ip) {
+    public void startSocket(String ip) throws IOException {
         System.out.println("Client: starting socket");
-        try {
-            inputSocket = new Socket(InetAddress.getByName(ip), 4243);
-            ObjectOutputStream outs = new ObjectOutputStream(inputSocket.getOutputStream());
-            outs.writeObject(new ConfirmAction(info.getId()));
-        } catch (Exception ex) {
-            Logger.getLogger(ClientCommunication.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        if (inputSocket != null && listening == false) {
-            listening = true;
-            new Thread(new Runnable() {
-                @Override
-                public void run() {
-                    ObjectInputStream objectInput = null;
-                    PerformablePacket packet;
-                    try {
-                        objectInput = new ObjectInputStream(inputSocket.getInputStream());
-                    } catch (IOException ex) {
-                        Logger.getLogger(ClientCommunication.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    try {
-                        PerformablePacket a = (PerformablePacket) objectInput.readObject();
-                        Main.startClientView();
-                    } catch (IOException | ClassNotFoundException ex) {
-                        Logger.getLogger(ClientCommunication.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                    getModel();
-                    running = true;
-                    while (running) {
-                        try {
-                            packet = (PerformablePacket) objectInput.readObject();
-                            int count = packet.getCount();
-                            if (count - counter <= 1) {
-                                System.out.println("Client: packet " + packet);
-                                packet.perform(ClientView.getInstance());
-                            } else {
-                                getModel();
-                            }
-                            counter = count;
-                        } catch (ClassNotFoundException | IOException ex) {
-                            Logger.getLogger(ClientCommunication.class.getName()).log(Level.SEVERE, null, ex);
-                        }
-                    }
-                    GameWindowItemBar.getInstance().clearBar();
-                    System.out.println("Client: terminating socket");
-                    listening = false;
-                }
-            }).start();
-        }
+
+        connection.start();
     }
 }

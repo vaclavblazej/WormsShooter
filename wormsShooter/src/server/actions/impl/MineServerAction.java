@@ -1,15 +1,15 @@
-package communication.server;
+package server.actions.impl;
 
 import java.awt.Point;
+import server.actions.ActionServer;
 import utilities.AbstractView;
-import utilities.communication.PerformablePacket;
 import utilities.materials.MaterialEnum;
 
 /**
  *
  * @author Skarab
  */
-public class MineServerAction extends PerformablePacket {
+public class MineServerAction extends ActionServer {
     private Point p;
     private MaterialEnum material;
 
@@ -19,7 +19,7 @@ public class MineServerAction extends PerformablePacket {
     }
 
     @Override
-    public void perform(AbstractView view) {
+    public void perform() {
         view.change(p.x, p.y, material);
         view.getModel().getMap().recalculateShadows(p);
     }

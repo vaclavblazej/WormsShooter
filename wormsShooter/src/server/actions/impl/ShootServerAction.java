@@ -1,15 +1,15 @@
-package communication.server;
+package server.actions.impl;
 
 import java.awt.Point;
 import objects.Bullet;
+import server.actions.ActionServer;
 import utilities.AbstractView;
-import utilities.communication.PerformablePacket;
 
 /**
  *
  * @author Skarab
  */
-public class ShootServerAction extends PerformablePacket {
+public class ShootServerAction extends ActionServer {
 
     private Point p;
     private double d;
@@ -20,7 +20,7 @@ public class ShootServerAction extends PerformablePacket {
     }
 
     @Override
-    public void perform(AbstractView view) {
+    public void perform() {
         view.addObject(new Bullet(p, d, view));
     }
 }

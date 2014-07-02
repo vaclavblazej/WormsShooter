@@ -2,7 +2,7 @@ package client.menu;
 
 import client.ClientCommunication;
 import client.ClientWindow;
-import communication.client.DisconnectAction;
+import client.actions.impl.DisconnectAction;
 import java.awt.event.ActionEvent;
 import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;

@@ -6,6 +6,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.LinkedList;
 import objects.GraphicComponent;
+import objects.LightSource;
 import utilities.communication.SerializableMapClass;
 import utilities.materials.Material;
 
@@ -21,18 +22,32 @@ public class MapClass {
     private AbstractView view;
     private int width;
     private int height;
+    private ArrayList<LightSource> lights;
 
     public MapClass(BufferedImage map, AbstractView view, ArrayList<GraphicComponent> actObjects) {
         this(map, view, new int[map.getWidth()][map.getHeight()], actObjects);
     }
 
-    private MapClass(BufferedImage map, AbstractView view, int[][] shadows, ArrayList<GraphicComponent> actObjs) {
+    private MapClass(BufferedImage map, AbstractView view, int[][] shadows, ArrayList<GraphicComponent> actObjects) {
+        this(map, view, null, shadows, actObjects);
+    }
+
+    public MapClass(BufferedImage map, AbstractView view, ArrayList<LightSource> lights, ArrayList<GraphicComponent> actObjects) {
+        this(map, view, lights, new int[map.getWidth()][map.getHeight()], actObjects);
+    }
+
+    private MapClass(BufferedImage map, AbstractView view, ArrayList<LightSource> lights, int[][] shadows, ArrayList<GraphicComponent> actObjects) {
         this.map = map;
         this.view = view;
         width = map.getWidth();
         height = map.getHeight();
         this.shadows = shadows;
-        this.activeObjects = actObjs;
+        this.activeObjects = actObjects;
+        if (lights != null) {
+            this.lights = lights;
+        } else {
+            this.lights = new ArrayList<>(10);
+        }
     }
 
     public int getWidth() {
@@ -59,24 +74,28 @@ public class MapClass {
         return activeObjects;
     }
 
-    public MapClass getSubmap(int x, int y, int width, int height)
-            throws ArrayIndexOutOfBoundsException {
+    public MapClass getSubmap(int x, int y, int width, int height) throws ArrayIndexOutOfBoundsException {
         int[][] ns = new int[width][height];
         for (int j = 0; j < height; j++) {
             for (int i = 0; i < width; i++) {
                 ns[i][j] = shadows[x + i][y + j];
             }
         }
-        return new MapClass(map.getSubimage(x, y, width, height), view, ns, activeObjects);
+        return new MapClass(map.getSubimage(x, y, width, height), view, lights, ns, activeObjects);
     }
 
-    public void calculateShadows() {
+    public void addLightSource(LightSource source) {
+        lights.add(source);
+        System.out.println("add light source");
+    }
+
+    public void calculateShadows(Material material) {
         for (int i = 0; i < width; i++) {
             for (int j = 0; j < height; j++) {
                 shadows[i][j] = 0xFF;
             }
         }
-        recalculateShadows();
+        recalculateShadows(material);
     }
 
     public void recalculateShadows(Point p) {
@@ -88,11 +107,23 @@ public class MapClass {
         recalculateShadows(samples);
     }
 
-    public void recalculateShadows() {
-        Point sampleLight = new Point(100, 200);
+    public void recalculateShadows(Material material) {
         LinkedList<Point> samples = new LinkedList<>();
-        samples.add(sampleLight);
-        shadows[sampleLight.x][sampleLight.y] = 0;
+        /*for (int i = 0; i < width; i++) {
+         for (int j = 0; j < height; j++) {
+         if (material.getMaterial(map.getRGB(i, j)).equals(MaterialEnum.AIR)) {
+         Point sampleLight = new Point(i, j);
+         samples.add(sampleLight);
+         shadows[sampleLight.x][sampleLight.y] = 0;
+         }
+         }
+         }*/
+        System.out.println("recalculation woth " + lights.size() + " sources");
+        for (LightSource source : lights) {
+            Point sampleLight = source.getPosition();
+            samples.add(sampleLight);
+            shadows[sampleLight.x][sampleLight.y] = 0;
+        }
         recalculateShadows(samples);
     }
 
@@ -137,6 +168,6 @@ public class MapClass {
     }
 
     public SerializableMapClass serialize() {
-        return new SerializableMapClass(map, activeObjects);
+        return new SerializableMapClass(map, lights, activeObjects);
     }
 }

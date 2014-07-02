@@ -1,4 +1,4 @@
-package communication.server;
+package server.actions.impl;
 
 import client.ClientCommunication;
 import client.menu.GameWindowItemBar;
@@ -6,14 +6,13 @@ import java.util.Map;
 import objects.Body;
 import objects.items.InventoryTableModel;
 import objects.items.Recipe;
-import utilities.AbstractView;
-import utilities.communication.PerformablePacket;
+import server.actions.ActionServer;
 
 /**
  *
  * @author Skarab
  */
-public class CraftServerAction extends PerformablePacket {
+public class CraftServerAction extends ActionServer {
 
     private int recipeId;
 
@@ -23,7 +22,7 @@ public class CraftServerAction extends PerformablePacket {
     }
 
     @Override
-    public void perform(AbstractView view) {
+    public void perform() {
         Map<Integer, Body> controls = view.getModel().getControls();
         InventoryTableModel inventory = controls.get(id).getInventory();
         Recipe recipe = view.getModel().getFactory().getRecipes().getReceipe(recipeId);

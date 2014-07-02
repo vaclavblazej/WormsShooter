@@ -1,11 +1,9 @@
 package utilities.communication;
 
-import java.io.Serializable;
-
 /**
  *
  * @author plach_000
+ * @author Skarab
  */
-public class RegistrationForm implements Serializable {
-
+public class RegistrationForm {
 }

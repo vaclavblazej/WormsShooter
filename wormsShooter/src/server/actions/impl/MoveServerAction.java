@@ -1,16 +1,16 @@
-package communication.server;
+package server.actions.impl;
 
 import java.awt.Point;
 import objects.Body;
 import objects.MoveEnum;
+import server.actions.ActionServer;
 import utilities.AbstractView;
-import utilities.communication.PerformablePacket;
 
 /**
  *
  * @author Skarab
  */
-public class MoveServerAction extends PerformablePacket {
+public class MoveServerAction extends ActionServer {
 
     private int positionX;
     private int positionY;
@@ -28,7 +28,7 @@ public class MoveServerAction extends PerformablePacket {
     }
 
     @Override
-    public void perform(AbstractView view) {
+    public void perform() {
         Body body = view.getModel().getControls().get(id);
         if (body != null) {
             body.setPosition(new Point(positionX, positionY));

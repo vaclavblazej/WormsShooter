@@ -1,19 +1,17 @@
-package communication.client;
+package client.actions.impl;
 
-import communication.server.ShootServerAction;
+import client.actions.ActionClient;
 import java.awt.Point;
-import main.Main;
 import objects.Body;
 import objects.Bullet;
-import server.ServerComService;
-import utilities.AbstractView;
-import utilities.communication.PerformablePacket;
+import server.ServerCommunication;
+import server.actions.impl.ShootServerAction;
 
 /**
  *
  * @author Skarab
  */
-public class ShootAction extends PerformablePacket {
+public class ShootAction extends ActionClient {
 
     private Point p;
 
@@ -22,11 +20,11 @@ public class ShootAction extends PerformablePacket {
     }
 
     @Override
-    public void perform(AbstractView view) {
+    public void perform() {
         Body body = view.getModel().getControls().get(id);
         Point pos = (Point) body.getPosition().clone();
         double rad = Math.atan2(p.y - pos.y, p.x - pos.x);
         view.addObject(new Bullet(pos, rad, view));
-        ServerComService.getInstance().broadcast(new ShootServerAction(pos, rad));
+        ServerCommunication.getInstance().broadcast(new ShootServerAction(pos, rad));
     }
 }

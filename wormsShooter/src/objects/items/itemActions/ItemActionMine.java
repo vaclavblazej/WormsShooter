@@ -1,7 +1,7 @@
 package objects.items.itemActions;
 
 import client.ClientCommunication;
-import communication.client.MineAction;
+import client.actions.impl.MineAction;
 import java.awt.Point;
 
 /**

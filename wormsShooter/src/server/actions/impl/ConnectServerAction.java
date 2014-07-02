@@ -1,16 +1,15 @@
-package communication.server;
+package server.actions.impl;
 
 import client.ClientView;
 import objects.Body;
-import utilities.AbstractView;
-import utilities.communication.PerformablePacket;
+import server.actions.ActionServer;
 import utilities.communication.RegistrationForm;
 
 /**
  *
  * @author Skarab
  */
-public class ConnectServerAction extends PerformablePacket {
+public class ConnectServerAction extends ActionServer {
 
     private RegistrationForm form;
 
@@ -19,7 +18,7 @@ public class ConnectServerAction extends PerformablePacket {
         this.form = form;
     }
 
-    public void perform(AbstractView view) {
+    public void perform() {
         Body b = ClientView.getInstance().newBody();
         view.getModel().getControls().put(getId(), b);
         System.out.println("client connect");

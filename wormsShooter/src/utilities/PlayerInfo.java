@@ -1,17 +1,18 @@
 package utilities;
 
-import java.io.Serializable;
-
 /**
+ * Information about player.
  *
  * @author plach_000
  */
-public class PlayerInfo implements Serializable {
+public class PlayerInfo  {
 
+    private final String name;
     private final int id;
 
     public PlayerInfo(int id) {
         this.id = id;
+        name = "";
     }
 
     public int getId() {

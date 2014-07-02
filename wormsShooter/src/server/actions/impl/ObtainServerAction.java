@@ -1,17 +1,17 @@
-package communication.server;
+package server.actions.impl;
 
 import client.ClientCommunication;
 import client.menu.GameWindowItemBar;
 import objects.items.InventoryTableModel;
+import server.actions.ActionServer;
 import utilities.AbstractView;
-import utilities.communication.PerformablePacket;
 import utilities.materials.MaterialEnum;
 
 /**
  *
  * @author Skarab
  */
-public class ObtainServerAction extends PerformablePacket {
+public class ObtainServerAction extends ActionServer {
 
     private MaterialEnum en;
 
@@ -21,7 +21,7 @@ public class ObtainServerAction extends PerformablePacket {
     }
 
     @Override
-    public void perform(AbstractView view) {
+    public void perform() {
         InventoryTableModel inv = view.getModel().getControls().get(id).getInventory();
         inv.add(view.getMaterial().getComponents(en));
         if (ClientCommunication.getInstance().getInfo().getId() == id) {

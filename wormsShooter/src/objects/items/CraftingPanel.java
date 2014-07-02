@@ -2,7 +2,7 @@ package objects.items;
 
 import client.ClientCommunication;
 import client.ClientView;
-import communication.client.CraftAction;
+import client.actions.impl.CraftAction;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;
@@ -79,9 +79,11 @@ public class CraftingPanel extends JPanel implements ListSelectionListener {
         //int minIndex = lsm.getMinSelectionIndex();
         lastIndex = lsm.getMaxSelectionIndex();
         Recipe recipe = recepiesModel.getReceipe(lastIndex);
-        ingredientsModel = recipe.getIngredients();
-        ingredients.setModel(ingredientsModel);
-        productsModel = recipe.getProducts();
-        products.setModel(productsModel);
+        if (recipe != null) {
+            ingredientsModel = recipe.getIngredients();
+            ingredients.setModel(ingredientsModel);
+            productsModel = recipe.getProducts();
+            products.setModel(productsModel);
+        }
     }
 }

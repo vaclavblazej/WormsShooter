@@ -25,6 +25,7 @@ import utilities.materials.Material;
 import utilities.materials.MaterialEnum;
 
 /**
+ * Represents general view on the scene.
  *
  * @author Skarab
  */
@@ -43,6 +44,13 @@ public abstract class AbstractView extends JPanel implements ActionListener {
     private final Dimension size;
     private boolean check;
 
+    /**
+     * Creates view and calls reset method which is obligatory to implement.
+     *
+     * @param width
+     * @param height
+     * @param ratio
+     */
     public AbstractView(int width, int height, int ratio) {
         this.ratio = ratio;
         this.size = new Dimension(width, height);
@@ -89,8 +97,8 @@ public abstract class AbstractView extends JPanel implements ActionListener {
     public Crafting getRecipes() {
         return getModel().getFactory().getRecipes();
     }
-    
-    public void logChat(String string){
+
+    public void logChat(String string) {
         chatLog.log(string);
     }
 

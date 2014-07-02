@@ -1,19 +1,18 @@
-package communication.client;
+package client.actions.impl;
 
-import communication.server.CraftServerAction;
+import client.actions.ActionClient;
 import java.util.Map;
 import objects.Body;
 import objects.items.ComponentTableModel;
 import objects.items.Recipe;
-import server.ServerComService;
-import utilities.AbstractView;
-import utilities.communication.PerformablePacket;
+import server.ServerCommunication;
+import server.actions.impl.CraftServerAction;
 
 /**
  *
  * @author Skarab
  */
-public class CraftAction extends PerformablePacket {
+public class CraftAction extends ActionClient {
 
     private int recipeId;
 
@@ -22,13 +21,13 @@ public class CraftAction extends PerformablePacket {
     }
 
     @Override
-    public void perform(AbstractView view) {
+    public void perform() {
         Map<Integer, Body> controls = view.getModel().getControls();
         ComponentTableModel inventory = controls.get(id).getInventory();
         Recipe recipe = view.getModel().getFactory().getRecipes().getReceipe(recipeId);
         inventory.remove(recipe.getIngredients());
         inventory.add(recipe.getProducts());
-        ServerComService.getInstance().broadcast(new CraftServerAction(recipeId, id));
+        ServerCommunication.getInstance().broadcast(new CraftServerAction(recipeId, id));
         System.out.println("server craft " + id + " " + recipeId);
     }
 }

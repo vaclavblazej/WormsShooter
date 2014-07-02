@@ -9,6 +9,7 @@ import javax.swing.SwingUtilities;
 import objects.Body;
 import objects.GraphicComponent;
 import objects.Thing;
+import objects.LightSource;
 import objects.items.Crafting;
 import objects.items.ItemBlueprint;
 import objects.items.ItemCategory;
@@ -48,14 +49,16 @@ public class ServerView extends AbstractView {
         if (loadedMap != null) {
             map = loadedMap;
         } else {
-            map = new MapClass(SpriteLoader.getSprite().getFrame(), this, createObjects());
+            ArrayList<LightSource> lights = new ArrayList<>(10);
+            lights.add(new LightSource(100, 200, 5));
+            lights.add(new LightSource(200, 200, 5));
+            lights.add(new LightSource(300, 200, 5));
+            map = new MapClass(SpriteLoader.getSprite().getFrame(), this, lights, createObjects());
         }
-
         model = new Model(map,
                 new HashMap<Integer, Body>(20),
                 objects,
-                createItems(),
-                ServerComService.getInstance().getCounter());
+                createItems());
         material = new Material(this);
         createReceipes();
 

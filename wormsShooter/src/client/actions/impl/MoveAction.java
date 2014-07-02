@@ -1,18 +1,17 @@
-package communication.client;
+package client.actions.impl;
 
-import communication.server.MoveServerAction;
+import client.actions.ActionClient;
 import java.awt.Point;
 import objects.Body;
 import objects.MoveEnum;
-import server.ServerComService;
-import utilities.AbstractView;
-import utilities.communication.PerformablePacket;
+import server.ServerCommunication;
+import server.actions.impl.MoveServerAction;
 
 /**
  *
  * @author Skarab
  */
-public class MoveAction extends PerformablePacket {
+public class MoveAction extends ActionClient {
 
     private MoveEnum action;
 
@@ -21,12 +20,12 @@ public class MoveAction extends PerformablePacket {
     }
 
     @Override
-    public void perform(AbstractView view) {
+    public void perform() {
         Body body = view.getModel().getControls().get(id);
         if (body != null) {
             Point pos = body.getPosition();
             Point.Double vel = body.getVelocity();
-            ServerComService.getInstance().broadcast(new MoveServerAction(id, pos, vel, action));
+            ServerCommunication.getInstance().broadcast(new MoveServerAction(id, pos, vel, action));
             body.control(action);
         }
     }

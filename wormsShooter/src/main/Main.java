@@ -3,6 +3,10 @@ package main;
 import client.ClientCommunication;
 import client.ClientView;
 import client.ClientWindow;
+import communication.backend.utilities.SLoggerService;
+import java.io.IOException;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 import javax.swing.SwingUtilities;
 import server.ServerCommunication;
 import server.ServerView;
@@ -10,11 +14,11 @@ import server.ServerWindow;
 
 /**
  *
- * @author Skarab
+ * @author Václav Blažej
  */
 public class Main {
 
-    private static boolean server = false;
+    private static boolean serverOnline = false;
     public static final double RATIO = 20;
 
     public static void main(String[] args) {
@@ -39,15 +43,20 @@ public class Main {
     }
 
     public static void startServer(int port) {
-        if (server == false) {
-            ServerCommunication.getInstance().init(port);
+        if (serverOnline == false) {
             new ServerWindow();
-            server = true;
+            SLoggerService.setLogger(new SLoggerService.SLoggerPrint());
+            try {
+                new ServerCommunication(port);
+            } catch (IOException ex) {
+                Logger.getLogger(ServerCommunication.class.getName()).log(Level.SEVERE, null, ex);
+            }
+            serverOnline = true;
         }
     }
 
     public static void exit() {
-        if (server) {
+        if (serverOnline) {
             ServerView.getInstance().save();
         }
         System.exit(0);

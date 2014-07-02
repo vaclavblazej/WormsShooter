@@ -1,7 +1,7 @@
 package client;
 
 import client.menu.Settings;
-import communication.client.MoveAction;
+import client.actions.impl.MoveAction;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -84,7 +84,7 @@ public class ClientView extends AbstractView implements
     public void setModel(Model model) {
         super.setModel(model);
         map = model.getMap();
-        map.calculateShadows();
+        map.calculateShadows(material);
         bodies = new ArrayList<>(model.getControls().values());
     }
 

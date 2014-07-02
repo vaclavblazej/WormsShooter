@@ -60,7 +60,7 @@ public abstract class AbstractDialog extends JDialog implements Validator {
         });
     }
 
-    public final JComponent createErrorPanel() {
+    private JComponent createErrorPanel() {
         Box errPanel = new Box(BoxLayout.X_AXIS);
         errPanel.setPreferredSize(new Dimension(300, 30));
         int i = 5;
@@ -71,7 +71,7 @@ public abstract class AbstractDialog extends JDialog implements Validator {
         return errPanel;
     }
 
-    public final JComponent createButtonPanel() {
+    private JComponent createButtonPanel() {
         Box btnPanel = new Box(BoxLayout.X_AXIS);
         int i = 5;
         btnPanel.setBorder(BorderFactory.createEmptyBorder(i, i, i, i));
@@ -104,6 +104,12 @@ public abstract class AbstractDialog extends JDialog implements Validator {
         return btnPanel;
     }
 
+    /**
+     * Prints message as error label. Functions only when errorPanel flag was
+     * enable (it is by default).
+     *
+     * @param message printed message
+     */
     public void error(String message) {
         if (errorLabel != null) {
             errorLabel.setForeground(Color.RED);
@@ -111,6 +117,9 @@ public abstract class AbstractDialog extends JDialog implements Validator {
         }
     }
 
+    /**
+     * Flushes error message and enables ok button to be hit.
+     */
     public void clearError() {
         if (errorLabel != null) {
             errorLabel.setForeground(Color.BLUE);
@@ -119,15 +128,33 @@ public abstract class AbstractDialog extends JDialog implements Validator {
         okAction.setEnabled(true);
     }
 
+    /**
+     * Blocks ok button to be hit.
+     */
     public void blockOk() {
         okAction.setEnabled(false);
     }
 
+    /**
+     * Is called when ok button is hit.
+     *
+     * @throws Exception
+     */
     public abstract void okAction() throws Exception;
 
+    /**
+     * Is called when cancel button is hit. It does not do anything by default.
+     *
+     * @throws Exception
+     */
     public void cancelAction() throws Exception {
     }
 
+    /**
+     * Returns panel on which dialog components should be put.
+     *
+     * @return context panel
+     */
     public JPanel getContent() {
         return content;
     }

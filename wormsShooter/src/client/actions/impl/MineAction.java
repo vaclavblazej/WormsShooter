@@ -1,20 +1,19 @@
-package communication.client;
+package client.actions.impl;
 
-import communication.server.MineServerAction;
-import communication.server.ObtainServerAction;
+import client.actions.ActionClient;
+import server.actions.impl.MineServerAction;
+import server.actions.impl.ObtainServerAction;
 import java.awt.Point;
 import main.Main;
 import objects.Body;
-import server.ServerComService;
-import utilities.AbstractView;
-import utilities.communication.PerformablePacket;
+import server.ServerCommunication;
 import utilities.materials.MaterialEnum;
 
 /**
  *
  * @author Skarab
  */
-public class MineAction extends PerformablePacket {
+public class MineAction extends ActionClient {
 
     private Point point;
 
@@ -23,7 +22,7 @@ public class MineAction extends PerformablePacket {
     }
 
     @Override
-    public void perform(AbstractView view) {
+    public void perform() {
         int x = (int) (point.x / Main.RATIO);
         int y = (int) (point.y / Main.RATIO);
         Body body = view.getModel().getControls().get(id);
@@ -34,7 +33,7 @@ public class MineAction extends PerformablePacket {
             MaterialEnum to = MaterialEnum.AIR;
             MaterialEnum mat = view.change(x, y, to);
             body.getInventory().add(view.getMaterial().getComponents(mat));
-            ServerComService service = ServerComService.getInstance();
+            ServerCommunication service = ServerCommunication.getInstance();
             service.broadcast(new ObtainServerAction(id, mat));
             service.broadcast(new MineServerAction(new Point(x, y), to));
         }

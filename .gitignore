@@ -213,7 +213,7 @@ pip-log.txt
 
 #Mr Developer
 .mr.developer.cfg
-/wormsShooter/nbproject/private/
+/wormsShooter/nbproject/
 /wormsShooter/resources/
 /wormsShooter/src/images/
 /JavaApplication53/nbproject/private/
