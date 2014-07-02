@@ -7,7 +7,7 @@ import javax.swing.AbstractAction;
 import javax.swing.JButton;
 
 /**
- *
+ * Button which listens on keyboard when pressed and changes its text accordingly.
  * @author Skarab
  */
 public class BindableButton extends JButton implements KeyListener {

@@ -2,7 +2,7 @@ package objects.items;
 
 import client.ClientCommunication;
 import client.ClientView;
-import communication.client.CraftAction;
+import client.actions.impl.CraftAction;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import java.awt.event.ActionEvent;

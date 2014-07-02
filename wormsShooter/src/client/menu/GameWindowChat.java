@@ -1,7 +1,7 @@
 package client.menu;
 
 import client.ClientCommunication;
-import communication.client.SendChatAction;
+import client.actions.impl.SendChatAction;
 import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.event.ActionEvent;

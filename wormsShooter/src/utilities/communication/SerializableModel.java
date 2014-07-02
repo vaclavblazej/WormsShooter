@@ -19,19 +19,16 @@ public class SerializableModel implements Serializable {
     private Map<Integer, SerializableBody> controls;
     private List<GraphicComponent> objects;
     private ItemFactory factory;
-    private int counter;
 
     public SerializableModel(
             SerializableMapClass map,
             ItemFactory factory,
             List<GraphicComponent> objects,
-            Map<Integer, SerializableBody> controls,
-            int counter) {
+            Map<Integer, SerializableBody> controls) {
         this.map = map;
         this.controls = controls;
         this.objects = objects;
         this.factory = factory;
-        this.counter = counter;
     }
 
     public Model deserialize(AbstractView view) {
@@ -39,6 +36,6 @@ public class SerializableModel implements Serializable {
         for (Integer i : controls.keySet()) {
             arr.put(i, controls.get(i).deserialize(view));
         }
-        return new Model(map.deserialize(view), arr, objects, factory, counter);
+        return new Model(map.deserialize(view), arr, objects, factory);
     }
 }

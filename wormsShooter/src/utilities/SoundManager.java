@@ -3,6 +3,7 @@ package utilities;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import javax.sound.sampled.AudioInputStream;
@@ -24,6 +25,7 @@ import utilities.properties.Sounds;
 public class SoundManager {
 
     private static Sounds sound;
+    private static HashMap<Sounds, Clip> cache;
 
     public static synchronized void playSound(Sounds sound) {
         SoundManager.sound = sound;

@@ -1,7 +1,7 @@
 package objects.items.itemActions;
 
 import client.ClientCommunication;
-import communication.client.ShootAction;
+import client.actions.impl.ShootAction;
 import java.awt.Point;
 
 /**

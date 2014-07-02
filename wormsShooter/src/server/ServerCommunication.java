@@ -1,130 +1,79 @@
 package server;
 
-import communication.client.ConnectAction;
+import client.actions.ActionClient;
+import communication.backend.server.SCommunicationServer;
+import communication.frontend.utilities.Performable;
+import communication.frontend.utilities.SListener;
 import java.io.IOException;
-import java.io.ObjectInputStream;
-import java.io.ObjectOutputStream;
-import java.net.ServerSocket;
-import java.net.Socket;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 import objects.Body;
-import utilities.PlayerInfo;
-import utilities.communication.PerformablePacket;
-import utilities.communication.RegistrationForm;
+import server.actions.impl.DisconnectServerAction;
 
 /**
  *
- * @author plach_000
+ * @author Štěpán Plachý
+ * @author Václav Blažej
  */
-public class ServerCommunication {
+public class ServerCommunication extends SListener {
 
     private static ServerCommunication instance;
 
     public static ServerCommunication getInstance() {
-        if (instance == null) {
-            instance = new ServerCommunication();
-        }
         return instance;
     }
-    private ServerSocket serverSocket;
-    private boolean running;
+    private SCommunicationServer server;
 
-    private ServerCommunication() {
-        serverSocket = null;
-        running = false;
-    }
-
-    public void init(int port) {
-        try {
-            serverSocket = new ServerSocket(port);
-        } catch (IOException ex) {
-            Logger.getLogger(ServerCommunication.class.getName()).log(Level.SEVERE, null, ex);
-        }
-        run();
-    }
-
-    public void run() {
+    public ServerCommunication(int port) throws IOException {
         System.out.println("Server: starting");
-        new Thread(new Runnable() {
-            @Override
-            public void run() {
-                running = true;
-                while (running) {
-                    try {
-                        Socket s = serverSocket.accept();
-                        new Thread(new CommunicationHandler(s)).start();
-                    } catch (IOException ex) {
-                        Logger.getLogger(ServerCommunication.class.getName()).log(Level.SEVERE, null, ex);
-                    }
-                }
-            }
-        }).start();
+        ActionClient.setView(ServerView.getInstance());
+        server = new SCommunicationServer(port, this);
+        server.start();
+        instance = this;
     }
 
-    public void shutdown() {
-        running = false;
+    public SCommunicationServer getServer() {
+        return server;
     }
 
-    public void bindBody(int id, Body body) {
+    public void setServer(SCommunicationServer server) {
+        this.server = server;
+    }
+
+    public void broadcast(Performable action) {
+        try {
+            server.broadcast(action);
+        } catch (IOException ex) {
+        }
+    }
+
+    public void send(int id, Performable action) {
+        try {
+            server.send(id, action);
+        } catch (IOException ex) {
+        }
+    }
+
+    public void disconnect(int id) {
+        try {
+            server.disconnect(id);
+        } catch (IOException ex) {
+        }
+    }
+
+    @Override
+    public void connectionCreated(int id) {
+        Body body = ServerView.getInstance().newBody();
         Map<Integer, Body> controls = ServerView.getInstance().getModel().getControls();
         controls.put(id, body);
+        System.out.println("bind body");
     }
 
-    public void unbindBody(int id) {
+    @Override
+    public void connectionRemoved(int id) {
         Map<Integer, Body> controls = ServerView.getInstance().getModel().getControls();
         ServerView.getInstance().removeBody(controls.get(id));
         controls.remove(id);
-    }
-
-    private class CommunicationHandler implements Runnable {
-
-        private boolean run;
-        private Socket socket;
-        private int id;
-        private ObjectInputStream is;
-        private ObjectOutputStream os;
-
-        CommunicationHandler(Socket socket) {
-            System.out.println("Server: got client socket");
-            this.socket = socket;
-            this.run = true;
-        }
-
-        public Object receive() {
-            try {
-                return is.readObject();
-            } catch (IOException | ClassNotFoundException ex) {
-                run = false;
-                Logger.getLogger(ServerCommunication.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            return null;
-        }
-
-        @Override
-        public void run() {
-            try {
-                is = new ObjectInputStream(socket.getInputStream());
-                os = new ObjectOutputStream(socket.getOutputStream());
-            } catch (IOException ex) {
-                Logger.getLogger(ServerCommunication.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            ConnectAction action = ((ConnectAction) receive());
-            action.perform(ServerView.getInstance());
-            RegistrationForm form = action.getForm();
-            PlayerInfo info = ServerComService.getInstance().registerPlayer(form);
-            id = info.getId();
-            try {
-                os.writeObject(info);
-            } catch (IOException ex) {
-                Logger.getLogger(ServerCommunication.class.getName()).log(Level.SEVERE, null, ex);
-            }
-            while (run) {
-                PerformablePacket packet = ((PerformablePacket) receive());
-                System.out.println("Server: packet " + packet);
-                packet.perform(ServerView.getInstance());
-            }
-        }
     }
 }

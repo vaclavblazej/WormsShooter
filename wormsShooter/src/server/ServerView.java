@@ -49,8 +49,7 @@ public class ServerView extends AbstractView {
         model = new Model(map,
                 new HashMap<Integer, Body>(20),
                 objects,
-                createItems(),
-                ServerComService.getInstance().getCounter());
+                createItems());
         material = new Material(this);
         createReceipes();
 

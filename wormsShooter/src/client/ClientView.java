@@ -1,7 +1,7 @@
 package client;
 
 import client.menu.Settings;
-import communication.client.MoveAction;
+import client.actions.impl.MoveAction;
 import java.awt.Dimension;
 import java.awt.Graphics;
 import java.awt.Graphics2D;

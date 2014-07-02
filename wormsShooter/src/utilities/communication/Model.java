@@ -18,19 +18,16 @@ public class Model {
     private Map<Integer, Body> controls;
     private List<GraphicComponent> objects;
     private ItemFactory factory;
-    private int counter;
 
     public Model(
             MapClass map,
             Map<Integer, Body> controls,
             List<GraphicComponent> objects,
-            ItemFactory factory,
-            int counter) {
+            ItemFactory factory) {
         this.map = map;
         this.controls = controls;
         this.objects = objects;
         this.factory = factory;
-        this.counter = counter;
     }
 
     public MapClass getMap() {
@@ -49,15 +46,11 @@ public class Model {
         return factory;
     }
 
-    public int getCounter() {
-        return counter;
-    }
-
     public SerializableModel serialize() {
         Map<Integer, SerializableBody> arr = new HashMap<>();
         for (Integer i : controls.keySet()) {
             arr.put(i, controls.get(i).serialize());
         }
-        return new SerializableModel(map.serialize(), factory, objects, arr, counter);
+        return new SerializableModel(map.serialize(), factory, objects, arr);
     }
 }
