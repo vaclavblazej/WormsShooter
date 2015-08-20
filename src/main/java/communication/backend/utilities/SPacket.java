@@ -2,6 +2,7 @@ package communication.backend.utilities;
 
 import communication.frontend.utilities.Performable;
 import java.io.Serializable;
+import java.util.logging.Logger;
 
 /**
  *
@@ -9,6 +10,8 @@ import java.io.Serializable;
  * @author Václav Blažej
  */
 public abstract class SPacket implements Serializable {
+
+    private Logger logger = Logger.getLogger(SPacket.class.getName());
 
     protected Performable action;
     protected int id;
@@ -19,7 +22,7 @@ public abstract class SPacket implements Serializable {
     }
 
     public void performAction() {
-        SLoggerService.print("Server: action - " + action.toString());
+        logger.info("Server: action - " + action.toString());
         action.perform();
     }
 

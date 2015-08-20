@@ -2,10 +2,9 @@ package communication;
 
 import communication.backend.client.SCommunicationClient;
 import communication.backend.server.SCommunicationServer;
+import org.junit.Assert;
 import org.junit.Test;
-import static org.junit.Assert.*;
-import org.junit.Ignore;
-import packets.PrintAction;
+import communication.packets.PrintAction;
 
 public class SCommunicationTest {
 
@@ -15,7 +14,6 @@ public class SCommunicationTest {
     public SCommunicationTest() {
     }
 
-    @Ignore
     @Test
     public void initialize() throws Exception {
         System.out.println("initialize");
@@ -25,13 +23,12 @@ public class SCommunicationTest {
         // fail("The test case is a prototype.");
     }
 
-    @Ignore
     @Test
     public void connect() throws Exception {
         System.out.println("connect");
         SCommunicationServer server = new SCommunicationServer(port);
         SCommunicationClient instance = new SCommunicationClient();
-        assert server.start();
+        Assert.assertTrue(server.start());
         instance.connect(ip, port);
         instance.stop();
         server.stop();
@@ -48,13 +45,10 @@ public class SCommunicationTest {
 
         for (int i = 0; i < 10; i++) {
             PrintAction clientAction = new PrintAction("Client", String.valueOf(i));
-            //System.out.println("?" + clientAction.message + "?");
             instance.send(clientAction);
             PrintAction serverAction = new PrintAction("Server", String.valueOf(i));
-            //System.out.println("!" + serverAction.message + "!");
             server.send(0, serverAction);
         }
-        // wait for test output
         Thread.sleep(50);
         server.stop();
         instance.stop();

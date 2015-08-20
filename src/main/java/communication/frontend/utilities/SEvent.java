@@ -4,7 +4,7 @@ import java.awt.event.ActionEvent;
 
 /**
  *
- * @author Skarab
+ * @author Václav Blažej
  */
 public class SEvent extends ActionEvent {
 
@@ -12,13 +12,13 @@ public class SEvent extends ActionEvent {
         super(source, id, command.toString());
     }
 
-    static enum SEventType {
+    enum SEventType {
 
         CONNECT("Connect"),
         DISCONNECT("Disonnect");
         String name;
 
-        private SEventType(String name) {
+        SEventType(String name) {
             this.name = name;
         }
 

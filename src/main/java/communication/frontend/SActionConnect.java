@@ -5,7 +5,7 @@ import java.io.Serializable;
 
 /**
  *
- * @author Skarab
+ * @author Václav Blažej
  */
 public class SActionConnect implements Serializable {
 

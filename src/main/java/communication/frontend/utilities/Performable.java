@@ -7,11 +7,11 @@ import java.io.Serializable;
  *
  * @author Štěpán Plachý
  * @author Václav Blažej
- * @see communication.backend.utils.SAsynchronousPacket
- * @see communication.backend.utils.SSynchronousPacket
+ * @see communication.backend.utilities.SAsynchronousPacket
+ * @see communication.backend.utilities.SSynchronousPacket
  * @since SAPI Communication 1.0
  */
 public interface Performable extends Serializable {
 
-    public void perform();
+    void perform();
 }

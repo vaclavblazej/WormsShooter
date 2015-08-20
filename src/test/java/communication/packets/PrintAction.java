@@ -1,4 +1,4 @@
-package packets;
+package communication.packets;
 
 import communication.frontend.utilities.Performable;
 
