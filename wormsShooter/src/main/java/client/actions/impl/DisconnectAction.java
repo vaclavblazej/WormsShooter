@@ -5,7 +5,7 @@ import server.ServerCommunication;
 import server.actions.impl.DisconnectServerAction;
 
 /**
- * @author Skarab
+ * @author Václav Blažej
  */
 public class DisconnectAction extends ActionClient {
 

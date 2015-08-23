@@ -6,7 +6,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * @author Skarab
+ * @author Václav Blažej
  */
 public enum Message {
 

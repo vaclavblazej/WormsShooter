@@ -10,7 +10,7 @@ import server.actions.impl.CraftServerAction;
 import java.util.Map;
 
 /**
- * @author Skarab
+ * @author Václav Blažej
  */
 public class CraftAction extends ActionClient {
 

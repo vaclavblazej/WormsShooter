@@ -9,7 +9,7 @@ import server.actions.impl.MoveServerAction;
 import java.awt.*;
 
 /**
- * @author Skarab
+ * @author Václav Blažej
  */
 public class MoveAction extends ActionClient {
 

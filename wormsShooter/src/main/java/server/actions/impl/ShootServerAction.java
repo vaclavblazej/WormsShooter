@@ -6,7 +6,7 @@ import server.actions.ActionServer;
 import java.awt.*;
 
 /**
- * @author Skarab
+ * @author Václav Blažej
  */
 public class ShootServerAction extends ActionServer {
 

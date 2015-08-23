@@ -4,7 +4,7 @@ import client.actions.ActionClient;
 import utilities.communication.RegistrationForm;
 
 /**
- * @author Skarab
+ * @author Václav Blažej
  */
 public class ConnectAction extends ActionClient {
 

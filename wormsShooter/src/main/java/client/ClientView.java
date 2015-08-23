@@ -24,7 +24,7 @@ import java.util.ArrayList;
 import java.util.EnumSet;
 
 /**
- * @author Skarab
+ * @author Václav Blažej
  */
 public class ClientView extends AbstractView implements
         ActionListener,

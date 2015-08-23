@@ -6,7 +6,7 @@ import client.actions.impl.MineAction;
 import java.awt.*;
 
 /**
- * @author Skarab
+ * @author Václav Blažej
  */
 public class ItemActionMine implements ItemAction {
 

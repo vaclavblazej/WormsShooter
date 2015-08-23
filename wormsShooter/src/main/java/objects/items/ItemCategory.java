@@ -3,7 +3,7 @@ package objects.items;
 import java.awt.*;
 
 /**
- * @author Skarab
+ * @author Václav Blažej
  */
 public enum ItemCategory {
 

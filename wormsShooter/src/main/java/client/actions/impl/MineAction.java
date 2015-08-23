@@ -11,7 +11,7 @@ import utilities.materials.MaterialEnum;
 import java.awt.*;
 
 /**
- * @author Skarab
+ * @author Václav Blažej
  */
 public class MineAction extends ActionClient {
 

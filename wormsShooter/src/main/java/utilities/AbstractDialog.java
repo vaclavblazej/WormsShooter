@@ -10,7 +10,7 @@ import java.awt.event.WindowAdapter;
 import java.awt.event.WindowEvent;
 
 /**
- * @author Skarab
+ * @author Václav Blažej
  */
 public abstract class AbstractDialog extends JDialog implements Validator {
 

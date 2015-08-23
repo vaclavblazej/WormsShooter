@@ -11,7 +11,7 @@ import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 
 /**
- * @author Skarab
+ * @author Václav Blažej
  */
 public class InventoryDialog extends AbstractDialog {
 

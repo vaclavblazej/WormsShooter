@@ -7,7 +7,7 @@ import server.actions.ActionServer;
 import utilities.materials.MaterialEnum;
 
 /**
- * @author Skarab
+ * @author Václav Blažej
  */
 public class ObtainServerAction extends ActionServer {
 

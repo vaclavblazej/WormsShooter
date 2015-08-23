@@ -8,7 +8,7 @@ import java.io.OutputStream;
 import java.io.PrintStream;
 
 /**
- * @author Skarab
+ * @author Václav Blažej
  */
 public class LogWindow extends JFrame {
 

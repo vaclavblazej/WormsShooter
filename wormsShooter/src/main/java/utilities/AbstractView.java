@@ -24,7 +24,7 @@ import java.util.logging.Logger;
 /**
  * Represents general view on the scene.
  *
- * @author Skarab
+ * @author Václav Blažej
  */
 public abstract class AbstractView extends JPanel implements ActionListener {
 

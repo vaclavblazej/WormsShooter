@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Skarab
+ * @author Václav Blažej
  */
 public class Crafting extends AbstractTableModel implements Serializable {
 

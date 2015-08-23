@@ -3,7 +3,7 @@ package server.actions.impl;
 import server.actions.ActionServer;
 
 /**
- * @author Skarab
+ * @author Václav Blažej
  */
 public class SendChatServerAction extends ActionServer {
 

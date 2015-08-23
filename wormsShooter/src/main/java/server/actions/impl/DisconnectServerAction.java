@@ -5,7 +5,7 @@ import client.ClientView;
 import server.actions.ActionServer;
 
 /**
- * @author Skarab
+ * @author Václav Blažej
  */
 public class DisconnectServerAction extends ActionServer {
 

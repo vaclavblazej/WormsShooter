@@ -4,7 +4,7 @@ import client.ClientView;
 import spacks.communication.utilities.SAction;
 
 /**
- * @author Skarab
+ * @author Václav Blažej
  */
 public abstract class ActionServer implements SAction {
 

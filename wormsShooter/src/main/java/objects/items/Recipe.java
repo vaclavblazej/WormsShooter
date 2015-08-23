@@ -4,7 +4,7 @@ import java.io.Serializable;
 import java.util.EnumSet;
 
 /**
- * @author Skarab
+ * @author Václav Blažej
  */
 public class Recipe implements Serializable {
 

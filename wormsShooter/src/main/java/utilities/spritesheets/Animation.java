@@ -1,7 +1,7 @@
 package utilities.spritesheets;
 
 /**
- * @author Skarab
+ * @author Václav Blažej
  */
 
 import java.awt.image.BufferedImage;

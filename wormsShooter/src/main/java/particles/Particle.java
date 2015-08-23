@@ -3,7 +3,7 @@ package particles;
 import java.awt.*;
 
 /**
- * @author Skarab
+ * @author Václav Blažej
  */
 public abstract class Particle {
 

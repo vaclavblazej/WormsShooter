@@ -5,7 +5,7 @@ import server.ServerCommunication;
 import server.actions.impl.SendChatServerAction;
 
 /**
- * @author Skarab
+ * @author Václav Blažej
  */
 public class SendChatAction extends ActionClient {
 

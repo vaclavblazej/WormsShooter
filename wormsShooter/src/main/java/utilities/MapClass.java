@@ -10,7 +10,7 @@ import java.util.ArrayList;
 import java.util.LinkedList;
 
 /**
- * @author Skarab
+ * @author Václav Blažej
  */
 public class MapClass {
 

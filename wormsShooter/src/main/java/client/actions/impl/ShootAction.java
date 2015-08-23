@@ -9,7 +9,7 @@ import server.actions.impl.ShootServerAction;
 import java.awt.*;
 
 /**
- * @author Skarab
+ * @author Václav Blažej
  */
 public class ShootAction extends ActionClient {
 

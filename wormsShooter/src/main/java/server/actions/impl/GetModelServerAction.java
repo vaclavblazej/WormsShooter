@@ -10,7 +10,7 @@ import utilities.communication.SerializableModel;
 import java.util.Map;
 
 /**
- * @author Skarab
+ * @author Václav Blažej
  */
 public class GetModelServerAction extends ActionServer {
 

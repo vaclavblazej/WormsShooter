@@ -15,7 +15,7 @@ import java.awt.geom.Point2D;
 import java.util.ArrayList;
 
 /**
- * @author Skarab
+ * @author Václav Blažej
  */
 public class Body implements GraphicComponent {
 

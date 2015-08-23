@@ -1,7 +1,7 @@
 package objects;
 
 /**
- * @author Skarab
+ * @author Václav Blažej
  */
 public enum MoveEnum {
 

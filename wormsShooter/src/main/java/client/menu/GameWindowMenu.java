@@ -12,7 +12,7 @@ import java.awt.event.InputEvent;
 import java.awt.event.KeyEvent;
 
 /**
- * @author Skarab
+ * @author Václav Blažej
  */
 public class GameWindowMenu extends JMenuBar {
 

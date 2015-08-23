@@ -6,7 +6,7 @@ import client.actions.impl.ShootAction;
 import java.awt.*;
 
 /**
- * @author Skarab
+ * @author Václav Blažej
  */
 public class ItemActionShoot implements ItemAction {
 

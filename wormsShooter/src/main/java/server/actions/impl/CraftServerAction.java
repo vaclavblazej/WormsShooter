@@ -10,7 +10,7 @@ import server.actions.ActionServer;
 import java.util.Map;
 
 /**
- * @author Skarab
+ * @author Václav Blažej
  */
 public class CraftServerAction extends ActionServer {
 

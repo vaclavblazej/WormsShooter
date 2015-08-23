@@ -8,7 +8,7 @@ import java.awt.image.BufferedImage;
 import java.io.Serializable;
 
 /**
- * @author Skarab
+ * @author Václav Blažej
  */
 public class ItemBlueprint implements Serializable, Comparable<ItemBlueprint> {
 

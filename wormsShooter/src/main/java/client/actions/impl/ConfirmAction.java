@@ -3,7 +3,7 @@ package client.actions.impl;
 import client.actions.ActionClient;
 
 /**
- * @author Skarab
+ * @author Václav Blažej
  */
 public class ConfirmAction extends ActionClient {
 

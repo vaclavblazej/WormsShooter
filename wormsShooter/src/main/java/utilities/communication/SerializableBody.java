@@ -9,7 +9,7 @@ import java.awt.geom.Point2D;
 import java.io.Serializable;
 
 /**
- * @author Skarab
+ * @author Václav Blažej
  */
 public class SerializableBody implements Serializable {
 

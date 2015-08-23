@@ -5,7 +5,7 @@ import server.ServerCommunication;
 import server.actions.impl.GetModelServerAction;
 
 /**
- * @author Skarab
+ * @author Václav Blažej
  */
 public class GetModelAction extends ActionClient {
 

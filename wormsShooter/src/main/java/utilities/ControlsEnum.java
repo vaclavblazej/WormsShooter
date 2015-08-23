@@ -1,7 +1,7 @@
 package utilities;
 
 /**
- * @author Skarab
+ * @author Václav Blažej
  */
 public enum ControlsEnum {
     UP,

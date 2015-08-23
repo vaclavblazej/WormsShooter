@@ -9,7 +9,7 @@ import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
- * @author Skarab
+ * @author Václav Blažej
  */
 public class SerializableMapClass implements Serializable {
 

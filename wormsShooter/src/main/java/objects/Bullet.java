@@ -8,7 +8,7 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 
 /**
- * @author Skarab
+ * @author Václav Blažej
  */
 public class Bullet implements GraphicComponent {
 

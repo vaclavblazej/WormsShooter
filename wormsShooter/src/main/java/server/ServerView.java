@@ -18,7 +18,7 @@ import java.util.ArrayList;
 import java.util.HashMap;
 
 /**
- * @author Skarab
+ * @author Václav Blažej
  */
 public class ServerView extends AbstractView {
 

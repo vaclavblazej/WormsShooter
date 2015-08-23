@@ -6,7 +6,7 @@ import server.actions.ActionServer;
 import utilities.communication.RegistrationForm;
 
 /**
- * @author Skarab
+ * @author Václav Blažej
  */
 public class ConnectServerAction extends ActionServer {
 

@@ -1,7 +1,7 @@
 package utilities.materials;
 
 /**
- * @author Skarab
+ * @author Václav Blažej
  */
 public enum MaterialEnum {
 
