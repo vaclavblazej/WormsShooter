@@ -1,6 +1,6 @@
-package communication.packets;
+package spacks.communication.packets;
 
-import communication.frontend.utilities.SAction;
+import spacks.communication.utilities.SAction;
 
 /**
  *

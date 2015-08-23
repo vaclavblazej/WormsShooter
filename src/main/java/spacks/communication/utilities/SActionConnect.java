@@ -1,6 +1,6 @@
-package communication.frontend;
+package spacks.communication.utilities;
 
-import communication.backend.utilities.SRegistrationForm;
+import spacks.communication.utilities.SRegistrationForm;
 import java.io.Serializable;
 
 /**

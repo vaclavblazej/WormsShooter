@@ -1,8 +1,10 @@
-package communication.backend.client.impl;
+package spacks.communication.client.impl;
 
-import communication.backend.client.SCommunicationClient;
-import communication.backend.utilities.*;
-import communication.frontend.utilities.SAction;
+import spacks.communication.client.SCommunicationClient;
+import spacks.communication.utilities.SAsynchronousPacket;
+import spacks.communication.utilities.SPacket;
+import spacks.communication.utilities.SSynchronousPacket;
+import spacks.communication.utilities.SAction;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -20,15 +22,13 @@ import java.util.logging.Logger;
  */
 public class SCommunicationClientImpl implements SCommunicationClient {
 
-    private static final transient Logger logger = Logger.getLogger(SCommunicationClientImpl.class.getName());
+    private static final Logger logger = Logger.getLogger(SCommunicationClientImpl.class.getName());
 
     private Socket communicationSocket;
     private ObjectOutputStream os;
     private ObjectInputStream is;
     private boolean running;
     private final SAction repairAction;
-    private SAsynchronousPacket asynchronousPacket;
-    private SSynchronousPacket synchronousPacket;
 
     public SCommunicationClientImpl() {
         this(null);
@@ -39,7 +39,6 @@ public class SCommunicationClientImpl implements SCommunicationClient {
         communicationSocket = new Socket();
         os = null;
         is = null;
-        asynchronousPacket = new SAsynchronousPacket(null);
     }
 
     @Override
@@ -59,7 +58,7 @@ public class SCommunicationClientImpl implements SCommunicationClient {
 
     @Override
     public synchronized void send(SAction action) throws IOException {
-        asynchronousPacket.setAction(action);
+        SAsynchronousPacket asynchronousPacket = new SAsynchronousPacket(action);
         os.reset();
         os.writeObject(asynchronousPacket);
     }
@@ -120,7 +119,7 @@ public class SCommunicationClientImpl implements SCommunicationClient {
     }
 
     @Override
-    public Boolean isRunning(){
+    public Boolean isRunning() {
         return running;
     }
 }

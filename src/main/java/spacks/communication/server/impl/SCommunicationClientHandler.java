@@ -1,9 +1,9 @@
-package communication.backend.server;
+package spacks.communication.server.impl;
 
-import communication.backend.utilities.SAsynchronousPacket;
-import communication.backend.utilities.SPacket;
-import communication.backend.utilities.SSynchronousPacket;
-import communication.frontend.utilities.SAction;
+import spacks.communication.utilities.SAsynchronousPacket;
+import spacks.communication.utilities.SPacket;
+import spacks.communication.utilities.SSynchronousPacket;
+import spacks.communication.utilities.SAction;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -14,29 +14,25 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * A SCommunicationClientHandler deals with communication with a client from a server side.
+ * A SCommunicationClientHandler deals with spacks.communication with a client from a server side.
  *
  * @author Štěpán Plachý
  * @author Václav Blažej
  */
 public class SCommunicationClientHandler implements Runnable {
 
-    private static final transient Logger logger = Logger.getLogger(SCommunicationClientHandler.class.getName());
+    private static final Logger logger = Logger.getLogger(SCommunicationClientHandler.class.getName());
 
     private boolean running;
     private Socket communicationSocket;
     private ObjectInputStream is;
     private ObjectOutputStream os;
-    private SAsynchronousPacket asynchronousPacket;
-    private SSynchronousPacket synchronousPacket;
 
     public SCommunicationClientHandler(Socket socket) throws IOException {
         this.communicationSocket = socket;
         this.running = true;
         is = new ObjectInputStream(communicationSocket.getInputStream());
         os = new ObjectOutputStream(communicationSocket.getOutputStream());
-        asynchronousPacket = new SAsynchronousPacket(null);
-        synchronousPacket = new SSynchronousPacket(null);
         logger.info("Server: connection to a new client");
     }
 
@@ -46,12 +42,12 @@ public class SCommunicationClientHandler implements Runnable {
     }
 
     public void sendAsynchronous(SAction action) throws IOException {
-        asynchronousPacket.setAction(action);
+        SAsynchronousPacket asynchronousPacket = new SAsynchronousPacket(action);
         sendObject(asynchronousPacket);
     }
 
     public synchronized void sendSynchronous(SAction action) throws IOException {
-        synchronousPacket.setAction(action);
+        SSynchronousPacket synchronousPacket = new SSynchronousPacket(action, 0);
         sendObject(synchronousPacket);
         synchronousPacket.incrementCount();
     }

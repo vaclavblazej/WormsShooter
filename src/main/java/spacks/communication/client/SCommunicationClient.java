@@ -1,7 +1,7 @@
-package communication.backend.client;
+package spacks.communication.client;
 
-import communication.backend.utilities.SPacket;
-import communication.frontend.utilities.SAction;
+import spacks.communication.utilities.SPacket;
+import spacks.communication.utilities.SAction;
 
 import java.io.IOException;
 

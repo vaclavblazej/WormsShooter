@@ -1,6 +1,4 @@
-package communication.backend.utilities;
-
-import communication.frontend.utilities.SAction;
+package spacks.communication.utilities;
 
 /**
  *
@@ -9,19 +7,15 @@ import communication.frontend.utilities.SAction;
  */
 public class SSynchronousPacket extends SPacket {
 
-    private int count;
+    private Integer count;
 
-    public SSynchronousPacket(SAction action) {
+    public SSynchronousPacket(SAction action, Integer count) {
         super(action);
-        this.count = 0;
+        this.count = count;
     }
 
     public int getCount() {
         return count;
-    }
-
-    public void setCount(int count) {
-        this.count = count;
     }
 
     public void incrementCount() {
@@ -29,7 +23,7 @@ public class SSynchronousPacket extends SPacket {
     }
     
     public boolean checkSynchronization(int count) {
-        return this.count == count + 1; // functional for overflow
+        return this.count == count + 1;
     }
 
     @Override

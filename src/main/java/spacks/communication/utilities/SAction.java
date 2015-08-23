@@ -1,4 +1,4 @@
-package communication.frontend.utilities;
+package spacks.communication.utilities;
 
 import java.io.Serializable;
 
@@ -7,8 +7,8 @@ import java.io.Serializable;
  *
  * @author Štěpán Plachý
  * @author Václav Blažej
- * @see communication.backend.utilities.SAsynchronousPacket
- * @see communication.backend.utilities.SSynchronousPacket
+ * @see spacks.communication.utilities.SAsynchronousPacket
+ * @see spacks.communication.utilities.SSynchronousPacket
  * @since SAPI Communication 1.0
  */
 public interface SAction extends Serializable {

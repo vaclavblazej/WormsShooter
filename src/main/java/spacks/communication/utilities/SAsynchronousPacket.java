@@ -1,6 +1,4 @@
-package communication.backend.utilities;
-
-import communication.frontend.utilities.SAction;
+package spacks.communication.utilities;
 
 /**
  *

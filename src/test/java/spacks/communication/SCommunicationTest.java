@@ -1,14 +1,12 @@
-package communication;
+package spacks.communication;
 
-import communication.backend.client.SCommunicationClient;
-import communication.backend.client.impl.SCommunicationClientImpl;
-import communication.backend.server.SCommunicationServer;
-import communication.backend.utilities.SPacket;
-import communication.frontend.utilities.SAction;
+import spacks.communication.client.SCommunicationClient;
+import spacks.communication.server.SCommunicationServer;
+import spacks.communication.utilities.SAction;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
-import communication.packets.TestAction;
+import spacks.communication.packets.TestAction;
 
 public class SCommunicationTest {
 
@@ -21,7 +19,7 @@ public class SCommunicationTest {
 
     @Test
     public void serverInitialization() throws Exception {
-        SCommunicationServer server = new SCommunicationServer(port);
+        SCommunicationServer server = SCommunication.createNewServer(port);
         server.start();
         Assert.assertTrue(server.isRunning());
 
@@ -31,7 +29,7 @@ public class SCommunicationTest {
 
     @Test
     public void clientInitialization() throws Exception {
-        SCommunicationClient client = new SCommunicationClientImpl();
+        SCommunicationClient client = SCommunication.createNewClient();
         client.start();
 
         client.stop();
@@ -39,8 +37,8 @@ public class SCommunicationTest {
 
     @Test
     public void connect() throws Exception {
-        SCommunicationServer server = new SCommunicationServer(port);
-        SCommunicationClient client = new SCommunicationClientImpl();
+        SCommunicationServer server = SCommunication.createNewServer(port);
+        SCommunicationClient client = SCommunication.createNewClient();
         Assert.assertTrue(server.start());
         client.connect(ip, port);
         client.stop();
@@ -49,10 +47,10 @@ public class SCommunicationTest {
 
     @Test
     public void sendPrintAction() throws Exception {
-        SCommunicationServer server = new SCommunicationServer(port);
+        SCommunicationServer server = SCommunication.createNewServer(port);
         server.start();
 
-        SCommunicationClient client = new SCommunicationClientImpl();
+        SCommunicationClient client = SCommunication.createNewClient();
         client.connect(ip, port);
         client.start();
 
@@ -69,10 +67,10 @@ public class SCommunicationTest {
 
     @Test
     public void broadcastTest() throws Exception {
-        SCommunicationServer server = new SCommunicationServer(port);
+        SCommunicationServer server = SCommunication.createNewServer(port);
         server.start();
 
-        SCommunicationClient client = new SCommunicationClientImpl();
+        SCommunicationClient client = SCommunication.createNewClient();
         client.connect(ip, port);
         waitForConnection(); // not necessary for separate client/server
 

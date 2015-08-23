@@ -1,4 +1,4 @@
-package communication.backend.utilities;
+package spacks.communication.utilities;
 
 import java.io.Serializable;
 

@@ -1,6 +1,5 @@
-package communication.backend.utilities;
+package spacks.communication.utilities;
 
-import communication.frontend.utilities.SAction;
 import java.io.Serializable;
 import java.util.logging.Logger;
 
@@ -14,11 +13,15 @@ public abstract class SPacket implements Serializable {
     private static final transient Logger logger = Logger.getLogger(SPacket.class.getName());
 
     protected SAction action;
-    protected int id;
+    protected Integer id;
 
     public SPacket(SAction action) {
+        this(action, 0);
+    }
+
+    public SPacket(SAction action, Integer id) {
         this.action = action;
-        this.id = 0;
+        this.id = id;
     }
 
     public void performAction() {
@@ -30,14 +33,6 @@ public abstract class SPacket implements Serializable {
         return id;
     }
 
-    public void setId(int id) {
-        this.id = id;
-    }
-    
-    public void setAction(SAction action) {
-        this.action = action;
-    }
-    
     public SAction getAction() {
         return action;
     }
