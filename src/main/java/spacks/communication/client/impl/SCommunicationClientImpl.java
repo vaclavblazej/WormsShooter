@@ -1,10 +1,10 @@
 package spacks.communication.client.impl;
 
 import spacks.communication.client.SCommunicationClient;
+import spacks.communication.utilities.SAction;
 import spacks.communication.utilities.SAsynchronousPacket;
 import spacks.communication.utilities.SPacket;
 import spacks.communication.utilities.SSynchronousPacket;
-import spacks.communication.utilities.SAction;
 
 import java.io.IOException;
 import java.io.ObjectInputStream;
@@ -24,21 +24,16 @@ public class SCommunicationClientImpl implements SCommunicationClient {
 
     private static final Logger logger = Logger.getLogger(SCommunicationClientImpl.class.getName());
 
-    private Socket communicationSocket;
-    private ObjectOutputStream os;
-    private ObjectInputStream is;
-    private boolean running;
-    private final SAction repairAction;
+    public Socket communicationSocket;
+    public ObjectOutputStream os;
+    public ObjectInputStream is;
+    public Boolean running;
 
     public SCommunicationClientImpl() {
-        this(null);
-    }
-
-    public SCommunicationClientImpl(SAction repairAction) {
-        this.repairAction = repairAction;
         communicationSocket = new Socket();
         os = null;
         is = null;
+        running = false;
     }
 
     @Override
@@ -48,6 +43,7 @@ public class SCommunicationClientImpl implements SCommunicationClient {
         socket.connect(new InetSocketAddress(InetAddress.getByName(ip), port));
         bind(socket);
         logger.info("Client: connection established");
+
     }
 
     public void bind(Socket socket) throws IOException {
@@ -69,14 +65,10 @@ public class SCommunicationClientImpl implements SCommunicationClient {
         if (o instanceof SPacket) {
             return (SPacket) o;
         } else {
-            throw new RuntimeException("Bad packet");
+            throw new RuntimeException("Received packet is not of expected class");
         }
     }
 
-    /**
-     * Starts listening on connected socket for a packets sent from server.
-     * This method also executes all packet code.
-     */
     @Override
     public void start() {
         running = true;
@@ -91,8 +83,6 @@ public class SCommunicationClientImpl implements SCommunicationClient {
                         if (packet.isAsynchronous() || ((SSynchronousPacket) packet).checkSynchronization(currentCount)) {
                             logger.info("Client: packet " + packet);
                             packet.performAction();
-                        } else if (repairAction != null) {
-                            send(repairAction);
                         }
                         if (!packet.isAsynchronous()) {
                             currentCount = ((SSynchronousPacket) packet).getCount();

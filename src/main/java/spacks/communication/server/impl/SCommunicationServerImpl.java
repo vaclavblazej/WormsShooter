@@ -21,8 +21,8 @@ public class SCommunicationServerImpl implements SCommunicationServer {
     private Map<Integer, SCommunicationClientHandler> connections;
 
     public SCommunicationServerImpl(int port) throws IOException {
-        connectionService = new SCommunicationServerCreateService(port);
         connections = new HashMap<>(20);
+        connectionService = new SCommunicationServerCreateService(port, connections);
     }
 
     @Override

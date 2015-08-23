@@ -19,6 +19,10 @@ public interface SCommunicationClient {
 
     SPacket receive() throws IOException, ClassNotFoundException;
 
+    /**
+     * Starts listening on connected socket for a packets sent from server.
+     * This method also executes all packet code.
+     */
     void start();
 
     void stop();

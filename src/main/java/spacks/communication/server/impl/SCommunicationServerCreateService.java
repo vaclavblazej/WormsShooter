@@ -4,6 +4,7 @@ import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
 import java.net.SocketException;
+import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -20,9 +21,11 @@ public class SCommunicationServerCreateService implements Runnable {
     private int port;
     private ServerSocket serverSocket;
     private boolean running;
+    private Map<Integer, SCommunicationClientHandler> connections;
 
-    public SCommunicationServerCreateService(int port) throws IOException {
+    public SCommunicationServerCreateService(int port, Map<Integer, SCommunicationClientHandler> connections) throws IOException {
         this.port = port;
+        this.connections = connections;
         serverSocket = null;
         running = false;
         connectionsCounter = 0;
