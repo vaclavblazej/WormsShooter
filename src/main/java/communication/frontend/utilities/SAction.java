@@ -11,7 +11,7 @@ import java.io.Serializable;
  * @see communication.backend.utilities.SSynchronousPacket
  * @since SAPI Communication 1.0
  */
-public interface Performable extends Serializable {
+public interface SAction extends Serializable {
 
     void perform();
 }

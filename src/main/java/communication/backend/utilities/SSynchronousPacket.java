@@ -1,6 +1,6 @@
 package communication.backend.utilities;
 
-import communication.frontend.utilities.Performable;
+import communication.frontend.utilities.SAction;
 
 /**
  *
@@ -11,7 +11,7 @@ public class SSynchronousPacket extends SPacket {
 
     private int count;
 
-    public SSynchronousPacket(Performable action) {
+    public SSynchronousPacket(SAction action) {
         super(action);
         this.count = 0;
     }

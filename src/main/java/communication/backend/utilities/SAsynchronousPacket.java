@@ -1,6 +1,6 @@
 package communication.backend.utilities;
 
-import communication.frontend.utilities.Performable;
+import communication.frontend.utilities.SAction;
 
 /**
  *
@@ -9,7 +9,7 @@ import communication.frontend.utilities.Performable;
  */
 public class SAsynchronousPacket extends SPacket {
 
-    public SAsynchronousPacket(Performable action) {
+    public SAsynchronousPacket(SAction action) {
         super(action);
     }
 

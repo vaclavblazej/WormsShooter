@@ -1,12 +1,12 @@
 package communication.backend.utilities;
 
-import communication.frontend.utilities.Performable;
+import communication.frontend.utilities.SAction;
 
 /**
  *
  * @author Štìpán Plachý
  */
-public class SActionNull implements Performable {
+public class SActionNull implements SAction {
 
     @Override
     public void perform() {

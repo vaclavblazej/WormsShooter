@@ -1,6 +1,6 @@
 package communication.backend.utilities;
 
-import communication.frontend.utilities.Performable;
+import communication.frontend.utilities.SAction;
 import java.io.Serializable;
 import java.util.logging.Logger;
 
@@ -11,12 +11,12 @@ import java.util.logging.Logger;
  */
 public abstract class SPacket implements Serializable {
 
-    private Logger logger = Logger.getLogger(SPacket.class.getName());
+    private static final transient Logger logger = Logger.getLogger(SPacket.class.getName());
 
-    protected Performable action;
+    protected SAction action;
     protected int id;
 
-    public SPacket(Performable action) {
+    public SPacket(SAction action) {
         this.action = action;
         this.id = 0;
     }
@@ -34,11 +34,11 @@ public abstract class SPacket implements Serializable {
         this.id = id;
     }
     
-    public void setAction(Performable action) {
+    public void setAction(SAction action) {
         this.action = action;
     }
     
-    public Performable getAction() {
+    public SAction getAction() {
         return action;
     }
 

@@ -1,56 +1,95 @@
 package communication;
 
 import communication.backend.client.SCommunicationClient;
+import communication.backend.client.impl.SCommunicationClientImpl;
 import communication.backend.server.SCommunicationServer;
+import communication.backend.utilities.SPacket;
+import communication.frontend.utilities.SAction;
 import org.junit.Assert;
+import org.junit.Before;
 import org.junit.Test;
-import communication.packets.PrintAction;
+import communication.packets.TestAction;
 
 public class SCommunicationTest {
 
     private static final String ip = "localhost";
     private static final int port = 4242;
 
-    public SCommunicationTest() {
+    @Before
+    public void setup(){
     }
 
     @Test
-    public void initialize() throws Exception {
-        System.out.println("initialize");
+    public void serverInitialization() throws Exception {
         SCommunicationServer server = new SCommunicationServer(port);
-        SCommunicationClient instance = new SCommunicationClient();
-        // TODO review the generated test code and remove the default call to fail.
-        // fail("The test case is a prototype.");
+        server.start();
+        Assert.assertTrue(server.isRunning());
+
+        server.stop();
+        Assert.assertFalse(server.isRunning());
+    }
+
+    @Test
+    public void clientInitialization() throws Exception {
+        SCommunicationClient client = new SCommunicationClientImpl();
+        client.start();
+
+        client.stop();
     }
 
     @Test
     public void connect() throws Exception {
-        System.out.println("connect");
         SCommunicationServer server = new SCommunicationServer(port);
-        SCommunicationClient instance = new SCommunicationClient();
+        SCommunicationClient client = new SCommunicationClientImpl();
         Assert.assertTrue(server.start());
-        instance.connect(ip, port);
-        instance.stop();
+        client.connect(ip, port);
+        client.stop();
         server.stop();
     }
 
     @Test
     public void sendPrintAction() throws Exception {
-        System.out.println("sendPrintAction");
         SCommunicationServer server = new SCommunicationServer(port);
-        SCommunicationClient instance = new SCommunicationClient();
-        assert server.start();
-        instance.connect(ip, port);
-        instance.start();
+        server.start();
+
+        SCommunicationClient client = new SCommunicationClientImpl();
+        client.connect(ip, port);
+        client.start();
 
         for (int i = 0; i < 10; i++) {
-            PrintAction clientAction = new PrintAction("Client", String.valueOf(i));
-            instance.send(clientAction);
-            PrintAction serverAction = new PrintAction("Server", String.valueOf(i));
-            server.send(0, serverAction);
+//            TestAction clientAction = new TestAction("Client", String.valueOf(i));
+//            client.send(clientAction);
+//            TestAction serverAction = new TestAction("Server", String.valueOf(i));
+//            server.send(0, serverAction);
         }
-        Thread.sleep(50);
+        waitForConnection();
         server.stop();
-        instance.stop();
+        client.stop();
+    }
+
+    @Test
+    public void broadcastTest() throws Exception {
+        SCommunicationServer server = new SCommunicationServer(port);
+        server.start();
+
+        SCommunicationClient client = new SCommunicationClientImpl();
+        client.connect(ip, port);
+        waitForConnection(); // not necessary for separate client/server
+
+        server.broadcast(new TestAction("Is this delivered?"));
+        final TestAction receive = getAction(client.receive().getAction());
+        Assert.assertEquals("delivered string is different", "Is this delivered?", receive.getIdent());
+    }
+
+    public void waitForConnection() throws InterruptedException {
+        Thread.sleep(50);
+    }
+
+    public TestAction getAction(SAction action){
+        if(action instanceof TestAction){
+            return (TestAction) action;
+        }else{
+            throw new RuntimeException("Bad test action type");
+        }
     }
 }

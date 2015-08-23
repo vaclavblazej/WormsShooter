@@ -1,25 +1,26 @@
 package communication.backend.server;
 
-import communication.frontend.utilities.Performable;
+import communication.frontend.utilities.SAction;
 import communication.frontend.utilities.SListener;
 
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
+import java.net.SocketException;
 import java.util.HashMap;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- *
  * @author Štěpán Plachý
  * @author Václav Blažej
  */
 public class SCommunicationServer {
 
-    private Logger logger = Logger.getLogger(SCommunicationServer.class.getName());
+    private static final transient Logger logger = Logger.getLogger(SCommunicationServer.class.getName());
 
+    private static Integer MAXIMUM_CONNECTIONS = 70007;
     private SCommunicationServerCreateService connectionService;
     private Map<Integer, SCommunicationClientHandler> connections;
     private Integer connectionsCounter;
@@ -44,24 +45,33 @@ public class SCommunicationServer {
         connectionService.stop();
     }
 
-    public void send(int id, Performable action) throws IOException {
-        connections.get(id).sendAsynchronous(action);
+    public void send(int id, SAction action) throws IOException {
+        final SCommunicationClientHandler handler = connections.get(id);
+        if (handler != null) {
+            handler.sendAsynchronous(action);
+        } else {
+            throw new RuntimeException("Asking for handler for client with invalid id=" + id);
+        }
     }
 
-    public void broadcast(Performable action) throws IOException {
+    public void broadcast(SAction action) throws IOException {
         for (Integer connection : connections.keySet()) {
             send(connection, action);
         }
+    }
+
+    public Boolean isRunning(){
+        return connectionService.running;
     }
 
     public int getNumberOfConnections() {
         return connections.size();
     }
 
-    public void disconnect(int id) throws IOException {
-        SCommunicationClientHandler c = connections.get(id);
+    public void disconnectClient(int id) throws IOException {
+        SCommunicationClientHandler handler = connections.get(id);
         connections.remove(id);
-        c.disconnect();
+        handler.disconnect();
         listener.connectionRemoved(id);
     }
 
@@ -77,11 +87,15 @@ public class SCommunicationServer {
             running = false;
         }
 
+        /**
+         * Start accepting connections from clients.
+         */
         public boolean start() {
+            running = true;
             try {
                 serverSocket = new ServerSocket(port);
             } catch (IOException ex) {
-                Logger.getLogger(SCommunicationServer.class.getName()).log(Level.SEVERE, null, ex);
+                logger.log(Level.SEVERE, null, ex);
                 return false;
             }
             new Thread(this).start();
@@ -93,26 +107,32 @@ public class SCommunicationServer {
             try {
                 serverSocket.close();
             } catch (IOException ex) {
-                Logger.getLogger(SCommunicationServer.class.getName()).log(Level.SEVERE, null, ex);
+                logger.log(Level.SEVERE, null, ex);
             }
         }
 
         @Override
         public void run() {
-            running = true;
             while (running) {
                 try {
                     Socket s = serverSocket.accept();
                     logger.info("Server: new connection");
                     SCommunicationClientHandler h = new SCommunicationClientHandler(s);
                     new Thread(h).start();
+                    if (connections.size() >= MAXIMUM_CONNECTIONS) {
+                        logger.info("Server: server is full");
+                        continue;
+                    }
                     while (connections.containsKey(connectionsCounter)) {
-                        connectionsCounter = (connectionsCounter + 1) % 70000;
+                        connectionsCounter = (connectionsCounter + 1) % MAXIMUM_CONNECTIONS;
                     }
                     connections.put(connectionsCounter, h);
                     listener.connectionCreated(connectionsCounter);
+                } catch (SocketException ex) {
+                    logger.info("Server: connection closed");
+                    break;
                 } catch (IOException ex) {
-                    Logger.getLogger(SCommunicationServer.class.getName()).log(Level.SEVERE, null, ex);
+                    logger.log(Level.SEVERE, null, ex);
                 }
             }
         }
