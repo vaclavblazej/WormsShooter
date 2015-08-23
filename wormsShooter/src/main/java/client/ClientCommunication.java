@@ -5,9 +5,11 @@ import client.actions.impl.GetModelAction;
 import main.Application;
 import objects.Body;
 import server.actions.ActionServer;
+import server.actions.impl.ConnectServerAction;
 import spacks.communication.SCommunication;
 import spacks.communication.client.SCommunicationClient;
 import utilities.PlayerInfo;
+import utilities.communication.RegistrationForm;
 
 import java.io.IOException;
 import java.util.Map;
@@ -31,21 +33,17 @@ public class ClientCommunication {
 
     private PlayerInfo info;
     private SCommunicationClient connection;
-    private boolean listening;
-    private volatile boolean running;
 
     public void init(String ip, String port) {
         System.out.println("Client: starting");
         ActionServer.setView(ClientView.getInstance());
         info = new PlayerInfo(0);
-        listening = false;
-
-        connection = SCommunication.createNewClient();
+        connection = SCommunication.createNewClient(new GetModelAction());
         //new SCommunicationClient(new GetModelAction());
         try {
             connection.connect(ip, Integer.parseInt(port));
             Application.startClientView();
-            startSocket(ip);
+            startConnection(ip);
         } catch (IOException ex) {
             Logger.getLogger(ClientCommunication.class.getName()).log(Level.SEVERE, null, ex);
         }
@@ -54,8 +52,6 @@ public class ClientCommunication {
 
     public void reset() {
         info = new PlayerInfo(0);
-        running = false;
-        listening = false;
 //        connection.reset();
     }
 
@@ -88,7 +84,7 @@ public class ClientCommunication {
         return info;
     }
 
-    public void startSocket(String ip) throws IOException {
+    public void startConnection(String ip) throws IOException {
         System.out.println("Client: starting socket");
 
         connection.start();

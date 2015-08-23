@@ -51,6 +51,7 @@ public class ServerCommunication implements SListener {
         try {
             server.send(id, action);
         } catch (IOException ex) {
+            System.out.println(ex);
         }
     }
 

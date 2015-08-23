@@ -20,7 +20,7 @@ public class Application {
     private static final Logger logger = Logger.getLogger(Application.class.getName());
 
     private static boolean serverOnline = false;
-    public static final double RATIO = 20;
+    public static final double RATIO = 1;
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(new Runnable() {
