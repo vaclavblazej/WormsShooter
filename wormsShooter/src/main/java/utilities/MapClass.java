@@ -107,7 +107,7 @@ public class MapClass {
          }
          }
          }*/
-        System.out.println("recalculation woth " + lights.size() + " sources");
+        System.out.println("recalculation with " + lights.size() + " sources");
         for (LightSource source : lights) {
             Point sampleLight = source.getPosition();
             samples.add(sampleLight);
