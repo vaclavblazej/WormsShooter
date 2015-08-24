@@ -1,11 +1,10 @@
 package utilities.spritesheets;
 
 /**
- * @author Skarab
+ * @author Václav Blažej
  */
 
 import client.ClientWindow;
-import main.Application;
 import utilities.properties.Message;
 import utilities.properties.Paths;
 
@@ -14,8 +13,11 @@ import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
 import java.net.URL;
+import java.util.logging.Logger;
 
 public class SpriteLoader {
+
+    private static final Logger logger = Logger.getLogger(SpriteLoader.class.getName());
 
     private static BufferedImage spriteSheet;
     private static int tileSizeX = 32;
@@ -36,23 +38,21 @@ public class SpriteLoader {
 
     public static BufferedImage loadSprite(String file) {
         BufferedImage sprite = null;
-        URL localUrl = Application.class.getResource(Paths.IMAGE_FOLDER.cm() + file + Paths.IMAGE_FORMAT.cm());
+        final String path = Paths.IMAGE_FOLDER.value() + file + Paths.IMAGE_FORMAT.value();
+        URL localUrl = SpriteLoader.class.getResource(path);
         try {
             // read image from local source
             sprite = ImageIO.read(localUrl);
         } catch (IllegalArgumentException | IOException e) {
             try {
-                System.out.println("Downloading " + file + Paths.IMAGE_FORMAT.cm());
+                logger.info(e.toString());
+                System.out.println("Downloading " + file + Paths.IMAGE_FORMAT.value());
                 //read image from online source
-                URL serverUrl = new URL(Paths.IMAGE_ONLINE_FOLDER.cm() + file + Paths.IMAGE_FORMAT.cm());
+                URL serverUrl = new URL(Paths.IMAGE_ONLINE_FOLDER.value() + file + Paths.IMAGE_FORMAT.value());
                 sprite = ImageIO.read(serverUrl);
                 saveSprite(file, sprite);
             } catch (IllegalArgumentException | IOException ex) {
-                ClientWindow.getInstance().showError(new Exception(
-                        Message.IMAGE_LOAD_ERROR.cm()
-                                + Paths.IMAGE_FOLDER.cm()
-                                + file
-                                + Paths.IMAGE_FORMAT.cm()));
+                ClientWindow.getInstance().showError(new Exception(Message.IMAGE_LOAD_ERROR.value() + path));
             }
         }
         spriteSheet = sprite;
@@ -60,13 +60,15 @@ public class SpriteLoader {
     }
 
     public static boolean saveSprite(String file, BufferedImage image) {
-        String path = Paths.IMAGE_SAVE_FOLDER.cm() + file + Paths.IMAGE_FORMAT.cm();
+        String path = Paths.IMAGE_SAVE_FOLDER.value() + file + Paths.IMAGE_FORMAT.value();
         try {
-            File outputfile = new File(path);
-            outputfile.createNewFile();
-            ImageIO.write(image, "png", outputfile);
+            File outFile = new File(path);
+            final boolean newFile = outFile.createNewFile();
+            if (!newFile) throw new RuntimeException("cannot create file " + path);
+            ImageIO.write(image, "png", outFile);
             return true;
         } catch (IllegalArgumentException | IOException e) {
+            logger.info(e.toString());
             return false;
         }
     }

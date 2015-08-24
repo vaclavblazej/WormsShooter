@@ -28,7 +28,7 @@ public class ExchangeDialog extends AbstractDialog {
      * @param toArg   accessed inventory
      */
     public ExchangeDialog(JFrame owner, ComponentTableModel fromArg, ComponentTableModel toArg) {
-        super(owner, Message.INVENTORY_WINDOW_TITLE.cm(), false);
+        super(owner, Message.INVENTORY_WINDOW_TITLE.value(), false);
         this.from = fromArg;
         this.to = toArg;
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);

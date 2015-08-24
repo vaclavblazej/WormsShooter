@@ -11,7 +11,7 @@ import java.awt.*;
 public class ServerWindow extends JFrame {
 
     public ServerWindow() {
-        super(Message.SERVER_WINDOW_TITLE.cm());
+        super(Message.SERVER_WINDOW_TITLE.value());
         setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
         setVisible(true);
         setResizable(false);

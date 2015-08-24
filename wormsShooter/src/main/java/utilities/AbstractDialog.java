@@ -61,7 +61,7 @@ public abstract class AbstractDialog extends JDialog implements Validator {
         int i = 5;
         btnPanel.setBorder(BorderFactory.createEmptyBorder(i, i, i, i));
         btnPanel.add(Box.createHorizontalGlue());
-        btnPanel.add(new JButton(new AbstractAction(Message.CANCEL_BUTTON.cm()) {
+        btnPanel.add(new JButton(new AbstractAction(Message.CANCEL_BUTTON.value()) {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 try {
@@ -73,7 +73,7 @@ public abstract class AbstractDialog extends JDialog implements Validator {
             }
         }));
         btnPanel.add(Box.createHorizontalStrut(5));
-        okAction = new AbstractAction(Message.OK_BUTTON.cm()) {
+        okAction = new AbstractAction(Message.OK_BUTTON.value()) {
             @Override
             public void actionPerformed(ActionEvent ae) {
                 try {
@@ -97,7 +97,7 @@ public abstract class AbstractDialog extends JDialog implements Validator {
     public void error(String message) {
         if (errorLabel != null) {
             errorLabel.setForeground(Color.RED);
-            errorLabel.setText(Message.ERROR.cm() + ": " + message);
+            errorLabel.setText(Message.ERROR.value() + ": " + message);
         }
     }
 
@@ -107,7 +107,7 @@ public abstract class AbstractDialog extends JDialog implements Validator {
     public void clearError() {
         if (errorLabel != null) {
             errorLabel.setForeground(Color.BLUE);
-            errorLabel.setText(Message.OK_MESSAGE.cm());
+            errorLabel.setText(Message.OK_MESSAGE.value());
         }
         okAction.setEnabled(true);
     }

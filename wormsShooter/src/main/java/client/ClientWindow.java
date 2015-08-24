@@ -19,7 +19,7 @@ public class ClientWindow extends JFrame {
 
     public static ClientWindow getInstance() {
         if (instance == null) {
-            instance = new ClientWindow(Message.CLIENT_WINDOW_TITLE.cm());
+            instance = new ClientWindow(Message.CLIENT_WINDOW_TITLE.value());
         }
         return instance;
     }
@@ -32,10 +32,10 @@ public class ClientWindow extends JFrame {
 
     public ClientWindow(String title) {
         super(title);
-        setDefaultCloseOperation(JFrame.EXIT_ON_CLOSE);
-        setVisible(true);
-        setResizable(false);
-        setLayout(new BorderLayout());
+        super.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        super.setVisible(true);
+        super.setResizable(false);
+        super.setLayout(new BorderLayout());
 
         menuBar = new GameWindowMenu();
         setJMenuBar(menuBar);
@@ -50,8 +50,8 @@ public class ClientWindow extends JFrame {
         gamePlane = ClientView.getInstance();
         add(gamePlane, BorderLayout.CENTER);
         pack();
-        //setLocationRelativeTo(null);
-        setLocation(500, 10);
+        setLocationRelativeTo(null);
+//        setLocation(500, 10);
     }
 
     public void launch() {

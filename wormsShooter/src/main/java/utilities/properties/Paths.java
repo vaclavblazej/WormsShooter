@@ -6,7 +6,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * @author Skarab
+ * @author Václav Blažej
  */
 public enum Paths {
 
@@ -21,7 +21,7 @@ public enum Paths {
     SOUND_FOLDER;
     private static Properties properties;
 
-    public String cm() {
+    public String value() {
         try {
             if (properties == null) {
                 properties = new Properties();

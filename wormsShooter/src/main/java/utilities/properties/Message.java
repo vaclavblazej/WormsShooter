@@ -46,7 +46,7 @@ public enum Message {
     MENU_DISCONNECT;
     private static Properties properties;
 
-    public String cm() {
+    public String value() {
         try {
             if (properties == null) {
                 properties = new Properties();

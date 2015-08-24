@@ -29,7 +29,7 @@ public class SoundManager {
         new Thread(new Runnable() {
             @Override
             public void run() {
-                URL url = Application.class.getResource(SoundManager.sound.cm());
+                URL url = Application.class.getResource(SoundManager.sound.value());
                 File soundFile = new File(url.getPath());
                 AudioInputStream audioInputStream;
                 try {

@@ -13,7 +13,7 @@ import java.net.InetAddress;
 import java.net.UnknownHostException;
 
 /**
- * @author Skarab
+ * @author Václav Blažej
  */
 public class GameLauncher extends AbstractDialog {
 
@@ -23,7 +23,7 @@ public class GameLauncher extends AbstractDialog {
     private ValidatedTextField clientPort;
 
     public GameLauncher(JFrame owner) {
-        super(owner, Message.LAUNCHER_WINDOW_TITLE.cm());
+        super(owner, Message.LAUNCHER_WINDOW_TITLE.value());
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         newServer = new JCheckBox();
@@ -31,21 +31,21 @@ public class GameLauncher extends AbstractDialog {
         serverPort = new ValidatedTextField(this);
         address = new ValidatedTextField(this);
         clientPort = new ValidatedTextField(this);
-        serverPort.setText(Paths.SERVER_PORT_INITIAL.cm());
-        address.setText(Paths.ADDRESS_INITIAL.cm());
-        clientPort.setText(Paths.CLIENT_PORT_INITIAL.cm());
+        serverPort.setText(Paths.SERVER_PORT_INITIAL.value());
+        address.setText(Paths.ADDRESS_INITIAL.value());
+        clientPort.setText(Paths.CLIENT_PORT_INITIAL.value());
         getContent().setLayout(new GridBagLayout());
         int i = 0;
-        getContent().add(new JLabel(Message.CREATE_SERVER.cm() + ": "), new GBCBuilder().setY(i).build());
+        getContent().add(new JLabel(Message.CREATE_SERVER.value() + ": "), new GBCBuilder().setY(i).build());
         getContent().add(newServer, new GBCBuilder().setY(i).setXRel().build());
         i++;
-        getContent().add(new JLabel(Message.SERVER_PORT.cm() + ": "), new GBCBuilder().setY(i).build());
+        getContent().add(new JLabel(Message.SERVER_PORT.value() + ": "), new GBCBuilder().setY(i).build());
         getContent().add(serverPort, new GBCBuilder().setY(i).setXRel().build());
         i++;
-        getContent().add(new JLabel(Message.ADDRESS.cm() + ": "), new GBCBuilder().setY(i).build());
+        getContent().add(new JLabel(Message.ADDRESS.value() + ": "), new GBCBuilder().setY(i).build());
         getContent().add(address, new GBCBuilder().setY(i).setXRel().build());
         i++;
-        getContent().add(new JLabel(Message.CLIENT_PORT.cm() + ": "), new GBCBuilder().setY(i).build());
+        getContent().add(new JLabel(Message.CLIENT_PORT.value() + ": "), new GBCBuilder().setY(i).build());
         getContent().add(clientPort, new GBCBuilder().setY(i).setXRel().build());
         pack();
         setResizable(false);
@@ -66,13 +66,13 @@ public class GameLauncher extends AbstractDialog {
         try {
             InetAddress.getByName(address.getText());
         } catch (UnknownHostException ex) {
-            error(Message.ADDRESS_ERROR_MESSAGE.cm());
+            error(Message.ADDRESS_ERROR_MESSAGE.value());
             return false;
         }
         try {
             Integer.parseInt(clientPort.getText());
         } catch (NumberFormatException ex) {
-            error(Message.SOCKET_ERROR_MESSAGE.cm());
+            error(Message.SOCKET_ERROR_MESSAGE.value());
             return false;
         }
         clearError();
