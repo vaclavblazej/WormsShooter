@@ -39,7 +39,6 @@ public class ClientCommunication {
         ActionServer.setView(ClientView.getInstance());
         info = new PlayerInfo(0);
         connection = SCommunication.createNewClient(new GetModelAction());
-        //new SCommunicationClient(new GetModelAction());
         try {
             connection.connect(ip, Integer.parseInt(port));
             Application.startClientView();

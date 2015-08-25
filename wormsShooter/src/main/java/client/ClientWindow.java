@@ -18,21 +18,19 @@ public class ClientWindow extends JFrame {
     private static ClientWindow instance;
 
     public static ClientWindow getInstance() {
-        if (instance == null) {
-            instance = new ClientWindow(Message.CLIENT_WINDOW_TITLE.value());
-        }
+        if (instance == null) instance = new ClientWindow(Message.CLIENT_WINDOW_TITLE.value());
         return instance;
     }
 
-    private ClientView gamePlane;
-    private JMenuBar menuBar;
-    private JPanel bottomPanel;
-    private JPanel chatBar;
-    private JToolBar itemBar;
-
     public ClientWindow(String title) {
         super(title);
-        super.setDefaultCloseOperation(EXIT_ON_CLOSE);
+        ClientView gamePlane;
+        JMenuBar menuBar;
+        JPanel bottomPanel;
+        JPanel chatBar;
+        JToolBar itemBar;
+
+        super.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         super.setVisible(true);
         super.setResizable(false);
         super.setLayout(new BorderLayout());

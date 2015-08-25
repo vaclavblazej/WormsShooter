@@ -11,7 +11,7 @@ import java.util.logging.Logger;
  */
 public class FileManager {
 
-    public static Object load(String name) {
+    public static <T> T load(String name) {
         try {
             File f = new File(name);
             if (!f.exists()) {
@@ -19,13 +19,14 @@ public class FileManager {
             }
             FileInputStream file = new FileInputStream(f);
             ObjectInputStream input = new ObjectInputStream(new BufferedInputStream(file));
-            return input.readObject();
+            final Object o = input.readObject();
+            return (T) o;
         } catch (IOException | ClassNotFoundException ex) {
             return null;
         }
     }
 
-    public static void save(String name, Object object) {
+    public static <T> void save(String name, T object) {
         try {
             FileOutputStream file = new FileOutputStream(name);
             ObjectOutputStream output = new ObjectOutputStream(file);

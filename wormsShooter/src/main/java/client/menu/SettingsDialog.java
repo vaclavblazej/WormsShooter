@@ -3,7 +3,7 @@ package client.menu;
 import utilities.AbstractDialog;
 import utilities.BindableButton;
 import utilities.ControlsEnum;
-import utilities.GBCBuilder;
+import utilities.GridBagConstraintsBuilder;
 import utilities.properties.Message;
 
 import javax.swing.*;
@@ -60,20 +60,20 @@ public class SettingsDialog extends AbstractDialog {
         keys.setLayout(new GridBagLayout());
         int row = 0;
         up = new BindableButton(Settings.getInstance().getControls().get(ControlsEnum.UP));
-        keys.add(new JLabel(Message.UP.value() + ": "), new GBCBuilder().setY(row).build());
-        keys.add(up, new GBCBuilder().setY(row).setXRel().build());
+        keys.add(new JLabel(Message.UP.value() + ": "), new GridBagConstraintsBuilder().setY(row).build());
+        keys.add(up, new GridBagConstraintsBuilder().setY(row).setXRel().build());
         row++;
         down = new BindableButton(Settings.getInstance().getControls().get(ControlsEnum.DOWN));
-        keys.add(new JLabel(Message.DOWN.value() + ": "), new GBCBuilder().setY(row).build());
-        keys.add(down, new GBCBuilder().setY(row).setXRel().build());
+        keys.add(new JLabel(Message.DOWN.value() + ": "), new GridBagConstraintsBuilder().setY(row).build());
+        keys.add(down, new GridBagConstraintsBuilder().setY(row).setXRel().build());
         row++;
         left = new BindableButton(Settings.getInstance().getControls().get(ControlsEnum.LEFT));
-        keys.add(new JLabel(Message.LEFT.value() + ": "), new GBCBuilder().setY(row).build());
-        keys.add(left, new GBCBuilder().setY(row).setXRel().build());
+        keys.add(new JLabel(Message.LEFT.value() + ": "), new GridBagConstraintsBuilder().setY(row).build());
+        keys.add(left, new GridBagConstraintsBuilder().setY(row).setXRel().build());
         row++;
         right = new BindableButton(Settings.getInstance().getControls().get(ControlsEnum.RIGHT));
-        keys.add(new JLabel(Message.RIGHT.value() + ": "), new GBCBuilder().setY(row).build());
-        keys.add(right, new GBCBuilder().setY(row).setXRel().build());
+        keys.add(new JLabel(Message.RIGHT.value() + ": "), new GridBagConstraintsBuilder().setY(row).build());
+        keys.add(right, new GridBagConstraintsBuilder().setY(row).setXRel().build());
         tabbedPane.addTab(Message.SETTINGS_TAB_KEYS.value(), keys);
     }
 
@@ -83,8 +83,8 @@ public class SettingsDialog extends AbstractDialog {
         int row = 0;
         detailLevel = new JSlider(0, 4, 1);
         detailLevel.setValue(Settings.getInstance().getQuality());
-        graphic.add(new JLabel(Message.DETAIL_LEVEL.value() + ": "), new GBCBuilder().setY(row).build());
-        graphic.add(detailLevel, new GBCBuilder().setY(row).setXRel().build());
+        graphic.add(new JLabel(Message.DETAIL_LEVEL.value() + ": "), new GridBagConstraintsBuilder().setY(row).build());
+        graphic.add(detailLevel, new GridBagConstraintsBuilder().setY(row).setXRel().build());
         tabbedPane.addTab(Message.SETTINGS_TAB_GRAPHICS.value(), graphic);
     }
 
@@ -94,8 +94,8 @@ public class SettingsDialog extends AbstractDialog {
         int row = 0;
         soundLevel = new JSlider(0, 100, 1);
         soundLevel.setValue(Settings.getInstance().getVolume());
-        sound.add(new JLabel(Message.SOUND_LEVEL.value() + ": "), new GBCBuilder().setY(row).build());
-        sound.add(soundLevel, new GBCBuilder().setY(row).setXRel().build());
+        sound.add(new JLabel(Message.SOUND_LEVEL.value() + ": "), new GridBagConstraintsBuilder().setY(row).build());
+        sound.add(soundLevel, new GridBagConstraintsBuilder().setY(row).setXRel().build());
         tabbedPane.addTab(Message.SETTINGS_TAB_SOUND.value(), sound);
     }
 }

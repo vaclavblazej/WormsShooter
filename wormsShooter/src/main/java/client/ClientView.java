@@ -36,9 +36,7 @@ public class ClientView extends AbstractView implements
     private static final int SCALE = 20;
 
     public static ClientView getInstance() {
-        if (instance == null) {
-            instance = new ClientView();
-        }
+        if (instance == null) instance = new ClientView();
         return instance;
     }
 
@@ -77,7 +75,7 @@ public class ClientView extends AbstractView implements
     public void setModel(Model model) {
         super.setModel(model);
         map = model.getMap();
-        map.calculateShadows(material);
+//        map.calculateShadows(material);
         bodies = new ArrayList<>(model.getControls().values());
     }
 

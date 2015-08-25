@@ -20,7 +20,7 @@ public class ConnectAction extends ActionClient {
 
     @Override
     public void perform() {
-        /*Body b = ClientView.getInstance().newBody();
-         view.getModel().getControls().put(getId(), b);*/
+//        Body b = ClientView.getInstance().newBody();
+//        view.getModel().getControls().put(getId(), b);
     }
 }

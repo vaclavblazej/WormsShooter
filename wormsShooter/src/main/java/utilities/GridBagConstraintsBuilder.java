@@ -5,54 +5,54 @@ import java.awt.*;
 /**
  * @author danecek
  */
-public class GBCBuilder {
+public class GridBagConstraintsBuilder {
 
     GridBagConstraints gbc = new GridBagConstraints();
 
-    public GBCBuilder(GridBagConstraints gbc) {
+    public GridBagConstraintsBuilder(GridBagConstraints gbc) {
         this.gbc = (GridBagConstraints) gbc.clone();
     }
 
-    public GBCBuilder() {
+    public GridBagConstraintsBuilder() {
         setInsets(5);
         setAnchor(Anchor.FIRST_LINE_START);
     }
 
-    public GBCBuilder setXRel() {
+    public GridBagConstraintsBuilder setXRel() {
         return setX(GridBagConstraints.RELATIVE);
     }
 
-    public GBCBuilder setX(int gridx) {
+    public GridBagConstraintsBuilder setX(int gridx) {
         gbc.gridx = gridx;
         return this;
     }
 
-    public GBCBuilder setY(int gridy) {
+    public GridBagConstraintsBuilder setY(int gridy) {
         gbc.gridy = gridy;
         return this;
     }
 
-    public GBCBuilder setWidth(int gridwidth) {
+    public GridBagConstraintsBuilder setWidth(int gridwidth) {
         gbc.gridwidth = gridwidth;
         return this;
     }
 
-    public GBCBuilder setHeight(int gridheight) {
+    public GridBagConstraintsBuilder setHeight(int gridheight) {
         gbc.gridheight = gridheight;
         return this;
     }
 
-    public GBCBuilder setWeightx(double weightx) {
+    public GridBagConstraintsBuilder setWeightx(double weightx) {
         gbc.weightx = weightx;
         return this;
     }
 
-    public GBCBuilder setWeighty(double weighty) {
+    public GridBagConstraintsBuilder setWeighty(double weighty) {
         gbc.weighty = weighty;
         return this;
     }
 
-    public final GBCBuilder setAnchor(Anchor anchor) {
+    public final GridBagConstraintsBuilder setAnchor(Anchor anchor) {
         switch (anchor) {
             case FIRST_LINE_START:
                 gbc.anchor = GridBagConstraints.FIRST_LINE_START;
@@ -85,7 +85,7 @@ public class GBCBuilder {
         return this;
     }
 
-    public GBCBuilder setFill(Fill fill) {
+    public GridBagConstraintsBuilder setFill(Fill fill) {
         switch (fill) {
             case NONE:
                 gbc.fill = GridBagConstraints.NONE;
@@ -103,22 +103,22 @@ public class GBCBuilder {
         return this;
     }
 
-    public final GBCBuilder setInsets(int insets) {
+    public final GridBagConstraintsBuilder setInsets(int insets) {
         gbc.insets = new Insets(insets, insets, insets, insets);
         return this;
     }
 
-    public GBCBuilder setInsets(Insets insets) {
+    public GridBagConstraintsBuilder setInsets(Insets insets) {
         gbc.insets = insets;
         return this;
     }
 
-    public GBCBuilder setIpadx(int ipadx) {
+    public GridBagConstraintsBuilder setIpadx(int ipadx) {
         gbc.ipadx = ipadx;
         return this;
     }
 
-    public GBCBuilder setIpady(int ipady) {
+    public GridBagConstraintsBuilder setIpady(int ipady) {
         gbc.ipady = ipady;
         return this;
     }
