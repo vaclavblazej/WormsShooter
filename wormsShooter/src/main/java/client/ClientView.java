@@ -67,7 +67,8 @@ public class ClientView extends AbstractView implements
         controlSet = EnumSet.noneOf(ControlsEnum.class);
         mouse = new Point();
         tr = new AffineTransform();
-        tr.setToScale(1.0 / SCALE, 1.0 / SCALE);
+        final double scaleTmp = 1.0 / SCALE;
+        tr.setToScale(scaleTmp, scaleTmp);
         setFocusable(true);
     }
 

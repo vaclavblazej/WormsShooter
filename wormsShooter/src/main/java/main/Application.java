@@ -1,10 +1,8 @@
 package main;
 
 import client.ClientCommunication;
-import client.ClientView;
-import client.ClientWindow;
+import main.windows.MainFrame;
 import server.ServerCommunication;
-import server.ServerView;
 import server.ServerWindow;
 
 import javax.swing.*;
@@ -20,26 +18,16 @@ public class Application {
     private static final Logger logger = Logger.getLogger(Application.class.getName());
 
     private static boolean serverOnline = false;
+
     public static final double RATIO = 20;
+    public static final String version = "1.1.0-SNAPSHOT";
 
     public static void main(String[] args) {
-        SwingUtilities.invokeLater(new Runnable() {
-            public void run() {
-                startGame();
-            }
-        });
-    }
-
-    public static void startGame() {
-        ClientWindow.getInstance().launch();
+        SwingUtilities.invokeLater(MainFrame::new);
     }
 
     public static void startClient(String address, String socket) {
         ClientCommunication.getInstance().init(address, socket);
-    }
-
-    public static void startClientView() {
-        ClientView.getInstance().init();
     }
 
     public static void startServer(int port) {
@@ -56,7 +44,8 @@ public class Application {
 
     public static void exit() {
         if (serverOnline) {
-            ServerView.getInstance().save();
+//            ServerView.getInstance().save();
+            serverOnline = false;
         }
         System.exit(0);
     }

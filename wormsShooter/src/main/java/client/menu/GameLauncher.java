@@ -50,6 +50,7 @@ public class GameLauncher extends AbstractDialog {
         pack();
         setResizable(false);
         setVisible(true);
+        setLocationRelativeTo(owner);
     }
 
     @Override

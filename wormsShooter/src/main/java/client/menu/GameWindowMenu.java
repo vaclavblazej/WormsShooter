@@ -55,7 +55,7 @@ public class GameWindowMenu extends JMenuBar {
         item.setAction(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ClientWindow.getInstance().launch();
+                ClientWindow.getInstance();
             }
         });
         item.setText(Message.MENU_CONNECT.value());

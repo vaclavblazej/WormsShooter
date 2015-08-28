@@ -18,12 +18,12 @@ public class ClientWindow extends JFrame {
     private static ClientWindow instance;
 
     public static ClientWindow getInstance() {
-        if (instance == null) instance = new ClientWindow(Message.CLIENT_WINDOW_TITLE.value());
+        if (instance == null) instance = new ClientWindow();
         return instance;
     }
 
-    public ClientWindow(String title) {
-        super(title);
+    public ClientWindow() {
+        super(Message.CLIENT_WINDOW_TITLE.value());
         ClientView gamePlane;
         JMenuBar menuBar;
         JPanel bottomPanel;
@@ -49,11 +49,6 @@ public class ClientWindow extends JFrame {
         add(gamePlane, BorderLayout.CENTER);
         pack();
         setLocationRelativeTo(null);
-//        setLocation(500, 10);
-    }
-
-    public void launch() {
-        new GameLauncher(this);
     }
 
     public void showError(Exception ex) {

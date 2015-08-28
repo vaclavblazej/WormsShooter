@@ -45,7 +45,6 @@ public class SpriteLoader {
             sprite = ImageIO.read(localUrl);
         } catch (IllegalArgumentException | IOException e) {
             try {
-                logger.info(e.toString());
                 System.out.println("Downloading " + file + Paths.IMAGE_FORMAT.value());
                 //read image from online source
                 URL serverUrl = new URL(Paths.IMAGE_ONLINE_FOLDER.value() + file + Paths.IMAGE_FORMAT.value());
@@ -68,8 +67,8 @@ public class SpriteLoader {
             ImageIO.write(image, "png", outFile);
             return true;
         } catch (IllegalArgumentException | IOException e) {
-            logger.info(e.toString());
-            return false;
+            throw new RuntimeException(e);
+//            return false;
         }
     }
 

@@ -22,6 +22,8 @@ import java.util.logging.Logger;
  */
 public class ClientCommunication {
 
+    private static final Logger logger = Logger.getLogger(ClientCommunication.class.getName());
+
     private static ClientCommunication instance;
 
     public static ClientCommunication getInstance() {
@@ -35,13 +37,13 @@ public class ClientCommunication {
     private SCommunicationClient connection;
 
     public void init(String ip, String port) {
-        System.out.println("Client: starting");
+        logger.info("Client: starting");
         ActionServer.setView(ClientView.getInstance());
         info = new PlayerInfo(0);
         connection = SCommunication.createNewClient(new GetModelAction());
         try {
             connection.connect(ip, Integer.parseInt(port));
-            Application.startClientView();
+            ClientView.getInstance().init();
             startConnection(ip);
         } catch (IOException ex) {
             Logger.getLogger(ClientCommunication.class.getName()).log(Level.SEVERE, null, ex);
@@ -75,7 +77,7 @@ public class ClientCommunication {
     }
 
     public void getModel() {
-        System.out.println("Client: getting model");
+        logger .info("Client: getting model");
         send(new GetModelAction());
     }
 
@@ -84,8 +86,7 @@ public class ClientCommunication {
     }
 
     public void startConnection(String ip) throws IOException {
-        System.out.println("Client: starting socket");
-
+        logger .info("Client: starting socket");
         connection.start();
     }
 }

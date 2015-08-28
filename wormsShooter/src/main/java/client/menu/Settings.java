@@ -15,18 +15,14 @@ public class Settings implements Serializable {
     private static final String SAVE_FILE = "settings.cfg";
 
     public static Settings getInstance() {
-        if (instance == null) {
-            loadSettings();
-        }
+        if (instance == null) loadSettings();
         return instance;
     }
 
     private static void loadSettings() {
         //default settings if it fails to obtain controls from a file.
-        instance = (Settings) FileManager.load(SAVE_FILE);
-        if (instance == null) {
-            instance = new Settings();
-        }
+        instance = FileManager.load(SAVE_FILE);
+        if (instance == null) instance = new Settings();
     }
 
     private int quality;
