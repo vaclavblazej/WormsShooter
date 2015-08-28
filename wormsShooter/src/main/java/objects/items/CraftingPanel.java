@@ -43,7 +43,7 @@ public class CraftingPanel extends JPanel implements ListSelectionListener {
         craftButton = new JButton(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ComponentTableModel inventory = ClientView.getInstance().getMyBody().getInventory();
+                ComponentTableModel inventory = ClientView.getInstance().getMyView().getInventory();
                 if (inventory.contains(ingredientsModel)) {
                     ClientCommunication.getInstance().send(new CraftAction(lastIndex));
                 }

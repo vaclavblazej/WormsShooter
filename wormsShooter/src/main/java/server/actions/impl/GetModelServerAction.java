@@ -26,7 +26,7 @@ public class GetModelServerAction extends ActionServer {
         Model realModel = model.deserialize(view);
         view.setModel(realModel);
         final Body body = ClientView.getInstance().newBody();
-        ClientView.getInstance().setMyBody(body);
+        ClientView.getInstance().setMyView(body);
         final Map<Integer, Body> controls = realModel.getControls();
         controls.put(id, body);
         System.out.println("SIZE: " + realModel.getControls().size());

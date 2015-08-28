@@ -22,6 +22,8 @@ import java.awt.image.BufferedImage;
 import java.awt.image.RasterFormatException;
 import java.util.ArrayList;
 import java.util.EnumSet;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author Václav Blažej
@@ -31,6 +33,8 @@ public class ClientView extends AbstractView implements
         KeyListener,
         MouseMotionListener,
         MouseListener {
+
+    private static final Logger logger = Logger.getLogger(ClientView.class.getName());
 
     private static ClientView instance;
     private static final int SCALE = 20;
@@ -44,10 +48,10 @@ public class ClientView extends AbstractView implements
     private final Dimension REAL_VIEW_SIZE;
     private Body body;
     private EnumSet<ControlsEnum> controlSet;
-    private MapClass curentView;
+    private MapClass currentView;
     private BufferedImage realView;
     private Point viewTilePos;
-    private AffineTransform tr;         // Defines view position and size. Is inversed already.
+    private AffineTransform tr;         // Defines view position and size. Is inverted already.
     private Controls controls;
     private Point mouse;
 
@@ -62,7 +66,7 @@ public class ClientView extends AbstractView implements
         TILE_VIEW_SIZE = new Dimension(
                 REAL_VIEW_SIZE.width / getRatio(),
                 REAL_VIEW_SIZE.height / getRatio());
-        curentView = null;
+        currentView = null;
         viewTilePos = new Point();
         controlSet = EnumSet.noneOf(ControlsEnum.class);
         mouse = new Point();
@@ -80,11 +84,11 @@ public class ClientView extends AbstractView implements
         bodies = new ArrayList<>(model.getControls().values());
     }
 
-    public void setMyBody(Body body) {
+    public void setMyView(Body body) {
         this.body = body;
     }
 
-    public Body getMyBody() {
+    public Body getMyView() {
         return body;
     }
 
@@ -106,7 +110,6 @@ public class ClientView extends AbstractView implements
         removeKeyListener(this);
         body = null;
         controls = null;
-        repaint();
     }
 
     @Override
@@ -147,11 +150,11 @@ public class ClientView extends AbstractView implements
         }
         tr.setToTranslation(-viewRealPos.x, -viewRealPos.y);
         try {
-            curentView = map.getSubmap(viewTilePos.x, viewTilePos.y,
+            currentView = map.getSubmap(viewTilePos.x, viewTilePos.y,
                     TILE_VIEW_SIZE.width + 1, TILE_VIEW_SIZE.height + 1);
-            MaterialVisuals.redraw(curentView, realView);
+            MaterialVisuals.redraw(currentView, realView);
         } catch (RasterFormatException | ArrayIndexOutOfBoundsException ex) {
-            //Logger.getLogger(ClientView.class.getName()).log(Level.SEVERE, null, ex);
+            logger.log(Level.SEVERE, null, ex);
         }
         Graphics2D g = (Graphics2D) grphcs;
         g.drawImage(realView, -harmony.x, -harmony.y, realView.getWidth(), realView.getHeight(), null);
@@ -197,12 +200,8 @@ public class ClientView extends AbstractView implements
 
     public void changeMovement() {
         int d = 0;
-        if (controlSet.contains(ControlsEnum.LEFT)) {
-            d--;
-        }
-        if (controlSet.contains(ControlsEnum.RIGHT)) {
-            d++;
-        }
+        if (controlSet.contains(ControlsEnum.LEFT)) d--;
+        if (controlSet.contains(ControlsEnum.RIGHT)) d++;
         switch (d) {
             case 1:
                 ClientCommunication.getInstance().send(new MoveAction(MoveEnum.RIGHT));
@@ -224,7 +223,7 @@ public class ClientView extends AbstractView implements
             case MouseEvent.BUTTON1:
                 Point p = new Point((int) (viewTilePos.x * Application.RATIO) + e.getX(),
                         (int) (viewTilePos.y * Application.RATIO) + e.getY());
-                ItemBlueprint heldItem = getMyBody().getInventory().getHeldItem();
+                ItemBlueprint heldItem = getMyView().getInventory().getHeldItem();
                 if (heldItem != null) {
                     ItemAction action = heldItem.getAction();
                     if (action != null) {

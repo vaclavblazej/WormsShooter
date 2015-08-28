@@ -23,7 +23,7 @@ public class InventoryDialog extends AbstractDialog {
         setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
 
         split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-        items = new JTable(ClientView.getInstance().getMyBody().getInventory()) {
+        items = new JTable(ClientView.getInstance().getMyView().getInventory()) {
             @Override
             public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
                 Component c = super.prepareRenderer(renderer, row, column);

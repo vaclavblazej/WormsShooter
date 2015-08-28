@@ -1,5 +1,6 @@
 package main.windows;
 
+import client.ClientCommunication;
 import client.ClientView;
 import main.Application;
 import utilities.properties.Paths;
@@ -114,9 +115,10 @@ public class MainFrame extends JFrame {
 
         // multiplayer - join
         joinJoinButton = new CustomButton(e -> {
-            Application.startClient(joinAddressTextField.getText(), joinPortTextField.getText());
+            ClientCommunication.getInstance().init(joinAddressTextField.getText(), joinPortTextField.getText());
             joinProgressBar.setValue(joinProgressBar.getMaximum());
             mainCardLayout.show(rootPanel, "clientCard");
+            clientCard.requestFocusInWindow();
         });
         backJoinButton = new CustomButton(e -> menuCardLayout.show(menuCards, "multiplayerCard"));
 

@@ -1,6 +1,5 @@
 package main;
 
-import client.ClientCommunication;
 import main.windows.MainFrame;
 import server.ServerCommunication;
 import server.ServerWindow;
@@ -24,10 +23,6 @@ public class Application {
 
     public static void main(String[] args) {
         SwingUtilities.invokeLater(MainFrame::new);
-    }
-
-    public static void startClient(String address, String socket) {
-        ClientCommunication.getInstance().init(address, socket);
     }
 
     public static void startServer(int port) {

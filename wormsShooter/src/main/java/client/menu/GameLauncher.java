@@ -58,7 +58,7 @@ public class GameLauncher extends AbstractDialog {
         if (newServer.isSelected()) {
             Application.startServer(Integer.parseInt(serverPort.getText()));
         }
-        Application.startClient(address.getText(), clientPort.getText());
+//        Application.startClient(address.getText(), clientPort.getText());
     }
 
     @Override
