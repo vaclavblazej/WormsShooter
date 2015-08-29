@@ -1,6 +1,5 @@
 package client;
 
-import client.menu.GameLauncher;
 import client.menu.GameWindowChat;
 import client.menu.GameWindowItemBar;
 import client.menu.GameWindowMenu;
@@ -32,7 +31,7 @@ public class ClientWindow extends JFrame {
 
         super.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         super.setVisible(true);
-        super.setResizable(false);
+        super.setResizable(true);
         super.setLayout(new BorderLayout());
 
         menuBar = new GameWindowMenu();

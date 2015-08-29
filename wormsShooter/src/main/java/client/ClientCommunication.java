@@ -2,14 +2,11 @@ package client;
 
 import client.actions.ActionClient;
 import client.actions.impl.GetModelAction;
-import main.Application;
 import objects.Body;
 import server.actions.ActionServer;
-import server.actions.impl.ConnectServerAction;
 import spacks.communication.SCommunication;
 import spacks.communication.client.SCommunicationClient;
 import utilities.PlayerInfo;
-import utilities.communication.RegistrationForm;
 
 import java.io.IOException;
 import java.util.Map;

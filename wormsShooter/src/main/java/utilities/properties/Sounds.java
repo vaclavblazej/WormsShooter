@@ -10,8 +10,11 @@ import java.util.logging.Logger;
  */
 public enum Sounds {
 
+    BUTTON_TICK,
     CASH_REGISTER;
+
     private static Properties properties;
+    private static final Logger logger = Logger.getLogger(Sounds.class.getName());
 
     public String value() {
         try {
@@ -21,7 +24,7 @@ public enum Sounds {
             }
             return Paths.SOUND_FOLDER.value() + properties.getProperty(name()) + Paths.SOUND_FORMAT.value();
         } catch (IOException ex) {
-            Logger.getLogger(Sounds.class.getName()).log(Level.SEVERE, null, ex);
+            logger.log(Level.SEVERE, null, ex);
         }
         return "ERROR";
     }

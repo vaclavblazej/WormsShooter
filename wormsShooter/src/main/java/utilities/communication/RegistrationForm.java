@@ -1,8 +1,8 @@
 package utilities.communication;
 
 /**
- * @author plach_000
+ * @author Štìpán Plachý
  * @author Václav Blažej
  */
-public class RegistrationForm {
+public interface RegistrationForm {
 }

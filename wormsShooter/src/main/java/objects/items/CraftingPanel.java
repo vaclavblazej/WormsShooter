@@ -15,9 +15,9 @@ import java.awt.event.ActionEvent;
  */
 public class CraftingPanel extends JPanel implements ListSelectionListener {
 
-    private JScrollPane recepiesScroll;
-    private JTable recepies;
-    private Crafting recepiesModel;
+    private JScrollPane recipesScroll;
+    private JTable recipes;
+    private Crafting recipesModel;
     private JScrollPane ingredientsScroll;
     private JTable ingredients;
     private ComponentTableModel ingredientsModel;
@@ -30,10 +30,10 @@ public class CraftingPanel extends JPanel implements ListSelectionListener {
     public CraftingPanel() {
         super();
         setLayout(new BorderLayout());
-        recepiesModel = ClientView.getInstance().getModel().getFactory().getRecipes();
-        recepies = new JTable(recepiesModel);
-        recepiesScroll = new JScrollPane(recepies);
-        recepiesScroll.setPreferredSize(new Dimension(200, 100));
+        recipesModel = ClientView.getInstance().getModel().getFactory().getRecipes();
+        recipes = new JTable(recipesModel);
+        recipesScroll = new JScrollPane(recipes);
+        recipesScroll.setPreferredSize(new Dimension(200, 100));
         ingredients = new JTable();
         ingredientsScroll = new JScrollPane(ingredients);
         ingredientsScroll.setPreferredSize(new Dimension(200, 100));
@@ -55,14 +55,14 @@ public class CraftingPanel extends JPanel implements ListSelectionListener {
         JPanel container = new JPanel(new BorderLayout());
         container.add(ingredientsScroll, BorderLayout.NORTH);
         container.add(productsScroll, BorderLayout.CENTER);
-        add(recepiesScroll, BorderLayout.CENTER);
+        add(recipesScroll, BorderLayout.CENTER);
         add(container, BorderLayout.SOUTH);
         JPanel confirmation = new JPanel();
         confirmation.add(craftButton);
         container.add(confirmation, BorderLayout.SOUTH);
-        //add(new JScrollPane(recepies), BorderLayout.CENTER);
-        recepies.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
-        recepies.getSelectionModel().addListSelectionListener(this);
+        //add(new JScrollPane(recipes), BorderLayout.CENTER);
+        recipes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
+        recipes.getSelectionModel().addListSelectionListener(this);
     }
 
     @Override
@@ -72,7 +72,7 @@ public class CraftingPanel extends JPanel implements ListSelectionListener {
         //boolean isAdjusting = e.getValueIsAdjusting();
         //int minIndex = lsm.getMinSelectionIndex();
         lastIndex = lsm.getMaxSelectionIndex();
-        Recipe recipe = recepiesModel.getReceipe(lastIndex);
+        Recipe recipe = recipesModel.getReceipe(lastIndex);
         if (recipe != null) {
             ingredientsModel = recipe.getIngredients();
             ingredients.setModel(ingredientsModel);

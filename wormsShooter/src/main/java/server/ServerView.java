@@ -25,14 +25,12 @@ public class ServerView extends AbstractView {
     private static ServerView instance;
 
     public static ServerView getInstance() {
-        if (instance == null) {
-            instance = new ServerView();
-        }
+        if (instance == null) instance = new ServerView();
         return instance;
     }
 
     private ServerView() {
-        super(400, 300, 1);
+        super(1);
         SpriteLoader.loadSprite("Map");
         SpriteLoader.set(400, 300);
         ArrayList<LightSource> lights = new ArrayList<>(10);
@@ -41,18 +39,13 @@ public class ServerView extends AbstractView {
         lights.add(new LightSource(300, 200, 5));
         map = new MapClass(SpriteLoader.getSprite().getFrame(), this, lights);
         model = new Model(map,
-                new HashMap<Integer, Body>(20),
+                new HashMap<>(20),
                 objects,
                 createItems());
         material = new Material(this);
-        createReceipes();
+        createRecipes();
 
-        SwingUtilities.invokeLater(new Runnable() {
-            @Override
-            public void run() {
-                init();
-            }
-        });
+        SwingUtilities.invokeLater(this::init);
     }
 
     private ItemFactory createItems() {
@@ -72,7 +65,7 @@ public class ServerView extends AbstractView {
         return itemFactory;
     }
 
-    private void createReceipes() {
+    private void createRecipes() {
         ItemFactory fac = getItemFactory();
         Crafting rec = getRecipes();
         Recipe r = new Recipe("Free gun");

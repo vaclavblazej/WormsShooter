@@ -37,15 +37,19 @@ public class SpriteLoader {
     }
 
     public static BufferedImage loadSprite(String file) {
+        return loadSprite(file, Paths.IMAGE_FORMAT.value());
+    }
+
+    public static BufferedImage loadSprite(String file, String format) {
         BufferedImage sprite = null;
-        final String path = Paths.IMAGE_FOLDER.value() + file + Paths.IMAGE_FORMAT.value();
+        final String path = Paths.IMAGE_FOLDER.value() + file + format;
         URL localUrl = SpriteLoader.class.getResource(path);
         try {
             // read image from local source
             sprite = ImageIO.read(localUrl);
         } catch (IllegalArgumentException | IOException e) {
             try {
-                System.out.println("Downloading " + file + Paths.IMAGE_FORMAT.value());
+                logger.info("Downloading " + file + Paths.IMAGE_FORMAT.value());
                 //read image from online source
                 URL serverUrl = new URL(Paths.IMAGE_ONLINE_FOLDER.value() + file + Paths.IMAGE_FORMAT.value());
                 sprite = ImageIO.read(serverUrl);

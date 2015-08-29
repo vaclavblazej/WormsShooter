@@ -1,12 +1,8 @@
 package main;
 
 import main.windows.MainFrame;
-import server.ServerCommunication;
-import server.ServerWindow;
 
 import javax.swing.*;
-import java.io.IOException;
-import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -25,23 +21,8 @@ public class Application {
         SwingUtilities.invokeLater(MainFrame::new);
     }
 
-    public static void startServer(int port) {
-        if (!serverOnline) {
-            new ServerWindow();
-            try {
-                new ServerCommunication(port);
-            } catch (IOException ex) {
-                logger.log(Level.SEVERE, null, ex);
-            }
-            serverOnline = true;
-        }
-    }
-
     public static void exit() {
-        if (serverOnline) {
-//            ServerView.getInstance().save();
-            serverOnline = false;
-        }
+//        ServerView.getInstance().save();
         System.exit(0);
     }
 }

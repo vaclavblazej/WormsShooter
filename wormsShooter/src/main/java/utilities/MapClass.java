@@ -8,11 +8,14 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.LinkedList;
+import java.util.logging.Logger;
 
 /**
  * @author Václav Blažej
  */
 public class MapClass {
+
+    private static final Logger logger = Logger.getLogger(MapClass.class.getName());
 
     private BufferedImage map;
     private int[][] shadows;
@@ -62,8 +65,7 @@ public class MapClass {
         return shadows[x][y];
     }
 
-    public MapClass getSubmap(int x, int y, int width, int height)
-            throws ArrayIndexOutOfBoundsException {
+    public MapClass getSubmap(int x, int y, int width, int height) throws ArrayIndexOutOfBoundsException {
         int[][] ns = new int[width][height];
         for (int j = 0; j < height; j++) {
             for (int i = 0; i < width; i++) {
@@ -75,7 +77,7 @@ public class MapClass {
 
     public void addLightSource(LightSource source) {
         lights.add(source);
-        System.out.println("add light source");
+        logger.info("add light source");
     }
 
     public void calculateShadows(Material material) {
@@ -107,7 +109,7 @@ public class MapClass {
          }
          }
          }*/
-        System.out.println("recalculation with " + lights.size() + " sources");
+        logger.info("recalculation with " + lights.size() + " sources");
         for (LightSource source : lights) {
             Point sampleLight = source.getPosition();
             samples.add(sampleLight);
@@ -129,8 +131,7 @@ public class MapClass {
                 procShadow(work.x, work.y - 1, samples, sh);
                 procShadow(work.x + 1, work.y, samples, sh);
                 procShadow(work.x - 1, work.y, samples, sh);
-            } catch (ArrayIndexOutOfBoundsException ex) {
-                continue;
+            } catch (ArrayIndexOutOfBoundsException ignored) {
             }
         }
     }

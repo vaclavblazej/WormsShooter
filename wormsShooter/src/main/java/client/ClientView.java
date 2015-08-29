@@ -56,7 +56,7 @@ public class ClientView extends AbstractView implements
     private Point mouse;
 
     private ClientView() {
-        super(800, 600, SCALE);
+        super(SCALE);
         map = new MapClass(new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB), this);
         REAL_VIEW_SIZE = new Dimension(800, 600);
         realView = new BufferedImage(

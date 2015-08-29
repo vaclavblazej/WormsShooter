@@ -39,22 +39,17 @@ public abstract class AbstractView extends JPanel implements ActionListener {
     protected Timer tickTimer;
     protected ChatLog chatLog;
     private final int ratio;
-    private final Dimension size;
     private boolean check;
 
     /**
      * Creates view and calls reset method which is obligatory to implement.
      *
-     * @param width
-     * @param height
      * @param ratio
      */
-    public AbstractView(int width, int height, int ratio) {
+    public AbstractView(int ratio) {
         this.ratio = ratio;
-        this.size = new Dimension(width, height);
         tickTimer = new Timer(40, this);
         random = new Random();
-        setPreferredSize(size);
         setFocusable(true);
         check = false;
         reset();
@@ -69,7 +64,7 @@ public abstract class AbstractView extends JPanel implements ActionListener {
 
     public CollisionState check(int x, int y) {
         if (material != null) {
-            return material.getState(getPixel((int) (x / RATIO), (int) (y / RATIO)));
+            return material.getState(getPixel((x / RATIO), (y / RATIO)));
         } else {
             return Material.DEFAULT;
         }
@@ -206,9 +201,5 @@ public abstract class AbstractView extends JPanel implements ActionListener {
 
     public int getRatio() {
         return ratio;
-    }
-
-    public Dimension getSize() {
-        return size;
     }
 }

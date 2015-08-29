@@ -15,6 +15,9 @@ import java.util.Map;
  */
 public class MaterialVisuals implements Serializable {
 
+    private MaterialVisuals() {
+    }
+
     private static Map<Integer, BufferedImage> images;
     private static final int SIZE = 20;
 
@@ -61,8 +64,5 @@ public class MaterialVisuals implements Serializable {
             }
         }
         g.dispose();
-    }
-
-    private MaterialVisuals() {
     }
 }

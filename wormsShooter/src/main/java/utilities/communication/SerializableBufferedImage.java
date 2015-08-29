@@ -5,7 +5,7 @@ import java.awt.image.*;
 import java.io.Serializable;
 
 /**
- * @author plach_000
+ * @author Štìpán Plachý
  */
 public class SerializableBufferedImage implements Serializable {
 

@@ -1,7 +1,9 @@
 package main.windows;
 
+import utilities.SoundManager;
+import utilities.properties.Sounds;
+
 import javax.swing.*;
-import javax.swing.event.ChangeEvent;
 import javax.swing.event.ChangeListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
@@ -45,6 +47,7 @@ public class CustomButton extends JButton {
         super(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
+                SoundManager.playSound(Sounds.BUTTON_TICK);
                 a.actionPerformed(e);
             }
         });

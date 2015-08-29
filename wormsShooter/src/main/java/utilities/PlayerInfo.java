@@ -3,7 +3,7 @@ package utilities;
 /**
  * Information about player.
  *
- * @author plach_000
+ * @author Štìpán Plachý
  */
 public class PlayerInfo {
 

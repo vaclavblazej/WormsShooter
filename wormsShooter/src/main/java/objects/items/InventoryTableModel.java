@@ -12,7 +12,7 @@ import java.util.List;
 public class InventoryTableModel extends ComponentTableModel {
 
     private ItemBlueprint heldItem;
-    private MyButton hightlight;
+    private MyButton highlight;
 
     public InventoryTableModel(String... columnNames) {
         super(columnNames);
@@ -42,18 +42,18 @@ public class InventoryTableModel extends ComponentTableModel {
                 MyButton btn = new MyButton(new AbstractAction() {
                     @Override
                     public void actionPerformed(ActionEvent e) {
-                        if (hightlight != null) {
-                            hightlight.setBackground(Color.WHITE);
+                        if (highlight != null) {
+                            highlight.setBackground(Color.WHITE);
                         }
-                        hightlight = (MyButton) e.getSource();
-                        hightlight.setBackground(Color.GREEN);
-                        heldItem = hightlight.item;
+                        highlight = (MyButton) e.getSource();
+                        highlight.setBackground(Color.GREEN);
+                        heldItem = highlight.item;
                     }
                 });
                 btn.item = getItem(i);
                 if (heldItem != null && heldItem.equals(btn.item)) {
                     btn.setBackground(Color.GREEN);
-                    hightlight = btn;
+                    highlight = btn;
                 }
                 btn.setText(getValueAt(i, 0).toString() + ": " + getValueAt(i, 1).toString());
                 btn.setFocusable(false);

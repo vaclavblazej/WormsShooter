@@ -20,9 +20,7 @@ public class Animation {
 
     public Animation(ArrayList<Frame> frames) {
         this.stopped = true;
-        for (int i = 0; i < frames.size(); i++) {
-            addFrame(frames.get(i));
-        }
+        frames.forEach(this::addFrame);
         this.frameCount = 0;
         this.frameDelay = 0;
         this.currentFrame = 0;
@@ -32,8 +30,8 @@ public class Animation {
 
     public Animation(ArrayList<Frame> frames, int frameDelay) {
         this(frames);
-        for (int i = 0; i < frames.size(); i++) {
-            frames.get(i).setDuration(frameDelay);
+        for (Frame frame : frames) {
+            frame.setDuration(frameDelay);
         }
         this.frameDelay = frameDelay;
     }

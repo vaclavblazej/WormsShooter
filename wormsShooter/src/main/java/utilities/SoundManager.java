@@ -27,7 +27,6 @@ public class SoundManager {
     private static HashMap<Sounds, File> cache = new HashMap<>();
 
     public static synchronized void playSound(Sounds sound) {
-        System.out.println("play " + sound.value());
         Runnable runnable = new PlaySound(sound);
         new Thread(runnable).start();
     }

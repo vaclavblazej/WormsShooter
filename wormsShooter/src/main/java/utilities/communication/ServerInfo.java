@@ -3,7 +3,7 @@ package utilities.communication;
 import java.io.Serializable;
 
 /**
- * @author plach_000
+ * @author Štìpán Plachý
  */
 public class ServerInfo implements Serializable {
     public final String name;
@@ -13,5 +13,4 @@ public class ServerInfo implements Serializable {
         this.name = name;
         this.numberOfPlayers = numberOfPlayers;
     }
-
 }
