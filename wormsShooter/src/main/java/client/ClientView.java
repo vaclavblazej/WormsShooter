@@ -32,7 +32,8 @@ public class ClientView extends AbstractView implements
         ActionListener,
         KeyListener,
         MouseMotionListener,
-        MouseListener {
+        MouseListener,
+        ComponentListener {
 
     private static final Logger logger = Logger.getLogger(ClientView.class.getName());
 
@@ -44,12 +45,12 @@ public class ClientView extends AbstractView implements
         return instance;
     }
 
-    private final Dimension TILE_VIEW_SIZE;
-    private final Dimension REAL_VIEW_SIZE;
+    private Dimension tileViewDimensions;
+    private Dimension finalViewDimensions;
     private Body body;
     private EnumSet<ControlsEnum> controlSet;
     private MapClass currentView;
-    private BufferedImage realView;
+    private BufferedImage finalView;
     private Point viewTilePos;
     private AffineTransform tr;         // Defines view position and size. Is inverted already.
     private Controls controls;
@@ -58,14 +59,14 @@ public class ClientView extends AbstractView implements
     private ClientView() {
         super(SCALE);
         map = new MapClass(new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB), this);
-        REAL_VIEW_SIZE = new Dimension(800, 600);
-        realView = new BufferedImage(
-                REAL_VIEW_SIZE.width + (int) Application.RATIO,
-                REAL_VIEW_SIZE.height + (int) Application.RATIO,
+        finalViewDimensions = new Dimension(800, 600);
+        finalView = new BufferedImage(
+                finalViewDimensions.width + (int) Application.RATIO,
+                finalViewDimensions.height + (int) Application.RATIO,
                 BufferedImage.TYPE_INT_RGB);
-        TILE_VIEW_SIZE = new Dimension(
-                REAL_VIEW_SIZE.width / getRatio(),
-                REAL_VIEW_SIZE.height / getRatio());
+        tileViewDimensions = new Dimension(
+                finalViewDimensions.width / getRatio(),
+                finalViewDimensions.height / getRatio());
         currentView = null;
         viewTilePos = new Point();
         controlSet = EnumSet.noneOf(ControlsEnum.class);
@@ -96,7 +97,6 @@ public class ClientView extends AbstractView implements
     public void init() {
         super.init();
         controls = Settings.getInstance().getControls();
-        //repaint();
         addMouseListener(this);
         addMouseMotionListener(this);
         addKeyListener(this);
@@ -113,58 +113,57 @@ public class ClientView extends AbstractView implements
     }
 
     @Override
-    public void paint(Graphics grphcs) {
-        super.paint(grphcs);
-        Point harmony = new Point(0, 0);
+    protected void paintComponent(Graphics graphics) {
+        super.paintComponent(graphics);
+        Point smoothOffset = new Point(0, 0);
         Point viewRealPos = new Point(0, 0);
         if (body != null) {
             Point bodyPosition = body.getPosition();
-            harmony.x = (int) (bodyPosition.x % Application.RATIO);
-            harmony.y = (int) (bodyPosition.y % Application.RATIO);
-            viewTilePos.x = (int) ((bodyPosition.x / Application.RATIO - TILE_VIEW_SIZE.width / 2));
-            viewTilePos.y = (int) ((bodyPosition.y / Application.RATIO - TILE_VIEW_SIZE.height / 2));
-            viewRealPos.x = (int) (bodyPosition.x - Application.RATIO * TILE_VIEW_SIZE.width / 2);
-            viewRealPos.y = (int) (bodyPosition.y - Application.RATIO * TILE_VIEW_SIZE.height / 2);
-            int ubX = (int) (map.getWidth() * Application.RATIO) - REAL_VIEW_SIZE.width - 1;
-            int tubX = map.getWidth() - TILE_VIEW_SIZE.width - 1;
-            int ubY = (int) (map.getHeight() * Application.RATIO) - REAL_VIEW_SIZE.height - 1;
-            int tubY = map.getHeight() - TILE_VIEW_SIZE.height - 1;
+            smoothOffset.x = (int) (bodyPosition.x % Application.RATIO);
+            smoothOffset.y = (int) (bodyPosition.y % Application.RATIO);
+            viewTilePos.x = (int) ((bodyPosition.x / Application.RATIO - tileViewDimensions.width / 2));
+            viewTilePos.y = (int) ((bodyPosition.y / Application.RATIO - tileViewDimensions.height / 2));
+            viewRealPos.x = (int) (bodyPosition.x - Application.RATIO * tileViewDimensions.width / 2);
+            viewRealPos.y = (int) (bodyPosition.y - Application.RATIO * tileViewDimensions.height / 2);
+            int ubX = (int) (map.getWidth() * Application.RATIO) - finalViewDimensions.width - 1;
+            int tubX = map.getWidth() - tileViewDimensions.width - 1;
+            int ubY = (int) (map.getHeight() * Application.RATIO) - finalViewDimensions.height - 1;
+            int tubY = map.getHeight() - tileViewDimensions.height - 1;
             if (viewRealPos.x < 0) {
                 viewRealPos.x = 0;
                 viewTilePos.x = 0;
-                harmony.x = 0;
+                smoothOffset.x = 0;
             } else if (viewRealPos.x > ubX) {
                 viewRealPos.x = ubX;
-                harmony.x = (int) Application.RATIO;
+                smoothOffset.x = (int) Application.RATIO;
                 viewTilePos.x = tubX;
             }
             if (viewRealPos.y < 0) {
                 viewRealPos.y = 0;
                 viewTilePos.y = 0;
-                harmony.y = 0;
+                smoothOffset.y = 0;
             } else if (viewRealPos.y > ubY) {
                 viewRealPos.y = ubY;
-                harmony.y = (int) Application.RATIO;
+                smoothOffset.y = (int) Application.RATIO;
                 viewTilePos.y = tubY;
             }
         }
         tr.setToTranslation(-viewRealPos.x, -viewRealPos.y);
         try {
             currentView = map.getSubmap(viewTilePos.x, viewTilePos.y,
-                    TILE_VIEW_SIZE.width + 1, TILE_VIEW_SIZE.height + 1);
-            MaterialVisuals.redraw(currentView, realView);
+                    tileViewDimensions.width + 1, tileViewDimensions.height + 1);
+            MaterialVisuals.redraw(currentView, finalView);
         } catch (RasterFormatException | ArrayIndexOutOfBoundsException ex) {
             logger.log(Level.SEVERE, null, ex);
         }
-        Graphics2D g = (Graphics2D) grphcs;
-        g.drawImage(realView, -harmony.x, -harmony.y, realView.getWidth(), realView.getHeight(), null);
+        Graphics2D g = (Graphics2D) graphics;
+        g.drawImage(finalView, -smoothOffset.x, -smoothOffset.y, finalView.getWidth(), finalView.getHeight(), null);
         for (Body b : bodies) {
             b.drawRelative(g, tr);
         }
         for (GraphicComponent o : objects) {
             o.drawRelative(g, tr);
         }
-        chatLog.draw(g);
     }
 
     @Override
@@ -266,5 +265,29 @@ public class ClientView extends AbstractView implements
 
     @Override
     public void keyTyped(KeyEvent e) {
+    }
+
+    @Override
+    public void componentResized(ComponentEvent e) {
+        finalViewDimensions = getSize();
+        finalView = new BufferedImage(
+                finalViewDimensions.width + (int) Application.RATIO,
+                finalViewDimensions.height + (int) Application.RATIO,
+                BufferedImage.TYPE_INT_RGB);
+        tileViewDimensions = new Dimension(
+                finalViewDimensions.width / getRatio(),
+                finalViewDimensions.height / getRatio());
+    }
+
+    @Override
+    public void componentMoved(ComponentEvent e) {
+    }
+
+    @Override
+    public void componentShown(ComponentEvent e) {
+    }
+
+    @Override
+    public void componentHidden(ComponentEvent e) {
     }
 }

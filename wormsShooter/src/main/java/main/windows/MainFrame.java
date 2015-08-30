@@ -1,9 +1,14 @@
 package main.windows;
 
+import client.ChatLog;
 import client.ClientCommunication;
 import client.ClientView;
+import client.menu.Settings;
 import main.Application;
 import server.ServerCommunication;
+import utilities.BindableButton;
+import utilities.Controls;
+import utilities.ControlsEnum;
 import utilities.properties.Paths;
 import utilities.spritesheets.SpriteLoader;
 
@@ -54,6 +59,7 @@ public class MainFrame extends JFrame {
     private JPanel settingsCard;
     private JButton videoSettingsButton;
     private JButton audioSettingsButton;
+    private JButton keysSettingsButton;
     private JButton backSettingsButton;
     // settings - video
     private JPanel videoSettingsCard;
@@ -65,12 +71,21 @@ public class MainFrame extends JFrame {
     private JLabel musicAudioSettingSlider;
     private JSlider musicSlider;
     private JButton backAudioSettingsButton;
+    // settings - keys
+    private JPanel keysSettingsCard;
+    private BindableButton upKeysSettingsButton;
+    private BindableButton downKeysSettingsButton;
+    private BindableButton leftKeysSettingsButton;
+    private BindableButton rightKeysSettingsButton;
+    private JButton applyKeysSettingsButton;
     // status bar
     private JPanel statusBar;
-    private JLabel versionNumberLabel;
 
+    private JLabel versionNumberLabel;
     // client card
     private JPanel clientCard;
+    private JPanel chatPanel;
+    private JList chatList;
 
 
     CardLayout mainCardLayout;
@@ -97,6 +112,13 @@ public class MainFrame extends JFrame {
         mainCardLayout = (CardLayout) rootPanel.getLayout();
         menuCardLayout = (CardLayout) menuCards.getLayout();
         versionNumberLabel.setText(Application.version);
+
+        mainFrame.addComponentListener(ClientView.getInstance());
+
+        upKeysSettingsButton.refreshText();
+        downKeysSettingsButton.refreshText();
+        leftKeysSettingsButton.refreshText();
+        rightKeysSettingsButton.refreshText();
     }
 
     /**
@@ -139,6 +161,7 @@ public class MainFrame extends JFrame {
         // singleplayer
         videoSettingsButton = new CustomButton(e -> menuCardLayout.show(menuCards, "videoSettingsCard"));
         audioSettingsButton = new CustomButton(e -> menuCardLayout.show(menuCards, "audioSettingsCard"));
+        keysSettingsButton = new CustomButton(e -> menuCardLayout.show(menuCards, "keysSettingsCard"));
         backSettingsButton = new CustomButton(e -> menuCardLayout.show(menuCards, "mainMenuCard"));
 
         // multiplayer
@@ -171,8 +194,28 @@ public class MainFrame extends JFrame {
         backVideoSettingsButton = new CustomButton(e -> menuCardLayout.show(menuCards, "settingsCard"));
         backAudioSettingsButton = new CustomButton(e -> menuCardLayout.show(menuCards, "settingsCard"));
 
+        // settings - keys
+        final Controls controls = Settings.getInstance().getControls();
+        upKeysSettingsButton = new BindableButton(controls.get(ControlsEnum.UP));
+        downKeysSettingsButton = new BindableButton(controls.get(ControlsEnum.DOWN));
+        leftKeysSettingsButton = new BindableButton(controls.get(ControlsEnum.LEFT));
+        rightKeysSettingsButton = new BindableButton(controls.get(ControlsEnum.RIGHT));
+        applyKeysSettingsButton = new CustomButton(e -> {
+            controls.rebind(ControlsEnum.UP, upKeysSettingsButton.getKeyCode());
+            controls.rebind(ControlsEnum.DOWN, downKeysSettingsButton.getKeyCode());
+            controls.rebind(ControlsEnum.LEFT, leftKeysSettingsButton.getKeyCode());
+            controls.rebind(ControlsEnum.RIGHT, rightKeysSettingsButton.getKeyCode());
+            final Settings settings = Settings.getInstance();
+            // todo save into settings
+            settings.saveSettings();
+            menuCardLayout.show(menuCards, "settingsCard");
+        });
 
         // client card
         clientCard = ClientView.getInstance();
+        chatPanel = ChatLog.getInstance();
+        chatList = ChatLog.getInstance().getList();
+
+        ChatLog.getInstance().log("Hello world!");
     }
 }

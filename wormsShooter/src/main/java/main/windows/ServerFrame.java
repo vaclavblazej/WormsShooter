@@ -21,7 +21,7 @@ public class ServerFrame extends JFrame {
         pack();
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
-        setMinimumSize(new Dimension(800, 600));
+        setMinimumSize(new Dimension(400, 300));
 //        setLocationRelativeTo(null);
         setLocation(10, 10);
     }

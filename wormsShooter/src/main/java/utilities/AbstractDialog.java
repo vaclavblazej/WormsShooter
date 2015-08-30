@@ -1,6 +1,6 @@
 package utilities;
 
-import client.ClientWindow;
+import main.Application;
 import utilities.properties.Message;
 
 import javax.swing.*;
@@ -68,7 +68,7 @@ public abstract class AbstractDialog extends JDialog implements Validator {
                     AbstractDialog.this.cancelAction();
                     AbstractDialog.this.dispose();
                 } catch (Exception ex) {
-                    ClientWindow.getInstance().showError(ex);
+                    Application.error(ex);
                 }
             }
         }));
@@ -80,7 +80,7 @@ public abstract class AbstractDialog extends JDialog implements Validator {
                     AbstractDialog.this.okAction();
                     AbstractDialog.this.dispose();
                 } catch (Exception ex) {
-                    ClientWindow.getInstance().showError(ex);
+                    Application.error(ex);
                 }
             }
         };

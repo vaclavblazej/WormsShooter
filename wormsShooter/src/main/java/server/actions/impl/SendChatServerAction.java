@@ -1,5 +1,6 @@
 package server.actions.impl;
 
+import client.ChatLog;
 import server.actions.ActionServer;
 
 /**
@@ -15,6 +16,6 @@ public class SendChatServerAction extends ActionServer {
     }
 
     public void perform() {
-        view.logChat(id + " " + str);
+        ChatLog.getInstance().log(id + " " + str);
     }
 }

@@ -28,6 +28,8 @@ import java.util.logging.Logger;
  */
 public abstract class AbstractView extends JPanel implements ActionListener {
 
+    private static final Logger logger = Logger.getLogger(AbstractView.class.getName());
+
     private static final int RNG = 20;
     private static final int RATIO = 20;
     protected Model model;
@@ -37,7 +39,6 @@ public abstract class AbstractView extends JPanel implements ActionListener {
     protected List<GraphicComponent> objects;
     protected Random random;
     protected Timer tickTimer;
-    protected ChatLog chatLog;
     private final int ratio;
     private boolean check;
 
@@ -54,12 +55,9 @@ public abstract class AbstractView extends JPanel implements ActionListener {
         check = false;
         reset();
         if (!check) {
-            Logger.getLogger(AbstractView.class.getName())
-                    .log(Level.SEVERE, null, new Exception(
-                            "Every " + AbstractView.class.getSimpleName()
-                                    + " should call super.reset() in its reset!"));
+            logger.log(Level.SEVERE, null, new Exception(
+                    "Every " + AbstractView.class.getSimpleName() + " should call super.reset() in its reset!"));
         }
-        chatLog = new ChatLog();
     }
 
     public CollisionState check(int x, int y) {
@@ -89,10 +87,6 @@ public abstract class AbstractView extends JPanel implements ActionListener {
 
     public Crafting getRecipes() {
         return getModel().getFactory().getRecipes();
-    }
-
-    public void logChat(String string) {
-        chatLog.log(string);
     }
 
     public void init() {

@@ -4,7 +4,7 @@ package utilities.spritesheets;
  * @author Václav Blažej
  */
 
-import client.ClientWindow;
+import main.Application;
 import utilities.properties.Message;
 import utilities.properties.Paths;
 
@@ -55,7 +55,7 @@ public class SpriteLoader {
                 sprite = ImageIO.read(serverUrl);
                 saveSprite(file, sprite);
             } catch (IllegalArgumentException | IOException ex) {
-                ClientWindow.getInstance().showError(new Exception(Message.IMAGE_LOAD_ERROR.value() + path));
+                Application.error(new Exception(Message.IMAGE_LOAD_ERROR.value() + path));
             }
         }
         spriteSheet = sprite;

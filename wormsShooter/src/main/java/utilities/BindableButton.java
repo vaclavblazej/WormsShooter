@@ -1,6 +1,7 @@
 package utilities;
 
 import javax.swing.*;
+import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
@@ -22,9 +23,23 @@ public class BindableButton extends JButton implements KeyListener {
         setAction(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                addKeyListener(me);
+                setActive();
             }
         });
+        refreshText();
+    }
+
+    public void setActive(){
+        addKeyListener(me);
+        setBackground(Color.GREEN);
+    }
+
+    public void setInactive(){
+        removeKeyListener(me);
+        setBackground(Color.LIGHT_GRAY);
+    }
+
+    public void refreshText(){
         setText(KeyEvent.getKeyText(code));
     }
 
@@ -40,9 +55,9 @@ public class BindableButton extends JButton implements KeyListener {
     public void keyPressed(KeyEvent e) {
         if (e.getKeyCode() != KeyEvent.VK_ESCAPE) {
             code = e.getKeyCode();
-            setText(KeyEvent.getKeyText(code));
+            refreshText();
         }
-        removeKeyListener(me);
+        setInactive();
     }
 
     @Override

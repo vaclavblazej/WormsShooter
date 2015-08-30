@@ -110,8 +110,8 @@ public class ServerView extends AbstractView {
     }
 
     @Override
-    public void paint(Graphics graphics) {
-        super.paint(graphics);
+    public void paintComponent(Graphics graphics) {
+        super.paintComponent(graphics);
         Graphics2D g = (Graphics2D) graphics;
         g.drawImage(map.getImage(), 0, 0, getWidth(), getHeight(), null);
         for (Body b : bodies) {
