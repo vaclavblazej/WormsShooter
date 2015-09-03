@@ -1,5 +1,7 @@
 package spacks.communication.server.impl;
 
+import spacks.communication.utilities.SListener;
+
 import java.io.IOException;
 import java.net.ServerSocket;
 import java.net.Socket;
@@ -22,9 +24,11 @@ public class SCommunicationServerCreateService implements Runnable {
     private ServerSocket serverSocket;
     private boolean running;
     private Map<Integer, SCommunicationClientHandler> connections;
+    private SListener sListener;
 
-    public SCommunicationServerCreateService(int port, Map<Integer, SCommunicationClientHandler> connections) throws IOException {
+    public SCommunicationServerCreateService(int port, Map<Integer, SCommunicationClientHandler> connections, SListener sListener) throws IOException {
         this.port = port;
+        this.sListener = sListener;
         this.connections = connections;
         serverSocket = null;
         running = false;
@@ -71,10 +75,13 @@ public class SCommunicationServerCreateService implements Runnable {
                     logger.info("Server: server is full");
                     continue;
                 }
+                int id = connectionsCounter;
                 while (connections.containsKey(connectionsCounter)) {
                     connectionsCounter = (connectionsCounter + 1) % MAXIMUM_CONNECTIONS;
                 }
-                connections.put(connectionsCounter, h);
+                logger.info("Server: client with id=" + id + " connected");
+                connections.put(id, h);
+                sListener.connectionCreated(id);
             } catch (SocketException ex) {
                 logger.info("Server: connection closed");
                 break;

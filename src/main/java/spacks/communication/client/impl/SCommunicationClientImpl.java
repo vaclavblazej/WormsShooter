@@ -28,8 +28,10 @@ public class SCommunicationClientImpl implements SCommunicationClient {
     public ObjectOutputStream os;
     public ObjectInputStream is;
     public Boolean running;
+    private SAction repair;
 
-    public SCommunicationClientImpl() {
+    public SCommunicationClientImpl(SAction repair) {
+        this.repair = repair;
         communicationSocket = new Socket();
         os = null;
         is = null;
@@ -83,12 +85,15 @@ public class SCommunicationClientImpl implements SCommunicationClient {
                         if (packet.isAsynchronous() || ((SSynchronousPacket) packet).checkSynchronization(currentCount)) {
                             logger.info("Client: packet " + packet);
                             packet.performAction();
+                        } else{
+                            repair.perform();
                         }
                         if (!packet.isAsynchronous()) {
                             currentCount = ((SSynchronousPacket) packet).getCount();
                         }
                     } catch (IOException | ClassNotFoundException ex) {
                         logger.log(Level.SEVERE, null, ex);
+                        running = false;
                     }
                 }
                 logger.info("Client: terminating socket");
