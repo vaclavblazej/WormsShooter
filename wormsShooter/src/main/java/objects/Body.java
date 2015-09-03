@@ -102,9 +102,15 @@ public class Body implements GraphicComponent, SendableVia<Body, SerializableBod
     @Override
     public void tick() {
         state = view.check(position.x / Application.BLOCK_SIZE, (position.y + physicsSize.height) / Application.BLOCK_SIZE);
-        if (state == CollisionState.GAS) {
-            velocity.y += GRAVITY;
-            velocity.y *= 0.95;
+        switch(state){
+            case GAS:
+                velocity.y += GRAVITY;
+                velocity.y *= 0.95;
+                break;
+            case LIQUID:
+                velocity.y += GRAVITY;
+                velocity.y *= 0.60;
+                break;
         }
         switch (movement) {
             case RIGHT:
@@ -134,7 +140,7 @@ public class Body implements GraphicComponent, SendableVia<Body, SerializableBod
             }
         } else {
             while (slide > velocity.x) {
-                int x = (position.x - 1 - slide) / Application.BLOCK_SIZE;
+                int x = (position.x - 1 + slide) / Application.BLOCK_SIZE;
                 topSideCollision = view.check(x, top);
                 bottomSideCollision = view.check(x, bottom);
                 if (topSideCollision == CollisionState.SOLID || bottomSideCollision == CollisionState.SOLID) {
@@ -162,7 +168,7 @@ public class Body implements GraphicComponent, SendableVia<Body, SerializableBod
             }
         } else {
             while (fall > velocity.y) {
-                int y = (position.y - 1 - fall) / Application.BLOCK_SIZE;
+                int y = (position.y - 1 + fall) / Application.BLOCK_SIZE;
                 leftVerticalCollision = view.check(left, y);
                 rightVerticalCollision = view.check(right, y);
                 if (leftVerticalCollision == CollisionState.SOLID || rightVerticalCollision == CollisionState.SOLID) {

@@ -144,7 +144,7 @@ public class ClientView extends AbstractView implements
             Graphics2D g = (Graphics2D) graphics;
             transformation.setToTranslation(-viewRealPos.x + smoothOffset.x, -viewRealPos.y + smoothOffset.y);
             for (Body body : bodies) body.drawRelative((Graphics2D) rasteredView.getGraphics(), transformation);
-            g.drawImage(rasteredView, -smoothOffset.x - Application.BLOCK_SIZE, -smoothOffset.y - Application.BLOCK_SIZE, rasteredView.getWidth(), rasteredView.getHeight(), null);
+            g.drawImage(rasteredView, -smoothOffset.x - 2*Application.BLOCK_SIZE, -smoothOffset.y - 2*Application.BLOCK_SIZE, rasteredView.getWidth(), rasteredView.getHeight(), null);
 
 //            final BufferedImage image = map.getImage();
 //            BufferedImage glass = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
@@ -172,8 +172,8 @@ public class ClientView extends AbstractView implements
                 panelViewDimensions.width / Application.BLOCK_SIZE,
                 panelViewDimensions.height / Application.BLOCK_SIZE);
         // even to avoid problems with centering when window is made larger
-        tileViewDimensions.width += 2;
-        tileViewDimensions.height += 2;
+        tileViewDimensions.width += 4;
+        tileViewDimensions.height += 4;
         if (tileViewDimensions.width % 2 != 0) tileViewDimensions.width++;
         if (tileViewDimensions.height % 2 != 0) tileViewDimensions.height++;
         rasteredView = new BufferedImage(
