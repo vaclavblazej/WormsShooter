@@ -43,11 +43,11 @@ public class ItemBlueprint implements Serializable, Comparable<ItemBlueprint> {
     }
 
     public Item getInstance() {
-        return new Item(name, usable, size, category, image.getImage(), action);
+        return new Item(name, usable, size, category, image.deserialize(), action);
     }
 
     public BufferedImage getImage() {
-        return image.getImage();
+        return image.deserialize();
     }
 
     public String getName() {

@@ -14,13 +14,20 @@ import utilities.spritesheets.SpriteLoader;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ComponentEvent;
+import java.awt.event.ComponentListener;
+import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.HashMap;
+import java.util.logging.Logger;
 
 /**
  * @author Václav Blažej
  */
-public class ServerView extends AbstractView {
+public class ServerView extends AbstractView implements ComponentListener {
+
+
+    private static final Logger logger = Logger.getLogger(ServerView.class.getName());
 
     private static ServerView instance;
 
@@ -28,6 +35,8 @@ public class ServerView extends AbstractView {
         if (instance == null) instance = new ServerView();
         return instance;
     }
+
+    private BufferedImage rasteredView;
 
     private ServerView() {
         super(1);
@@ -38,13 +47,11 @@ public class ServerView extends AbstractView {
         lights.add(new LightSource(200, 200, 5));
         lights.add(new LightSource(300, 200, 5));
         map = new MapClass(SpriteLoader.getSprite().getFrame(), this, lights);
-        model = new Model(map,
-                new HashMap<>(20),
-                objects,
-                createItems());
+        model = new Model(map, new HashMap<>(20), objects, createItems());
         material = new Material(this);
         createRecipes();
 
+        SwingUtilities.invokeLater(this::recalculateGraphicWindowLayout);
         SwingUtilities.invokeLater(this::init);
     }
 
@@ -113,12 +120,37 @@ public class ServerView extends AbstractView {
     public void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
         Graphics2D g = (Graphics2D) graphics;
-        g.drawImage(map.getImage(), 0, 0, getWidth(), getHeight(), null);
-        for (Body b : bodies) {
-            b.draw(g);
-        }
-        for (GraphicComponent c : objects) {
-            c.draw(g);
-        }
+        final BufferedImage image = map.getImage();
+        final BufferedImage glass = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
+        final Graphics2D imgGraphics = (Graphics2D) glass.getGraphics();
+        for (Body b : bodies) b.draw(imgGraphics);
+        for (GraphicComponent c : objects) c.draw(imgGraphics);
+        final Graphics raster = rasteredView.getGraphics();
+        raster.drawImage(image, 0, 0, image.getWidth(), image.getHeight(), null);
+        raster.drawImage(glass, 0, 0, glass.getWidth(), glass.getHeight(), null);
+        g.drawImage(rasteredView, 0, 0, getWidth(), getHeight(), null);
+    }
+
+
+    private void recalculateGraphicWindowLayout() {
+        final Dimension dimension = getSize();
+        rasteredView = new BufferedImage(dimension.width, dimension.height, BufferedImage.TYPE_INT_RGB);
+    }
+
+    @Override
+    public void componentResized(ComponentEvent e) {
+        recalculateGraphicWindowLayout();
+    }
+
+    @Override
+    public void componentMoved(ComponentEvent e) {
+    }
+
+    @Override
+    public void componentShown(ComponentEvent e) {
+    }
+
+    @Override
+    public void componentHidden(ComponentEvent e) {
     }
 }

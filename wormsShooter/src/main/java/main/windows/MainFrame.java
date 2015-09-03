@@ -125,14 +125,13 @@ public class MainFrame extends JFrame {
      * Structure:
      * -mainMenu
      * |-singleplayer
-     * |  |-xxx
-     * |  \-yyy
      * |-multiplayer
      * |  |-join
      * |  \-host
      * \-settings
      * * |-video
-     * * \-audio
+     * * |-audio
+     * * \-keys
      */
     private void createUIComponents() {
         // menu card

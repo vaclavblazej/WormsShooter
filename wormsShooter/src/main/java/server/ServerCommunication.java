@@ -9,12 +9,16 @@ import spacks.communication.utilities.SListener;
 
 import java.io.IOException;
 import java.util.Map;
+import java.util.logging.Level;
+import java.util.logging.Logger;
 
 /**
  * @author Štěpán Plachý
  * @author Václav Blažej
  */
 public class ServerCommunication implements SListener {
+
+    private static final Logger logger = Logger.getLogger(ServerCommunication.class.getName());
 
     private static ServerCommunication instance;
 
@@ -25,7 +29,7 @@ public class ServerCommunication implements SListener {
     private SCommunicationServer server;
 
     public ServerCommunication(int port) throws IOException {
-        System.out.println("Server: starting");
+        logger.info("Server: starting");
         ActionClient.setView(ServerView.getInstance());
         server = SCommunication.createNewServer(port, this); // todo this object listened to connections on server
         server.start();
@@ -43,7 +47,7 @@ public class ServerCommunication implements SListener {
     public void broadcast(SAction action) {
         try {
             server.broadcast(action);
-        } catch (IOException ex) {
+        } catch (IOException ignored) {
         }
     }
 
@@ -51,14 +55,14 @@ public class ServerCommunication implements SListener {
         try {
             server.send(id, action);
         } catch (IOException ex) {
-            System.out.println(ex);
+            logger.log(Level.SEVERE, ex.toString());
         }
     }
 
     public void disconnect(int id) {
         try {
             server.disconnectClient(id);
-        } catch (IOException ex) {
+        } catch (IOException ignored) {
         }
     }
 
@@ -67,7 +71,7 @@ public class ServerCommunication implements SListener {
         Body body = ServerView.getInstance().newBody();
         Map<Integer, Body> controls = ServerView.getInstance().getModel().getControls();
         controls.put(id, body);
-        System.out.println("bind body");
+        logger.info("bind body");
     }
 
     @Override

@@ -1,6 +1,5 @@
 package utilities;
 
-import client.ChatLog;
 import objects.Body;
 import objects.GraphicComponent;
 import objects.items.Crafting;
@@ -30,8 +29,6 @@ public abstract class AbstractView extends JPanel implements ActionListener {
 
     private static final Logger logger = Logger.getLogger(AbstractView.class.getName());
 
-    private static final int RNG = 20;
-    private static final int RATIO = 20;
     protected Model model;
     protected Material material;
     protected MapClass map;
@@ -51,7 +48,6 @@ public abstract class AbstractView extends JPanel implements ActionListener {
         this.ratio = ratio;
         tickTimer = new Timer(40, this);
         random = new Random();
-        setFocusable(true);
         check = false;
         reset();
         if (!check) {
@@ -62,7 +58,7 @@ public abstract class AbstractView extends JPanel implements ActionListener {
 
     public CollisionState check(int x, int y) {
         if (material != null) {
-            return material.getState(getPixel((x / RATIO), (y / RATIO)));
+            return material.getState(getPixel(x, y));
         } else {
             return Material.DEFAULT;
         }
@@ -120,7 +116,7 @@ public abstract class AbstractView extends JPanel implements ActionListener {
     }
 
     public Body newBody() {
-        Body b = new Body(100, 200, this);
+        Body b = new Body(4000, 6000, this);
         bodies.add(b);
         return b;
     }

@@ -5,13 +5,12 @@ import utilities.AbstractView;
 import utilities.MapClass;
 
 import java.awt.image.BufferedImage;
-import java.io.Serializable;
 import java.util.ArrayList;
 
 /**
  * @author Václav Blažej
  */
-public class SerializableMapClass implements Serializable {
+public class SerializableMapClass implements DeseriazibleInto<MapClass> {
 
     private SerializableBufferedImage map;
     private ArrayList<LightSource> lights;
@@ -21,7 +20,8 @@ public class SerializableMapClass implements Serializable {
         this.lights = lights;
     }
 
-    MapClass deserialize(AbstractView view) {
-        return new MapClass(map.getImage(), view, lights);
+    @Override
+    public MapClass deserialize(AbstractView view) {
+        return new MapClass(map.deserialize(), view, lights);
     }
 }

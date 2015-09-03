@@ -23,12 +23,12 @@ public class MineAction extends ActionClient {
 
     @Override
     public void perform() {
-        int x = (int) (point.x / Application.RATIO);
-        int y = (int) (point.y / Application.RATIO);
+        int x = point.x / Application.BLOCK_SIZE;
+        int y = point.y / Application.BLOCK_SIZE;
         Body body = view.getModel().getControls().get(id);
         Point pos = body.getPosition();
-        int distance = Math.abs((int) (pos.x / Application.RATIO) - x)
-                + Math.abs((int) (pos.y / Application.RATIO) - y);
+        int distance = Math.abs(pos.x / Application.BLOCK_SIZE - x)
+                + Math.abs(pos.y / Application.BLOCK_SIZE - y);
         if (distance < 6) {
             MaterialEnum to = MaterialEnum.AIR;
             MaterialEnum mat = view.change(x, y, to);

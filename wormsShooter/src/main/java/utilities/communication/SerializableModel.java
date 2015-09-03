@@ -5,7 +5,6 @@ import objects.GraphicComponent;
 import objects.items.ItemFactory;
 import utilities.AbstractView;
 
-import java.io.Serializable;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -13,7 +12,7 @@ import java.util.Map;
 /**
  * @author Václav Blažej
  */
-public class SerializableModel implements Serializable {
+public class SerializableModel implements DeseriazibleInto<Model> {
 
     private SerializableMapClass map;
     private Map<Integer, SerializableBody> controls;
@@ -31,6 +30,7 @@ public class SerializableModel implements Serializable {
         this.factory = factory;
     }
 
+    @Override
     public Model deserialize(AbstractView view) {
         Map<Integer, Body> arr = new HashMap<>();
         for (Integer i : controls.keySet()) {

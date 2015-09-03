@@ -12,7 +12,6 @@ import java.awt.*;
 public class ServerFrame extends JFrame {
     private JPanel rootPanel;
     private JPanel serverView;
-    private JButton shutDownServerButton;
 
     public ServerFrame() {
         super(Message.SERVER_WINDOW_TITLE.value());
@@ -21,8 +20,9 @@ public class ServerFrame extends JFrame {
         pack();
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
-        setMinimumSize(new Dimension(400, 300));
+        setPreferredSize(new Dimension(420, 340));
 //        setLocationRelativeTo(null);
+        pack();
         setLocation(10, 10);
     }
 

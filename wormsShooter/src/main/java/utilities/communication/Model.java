@@ -4,6 +4,7 @@ import objects.Body;
 import objects.GraphicComponent;
 import objects.items.ItemFactory;
 import utilities.MapClass;
+import utilities.SendableVia;
 
 import java.util.HashMap;
 import java.util.List;
@@ -12,7 +13,7 @@ import java.util.Map;
 /**
  * @author Václav Blažej
  */
-public class Model {
+public class Model implements SendableVia<Model, SerializableModel> {
 
     private MapClass map;
     private Map<Integer, Body> controls;
@@ -46,6 +47,7 @@ public class Model {
         return factory;
     }
 
+    @Override
     public SerializableModel serialize() {
         Map<Integer, SerializableBody> arr = new HashMap<>();
         for (Integer i : controls.keySet()) {

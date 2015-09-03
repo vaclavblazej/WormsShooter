@@ -7,21 +7,20 @@ import utilities.materials.Material;
 import java.awt.*;
 import java.awt.image.BufferedImage;
 import java.util.ArrayList;
+import java.util.Arrays;
 import java.util.LinkedList;
 import java.util.logging.Logger;
 
 /**
  * @author Václav Blažej
  */
-public class MapClass {
+public class MapClass implements SendableVia<MapClass, SerializableMapClass> {
 
     private static final Logger logger = Logger.getLogger(MapClass.class.getName());
 
     private BufferedImage map;
     private int[][] shadows;
     private AbstractView view;
-    private int width;
-    private int height;
     private ArrayList<LightSource> lights;
 
     public MapClass(BufferedImage map, AbstractView view) {
@@ -35,14 +34,8 @@ public class MapClass {
     private MapClass(BufferedImage map, AbstractView view, ArrayList<LightSource> lights, int[][] shadows) {
         this.map = map;
         this.view = view;
-        width = map.getWidth();
-        height = map.getHeight();
         this.shadows = shadows;
-        if (lights != null) {
-            this.lights = lights;
-        } else {
-            this.lights = new ArrayList<>(10);
-        }
+        this.lights = (lights != null) ? lights : new ArrayList<>(10);
     }
 
     public int getWidth() {
@@ -65,27 +58,25 @@ public class MapClass {
         return shadows[x][y];
     }
 
-    public MapClass getSubmap(int x, int y, int width, int height) throws ArrayIndexOutOfBoundsException {
-        int[][] ns = new int[width][height];
-        for (int j = 0; j < height; j++) {
-            for (int i = 0; i < width; i++) {
-                ns[i][j] = shadows[x + i][y + j];
-            }
-        }
-        return new MapClass(map.getSubimage(x, y, width, height), view, lights, ns);
+    public MapClass getSubmap(Point offset, Dimension size) throws ArrayIndexOutOfBoundsException {
+        int[][] ns = new int[size.width][size.height];
+        for (int[] s : ns) Arrays.fill(s, 0x33); // todo
+//        for (int j = 0; j < size.height; j++) {
+//            for (int i = 0; i < size.width; i++) {
+//                ns[i][j] = shadows[offset.x + i][offset.y + j];
+//            }
+//        }
+        final BufferedImage subimage = map.getSubimage(offset.x, offset.y, size.width, size.height);
+        return new MapClass(subimage, view, lights, ns);
     }
 
     public void addLightSource(LightSource source) {
         lights.add(source);
-        logger.info("add light source");
+        logger.info("added light source");
     }
 
     public void calculateShadows(Material material) {
-        for (int i = 0; i < width; i++) {
-            for (int j = 0; j < height; j++) {
-                shadows[i][j] = 0xFF;
-            }
-        }
+//        Arrays.fill(shadows, 0xFF);
         recalculateShadows(material);
     }
 
@@ -157,6 +148,7 @@ public class MapClass {
         return map.getSubimage(x, y, width, height);
     }
 
+    @Override
     public SerializableMapClass serialize() {
         return new SerializableMapClass(map, lights);
     }

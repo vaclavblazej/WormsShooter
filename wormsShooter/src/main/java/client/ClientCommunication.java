@@ -43,7 +43,7 @@ public class ClientCommunication {
             ClientView.getInstance().init();
             startConnection(ip);
         } catch (IOException ex) {
-            Logger.getLogger(ClientCommunication.class.getName()).log(Level.SEVERE, null, ex);
+            logger.log(Level.SEVERE, null, ex);
         }
         getModel();
     }
@@ -69,12 +69,12 @@ public class ClientCommunication {
         try {
             connection.send(packet);
         } catch (IOException ex) {
-            Logger.getLogger(ClientCommunication.class.getName()).log(Level.SEVERE, null, ex);
+            logger.log(Level.SEVERE, null, ex);
         }
     }
 
     public void getModel() {
-        logger .info("Client: getting model");
+        logger.info("Client: getting model");
         send(new GetModelAction());
     }
 
@@ -83,7 +83,7 @@ public class ClientCommunication {
     }
 
     public void startConnection(String ip) throws IOException {
-        logger .info("Client: starting socket");
+        logger.info("Client: starting socket");
         connection.start();
     }
 }

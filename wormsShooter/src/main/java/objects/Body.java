@@ -1,9 +1,11 @@
 package objects;
 
+import main.Application;
 import objects.items.InventoryTableModel;
 import objects.items.ItemBlueprint;
 import utilities.AbstractView;
 import utilities.CollisionState;
+import utilities.SendableVia;
 import utilities.communication.SerializableBody;
 import utilities.spritesheets.Animation;
 import utilities.spritesheets.Frame;
@@ -17,19 +19,18 @@ import java.util.ArrayList;
 /**
  * @author Václav Blažej
  */
-public class Body implements GraphicComponent {
+public class Body implements GraphicComponent, SendableVia<Body, SerializableBody> {
 
-    private static final double JUMP = 12;
-    private static final double RATIO = 20;
-    private static final double GRAVITY = 1;
-    private static final int SPEED = 8;
+    private static final double JUMP = 20;
+    private static final double GRAVITY = 2;
+    private static final int SPEED = 12;
     private static final int INITIAL_HEALTH = 100;
     private Point position;
     private Point.Double velocity;
     private MoveEnum movement;
-    private Dimension PHYSICS_SIZE;
-    private Dimension VIEW_SIZE;
-    private Dimension REAL_SIZE;
+    private Dimension physicsSize;
+    private Dimension viewSize;
+    private Dimension bodyBlockSize;
     private boolean jump;
     private AbstractView view;
     private InventoryTableModel inventory;
@@ -42,18 +43,19 @@ public class Body implements GraphicComponent {
     private int health;
     private Animation animation;
 
-    public Body(Point2D.Double position, Point2D.Double velocity,
-                MoveEnum movement, Dimension REAL_SIZE,
-                boolean jump, AbstractView view) {
-        this.position = new Point((int) (position.x * RATIO),
-                (int) (position.y * RATIO));
+    public Body(Point position,
+                Point.Double velocity,
+                MoveEnum movement,
+                Dimension bodyBlockSize,
+                boolean jump,
+                AbstractView view) {
+        this.position = position;
         this.velocity = velocity;
         this.movement = movement;
-        this.REAL_SIZE = REAL_SIZE;
+        this.bodyBlockSize = bodyBlockSize;
+        this.physicsSize = new Dimension(bodyBlockSize.width * Application.BLOCK_SIZE, bodyBlockSize.height * Application.BLOCK_SIZE);
         int ratio = view.getRatio();
-        this.PHYSICS_SIZE = new Dimension((int) (REAL_SIZE.width * RATIO),
-                (int) (REAL_SIZE.height * RATIO));
-        this.VIEW_SIZE = new Dimension(REAL_SIZE.width * ratio, REAL_SIZE.height * ratio);
+        this.viewSize = new Dimension(bodyBlockSize.width * ratio, bodyBlockSize.height * ratio);
         this.jump = jump;
         this.view = view;
         this.inventory = new InventoryTableModel("Item", "Count");
@@ -69,8 +71,7 @@ public class Body implements GraphicComponent {
     }
 
     public Body(int x, int y, AbstractView map) {
-        this(new Point.Double(x, y), new Point.Double(0, 0),
-                MoveEnum.STOP, new Dimension(1, 2), false, map);
+        this(new Point(x, y), new Point.Double(0, 0), MoveEnum.STOP, new Dimension(1, 2), false, map);
     }
 
     public InventoryTableModel getInventory() {
@@ -100,10 +101,10 @@ public class Body implements GraphicComponent {
 
     @Override
     public void tick() {
-        state = view.check(position.x, position.y + PHYSICS_SIZE.height);
+        state = view.check(position.x / Application.BLOCK_SIZE, (position.y + physicsSize.height) / Application.BLOCK_SIZE);
         if (state == CollisionState.GAS) {
             velocity.y += GRAVITY;
-            velocity.y *= 0.98;
+            velocity.y *= 0.95;
         }
         switch (movement) {
             case RIGHT:
@@ -116,15 +117,16 @@ public class Body implements GraphicComponent {
                 velocity.x = 0;
                 break;
         }
-        int x;
+
         int slide = 0;
+        final int top = position.y / Application.BLOCK_SIZE;
+        final int bottom = (position.y + physicsSize.height - 1) / Application.BLOCK_SIZE;
         if (velocity.x >= 0) {
             while (slide < velocity.x) {
-                x = position.x + slide + PHYSICS_SIZE.width;
-                topSideCollision = view.check(x, position.y);
-                bottomSideCollision = view.check(x, position.y + PHYSICS_SIZE.height - 1);
-                if (topSideCollision == CollisionState.SOLID
-                        || bottomSideCollision == CollisionState.SOLID) {
+                int x = (position.x + physicsSize.width + slide) / Application.BLOCK_SIZE;
+                topSideCollision = view.check(x, top);
+                bottomSideCollision = view.check(x, bottom);
+                if (topSideCollision == CollisionState.SOLID || bottomSideCollision == CollisionState.SOLID) {
                     velocity.x = 0;
                     break;
                 }
@@ -132,11 +134,10 @@ public class Body implements GraphicComponent {
             }
         } else {
             while (slide > velocity.x) {
-                x = position.x + slide - 1;
-                topSideCollision = view.check(x, position.y);
-                bottomSideCollision = view.check(x, position.y + PHYSICS_SIZE.height - 1);
-                if (topSideCollision == CollisionState.SOLID
-                        || bottomSideCollision == CollisionState.SOLID) {
+                int x = (position.x - 1 - slide) / Application.BLOCK_SIZE;
+                topSideCollision = view.check(x, top);
+                bottomSideCollision = view.check(x, bottom);
+                if (topSideCollision == CollisionState.SOLID || bottomSideCollision == CollisionState.SOLID) {
                     velocity.x = 0;
                     break;
                 }
@@ -144,15 +145,16 @@ public class Body implements GraphicComponent {
             }
         }
         position.x += slide;
-        int y;
+
         int fall = 0;
+        final int left = position.x / Application.BLOCK_SIZE;
+        final int right = (position.x + physicsSize.width - 1) / Application.BLOCK_SIZE;
         if (velocity.y >= 0) {
             while (fall < velocity.y) {
-                y = position.y + fall + PHYSICS_SIZE.height;
-                leftVerticalCollision = view.check(position.x, y);
-                rightVerticalCollision = view.check(position.x + PHYSICS_SIZE.width - 1, y);
-                if (leftVerticalCollision == CollisionState.SOLID
-                        || rightVerticalCollision == CollisionState.SOLID) {
+                int y = (position.y + physicsSize.height + fall) / Application.BLOCK_SIZE;
+                leftVerticalCollision = view.check(left, y);
+                rightVerticalCollision = view.check(right, y);
+                if (leftVerticalCollision == CollisionState.SOLID || rightVerticalCollision == CollisionState.SOLID) {
                     velocity.y = 0;
                     break;
                 }
@@ -160,11 +162,10 @@ public class Body implements GraphicComponent {
             }
         } else {
             while (fall > velocity.y) {
-                y = position.y + fall - 1;
-                leftVerticalCollision = view.check(position.x, y);
-                rightVerticalCollision = view.check(position.x + PHYSICS_SIZE.width - 1, y);
-                if (leftVerticalCollision == CollisionState.SOLID
-                        || rightVerticalCollision == CollisionState.SOLID) {
+                int y = (position.y - 1 - fall) / Application.BLOCK_SIZE;
+                leftVerticalCollision = view.check(left, y);
+                rightVerticalCollision = view.check(right, y);
+                if (leftVerticalCollision == CollisionState.SOLID || rightVerticalCollision == CollisionState.SOLID) {
                     velocity.y = 0;
                     break;
                 }
@@ -218,26 +219,28 @@ public class Body implements GraphicComponent {
     @Override
     public void draw(Graphics2D g) {
         g.setColor(Color.RED);
-        g.fillRect(
-                (int) (position.x / RATIO),
-                (int) (position.y / RATIO),
-                VIEW_SIZE.width, VIEW_SIZE.height);
+        g.fillRect(position.x / Application.BLOCK_SIZE, position.y / Application.BLOCK_SIZE,
+                bodyBlockSize.width, bodyBlockSize.height);
     }
 
     @Override
     public void drawRelative(Graphics2D g, AffineTransform trans) {
-        AffineTransform tr = (AffineTransform) trans.clone();
+        AffineTransform tr = new AffineTransform(trans);
         tr.translate(position.x, position.y);
 //        tr.rotate(rotation);
         g.setTransform(tr);
         g.setColor(Color.RED);
-        g.fillRect(0, 0, VIEW_SIZE.width, VIEW_SIZE.height);
+        g.fillRect(0, 0, viewSize.width, viewSize.height);
+
+//        final int top = position.y / Application.BLOCK_SIZE;
+//        final int bottom = (position.y + physicsSize.height - 1) / Application.BLOCK_SIZE;
+//        int x = (position.x + physicsSize.width) / Application.BLOCK_SIZE;
+
 //        g.drawImage(animation.getSprite(), null, null);
     }
 
+    @Override
     public SerializableBody serialize() {
-        return new SerializableBody(
-                new Point.Double(position.x / RATIO, position.y / RATIO),
-                velocity, movement, REAL_SIZE, jump);
+        return new SerializableBody(position, velocity, movement, bodyBlockSize, jump);
     }
 }

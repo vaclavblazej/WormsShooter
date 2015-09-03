@@ -27,7 +27,7 @@ public class Bullet implements GraphicComponent {
     @Override
     public void draw(Graphics2D g) {
         tr = new AffineTransform();
-        tr.translate(position.x / Application.RATIO, position.y / Application.RATIO);
+        tr.translate(position.x / Application.BLOCK_SIZE, position.y / Application.BLOCK_SIZE);
         tr.rotate(rotation);
         g.setColor(Color.RED);
         g.setTransform(tr);
@@ -48,7 +48,7 @@ public class Bullet implements GraphicComponent {
     public void tick() {
         position.x += velocity * Math.cos(rotation);
         position.y += velocity * Math.sin(rotation);
-        Color pixel = view.getPixel((int) (position.x / Application.RATIO), (int) (position.y / Application.RATIO));
+        Color pixel = view.getPixel((int) (position.x / Application.BLOCK_SIZE), (int) (position.y / Application.BLOCK_SIZE));
         CollisionState check = view.getMaterial().getState(pixel);
         if (check != CollisionState.GAS) {
             view.removeObject(this);
