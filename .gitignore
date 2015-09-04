@@ -6,3 +6,6 @@
 /nbproject/private/
 /build/
 /dist/
+
+pom.xml.releaseBackup
+release.properties
