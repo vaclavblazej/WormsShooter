@@ -74,30 +74,27 @@ public class SCommunicationClientImpl implements SCommunicationClient {
     @Override
     public void start() {
         running = true;
-        Runnable startup = new Runnable() {
-            @Override
-            public void run() {
-                SPacket packet;
-                int currentCount = 0;
-                while (running) {
-                    try {
-                        packet = receive();
-                        if (packet.isAsynchronous() || ((SSynchronousPacket) packet).checkSynchronization(currentCount)) {
-                            logger.info("Client: packet " + packet);
-                            packet.performAction();
-                        } else{
-                            repair.perform();
-                        }
-                        if (!packet.isAsynchronous()) {
-                            currentCount = ((SSynchronousPacket) packet).getCount();
-                        }
-                    } catch (IOException | ClassNotFoundException ex) {
-                        logger.log(Level.SEVERE, null, ex);
-                        running = false;
+        Runnable startup = () -> {
+            SPacket packet;
+            int currentCount = 0;
+            while (running) {
+                try {
+                    packet = receive();
+                    if (packet.isAsynchronous() || ((SSynchronousPacket) packet).checkSynchronization(currentCount)) {
+                        logger.info("Client: packet " + packet);
+                        packet.performAction();
+                    } else{
+                        repair.perform();
                     }
+                    if (!packet.isAsynchronous()) {
+                        currentCount = ((SSynchronousPacket) packet).getCount();
+                    }
+                } catch (IOException | ClassNotFoundException ex) {
+                    logger.log(Level.SEVERE, null, ex);
+                    running = false;
                 }
-                logger.info("Client: terminating socket");
             }
+            logger.info("Client: terminating socket");
         };
 
         new Thread(startup).start();
