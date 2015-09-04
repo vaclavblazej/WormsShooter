@@ -1,12 +1,12 @@
 package spacks.communication;
 
-import spacks.communication.client.SCommunicationClient;
-import spacks.communication.server.SCommunicationServer;
-import spacks.communication.utilities.SAction;
 import org.junit.Assert;
 import org.junit.Before;
 import org.junit.Test;
+import spacks.communication.client.SCommunicationClient;
 import spacks.communication.packets.TestAction;
+import spacks.communication.server.SCommunicationServer;
+import spacks.communication.utilities.SAction;
 
 public class SCommunicationTest {
 

@@ -1,7 +1,7 @@
 package spacks.communication.utilities;
 
 /**
- * @author Václav Blažej
+ * @author Vaclav Blazej
  */
 public interface SListener {
 

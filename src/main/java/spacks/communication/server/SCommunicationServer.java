@@ -5,8 +5,8 @@ import spacks.communication.utilities.SAction;
 import java.io.IOException;
 
 /**
- * @author Štěpán Plachý
- * @author Václav Blažej
+ * @author Stepan Plachy
+ * @author Vaclav Blazej
  */
 public interface SCommunicationServer {
 

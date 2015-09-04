@@ -4,8 +4,8 @@ import spacks.communication.utilities.SAction;
 
 /**
  *
- * @author Štěpán Plachý
- * @author Václav Blažej
+ * @author Stepan Plachy
+ * @author Vaclav Blazej
  */
 public class TestAction implements SAction {
 

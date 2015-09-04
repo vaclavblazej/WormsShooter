@@ -2,8 +2,8 @@ package spacks.communication.utilities;
 
 /**
  *
- * @author Štěpán Plachý
- * @author Václav Blažej
+ * @author Stepan Plachy
+ * @author Vaclav Blazej
  */
 public class SSynchronousPacket extends SPacket {
 

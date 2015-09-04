@@ -11,8 +11,8 @@ import java.util.Map;
 import java.util.logging.Logger;
 
 /**
- * @author Štìpán Plachý
- * @author Václav Blažej
+ * @author Stepan Plachy
+ * @author Vaclav Blazej
  */
 public class SCommunicationServerImpl implements SCommunicationServer {
 

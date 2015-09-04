@@ -5,8 +5,8 @@ import java.util.logging.Logger;
 
 /**
  *
- * @author Štěpán Plachý
- * @author Václav Blažej
+ * @author Stepan Plachy
+ * @author Vaclav Blazej
  */
 public abstract class SPacket implements Serializable {
 

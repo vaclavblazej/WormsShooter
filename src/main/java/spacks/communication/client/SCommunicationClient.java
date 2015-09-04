@@ -1,15 +1,15 @@
 package spacks.communication.client;
 
-import spacks.communication.utilities.SPacket;
 import spacks.communication.utilities.SAction;
+import spacks.communication.utilities.SPacket;
 
 import java.io.IOException;
 
 /**
  * Communication class on client side.
  *
- * @author Štěpán Plachý
- * @author Václav Blažej
+ * @author Stepan Plachy
+ * @author Vaclav Blazej
  */
 public interface SCommunicationClient {
 

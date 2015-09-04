@@ -4,8 +4,8 @@ import java.io.Serializable;
 
 /**
  *
- * @author Štěpán Plachý
- * @author Václav Blažej
+ * @author Stepan Plachy
+ * @author Vaclav Blazej
  */
 public interface SRegistrationForm extends Serializable {
 }

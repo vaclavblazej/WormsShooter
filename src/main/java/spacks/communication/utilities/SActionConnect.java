@@ -1,11 +1,10 @@
 package spacks.communication.utilities;
 
-import spacks.communication.utilities.SRegistrationForm;
 import java.io.Serializable;
 
 /**
  *
- * @author Václav Blažej
+ * @author Vaclav Blazej
  */
 public class SActionConnect implements Serializable {
 

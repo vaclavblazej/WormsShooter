@@ -1,9 +1,9 @@
 package spacks.communication.server.impl;
 
+import spacks.communication.utilities.SAction;
 import spacks.communication.utilities.SAsynchronousPacket;
 import spacks.communication.utilities.SPacket;
 import spacks.communication.utilities.SSynchronousPacket;
-import spacks.communication.utilities.SAction;
 
 import java.io.EOFException;
 import java.io.IOException;
@@ -16,8 +16,8 @@ import java.util.logging.Logger;
 /**
  * A SCommunicationClientHandler deals with spacks.communication with a client from a server side.
  *
- * @author Štěpán Plachý
- * @author Václav Blažej
+ * @author Stepan Plachy
+ * @author Vaclav Blazej
  */
 public class SCommunicationClientHandler implements Runnable {
 
