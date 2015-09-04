@@ -65,6 +65,9 @@ public class SCommunicationTest {
         server.broadcast(new TestAction("Is this delivered?"));
         final TestAction receive = getAction(client.receive().getAction());
         Assert.assertEquals("Delivered string is different", "Is this delivered?", receive.getIdent());
+
+        server.stop();
+        client.stop();
     }
 
     public void waitForConnection() throws InterruptedException {
