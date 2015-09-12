@@ -15,10 +15,18 @@
 
     <dependencies>
         <dependency>
-            <groupId>cz.spacks.spacks.communication</groupId>
+            <groupId>com.github.vaclavblazej</groupId>
             <artifactId>SCommunication</artifactId>
-            <version>1.0-SNAPSHOT</version>
+            <version>SCommunication-1.0</version>
         </dependency>
     </dependencies>
-    
+
+    <repositories>
+        <!--building projects from GitHub-->
+        <repository>
+            <id>jitpack.io</id>
+            <url>https://jitpack.io</url>
+        </repository>
+    </repositories>
+
 </project>
