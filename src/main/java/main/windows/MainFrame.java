@@ -84,8 +84,10 @@ public class MainFrame extends JFrame {
     private JLabel versionNumberLabel;
     // client card
     private JPanel clientCard;
+    private JPanel messagePanel;
     private JPanel chatPanel;
-    private JList chatList;
+    private JTextField messageTextField;
+    private JButton messageSendButton;
 
 
     CardLayout mainCardLayout;
@@ -138,7 +140,7 @@ public class MainFrame extends JFrame {
         menuCard = new BackgroundPanel(SpriteLoader.loadSprite("background", ".jpg"));
 
         // main menu
-        singleplayerButton = new CustomButton(e -> {
+        singleplayerButton = new CustomSoundButton(e -> {
             final int port = 4242;
             new ServerFrame();
             try {
@@ -153,32 +155,32 @@ public class MainFrame extends JFrame {
                 clientCard.requestFocusInWindow();
             });
         });
-        multiplayerButton = new CustomButton(e -> menuCardLayout.show(menuCards, "multiplayerCard"));
-        settingsButton = new CustomButton(e -> menuCardLayout.show(menuCards, "settingsCard"));
-        exitButton = new CustomButton(e -> Application.exit());
+        multiplayerButton = new CustomSoundButton(e -> menuCardLayout.show(menuCards, "multiplayerCard"));
+        settingsButton = new CustomSoundButton(e -> menuCardLayout.show(menuCards, "settingsCard"));
+        exitButton = new CustomSoundButton(e -> Application.exit());
 
         // singleplayer
-        videoSettingsButton = new CustomButton(e -> menuCardLayout.show(menuCards, "videoSettingsCard"));
-        audioSettingsButton = new CustomButton(e -> menuCardLayout.show(menuCards, "audioSettingsCard"));
-        keysSettingsButton = new CustomButton(e -> menuCardLayout.show(menuCards, "keysSettingsCard"));
-        backSettingsButton = new CustomButton(e -> menuCardLayout.show(menuCards, "mainMenuCard"));
+        videoSettingsButton = new CustomSoundButton(e -> menuCardLayout.show(menuCards, "videoSettingsCard"));
+        audioSettingsButton = new CustomSoundButton(e -> menuCardLayout.show(menuCards, "audioSettingsCard"));
+        keysSettingsButton = new CustomSoundButton(e -> menuCardLayout.show(menuCards, "keysSettingsCard"));
+        backSettingsButton = new CustomSoundButton(e -> menuCardLayout.show(menuCards, "mainMenuCard"));
 
         // multiplayer
-        joinMultiplayerButton = new CustomButton(e -> menuCardLayout.show(menuCards, "joinMultiplayerCard"));
-        hostMultiplayerButton = new CustomButton(e -> menuCardLayout.show(menuCards, "hostMultiplayerCard"));
-        backMultiplayerButton = new CustomButton(e -> menuCardLayout.show(menuCards, "mainMenuCard"));
+        joinMultiplayerButton = new CustomSoundButton(e -> menuCardLayout.show(menuCards, "joinMultiplayerCard"));
+        hostMultiplayerButton = new CustomSoundButton(e -> menuCardLayout.show(menuCards, "hostMultiplayerCard"));
+        backMultiplayerButton = new CustomSoundButton(e -> menuCardLayout.show(menuCards, "mainMenuCard"));
 
         // multiplayer - join
-        joinJoinButton = new CustomButton(e -> {
+        joinJoinButton = new CustomSoundButton(e -> {
             ClientCommunication.getInstance().init(joinAddressTextField.getText(), joinPortTextField.getText());
             joinProgressBar.setValue(joinProgressBar.getMaximum());
             mainCardLayout.show(rootPanel, "clientCard");
             clientCard.requestFocusInWindow();
         });
-        backJoinButton = new CustomButton(e -> menuCardLayout.show(menuCards, "multiplayerCard"));
+        backJoinButton = new CustomSoundButton(e -> menuCardLayout.show(menuCards, "multiplayerCard"));
 
         // multiplayer - host
-        hostHostButton = new CustomButton(e -> {
+        hostHostButton = new CustomSoundButton(e -> {
             final int port = Integer.parseInt(hostPortTextField.getText());
             new ServerFrame();
             try {
@@ -187,11 +189,11 @@ public class MainFrame extends JFrame {
                 e1.printStackTrace();
             }
         });
-        backHostButton = new CustomButton(e -> menuCardLayout.show(menuCards, "multiplayerCard"));
+        backHostButton = new CustomSoundButton(e -> menuCardLayout.show(menuCards, "multiplayerCard"));
 
         // settings
-        backVideoSettingsButton = new CustomButton(e -> menuCardLayout.show(menuCards, "settingsCard"));
-        backAudioSettingsButton = new CustomButton(e -> menuCardLayout.show(menuCards, "settingsCard"));
+        backVideoSettingsButton = new CustomSoundButton(e -> menuCardLayout.show(menuCards, "settingsCard"));
+        backAudioSettingsButton = new CustomSoundButton(e -> menuCardLayout.show(menuCards, "settingsCard"));
 
         // settings - keys
         final Controls controls = Settings.getInstance().getControls();
@@ -199,7 +201,7 @@ public class MainFrame extends JFrame {
         downKeysSettingsButton = new BindableButton(controls.get(ControlsEnum.DOWN));
         leftKeysSettingsButton = new BindableButton(controls.get(ControlsEnum.LEFT));
         rightKeysSettingsButton = new BindableButton(controls.get(ControlsEnum.RIGHT));
-        applyKeysSettingsButton = new CustomButton(e -> {
+        applyKeysSettingsButton = new CustomSoundButton(e -> {
             controls.rebind(ControlsEnum.UP, upKeysSettingsButton.getKeyCode());
             controls.rebind(ControlsEnum.DOWN, downKeysSettingsButton.getKeyCode());
             controls.rebind(ControlsEnum.LEFT, leftKeysSettingsButton.getKeyCode());
@@ -213,8 +215,13 @@ public class MainFrame extends JFrame {
         // client card
         clientCard = ClientView.getInstance();
         chatPanel = ChatLog.getInstance();
-        chatList = ChatLog.getInstance().getList();
+        chatPanel.setBackground(new Color(100, 100, 255, 10));
 
         ChatLog.getInstance().log("Hello world!");
+
+        final ChatInputPanel chatPanelInstance = ChatInputPanel.getInstance();
+        messagePanel = chatPanelInstance;
+        messageTextField = chatPanelInstance.getField();
+        messageSendButton = chatPanelInstance.getButton();
     }
 }

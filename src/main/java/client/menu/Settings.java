@@ -36,7 +36,8 @@ public class Settings implements Serializable {
                 .add(ControlsEnum.RIGHT, 39)
                 .add(ControlsEnum.LEFT, 37)
                 .add(ControlsEnum.FIRE, 32)
-                .add(ControlsEnum.MINE, 67);
+                .add(ControlsEnum.MINE, 67)
+                .add(ControlsEnum.CHAT, 10);
     }
 
     public void setQuality(int quality) {

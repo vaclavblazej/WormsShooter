@@ -10,5 +10,6 @@ public enum ControlsEnum {
     RIGHT,
     JUMP,
     FIRE,
-    MINE;
+    MINE,
+    CHAT;
 }

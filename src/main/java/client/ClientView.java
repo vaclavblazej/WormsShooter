@@ -195,6 +195,9 @@ public class ClientView extends AbstractView implements
                 case RIGHT:
                     changeMovement();
                     break;
+                case CHAT:
+                    main.windows.ChatInputPanel.getInstance().getField().grabFocus();
+                    break;
             }
         }
     }

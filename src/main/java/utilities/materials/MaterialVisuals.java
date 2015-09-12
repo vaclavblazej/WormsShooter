@@ -1,6 +1,7 @@
 package utilities.materials;
 
 import client.ClientView;
+import main.Application;
 import utilities.MapClass;
 import utilities.spritesheets.SpriteLoader;
 
@@ -50,20 +51,20 @@ public class MaterialVisuals implements Serializable {
         g.drawImage(sourceImage, 0, 0, dest.getWidth(), dest.getHeight(), null);
 
         // todo textures
-//        int w = sourceImage.getWidth();
-//        int h = sourceImage.getHeight();
-//        int ratio = dest.getWidth() / w;
-//        BufferedImage b;
-//        for (int j = 0; j < h; j++) {
-//            for (int i = 0; i < w; i++) {
-//                b = getImage(source.getRGB(i, j));
-//                if (b != null) {
-//                    g.drawImage(b, i * ratio, j * ratio, b.getWidth(), b.getHeight(), null);
-//                }
-//                g.setColor(new Color(0, 0, 0, source.getShadow(i, j)));
-//                g.fillRect(i * ratio, j * ratio, SIZE, SIZE);
-//            }
-//        }
+        int w = sourceImage.getWidth();
+        int h = sourceImage.getHeight();
+        int ratio = dest.getWidth() / w;
+        BufferedImage b;
+        for (int j = 0; j < h; j++) {
+            for (int i = 0; i < w; i++) {
+                b = getImage(source.getRGB(i, j));
+                if (b != null) {
+                    g.drawImage(b, i * ratio, j * ratio, Application.BLOCK_SIZE, Application.BLOCK_SIZE, null);
+                }
+                g.setColor(new Color(0, 0, 0, source.getShadow(i, j)));
+                g.fillRect(i * ratio, j * ratio, Application.BLOCK_SIZE, Application.BLOCK_SIZE);
+            }
+        }
         g.dispose();
     }
 }

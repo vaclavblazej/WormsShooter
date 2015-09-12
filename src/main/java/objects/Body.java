@@ -102,7 +102,7 @@ public class Body implements GraphicComponent, SendableVia<Body, SerializableBod
     @Override
     public void tick() {
         state = view.check(position.x / Application.BLOCK_SIZE, (position.y + physicsSize.height) / Application.BLOCK_SIZE);
-        switch(state){
+        switch (state) {
             case GAS:
                 velocity.y += GRAVITY;
                 velocity.y *= 0.95;
@@ -112,18 +112,20 @@ public class Body implements GraphicComponent, SendableVia<Body, SerializableBod
                 velocity.y *= 0.60;
                 break;
         }
+        // horizontal movement
         switch (movement) {
             case RIGHT:
-                velocity.x = SPEED;
+                velocity.x = (velocity.x + SPEED) / 2;
                 break;
             case LEFT:
-                velocity.x = -SPEED;
+                velocity.x = (velocity.x - SPEED) / 2;
                 break;
             case STOP:
-                velocity.x = 0;
+                velocity.x = Math.signum(velocity.x) * Math.max(Math.abs(velocity.x) - 1, 0) / 2;
                 break;
         }
 
+        // exact horizontal collision
         int slide = 0;
         final int top = position.y / Application.BLOCK_SIZE;
         final int bottom = (position.y + physicsSize.height - 1) / Application.BLOCK_SIZE;
@@ -152,6 +154,7 @@ public class Body implements GraphicComponent, SendableVia<Body, SerializableBod
         }
         position.x += slide;
 
+        // exact vertical collision
         int fall = 0;
         final int left = position.x / Application.BLOCK_SIZE;
         final int right = (position.x + physicsSize.width - 1) / Application.BLOCK_SIZE;
@@ -162,6 +165,7 @@ public class Body implements GraphicComponent, SendableVia<Body, SerializableBod
                 rightVerticalCollision = view.check(right, y);
                 if (leftVerticalCollision == CollisionState.SOLID || rightVerticalCollision == CollisionState.SOLID) {
                     velocity.y = 0;
+                    jump = true;
                     break;
                 }
                 fall++;
@@ -189,8 +193,7 @@ public class Body implements GraphicComponent, SendableVia<Body, SerializableBod
                 movement = action;
                 break;
             case JUMP:
-                jump = true;
-                if (jump == true) {
+                if (jump) {
                     velocity.y -= JUMP;
                     jump = false;
                 }

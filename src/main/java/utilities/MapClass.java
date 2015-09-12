@@ -35,7 +35,7 @@ public class MapClass implements SendableVia<MapClass, SerializableMapClass> {
         this.map = map;
         this.view = view;
         this.shadows = shadows;
-        this.lights = (lights != null) ? lights : new ArrayList<>(10);
+        this.lights = (lights != null) ? lights : new ArrayList<>();
     }
 
     public int getWidth() {
@@ -60,7 +60,7 @@ public class MapClass implements SendableVia<MapClass, SerializableMapClass> {
 
     public MapClass getSubmap(Point offset, Dimension size) throws ArrayIndexOutOfBoundsException {
         int[][] ns = new int[size.width][size.height];
-        for (int[] s : ns) Arrays.fill(s, 0x33); // todo
+        for (int[] s : ns) Arrays.fill(s, 0x00); // todo
 //        for (int j = 0; j < size.height; j++) {
 //            for (int i = 0; i < size.width; i++) {
 //                ns[i][j] = shadows[offset.x + i][offset.y + j];
