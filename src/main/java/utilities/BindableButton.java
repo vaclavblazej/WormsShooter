@@ -15,9 +15,11 @@ public class BindableButton extends JButton implements KeyListener {
 
     private BindableButton me;
     private int code;
+    private ControlsEnum control;
 
-    public BindableButton(int code) {
+    public BindableButton(ControlsEnum control, int code) {
         super();
+        this.control = control;
         this.code = code;
         me = this;
         setAction(new AbstractAction() {
@@ -37,6 +39,10 @@ public class BindableButton extends JButton implements KeyListener {
     public void setInactive(){
         removeKeyListener(me);
         setBackground(Color.LIGHT_GRAY);
+    }
+
+    public ControlsEnum getControl() {
+        return control;
     }
 
     public void refreshText(){

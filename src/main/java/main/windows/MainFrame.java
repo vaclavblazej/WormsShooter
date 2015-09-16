@@ -16,6 +16,8 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
+import java.util.*;
+import java.util.List;
 
 /**
  * Custom menu class for a project.
@@ -73,10 +75,7 @@ public class MainFrame extends JFrame {
     private JButton backAudioSettingsButton;
     // settings - keys
     private JPanel keysSettingsCard;
-    private BindableButton upKeysSettingsButton;
-    private BindableButton downKeysSettingsButton;
-    private BindableButton leftKeysSettingsButton;
-    private BindableButton rightKeysSettingsButton;
+    private JPanel keyBindingPanel;
     private JButton applyKeysSettingsButton;
     // status bar
     private JPanel statusBar;
@@ -88,10 +87,13 @@ public class MainFrame extends JFrame {
     private JPanel chatPanel;
     private JTextField messageTextField;
     private JButton messageSendButton;
+    private JPanel minimapPanel;
 
 
     CardLayout mainCardLayout;
     CardLayout menuCardLayout;
+
+    List<BindableButton> bindableButtons;
 
     public MainFrame() {
         super("Test window");
@@ -117,10 +119,7 @@ public class MainFrame extends JFrame {
 
         mainFrame.addComponentListener(ClientView.getInstance());
 
-        upKeysSettingsButton.refreshText();
-        downKeysSettingsButton.refreshText();
-        leftKeysSettingsButton.refreshText();
-        rightKeysSettingsButton.refreshText();
+        for (BindableButton button : bindableButtons) button.refreshText();
     }
 
     /**
@@ -197,23 +196,31 @@ public class MainFrame extends JFrame {
 
         // settings - keys
         final Controls controls = Settings.getInstance().getControls();
-        upKeysSettingsButton = new BindableButton(controls.get(ControlsEnum.UP));
-        downKeysSettingsButton = new BindableButton(controls.get(ControlsEnum.DOWN));
-        leftKeysSettingsButton = new BindableButton(controls.get(ControlsEnum.LEFT));
-        rightKeysSettingsButton = new BindableButton(controls.get(ControlsEnum.RIGHT));
+        final GridLayout keyBindingLayout = new GridLayout(0, 2);
+        keyBindingPanel = new JPanel(keyBindingLayout);
+        List<ControlsEnum> bindableControls = ControlsEnum.getBindableControls();
+        bindableButtons = new ArrayList<>();
+        for (ControlsEnum control : bindableControls) {
+            final JLabel label = new JLabel(control.getName());
+            final BindableButton e = new BindableButton(control, controls.get(control));
+            keyBindingPanel.add(label);
+            keyBindingPanel.add(e);
+            bindableButtons.add(e);
+        }
         applyKeysSettingsButton = new CustomSoundButton(e -> {
-            controls.rebind(ControlsEnum.UP, upKeysSettingsButton.getKeyCode());
-            controls.rebind(ControlsEnum.DOWN, downKeysSettingsButton.getKeyCode());
-            controls.rebind(ControlsEnum.LEFT, leftKeysSettingsButton.getKeyCode());
-            controls.rebind(ControlsEnum.RIGHT, rightKeysSettingsButton.getKeyCode());
+            for (BindableButton bindableButton : bindableButtons) {
+                ControlsEnum control = bindableButton.getControl();
+                controls.rebind(control, bindableButton.getKeyCode());
+            }
             final Settings settings = Settings.getInstance();
-            // todo save into settings
             settings.saveSettings();
             menuCardLayout.show(menuCards, "settingsCard");
         });
 
         // client card
-        clientCard = ClientView.getInstance();
+        final ClientView clientView = ClientView.getInstance();
+        clientCard = clientView;
+        minimapPanel = clientView.getMinimapView();
         chatPanel = ChatLog.getInstance();
         chatPanel.setBackground(new Color(100, 100, 255, 10));
 

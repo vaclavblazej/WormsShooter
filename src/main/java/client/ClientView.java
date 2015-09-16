@@ -12,14 +12,20 @@ import utilities.Controls;
 import utilities.ControlsEnum;
 import utilities.MapClass;
 import utilities.communication.Model;
+import utilities.defaults.DefaultComponentListener;
+import utilities.defaults.DefaultKeyListener;
+import utilities.defaults.DefaultMouseListener;
+import utilities.defaults.DefaultMouseMotionListener;
 import utilities.materials.MaterialVisuals;
 
 import java.awt.*;
-import java.awt.event.*;
+import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
+import java.awt.event.KeyEvent;
+import java.awt.event.MouseEvent;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.image.RasterFormatException;
-import java.util.ArrayList;
 import java.util.EnumSet;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -29,10 +35,10 @@ import java.util.logging.Logger;
  */
 public class ClientView extends AbstractView implements
         ActionListener,
-        KeyListener,
-        MouseMotionListener,
-        MouseListener,
-        ComponentListener {
+        DefaultKeyListener,
+        DefaultMouseMotionListener,
+        DefaultMouseListener,
+        DefaultComponentListener {
 
     private static final Logger logger = Logger.getLogger(ClientView.class.getName());
 
@@ -43,6 +49,7 @@ public class ClientView extends AbstractView implements
         return instance;
     }
 
+    private MinimapView minimapView;
     private Dimension tileViewDimensions;
     private Dimension panelViewDimensions;
     private Body body;
@@ -64,14 +71,15 @@ public class ClientView extends AbstractView implements
         mouse = new Point();
         transformation = new AffineTransform();
         // todo ratio with scale
+
+        minimapView = MinimapView.getInstance();
+        recalculateGraphicWindowLayout();
     }
 
     @Override
     public void setModel(Model model) {
         super.setModel(model);
-        map = model.getMap();
-//        map.calculateShadows(material);
-        bodies = new ArrayList<>(model.getControls().values());
+        minimapView.setModel(model);
     }
 
     public void setMyView(Body body) {
@@ -144,7 +152,7 @@ public class ClientView extends AbstractView implements
             Graphics2D g = (Graphics2D) graphics;
             transformation.setToTranslation(-viewRealPos.x + smoothOffset.x, -viewRealPos.y + smoothOffset.y);
             for (Body body : bodies) body.drawRelative((Graphics2D) rasteredView.getGraphics(), transformation);
-            g.drawImage(rasteredView, -smoothOffset.x - 2*Application.BLOCK_SIZE, -smoothOffset.y - 2*Application.BLOCK_SIZE, rasteredView.getWidth(), rasteredView.getHeight(), null);
+            g.drawImage(rasteredView, -smoothOffset.x - 2 * Application.BLOCK_SIZE, -smoothOffset.y - 2 * Application.BLOCK_SIZE, rasteredView.getWidth(), rasteredView.getHeight(), null);
 
 //            final BufferedImage image = map.getImage();
 //            BufferedImage glass = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
@@ -185,6 +193,7 @@ public class ClientView extends AbstractView implements
     @Override
     public void keyPressed(KeyEvent ke) {
         int i = ke.getKeyCode();
+//        System.out.println(i);
         ControlsEnum en = controls.get(i);
         if (en != null && controlSet.add(en)) {
             switch (en) {
@@ -197,6 +206,9 @@ public class ClientView extends AbstractView implements
                     break;
                 case CHAT:
                     main.windows.ChatInputPanel.getInstance().getField().grabFocus();
+                    break;
+                case MAP_TOGGLE:
+                    minimapView.setVisible(!minimapView.isVisible());
                     break;
             }
         }
@@ -266,39 +278,11 @@ public class ClientView extends AbstractView implements
     }
 
     @Override
-    public void mouseMoved(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseEntered(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseExited(MouseEvent e) {
-    }
-
-    @Override
-    public void mouseClicked(MouseEvent e) {
-    }
-
-    @Override
-    public void keyTyped(KeyEvent e) {
-    }
-
-    @Override
     public void componentResized(ComponentEvent e) {
         recalculateGraphicWindowLayout();
     }
 
-    @Override
-    public void componentMoved(ComponentEvent e) {
-    }
-
-    @Override
-    public void componentShown(ComponentEvent e) {
-    }
-
-    @Override
-    public void componentHidden(ComponentEvent e) {
+    public MinimapView getMinimapView() {
+        return minimapView;
     }
 }

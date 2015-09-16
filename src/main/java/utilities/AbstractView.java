@@ -6,6 +6,7 @@ import objects.items.Crafting;
 import objects.items.ItemFactory;
 import particles.Particle;
 import utilities.communication.Model;
+import utilities.defaults.DefaultComponentListener;
 import utilities.materials.Material;
 import utilities.materials.MaterialEnum;
 
@@ -13,6 +14,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
+import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -25,7 +27,7 @@ import java.util.logging.Logger;
  *
  * @author Václav Blažej
  */
-public abstract class AbstractView extends JPanel implements ActionListener {
+public abstract class AbstractView extends JPanel implements ActionListener, DefaultComponentListener {
 
     private static final Logger logger = Logger.getLogger(AbstractView.class.getName());
 
@@ -71,6 +73,8 @@ public abstract class AbstractView extends JPanel implements ActionListener {
     public void setModel(Model model) {
         this.model = model;
         material = new Material(this);
+        map = model.getMap();
+        bodies = new ArrayList<>(model.getControls().values());
     }
 
     public Material getMaterial() {
@@ -86,6 +90,7 @@ public abstract class AbstractView extends JPanel implements ActionListener {
     }
 
     public void init() {
+        componentResized(new ComponentEvent(this, 0));
         tickTimer.start();
     }
 
