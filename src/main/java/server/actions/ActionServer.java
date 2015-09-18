@@ -8,7 +8,7 @@ import spacks.communication.utilities.SAction;
  */
 public abstract class ActionServer implements SAction {
 
-    protected static ClientView view;
+    protected transient static ClientView view;
     protected final int id;
 
     public int getId() {

@@ -1,14 +1,16 @@
 package utilities;
 
 import java.io.IOException;
-import java.util.*;
+import java.util.Arrays;
+import java.util.List;
+import java.util.Properties;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
  * @author Václav Blažej
  */
-public enum ControlsEnum {
+public enum ControlsEnum implements PropertyLoader{
 
     UP,
     DOWN,

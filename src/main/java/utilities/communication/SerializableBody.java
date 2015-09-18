@@ -14,22 +14,26 @@ public class SerializableBody implements DeseriazibleInto<Body> {
 
     private Point position;
     private Point.Double velocity;
-    private MoveEnum movement;
+    private MoveEnum horizontalMovement;
+    private MoveEnum verticalMovement;
     private Dimension REAL_SIZE;
     private boolean jump;
 
     public SerializableBody(Point position, Point2D.Double velocity,
-                            MoveEnum movement, Dimension REAL_SIZE,
+                            MoveEnum horizontalMovement,
+                            MoveEnum verticalMovement,
+                            Dimension REAL_SIZE,
                             boolean jump) {
         this.position = position;
         this.velocity = velocity;
-        this.movement = movement;
+        this.horizontalMovement = horizontalMovement;
+        this.verticalMovement = verticalMovement;
         this.REAL_SIZE = REAL_SIZE;
         this.jump = jump;
     }
 
     @Override
     public Body deserialize(AbstractView map) {
-        return new Body(position, velocity, movement, REAL_SIZE, jump, map);
+        return new Body(position, velocity, horizontalMovement, verticalMovement, REAL_SIZE, jump, map);
     }
 }

@@ -7,6 +7,7 @@ import utilities.defaults.DefaultComponentListener;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 import java.awt.event.ComponentEvent;
 import java.awt.image.BufferedImage;
 import java.util.logging.Logger;
@@ -59,5 +60,9 @@ public class MinimapView extends AbstractView implements DefaultComponentListene
     @Override
     public void componentResized(ComponentEvent e) {
         recalculateGraphicWindowLayout();
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent ae) {
     }
 }

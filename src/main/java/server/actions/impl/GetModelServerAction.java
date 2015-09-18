@@ -1,5 +1,6 @@
 package server.actions.impl;
 
+import client.ClientCommunication;
 import client.ClientView;
 import objects.Body;
 import server.actions.ActionServer;
@@ -24,11 +25,8 @@ public class GetModelServerAction extends ActionServer {
         System.out.println("Client: model received");
         Model realModel = model.deserialize(view);
         view.setModel(realModel);
-        final Body body = ClientView.getInstance().newBody();
-        ClientView.getInstance().setMyView(body);
+        final int id = ClientCommunication.getInstance().getInfo().getId();
         final Map<Integer, Body> controls = realModel.getControls();
-        controls.put(id, body);
-//        System.out.println("SIZE: " + realModel.getControls().size());
-//        System.out.println(ClientCommunication.getInstance().getInfo());
+        ClientView.getInstance().setMyView(controls.get(id));
     }
 }

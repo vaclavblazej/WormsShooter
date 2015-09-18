@@ -1,9 +1,12 @@
 package utilities;
 
+import utilities.communication.RegistrationForm;
+
 /**
  * Information about player.
  *
  * @author Štìpán Plachý
+ * @author Václav Blažej
  */
 public class PlayerInfo {
 
@@ -15,7 +18,16 @@ public class PlayerInfo {
         name = "";
     }
 
+    public PlayerInfo(int id, RegistrationForm form) {
+        this.id = id;
+        this.name = form.getName();
+    }
+
     public int getId() {
         return id;
+    }
+
+    public String getName() {
+        return name;
     }
 }

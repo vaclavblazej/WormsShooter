@@ -21,13 +21,15 @@ import java.util.ArrayList;
  */
 public class Body implements GraphicComponent, SendableVia<Body, SerializableBody> {
 
-    private static final double JUMP = 20;
-    private static final double GRAVITY = 2;
-    private static final int SPEED = 12;
+    private static final double JUMP_FORCE = 24;
+    private static final double GRAVITY_FORCE = 4;
+    private static final int GROUND_SPEED = 12;
+    private static final int LIQUID_SPEED = 8;
     private static final int INITIAL_HEALTH = 100;
     private Point position;
     private Point.Double velocity;
-    private MoveEnum movement;
+    private MoveEnum horizontalMovement;
+    private MoveEnum verticalMovement;
     private Dimension physicsSize;
     private Dimension viewSize;
     private Dimension bodyBlockSize;
@@ -45,13 +47,15 @@ public class Body implements GraphicComponent, SendableVia<Body, SerializableBod
 
     public Body(Point position,
                 Point.Double velocity,
-                MoveEnum movement,
+                MoveEnum horizontalMovement,
+                MoveEnum verticalMovement,
                 Dimension bodyBlockSize,
                 boolean jump,
                 AbstractView view) {
         this.position = position;
         this.velocity = velocity;
-        this.movement = movement;
+        this.horizontalMovement = horizontalMovement;
+        this.verticalMovement = verticalMovement;
         this.bodyBlockSize = bodyBlockSize;
         this.physicsSize = new Dimension(bodyBlockSize.width * Application.BLOCK_SIZE, bodyBlockSize.height * Application.BLOCK_SIZE);
         int ratio = view.getRatio();
@@ -71,7 +75,7 @@ public class Body implements GraphicComponent, SendableVia<Body, SerializableBod
     }
 
     public Body(int x, int y, AbstractView map) {
-        this(new Point(x, y), new Point.Double(0, 0), MoveEnum.STOP, new Dimension(1, 2), false, map);
+        this(new Point(x, y), new Point.Double(0, 0), MoveEnum.HSTOP, MoveEnum.VSTOP, new Dimension(1, 2), false, map);
     }
 
     public InventoryTableModel getInventory() {
@@ -102,26 +106,44 @@ public class Body implements GraphicComponent, SendableVia<Body, SerializableBod
     @Override
     public void tick() {
         state = view.check(position.x / Application.BLOCK_SIZE, (position.y + physicsSize.height) / Application.BLOCK_SIZE);
+        int speed;
         switch (state) {
             case GAS:
-                velocity.y += GRAVITY;
+                velocity.y += GRAVITY_FORCE;
                 velocity.y *= 0.95;
+                speed = GROUND_SPEED;
                 break;
             case LIQUID:
-                velocity.y += GRAVITY;
-                velocity.y *= 0.60;
+                speed = LIQUID_SPEED;
                 break;
+            default:
+                speed = GROUND_SPEED;
         }
         // horizontal movement
-        switch (movement) {
+        switch (horizontalMovement) {
             case RIGHT:
-                velocity.x = (velocity.x + SPEED) / 2;
+                velocity.x = (velocity.x + speed) / 2;
                 break;
             case LEFT:
-                velocity.x = (velocity.x - SPEED) / 2;
+                velocity.x = (velocity.x - speed) / 2;
                 break;
-            case STOP:
+            case HSTOP:
                 velocity.x = Math.signum(velocity.x) * Math.max(Math.abs(velocity.x) - 1, 0) / 2;
+                break;
+        }
+        switch (state){
+            case LIQUID:
+                switch (verticalMovement) {
+                    case UP:
+                        velocity.y = (velocity.y - speed) / 2;
+                        break;
+                    case DOWN:
+                        velocity.y = (velocity.y + speed) / 2;
+                        break;
+                    case VSTOP:
+                        velocity.y = Math.signum(velocity.y) * Math.max(Math.abs(velocity.y) - 1, 0) / 2;
+                        break;
+                }
                 break;
         }
 
@@ -189,12 +211,17 @@ public class Body implements GraphicComponent, SendableVia<Body, SerializableBod
         switch (action) {
             case RIGHT:
             case LEFT:
-            case STOP:
-                movement = action;
+            case HSTOP:
+                horizontalMovement = action;
+                break;
+            case UP:
+            case DOWN:
+            case VSTOP:
+                verticalMovement = action;
                 break;
             case JUMP:
                 if (jump) {
-                    velocity.y -= JUMP;
+                    velocity.y -= JUMP_FORCE;
                     jump = false;
                 }
                 break;
@@ -250,6 +277,6 @@ public class Body implements GraphicComponent, SendableVia<Body, SerializableBod
 
     @Override
     public SerializableBody serialize() {
-        return new SerializableBody(position, velocity, movement, bodyBlockSize, jump);
+        return new SerializableBody(position, velocity, horizontalMovement, verticalMovement, bodyBlockSize, jump);
     }
 }

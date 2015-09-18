@@ -7,8 +7,9 @@ public enum MoveEnum {
 
     RIGHT,
     LEFT,
-    STOP,
+    HSTOP,
     DOWN,
     UP,
+    VSTOP,
     JUMP;
 }

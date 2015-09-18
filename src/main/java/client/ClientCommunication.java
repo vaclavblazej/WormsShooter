@@ -1,12 +1,14 @@
 package client;
 
 import client.actions.ActionClient;
+import client.actions.impl.ConnectAction;
 import client.actions.impl.GetModelAction;
 import objects.Body;
 import server.actions.ActionServer;
 import spacks.communication.SCommunication;
 import spacks.communication.client.SCommunicationClient;
 import utilities.PlayerInfo;
+import utilities.communication.RegistrationForm;
 
 import java.io.IOException;
 import java.util.Map;
@@ -24,33 +26,29 @@ public class ClientCommunication {
     private static ClientCommunication instance;
 
     public static ClientCommunication getInstance() {
-        if (instance == null) {
-            instance = new ClientCommunication();
-        }
+        if (instance == null) instance = new ClientCommunication();
         return instance;
+    }
+
+    public ClientCommunication() {
     }
 
     private PlayerInfo info;
     private SCommunicationClient connection;
 
-    public void init(String ip, String port) {
+    public void init(String ip, int port, RegistrationForm form) {
         logger.info("Client: starting");
         ActionServer.setView(ClientView.getInstance());
-        info = new PlayerInfo(0);
+        info = new PlayerInfo(-1); // temporal
         connection = SCommunication.createNewClient(new GetModelAction());
         try {
-            connection.connect(ip, Integer.parseInt(port));
+            connection.connect(ip, port);
             ClientView.getInstance().init();
             startConnection(ip);
+            connection.send(new ConnectAction(form));
         } catch (IOException ex) {
             logger.log(Level.SEVERE, null, ex);
         }
-        getModel();
-    }
-
-    public void reset() {
-        info = new PlayerInfo(0);
-//        connection.reset();
     }
 
     public void bindBody(int id, Body body) {
@@ -80,6 +78,10 @@ public class ClientCommunication {
 
     public PlayerInfo getInfo() {
         return info;
+    }
+
+    public void setInfo(PlayerInfo info) {
+        this.info = info;
     }
 
     public void startConnection(String ip) throws IOException {

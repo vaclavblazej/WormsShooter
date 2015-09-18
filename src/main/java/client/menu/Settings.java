@@ -31,12 +31,12 @@ public class Settings implements Serializable {
 
     private Settings() {
         controls = new Controls()
-                .add(ControlsEnum.UP, 38)
-                .add(ControlsEnum.DOWN, 40)
-                .add(ControlsEnum.RIGHT, 39)
-                .add(ControlsEnum.LEFT, 37)
-                .add(ControlsEnum.JUMP, 0)
-                .add(ControlsEnum.FIRE, 32)
+                .add(ControlsEnum.UP, 87)
+                .add(ControlsEnum.DOWN, 83)
+                .add(ControlsEnum.RIGHT, 68)
+                .add(ControlsEnum.LEFT, 65)
+                .add(ControlsEnum.JUMP, 32)
+                .add(ControlsEnum.FIRE, 0)
                 .add(ControlsEnum.MINE, 67)
                 .add(ControlsEnum.CHAT, 10)
                 .add(ControlsEnum.MAP_TOGGLE, 77);

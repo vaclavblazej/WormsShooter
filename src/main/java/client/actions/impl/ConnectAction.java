@@ -14,13 +14,7 @@ public class ConnectAction extends ActionClient {
         this.form = form;
     }
 
-    public RegistrationForm getForm() {
-        return form;
-    }
-
     @Override
     public void perform() {
-//        Body b = ClientView.getInstance().newBody();
-//        view.getModel().getControls().put(getId(), b);
     }
 }

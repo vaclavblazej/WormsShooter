@@ -9,6 +9,7 @@ import server.ServerCommunication;
 import utilities.BindableButton;
 import utilities.Controls;
 import utilities.ControlsEnum;
+import utilities.communication.RegistrationForm;
 import utilities.properties.Paths;
 import utilities.spritesheets.SpriteLoader;
 
@@ -16,7 +17,7 @@ import javax.swing.*;
 import java.awt.*;
 import java.io.IOException;
 import java.net.URL;
-import java.util.*;
+import java.util.ArrayList;
 import java.util.List;
 
 /**
@@ -148,7 +149,7 @@ public class MainFrame extends JFrame {
                 e1.printStackTrace();
             }
             SwingUtilities.invokeLater(() -> {
-                ClientCommunication.getInstance().init("localhost", "4242");
+                ClientCommunication.getInstance().init("localhost", port, new RegistrationForm("Alpha"));
                 joinProgressBar.setValue(joinProgressBar.getMaximum());
                 mainCardLayout.show(rootPanel, "clientCard");
                 clientCard.requestFocusInWindow();
@@ -171,7 +172,10 @@ public class MainFrame extends JFrame {
 
         // multiplayer - join
         joinJoinButton = new CustomSoundButton(e -> {
-            ClientCommunication.getInstance().init(joinAddressTextField.getText(), joinPortTextField.getText());
+            final String address = joinAddressTextField.getText();
+            final int port = Integer.parseInt(joinPortTextField.getText());
+            final RegistrationForm form = new RegistrationForm("Beta");
+            ClientCommunication.getInstance().init(address, port, form);
             joinProgressBar.setValue(joinProgressBar.getMaximum());
             mainCardLayout.show(rootPanel, "clientCard");
             clientCard.requestFocusInWindow();

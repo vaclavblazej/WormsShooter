@@ -2,12 +2,16 @@ package server;
 
 import client.actions.ActionClient;
 import objects.Body;
+import server.actions.impl.GetModelServerAction;
+import server.actions.impl.NewPlayerServerAction;
+import server.actions.impl.SetIdNewPlayerServerAction;
 import spacks.communication.SCommunication;
 import spacks.communication.server.SCommunicationServer;
 import spacks.communication.utilities.SAction;
 import spacks.communication.utilities.SListener;
 
 import java.io.IOException;
+import java.util.Collection;
 import java.util.Map;
 import java.util.logging.Level;
 import java.util.logging.Logger;
@@ -31,29 +35,36 @@ public class ServerCommunication implements SListener {
     public ServerCommunication(int port) throws IOException {
         logger.info("Server: starting");
         ActionClient.setView(ServerView.getInstance());
-        server = SCommunication.createNewServer(port, this); // todo this object listened to connections on server
+        server = SCommunication.createNewServer(port, this);
         server.start();
         instance = this;
     }
 
-    public SCommunicationServer getServer() {
-        return server;
-    }
-
-    public void setServer(SCommunicationServer server) {
-        this.server = server;
-    }
-
     public void broadcast(SAction action) {
-        try {
-            server.broadcast(action);
-        } catch (IOException ignored) {
-        }
+        serverDo(() -> server.broadcast(action));
+    }
+
+    public void broadcastExceptOne(int leftOut, SAction action) {
+        serverDo(() -> server.broadcastExceptOne(leftOut, action));
     }
 
     public void send(int id, SAction action) {
+        serverDo(() -> server.send(id, action));
+    }
+
+    public void sendToGroup(Collection<Integer> ids, SAction action) {
+        serverDo(() -> server.sendToGroup(ids, action));
+    }
+
+    // to simplify adapter, catch exceptions
+    private interface ServerRunnable {
+        void run() throws IOException;
+    }
+
+    // to handle exception boilerplate
+    private void serverDo(ServerRunnable runnable) {
         try {
-            server.send(id, action);
+            runnable.run();
         } catch (IOException ex) {
             logger.log(Level.SEVERE, ex.toString());
         }
@@ -62,16 +73,21 @@ public class ServerCommunication implements SListener {
     public void disconnect(int id) {
         try {
             server.disconnectClient(id);
-        } catch (IOException ignored) {
+        } catch (IOException ex) {
+            logger.log(Level.SEVERE, ex.toString());
         }
     }
 
     @Override
     public void connectionCreated(int id) {
-        Body body = ServerView.getInstance().newBody();
-        Map<Integer, Body> controls = ServerView.getInstance().getModel().getControls();
+        final ServerView serverView = ServerView.getInstance();
+        Body body = serverView.newBody();
+        Map<Integer, Body> controls = serverView.getModel().getControls();
         controls.put(id, body);
-        logger.info("bind body");
+        final ServerCommunication serverCommunication = ServerCommunication.getInstance();
+        serverCommunication.send(id, new SetIdNewPlayerServerAction(id));
+        serverCommunication.send(id, new GetModelServerAction(serverView.getModel().serialize()));
+        serverCommunication.broadcastExceptOne(id, new NewPlayerServerAction(id));
     }
 
     @Override

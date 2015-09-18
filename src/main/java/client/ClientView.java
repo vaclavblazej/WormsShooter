@@ -197,9 +197,11 @@ public class ClientView extends AbstractView implements
         ControlsEnum en = controls.get(i);
         if (en != null && controlSet.add(en)) {
             switch (en) {
-                case UP:
+                case JUMP:
                     ClientCommunication.getInstance().send(new MoveAction(MoveEnum.JUMP));
                     break;
+                case UP:
+                case DOWN:
                 case LEFT:
                 case RIGHT:
                     changeMovement();
@@ -220,6 +222,8 @@ public class ClientView extends AbstractView implements
         ControlsEnum en = controls.get(i);
         if (en != null && controlSet.remove(en)) {
             switch (en) {
+                case UP:
+                case DOWN:
                 case LEFT:
                 case RIGHT:
                     changeMovement();
@@ -229,18 +233,32 @@ public class ClientView extends AbstractView implements
     }
 
     public void changeMovement() {
-        int d = 0;
-        if (controlSet.contains(ControlsEnum.LEFT)) d--;
-        if (controlSet.contains(ControlsEnum.RIGHT)) d++;
-        switch (d) {
+        int hMov = 0;
+        int vMov = 0;
+        if (controlSet.contains(ControlsEnum.UP)) vMov++;
+        if (controlSet.contains(ControlsEnum.DOWN)) vMov--;
+        if (controlSet.contains(ControlsEnum.LEFT)) hMov--;
+        if (controlSet.contains(ControlsEnum.RIGHT)) hMov++;
+        switch (hMov) {
             case 1:
                 ClientCommunication.getInstance().send(new MoveAction(MoveEnum.RIGHT));
                 break;
             case 0:
-                ClientCommunication.getInstance().send(new MoveAction(MoveEnum.STOP));
+                ClientCommunication.getInstance().send(new MoveAction(MoveEnum.HSTOP));
                 break;
             case -1:
                 ClientCommunication.getInstance().send(new MoveAction(MoveEnum.LEFT));
+                break;
+        }
+        switch (vMov) {
+            case 1:
+                ClientCommunication.getInstance().send(new MoveAction(MoveEnum.UP));
+                break;
+            case 0:
+                ClientCommunication.getInstance().send(new MoveAction(MoveEnum.VSTOP));
+                break;
+            case -1:
+                ClientCommunication.getInstance().send(new MoveAction(MoveEnum.DOWN));
                 break;
         }
     }

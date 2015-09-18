@@ -17,7 +17,7 @@
         <dependency>
             <groupId>com.github.vaclavblazej</groupId>
             <artifactId>SCommunication</artifactId>
-            <version>SCommunication-1.0</version>
+            <version>1.1-SNAPSHOT</version>
         </dependency>
     </dependencies>
 
