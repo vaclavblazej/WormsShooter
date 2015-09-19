@@ -66,6 +66,12 @@ public class MapClass implements SendableVia<MapClass, SerializableMapClass> {
 //                ns[i][j] = shadows[offset.x + i][offset.y + j];
 //            }
 //        }
+        final int width = map.getWidth();
+        final int height = map.getHeight();
+        if(offset.x < 0) throw new ArrayIndexOutOfBoundsException("You tried to get subimage with left x index = " + offset.x);
+        if(offset.y < 0) throw new ArrayIndexOutOfBoundsException("You tried to get subimage with top y index = " + offset.y);
+        if(offset.x + size.width > width) throw new ArrayIndexOutOfBoundsException("You tried to get subimage with right x index = " + (offset.x + size.width));
+        if(offset.y + size.height > height) throw new ArrayIndexOutOfBoundsException("You tried to get subimage with bottom y index = " + (offset.y + size.height));
         final BufferedImage subimage = map.getSubimage(offset.x, offset.y, size.width, size.height);
         return new MapClass(subimage, view, lights, ns);
     }
@@ -131,9 +137,7 @@ public class MapClass implements SendableVia<MapClass, SerializableMapClass> {
         Material mat = view.getMaterial();
         CollisionState state = mat.getState(mat.getMaterial(map.getRGB(x, y)));
         sh += mat.getTransparency(mat.getMaterial(map.getRGB(x, y)));
-        if (sh > 0xFF) {
-            sh = 0xFF;
-        }
+        if (sh > 0xFF) sh = 0xFF;
         if (shadows[x][y] > (int) sh) {
             shadows[x][y] = (int) sh;
             samples.add(new Point(x, y));

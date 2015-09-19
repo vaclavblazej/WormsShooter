@@ -56,7 +56,8 @@ public class ClientView extends AbstractView implements
     private EnumSet<ControlsEnum> controlSet;
     private MapClass currentView;
     private BufferedImage rasteredView;
-    private Point viewTilePos;
+    private Point viewTileStartPos;
+    private Point viewTileEndPos;
     private AffineTransform transformation;         // Defines view position and size. Is inverted already.
     private Controls controls;
     private Point mouse;
@@ -66,7 +67,8 @@ public class ClientView extends AbstractView implements
         map = new MapClass(new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB), this);
         recalculateGraphicWindowLayout();
         currentView = null;
-        viewTilePos = new Point();
+        viewTileStartPos = new Point();
+        viewTileEndPos = new Point();
         controlSet = EnumSet.noneOf(ControlsEnum.class);
         mouse = new Point();
         transformation = new AffineTransform();
@@ -117,34 +119,41 @@ public class ClientView extends AbstractView implements
         if (body != null) {
             // view point
             Point bodyPosition = body.getPosition();
-            smoothOffset.x = bodyPosition.x % Application.BLOCK_SIZE;
-            smoothOffset.y = bodyPosition.y % Application.BLOCK_SIZE;
-            viewRealPos.x = bodyPosition.x - Application.BLOCK_SIZE * tileViewDimensions.width / 2;
-            viewRealPos.y = bodyPosition.y - Application.BLOCK_SIZE * tileViewDimensions.height / 2;
+            viewRealPos.x = bodyPosition.x - panelViewDimensions.width / 2;
+            viewRealPos.y = bodyPosition.y - panelViewDimensions.height / 2;
 
             // map edges
-            int ubX = map.getWidth() * Application.BLOCK_SIZE - panelViewDimensions.width - 1;
+            int maxX = map.getWidth() * Application.BLOCK_SIZE - panelViewDimensions.width - 1;
             if (viewRealPos.x < 0) {
                 viewRealPos.x = 0;
-                smoothOffset.x = 0;
-            } else if (viewRealPos.x > ubX) {
-                viewRealPos.x = ubX;
-                smoothOffset.x = Application.BLOCK_SIZE;
+            } else if (viewRealPos.x > maxX) {
+                viewRealPos.x = maxX;
             }
-            int ubY = map.getHeight() * Application.BLOCK_SIZE - panelViewDimensions.height - 1;
+            int maxY = map.getHeight() * Application.BLOCK_SIZE - panelViewDimensions.height - 1;
             if (viewRealPos.y < 0) {
                 viewRealPos.y = 0;
-                smoothOffset.y = 0;
-            } else if (viewRealPos.y > ubY) {
-                viewRealPos.y = ubY;
-                smoothOffset.y = Application.BLOCK_SIZE;
+            } else if (viewRealPos.y > maxY) {
+                viewRealPos.y = maxY;
             }
-            viewTilePos.x = viewRealPos.x / Application.BLOCK_SIZE;
-            viewTilePos.y = viewRealPos.y / Application.BLOCK_SIZE;
+            viewTileStartPos.x = viewRealPos.x / Application.BLOCK_SIZE;
+            viewTileStartPos.y = viewRealPos.y / Application.BLOCK_SIZE;
+            viewTileEndPos.x = (viewRealPos.x + panelViewDimensions.width) / Application.BLOCK_SIZE;
+            viewTileEndPos.y = (viewRealPos.y + panelViewDimensions.height) / Application.BLOCK_SIZE;
+            smoothOffset.x = viewRealPos.x % Application.BLOCK_SIZE;
+            smoothOffset.y = viewRealPos.y % Application.BLOCK_SIZE;
+
+            // todo more effective
+            tileViewDimensions = new Dimension(
+                    (panelViewDimensions.width + smoothOffset.x) / Application.BLOCK_SIZE+1,
+                    (panelViewDimensions.height + smoothOffset.y) / Application.BLOCK_SIZE+1);
+            rasteredView = new BufferedImage(
+                    tileViewDimensions.width * Application.BLOCK_SIZE,
+                    tileViewDimensions.height * Application.BLOCK_SIZE,
+                    BufferedImage.TYPE_INT_RGB);
 
             // print to screen
             try {
-                currentView = map.getSubmap(viewTilePos, tileViewDimensions);
+                currentView = map.getSubmap(viewTileStartPos, tileViewDimensions);
             } catch (RasterFormatException | ArrayIndexOutOfBoundsException ex) {
                 logger.log(Level.SEVERE, null, ex);
             }
@@ -152,7 +161,7 @@ public class ClientView extends AbstractView implements
             Graphics2D g = (Graphics2D) graphics;
             transformation.setToTranslation(-viewRealPos.x + smoothOffset.x, -viewRealPos.y + smoothOffset.y);
             for (Body body : bodies) body.drawRelative((Graphics2D) rasteredView.getGraphics(), transformation);
-            g.drawImage(rasteredView, -smoothOffset.x - 2 * Application.BLOCK_SIZE, -smoothOffset.y - 2 * Application.BLOCK_SIZE, rasteredView.getWidth(), rasteredView.getHeight(), null);
+            g.drawImage(rasteredView, -smoothOffset.x, -smoothOffset.y, rasteredView.getWidth(), rasteredView.getHeight(), null);
 
 //            final BufferedImage image = map.getImage();
 //            BufferedImage glass = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
@@ -177,16 +186,11 @@ public class ClientView extends AbstractView implements
         if (panelViewDimensions.width == 0)
             panelViewDimensions = new Dimension(Application.BLOCK_SIZE, Application.BLOCK_SIZE);
         tileViewDimensions = new Dimension(
-                panelViewDimensions.width / Application.BLOCK_SIZE,
-                panelViewDimensions.height / Application.BLOCK_SIZE);
-        // even to avoid problems with centering when window is made larger
-        tileViewDimensions.width += 4;
-        tileViewDimensions.height += 4;
-        if (tileViewDimensions.width % 2 != 0) tileViewDimensions.width++;
-        if (tileViewDimensions.height % 2 != 0) tileViewDimensions.height++;
+                (panelViewDimensions.width) / Application.BLOCK_SIZE,
+                (panelViewDimensions.height) / Application.BLOCK_SIZE);
         rasteredView = new BufferedImage(
-                (tileViewDimensions.width) * Application.BLOCK_SIZE,
-                (tileViewDimensions.height) * Application.BLOCK_SIZE,
+                tileViewDimensions.width * Application.BLOCK_SIZE,
+                tileViewDimensions.height * Application.BLOCK_SIZE,
                 BufferedImage.TYPE_INT_RGB);
     }
 
@@ -269,7 +273,7 @@ public class ClientView extends AbstractView implements
         mouse.y = e.getY();
         switch (e.getButton()) {
             case MouseEvent.BUTTON1:
-                Point p = new Point(viewTilePos.x * Application.BLOCK_SIZE + e.getX(), viewTilePos.y * Application.BLOCK_SIZE + e.getY());
+                Point p = new Point(viewTileStartPos.x * Application.BLOCK_SIZE + e.getX(), viewTileStartPos.y * Application.BLOCK_SIZE + e.getY());
                 ItemBlueprint heldItem = getMyView().getInventory().getHeldItem();
                 if (heldItem != null) {
                     ItemAction action = heldItem.getAction();

@@ -41,11 +41,9 @@ public class ServerView extends AbstractView implements ComponentListener {
     private ServerView() {
         super(1);
         SpriteLoader.loadSprite("Map");
-        SpriteLoader.set(400, 300);
+        SpriteLoader.set(150, 100);
         ArrayList<LightSource> lights = new ArrayList<>(10);
-        lights.add(new LightSource(100, 200, 5));
-        lights.add(new LightSource(200, 200, 5));
-        lights.add(new LightSource(300, 200, 5));
+        lights.add(new LightSource(50, 10, 5));
         map = new MapClass(SpriteLoader.getSprite().getFrame(), this, lights);
         model = new Model(map, new HashMap<>(20), objects, createItems());
         material = new Material(this);

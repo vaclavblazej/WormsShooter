@@ -121,7 +121,7 @@ public abstract class AbstractView extends JPanel implements ActionListener, Def
     }
 
     public Body newBody() {
-        Body b = new Body(4000, 6000, this);
+        Body b = new Body(2000, 1600, this);
         bodies.add(b);
         return b;
     }
