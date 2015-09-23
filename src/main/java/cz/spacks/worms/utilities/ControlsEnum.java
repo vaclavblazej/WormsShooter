@@ -20,6 +20,7 @@ public enum ControlsEnum implements PropertyLoader{
     FIRE,
     MINE,
     CHAT,
+    INVENTORY_TOGGLE,
     MAP_TOGGLE;
 
     private static Properties properties;

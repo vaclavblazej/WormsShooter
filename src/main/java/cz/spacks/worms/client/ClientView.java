@@ -1,6 +1,7 @@
 package cz.spacks.worms.client;
 
 import cz.spacks.worms.client.actions.impl.MoveAction;
+import cz.spacks.worms.client.menu.InventoryPanel;
 import cz.spacks.worms.client.menu.Settings;
 import cz.spacks.worms.main.Application;
 import cz.spacks.worms.objects.Body;
@@ -18,6 +19,7 @@ import cz.spacks.worms.utilities.defaults.DefaultMouseListener;
 import cz.spacks.worms.utilities.defaults.DefaultMouseMotionListener;
 import cz.spacks.worms.utilities.materials.MaterialVisuals;
 
+import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
@@ -50,6 +52,7 @@ public class ClientView extends AbstractView implements
     }
 
     private MinimapView minimapView;
+    private InventoryPanel inventory;
     private Dimension tileViewDimensions;
     private Dimension panelViewDimensions;
     private Body body;
@@ -75,6 +78,9 @@ public class ClientView extends AbstractView implements
         // todo ratio with scale
 
         minimapView = MinimapView.getInstance();
+        minimapView.setVisible(false);
+        inventory = new InventoryPanel();
+        inventory.setVisible(false);
         recalculateGraphicWindowLayout();
     }
 
@@ -88,7 +94,7 @@ public class ClientView extends AbstractView implements
         this.body = body;
     }
 
-    public Body getMyView() {
+    public Body getMyViewBody() {
         return body;
     }
 
@@ -144,8 +150,8 @@ public class ClientView extends AbstractView implements
 
             // todo more effective
             tileViewDimensions = new Dimension(
-                    (panelViewDimensions.width + smoothOffset.x) / Application.BLOCK_SIZE+1,
-                    (panelViewDimensions.height + smoothOffset.y) / Application.BLOCK_SIZE+1);
+                    (panelViewDimensions.width + smoothOffset.x) / Application.BLOCK_SIZE + 1,
+                    (panelViewDimensions.height + smoothOffset.y) / Application.BLOCK_SIZE + 1);
             rasteredView = new BufferedImage(
                     tileViewDimensions.width * Application.BLOCK_SIZE,
                     tileViewDimensions.height * Application.BLOCK_SIZE,
@@ -216,6 +222,11 @@ public class ClientView extends AbstractView implements
                 case MAP_TOGGLE:
                     minimapView.setVisible(!minimapView.isVisible());
                     break;
+                case INVENTORY_TOGGLE:
+                    inventory.updateInventoryModel(getMyViewBody().getInventory());
+                    inventory.updateCraftingModel(getItemFactory().getRecipes());
+                    inventory.setVisible(!inventory.isVisible());
+                    break;
             }
         }
     }
@@ -274,7 +285,7 @@ public class ClientView extends AbstractView implements
         switch (e.getButton()) {
             case MouseEvent.BUTTON1:
                 Point p = new Point(viewTileStartPos.x * Application.BLOCK_SIZE + e.getX(), viewTileStartPos.y * Application.BLOCK_SIZE + e.getY());
-                ItemBlueprint heldItem = getMyView().getInventory().getHeldItem();
+                ItemBlueprint heldItem = getMyViewBody().getInventory().getHeldItem();
                 if (heldItem != null) {
                     ItemAction action = heldItem.getAction();
                     if (action != null) {
@@ -306,5 +317,9 @@ public class ClientView extends AbstractView implements
 
     public MinimapView getMinimapView() {
         return minimapView;
+    }
+
+    public JPanel getInventory() {
+        return inventory;
     }
 }

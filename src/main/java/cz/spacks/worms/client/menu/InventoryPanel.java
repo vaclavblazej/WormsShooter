@@ -1,10 +1,8 @@
 package cz.spacks.worms.client.menu;
 
-import cz.spacks.worms.client.ClientView;
+import cz.spacks.worms.objects.items.Crafting;
 import cz.spacks.worms.objects.items.CraftingPanel;
 import cz.spacks.worms.objects.items.InventoryTableModel;
-import cz.spacks.worms.utilities.AbstractDialog;
-import cz.spacks.worms.utilities.properties.Message;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
@@ -13,17 +11,15 @@ import java.awt.*;
 /**
  * @author Václav Blažej
  */
-public class InventoryDialog extends AbstractDialog {
+public class InventoryPanel extends JPanel {
 
     private JSplitPane split;
-    private JTable items;
+    private JTable table;
+    private CraftingPanel craftingPanel;
 
-    public InventoryDialog(JFrame owner) {
-        super(owner, Message.INVENTORY_WINDOW_TITLE.value(), false);
-        setDefaultCloseOperation(JFrame.DISPOSE_ON_CLOSE);
-
+    public InventoryPanel() {
         split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-        items = new JTable(ClientView.getInstance().getMyView().getInventory()) {
+        table = new JTable(new InventoryTableModel("", "", "")) {
             @Override
             public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
                 Component c = super.prepareRenderer(renderer, row, column);
@@ -43,20 +39,18 @@ public class InventoryDialog extends AbstractDialog {
                 return c;
             }
         };
-        split.add(new JScrollPane(items), 1);
-        split.add(new CraftingPanel(), 2);
-        getContent().add(split);
-        pack();
-        setResizable(false);
-        setVisible(true);
+        split.add(new JScrollPane(table), 1);
+        craftingPanel = new CraftingPanel();
+        split.add(craftingPanel, 2);
+        add(split);
+//        setVisible(true);
     }
 
-    @Override
-    public void okAction() throws Exception {
+    public void updateInventoryModel(InventoryTableModel inventoryTableModel){
+        table.setModel(inventoryTableModel);
     }
 
-    @Override
-    public boolean validateDialog() {
-        return true;
+    public void updateCraftingModel(Crafting craftingModel){
+        craftingPanel.setRecipesModel(craftingModel);
     }
 }

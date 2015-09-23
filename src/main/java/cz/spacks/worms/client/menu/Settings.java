@@ -39,6 +39,7 @@ public class Settings implements Serializable {
                 .add(ControlsEnum.FIRE, 0)
                 .add(ControlsEnum.MINE, 67)
                 .add(ControlsEnum.CHAT, 10)
+                .add(ControlsEnum.INVENTORY_TOGGLE, 71)
                 .add(ControlsEnum.MAP_TOGGLE, 77);
     }
 

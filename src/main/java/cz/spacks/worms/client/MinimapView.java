@@ -29,7 +29,6 @@ public class MinimapView extends AbstractView implements DefaultComponentListene
     private MinimapView() {
         super(1);
 
-        setVisible(false);
         setPreferredSize(new Dimension(300, 200));
         SwingUtilities.invokeLater(this::init);
     }
