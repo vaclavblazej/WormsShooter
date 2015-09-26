@@ -1,7 +1,7 @@
 package cz.spacks.worms.client;
 
 import cz.spacks.worms.client.actions.impl.MoveAction;
-import cz.spacks.worms.client.menu.InventoryPanel;
+import cz.spacks.worms.main.windows.InventoryPanel;
 import cz.spacks.worms.client.menu.Settings;
 import cz.spacks.worms.main.Application;
 import cz.spacks.worms.objects.Body;
@@ -60,7 +60,7 @@ public class ClientView extends AbstractView implements
     private MapClass currentView;
     private BufferedImage rasteredView;
     private Point viewTileStartPos;
-    private Point viewTileEndPos;
+    private final Point viewRealPos;
     private AffineTransform transformation;         // Defines view position and size. Is inverted already.
     private Controls controls;
     private Point mouse;
@@ -71,7 +71,7 @@ public class ClientView extends AbstractView implements
         recalculateGraphicWindowLayout();
         currentView = null;
         viewTileStartPos = new Point();
-        viewTileEndPos = new Point();
+        viewRealPos = new Point();
         controlSet = EnumSet.noneOf(ControlsEnum.class);
         mouse = new Point();
         transformation = new AffineTransform();
@@ -121,7 +121,6 @@ public class ClientView extends AbstractView implements
     protected void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
         Point smoothOffset = new Point(0, 0);
-        Point viewRealPos = new Point(0, 0);
         if (body != null) {
             // view point
             Point bodyPosition = body.getPosition();
@@ -143,8 +142,6 @@ public class ClientView extends AbstractView implements
             }
             viewTileStartPos.x = viewRealPos.x / Application.BLOCK_SIZE;
             viewTileStartPos.y = viewRealPos.y / Application.BLOCK_SIZE;
-            viewTileEndPos.x = (viewRealPos.x + panelViewDimensions.width) / Application.BLOCK_SIZE;
-            viewTileEndPos.y = (viewRealPos.y + panelViewDimensions.height) / Application.BLOCK_SIZE;
             smoothOffset.x = viewRealPos.x % Application.BLOCK_SIZE;
             smoothOffset.y = viewRealPos.y % Application.BLOCK_SIZE;
 
@@ -284,7 +281,7 @@ public class ClientView extends AbstractView implements
         mouse.y = e.getY();
         switch (e.getButton()) {
             case MouseEvent.BUTTON1:
-                Point p = new Point(viewTileStartPos.x * Application.BLOCK_SIZE + e.getX(), viewTileStartPos.y * Application.BLOCK_SIZE + e.getY());
+                Point p = new Point(viewRealPos.x + e.getX(), viewRealPos.y + e.getY());
                 ItemBlueprint heldItem = getMyViewBody().getInventory().getHeldItem();
                 if (heldItem != null) {
                     ItemAction action = heldItem.getAction();

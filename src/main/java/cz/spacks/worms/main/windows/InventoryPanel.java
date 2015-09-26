@@ -1,17 +1,20 @@
-package cz.spacks.worms.client.menu;
+package cz.spacks.worms.main.windows;
 
+import cz.spacks.worms.client.ClientView;
 import cz.spacks.worms.objects.items.Crafting;
-import cz.spacks.worms.objects.items.CraftingPanel;
+import cz.spacks.worms.main.windows.CraftingPanel;
 import cz.spacks.worms.objects.items.InventoryTableModel;
+import cz.spacks.worms.utilities.defaults.DefaultKeyListener;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
+import java.awt.event.ActionEvent;
 
 /**
  * @author Václav Blažej
  */
-public class InventoryPanel extends JPanel {
+public class InventoryPanel extends JPanel implements DefaultKeyListener {
 
     private JSplitPane split;
     private JTable table;
@@ -43,14 +46,19 @@ public class InventoryPanel extends JPanel {
         craftingPanel = new CraftingPanel();
         split.add(craftingPanel, 2);
         add(split);
-//        setVisible(true);
+        final CustomButton close = new CustomButton(e -> {
+            setVisible(false);
+            ClientView.getInstance().grabFocus();
+        });
+        close.setText("Close");
+        add(close);
     }
 
-    public void updateInventoryModel(InventoryTableModel inventoryTableModel){
+    public void updateInventoryModel(InventoryTableModel inventoryTableModel) {
         table.setModel(inventoryTableModel);
     }
 
-    public void updateCraftingModel(Crafting craftingModel){
+    public void updateCraftingModel(Crafting craftingModel) {
         craftingPanel.setRecipesModel(craftingModel);
     }
 }

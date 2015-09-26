@@ -1,8 +1,11 @@
-package cz.spacks.worms.objects.items;
+package cz.spacks.worms.main.windows;
 
 import cz.spacks.worms.client.ClientCommunication;
 import cz.spacks.worms.client.ClientView;
 import cz.spacks.worms.client.actions.impl.CraftAction;
+import cz.spacks.worms.objects.items.ComponentTableModel;
+import cz.spacks.worms.objects.items.Crafting;
+import cz.spacks.worms.objects.items.Recipe;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
