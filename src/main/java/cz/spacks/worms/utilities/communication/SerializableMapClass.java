@@ -8,7 +8,7 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 
 /**
- * @author Václav Blažej
+ *
  */
 public class SerializableMapClass implements DeseriazibleInto<MapClass> {
 

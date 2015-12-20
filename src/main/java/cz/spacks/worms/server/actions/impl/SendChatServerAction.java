@@ -4,7 +4,7 @@ import cz.spacks.worms.client.ChatLog;
 import cz.spacks.worms.server.actions.ActionServer;
 
 /**
- * @author Václav Blažej
+ *
  */
 public class SendChatServerAction extends ActionServer {
 

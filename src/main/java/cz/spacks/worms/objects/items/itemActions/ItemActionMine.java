@@ -6,7 +6,7 @@ import cz.spacks.worms.client.actions.impl.MineAction;
 import java.awt.*;
 
 /**
- * @author Václav Blažej
+ *
  */
 public class ItemActionMine implements ItemAction {
 

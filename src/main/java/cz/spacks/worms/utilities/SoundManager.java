@@ -17,7 +17,7 @@ import java.util.logging.Logger;
  * call: <code>SoundManager.playSound(Sounds.CASH_REGISTER);</code> to play sound of
  * "CASH_REGISTER"
  *
- * @author Václav Blažej
+ *
  */
 public class SoundManager {
 

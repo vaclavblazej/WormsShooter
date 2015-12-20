@@ -12,7 +12,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author Václav Blažej
+ *
  */
 public class MaterialVisuals implements Serializable {
 

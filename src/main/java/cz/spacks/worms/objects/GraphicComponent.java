@@ -5,7 +5,7 @@ import java.awt.geom.AffineTransform;
 import java.io.Serializable;
 
 /**
- * @author Václav Blažej
+ *
  */
 public interface GraphicComponent extends Serializable {
 

@@ -5,7 +5,7 @@ import java.util.EnumMap;
 import java.util.Map;
 
 /**
- * @author Václav Blažej
+ *
  */
 public class ItemFactory implements Serializable {
 

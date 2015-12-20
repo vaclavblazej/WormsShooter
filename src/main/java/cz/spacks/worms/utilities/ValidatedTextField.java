@@ -5,7 +5,7 @@ import javax.swing.event.DocumentEvent;
 import javax.swing.event.DocumentListener;
 
 /**
- * @author Václav Blažej
+ *
  */
 public class ValidatedTextField extends JTextField {
 

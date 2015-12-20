@@ -10,7 +10,7 @@ import java.awt.event.ActionEvent;
 /**
  * Dialog allowing inventory item exchange.
  *
- * @author Václav Blažej
+ *
  */
 public class ExchangeDialog extends AbstractDialog {
 

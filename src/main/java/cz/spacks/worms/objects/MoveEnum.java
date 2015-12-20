@@ -1,7 +1,7 @@
 package cz.spacks.worms.objects;
 
 /**
- * @author Václav Blažej
+ *
  */
 public enum MoveEnum {
 

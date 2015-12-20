@@ -12,7 +12,7 @@ import java.util.LinkedList;
 import java.util.logging.Logger;
 
 /**
- * @author Václav Blažej
+ *
  */
 public class MapClass implements SendableVia<MapClass, SerializableMapClass> {
 

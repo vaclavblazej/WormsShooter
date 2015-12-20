@@ -5,7 +5,7 @@ import cz.spacks.worms.objects.Body;
 import cz.spacks.worms.server.actions.ActionServer;
 
 /**
- * @author Václav Blažej
+ *
  */
 public class NewPlayerServerAction extends ActionServer {
 

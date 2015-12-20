@@ -7,7 +7,7 @@ import java.util.Collections;
 import java.util.List;
 
 /**
- * @author Václav Blažej
+ *
  */
 public class ComponentTableModel extends AbstractTableModel implements Serializable {
 

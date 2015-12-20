@@ -8,7 +8,7 @@ import java.awt.*;
 import java.awt.geom.Point2D;
 
 /**
- * @author Václav Blažej
+ *
  */
 public class SerializableBody implements DeseriazibleInto<Body> {
 

@@ -5,7 +5,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author Václav Blažej
+ *
  */
 public class Controls implements Serializable {
 

@@ -7,7 +7,7 @@ import java.awt.*;
 import java.awt.image.BufferedImage;
 
 /**
- * @author Václav Blažej
+ *
  */
 public class MapGenerator {
 

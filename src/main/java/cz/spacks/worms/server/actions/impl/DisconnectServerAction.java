@@ -5,7 +5,7 @@ import cz.spacks.worms.client.ClientView;
 import cz.spacks.worms.server.actions.ActionServer;
 
 /**
- * @author Václav Blažej
+ *
  */
 public class DisconnectServerAction extends ActionServer {
 

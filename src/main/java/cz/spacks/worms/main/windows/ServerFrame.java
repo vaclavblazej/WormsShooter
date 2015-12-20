@@ -9,7 +9,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * @author Václav Blažej
+ *
  */
 public class ServerFrame extends JFrame {
     private JPanel rootPanel;

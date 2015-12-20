@@ -10,7 +10,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author Václav Blažej
+ *
  */
 public class SerializableModel implements DeseriazibleInto<Model> {
 

@@ -12,7 +12,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 
 /**
- * @author Václav Blažej
+ *
  */
 public class InventoryPanel extends JPanel implements DefaultKeyListener {
 

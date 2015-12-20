@@ -6,7 +6,7 @@ import cz.spacks.worms.client.actions.impl.ShootAction;
 import java.awt.*;
 
 /**
- * @author Václav Blažej
+ *
  */
 public class ItemActionShoot implements ItemAction {
 

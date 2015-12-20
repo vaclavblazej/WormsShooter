@@ -6,7 +6,7 @@ import java.awt.geom.AffineTransform;
 import java.util.LinkedList;
 
 /**
- * @author Václav Blažej
+ *
  */
 public class ChatLog extends JPanel {
 

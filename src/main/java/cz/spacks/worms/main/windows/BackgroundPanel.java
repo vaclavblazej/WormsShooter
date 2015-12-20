@@ -4,7 +4,7 @@ import javax.swing.*;
 import java.awt.*;
 
 /**
- * @author Václav Blažej
+ *
  */
 public class BackgroundPanel extends JPanel {
 

@@ -7,7 +7,7 @@ import java.awt.event.FocusEvent;
 import java.awt.event.FocusListener;
 
 /**
- * @author Václav Blažej
+ *
  */
 public class CustomSoundButton extends CustomButton {
     {

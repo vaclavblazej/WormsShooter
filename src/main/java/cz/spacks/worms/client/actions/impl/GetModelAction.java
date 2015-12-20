@@ -5,7 +5,7 @@ import cz.spacks.worms.server.ServerCommunication;
 import cz.spacks.worms.server.actions.impl.GetModelServerAction;
 
 /**
- * @author Václav Blažej
+ *
  */
 public class GetModelAction extends ActionClient {
 

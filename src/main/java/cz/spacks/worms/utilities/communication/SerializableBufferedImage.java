@@ -6,7 +6,7 @@ import java.awt.*;
 import java.awt.image.*;
 
 /**
- * @author Štìpán Plachý
+ *
  */
 public class SerializableBufferedImage implements DeseriazibleInto<BufferedImage> {
 

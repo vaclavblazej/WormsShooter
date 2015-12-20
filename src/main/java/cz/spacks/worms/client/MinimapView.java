@@ -13,7 +13,7 @@ import java.awt.image.BufferedImage;
 import java.util.logging.Logger;
 
 /**
- * @author Václav Blažej
+ *
  */
 public class MinimapView extends AbstractView implements DefaultComponentListener {
 

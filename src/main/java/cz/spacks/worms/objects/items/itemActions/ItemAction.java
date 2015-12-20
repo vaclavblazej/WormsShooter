@@ -4,7 +4,7 @@ import java.awt.*;
 import java.io.Serializable;
 
 /**
- * @author Václav Blažej
+ *
  */
 public interface ItemAction extends Serializable {
 

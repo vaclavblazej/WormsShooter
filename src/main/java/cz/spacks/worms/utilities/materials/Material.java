@@ -11,7 +11,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 /**
- * @author Václav Blažej
+ *
  */
 public class Material {
     public static final CollisionState DEFAULT = CollisionState.SOLID;

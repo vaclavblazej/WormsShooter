@@ -4,7 +4,7 @@ import cz.spacks.worms.client.ClientView;
 import spacks.communication.utilities.SAction;
 
 /**
- * @author Václav Blažej
+ *
  */
 public abstract class ActionServer implements SAction {
 

@@ -6,7 +6,7 @@ import java.awt.*;
 import java.awt.geom.AffineTransform;
 
 /**
- * @author Václav Blažej
+ *
  */
 public class Thing implements GraphicComponent {
 

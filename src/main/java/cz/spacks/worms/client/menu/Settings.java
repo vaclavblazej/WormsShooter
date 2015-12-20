@@ -7,7 +7,7 @@ import cz.spacks.worms.utilities.FileManager;
 import java.io.Serializable;
 
 /**
- * @author Václav Blažej
+ *
  */
 public class Settings implements Serializable {
 

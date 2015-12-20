@@ -1,7 +1,7 @@
 package cz.spacks.worms.utilities.materials;
 
 /**
- * @author Václav Blažej
+ *
  */
 public enum MaterialEnum {
 

@@ -6,7 +6,7 @@ import cz.spacks.worms.utilities.materials.MaterialEnum;
 import java.awt.*;
 
 /**
- * @author Václav Blažej
+ *
  */
 public class MineServerAction extends ActionServer {
     private Point p;

@@ -27,7 +27,7 @@ import java.util.List;
 /**
  * Custom menu class for a project.
  *
- * @author Václav Blažej
+ *
  */
 public class MainFrame extends JFrame {
 

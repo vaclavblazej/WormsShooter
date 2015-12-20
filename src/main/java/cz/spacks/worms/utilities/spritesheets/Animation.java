@@ -1,7 +1,7 @@
 package cz.spacks.worms.utilities.spritesheets;
 
 /**
- * @author Václav Blažej
+ *
  */
 
 import java.awt.image.BufferedImage;

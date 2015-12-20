@@ -3,7 +3,7 @@ package cz.spacks.worms.objects.items;
 import java.awt.*;
 
 /**
- * @author Václav Blažej
+ *
  */
 public enum ItemCategory {
 

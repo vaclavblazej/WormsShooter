@@ -6,7 +6,7 @@ import cz.spacks.worms.server.actions.ActionServer;
 import cz.spacks.worms.utilities.communication.RegistrationForm;
 
 /**
- * @author Václav Blažej
+ *
  */
 public class ConnectServerAction extends ActionServer {
 

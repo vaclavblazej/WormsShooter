@@ -7,7 +7,7 @@ import java.awt.*;
 import java.util.List;
 
 /**
- * @author Pajcak
+ *
  */
 public class GameWindowItemBar extends JToolBar {
 

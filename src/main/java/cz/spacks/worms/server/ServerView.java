@@ -22,7 +22,7 @@ import java.util.HashMap;
 import java.util.logging.Logger;
 
 /**
- * @author Václav Blažej
+ *
  */
 public class ServerView extends AbstractView implements ComponentListener {
 

@@ -10,7 +10,7 @@ import cz.spacks.worms.server.actions.impl.CraftServerAction;
 import java.util.Map;
 
 /**
- * @author Václav Blažej
+ *
  */
 public class CraftAction extends ActionClient {
 

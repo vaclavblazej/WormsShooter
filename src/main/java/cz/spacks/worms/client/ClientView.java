@@ -33,7 +33,7 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * @author Václav Blažej
+ *
  */
 public class ClientView extends AbstractView implements
         ActionListener,

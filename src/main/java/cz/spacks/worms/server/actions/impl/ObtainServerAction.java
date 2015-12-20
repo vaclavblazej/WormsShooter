@@ -7,7 +7,7 @@ import cz.spacks.worms.server.actions.ActionServer;
 import cz.spacks.worms.utilities.materials.MaterialEnum;
 
 /**
- * @author Václav Blažej
+ *
  */
 public class ObtainServerAction extends ActionServer {
 

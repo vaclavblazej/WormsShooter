@@ -14,7 +14,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 
 /**
- * @author Václav Blažej
+ *
  */
 public class CraftingPanel extends JPanel implements ListSelectionListener {
 

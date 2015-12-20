@@ -10,7 +10,7 @@ import cz.spacks.worms.utilities.communication.SerializableModel;
 import java.util.Map;
 
 /**
- * @author Václav Blažej
+ *
  */
 public class GetModelServerAction extends ActionServer {
 

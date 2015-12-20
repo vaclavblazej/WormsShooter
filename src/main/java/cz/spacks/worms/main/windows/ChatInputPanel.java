@@ -10,7 +10,7 @@ import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 
 /**
- * @author Václav Blažej
+ *
  */
 public class ChatInputPanel extends JPanel {
 

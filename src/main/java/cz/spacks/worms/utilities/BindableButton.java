@@ -9,7 +9,7 @@ import java.awt.event.KeyListener;
 /**
  * Button which listens on keyboard when pressed and changes its text accordingly.
  *
- * @author Václav Blažej
+ *
  */
 public class BindableButton extends JButton implements KeyListener {
 

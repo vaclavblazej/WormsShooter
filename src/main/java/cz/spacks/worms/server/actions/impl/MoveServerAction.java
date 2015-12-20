@@ -7,7 +7,7 @@ import cz.spacks.worms.server.actions.ActionServer;
 import java.awt.*;
 
 /**
- * @author Václav Blažej
+ *
  */
 public class MoveServerAction extends ActionServer {
 

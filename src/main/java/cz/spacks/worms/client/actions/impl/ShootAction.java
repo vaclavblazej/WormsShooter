@@ -9,7 +9,7 @@ import cz.spacks.worms.server.actions.impl.ShootServerAction;
 import java.awt.*;
 
 /**
- * @author Václav Blažej
+ *
  */
 public class ShootAction extends ActionClient {
 

@@ -17,8 +17,8 @@ import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
- * @author Štěpán Plachý
- * @author Václav Blažej
+ *
+ *
  */
 public class ServerCommunication implements SListener {
 

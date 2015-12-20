@@ -7,7 +7,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 /**
- * @author Václav Blažej
+ *
  */
 public class InventoryTableModel extends ComponentTableModel {
 

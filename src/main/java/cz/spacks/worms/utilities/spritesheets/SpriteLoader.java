@@ -1,7 +1,7 @@
 package cz.spacks.worms.utilities.spritesheets;
 
 /**
- * @author Václav Blažej
+ *
  */
 
 import cz.spacks.worms.main.Application;

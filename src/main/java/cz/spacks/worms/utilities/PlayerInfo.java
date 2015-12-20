@@ -5,8 +5,8 @@ import cz.spacks.worms.utilities.communication.RegistrationForm;
 /**
  * Information about player.
  *
- * @author Štìpán Plachý
- * @author Václav Blažej
+ *
+ *
  */
 public class PlayerInfo {
 

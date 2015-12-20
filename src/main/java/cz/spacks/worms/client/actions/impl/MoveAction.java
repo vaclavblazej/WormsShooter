@@ -9,7 +9,7 @@ import cz.spacks.worms.server.actions.impl.MoveServerAction;
 import java.awt.*;
 
 /**
- * @author Václav Blažej
+ *
  */
 public class MoveAction extends ActionClient {
 

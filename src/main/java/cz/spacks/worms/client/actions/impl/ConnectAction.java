@@ -4,7 +4,7 @@ import cz.spacks.worms.client.actions.ActionClient;
 import cz.spacks.worms.utilities.communication.RegistrationForm;
 
 /**
- * @author Václav Blažej
+ *
  */
 public class ConnectAction extends ActionClient {
 

@@ -3,7 +3,7 @@ package cz.spacks.worms.particles;
 import java.awt.*;
 
 /**
- * @author Václav Blažej
+ *
  */
 public class Sand extends Particle {
 

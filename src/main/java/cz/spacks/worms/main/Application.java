@@ -5,7 +5,7 @@ import cz.spacks.worms.main.windows.MainFrame;
 import javax.swing.*;
 
 /**
- * @author Václav Blažej
+ *
  */
 public class Application {
 

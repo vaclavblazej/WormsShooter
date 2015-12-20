@@ -5,7 +5,7 @@ import cz.spacks.worms.server.actions.ActionServer;
 import cz.spacks.worms.utilities.PlayerInfo;
 
 /**
- * @author Václav Blažej
+ *
  */
 public class SetIdNewPlayerServerAction extends ActionServer {
 

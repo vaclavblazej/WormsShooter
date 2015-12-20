@@ -7,7 +7,7 @@ import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 /**
- * @author Václav Blažej
+ *
  */
 public class CustomButton extends JButton {
 

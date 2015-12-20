@@ -11,7 +11,7 @@ import java.util.List;
 import java.util.Map;
 
 /**
- * @author Václav Blažej
+ *
  */
 public class Model implements SendableVia<Model, SerializableModel> {
 
