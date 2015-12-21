@@ -8,5 +8,5 @@ import java.io.Serializable;
  */
 public interface ItemAction extends Serializable {
 
-    public void action(Point point);
+    void action(Point point);
 }

@@ -14,6 +14,7 @@ public class Application {
     public static final String version = "1.1.0-SNAPSHOT";
 
     public static void main(String[] args) {
+//        UIManager.setLookAndFeel(UIManager.getSystemLookAndFeelClassName());
         SwingUtilities.invokeLater(MainFrame::new);
     }
 

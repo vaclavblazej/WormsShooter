@@ -79,6 +79,9 @@ public class ServerView extends AbstractView implements ComponentListener {
         r = new Recipe("Free shovel");
         r.addProduct(fac.getBlueprint(ItemEnum.SHOVEL), 1);
         rec.addReceipe(r);
+        r = new Recipe("Free bullet");
+        r.addProduct(fac.getBlueprint(ItemEnum.BULLET), 10);
+        rec.addReceipe(r);
         r = new Recipe("Gun assemble");
         r.addIngredient(fac.getBlueprint(ItemEnum.HANDGUN_BARREL), 1);
         r.addIngredient(fac.getBlueprint(ItemEnum.HANDGUN_HANDLE), 1);

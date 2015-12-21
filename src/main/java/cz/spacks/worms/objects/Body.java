@@ -43,7 +43,7 @@ public class Body implements GraphicComponent, SendableVia<Body, SerializableBod
     private CollisionState bottomSideCollision;
     private boolean alive;
     private int health;
-    private Animation animation;
+    private Frame frame;
 
     public Body(Point position,
                 Point.Double velocity,
@@ -64,14 +64,9 @@ public class Body implements GraphicComponent, SendableVia<Body, SerializableBod
         this.view = view;
         this.inventory = new InventoryTableModel("Item", "Count");
         this.alive = false;
-        SpriteLoader.loadSprite("Materials");
-        SpriteLoader.set(20, 40);
-        ArrayList<Frame> frames = new ArrayList<>();
-        for (int i = 0; i < 6; i++) {
-            frames.add(SpriteLoader.getSprite(i, 0));
-        }
-        this.animation = new Animation(frames);
-        animation.start();
+        SpriteLoader.loadSprite("player");
+        SpriteLoader.set(32, 64);
+        frame = SpriteLoader.getSprite(0, 0);
     }
 
     public Body(int x, int y, AbstractView map) {
@@ -266,13 +261,13 @@ public class Body implements GraphicComponent, SendableVia<Body, SerializableBod
 //        tr.rotate(rotation);
         g.setTransform(tr);
         g.setColor(Color.RED);
-        g.fillRect(0, 0, viewSize.width, viewSize.height);
+        g.drawRect(0, 0, viewSize.width, viewSize.height);
 
 //        final int top = position.y / Application.BLOCK_SIZE;
 //        final int bottom = (position.y + physicsSize.height - 1) / Application.BLOCK_SIZE;
 //        int x = (position.x + physicsSize.width) / Application.BLOCK_SIZE;
 
-//        g.drawImage(animation.getSprite(), null, null);
+        g.drawImage(frame.getFrame(), null, null);
     }
 
     @Override

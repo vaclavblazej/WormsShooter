@@ -6,19 +6,24 @@ import cz.spacks.worms.utilities.CollisionState;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
+import java.awt.geom.Point2D;
 
 /**
  *
  */
 public class Bullet implements GraphicComponent {
 
-    private static final int velocity = 20;
+    private Point.Double velocity;
     private AffineTransform tr;
     private Point.Double position;
     private double rotation;
     private AbstractView view;
 
     public Bullet(Point position, double rotation, AbstractView view) {
+        int vel = 100;
+        velocity = new Point2D.Double();
+        velocity.x = vel * Math.cos(rotation);
+        velocity.y = vel * Math.sin(rotation);
         this.position = new Point.Double(position.x, position.y);
         this.rotation = rotation;
         this.view = view;
@@ -46,8 +51,9 @@ public class Bullet implements GraphicComponent {
 
     @Override
     public void tick() {
-        position.x += velocity * Math.cos(rotation);
-        position.y += velocity * Math.sin(rotation);
+        velocity.y += 1;
+        position.x += velocity.x;
+        position.y += velocity.y;
         Color pixel = view.getPixel((int) (position.x / Application.BLOCK_SIZE), (int) (position.y / Application.BLOCK_SIZE));
         CollisionState check = view.getMaterial().getState(pixel);
         if (check != CollisionState.GAS) {

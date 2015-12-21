@@ -124,7 +124,7 @@ public class MainFrame extends JFrame {
         pack();
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
-        setMinimumSize(new Dimension(800, 600));
+        setMinimumSize(new Dimension(1000, 600));
         setLocationRelativeTo(null);
 
         // todo set inactive when this window is inactive

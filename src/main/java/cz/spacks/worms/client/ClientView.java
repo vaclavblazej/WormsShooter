@@ -5,6 +5,7 @@ import cz.spacks.worms.main.windows.InventoryPanel;
 import cz.spacks.worms.client.menu.Settings;
 import cz.spacks.worms.main.Application;
 import cz.spacks.worms.objects.Body;
+import cz.spacks.worms.objects.GraphicComponent;
 import cz.spacks.worms.objects.MoveEnum;
 import cz.spacks.worms.objects.items.ItemBlueprint;
 import cz.spacks.worms.objects.items.itemActions.ItemAction;
@@ -163,7 +164,9 @@ public class ClientView extends AbstractView implements
             MaterialVisuals.redraw(currentView, rasteredView);
             Graphics2D g = (Graphics2D) graphics;
             transformation.setToTranslation(-viewRealPos.x + smoothOffset.x, -viewRealPos.y + smoothOffset.y);
-            for (Body body : bodies) body.drawRelative((Graphics2D) rasteredView.getGraphics(), transformation);
+            final Graphics rasteredViewGraphics = rasteredView.getGraphics();
+            for (Body body : bodies) body.drawRelative((Graphics2D) rasteredViewGraphics, transformation);
+            for (GraphicComponent gc : objects) gc.drawRelative((Graphics2D) rasteredViewGraphics, transformation);
             g.drawImage(rasteredView, -smoothOffset.x, -smoothOffset.y, rasteredView.getWidth(), rasteredView.getHeight(), null);
 
 //            final BufferedImage image = map.getImage();
@@ -223,6 +226,8 @@ public class ClientView extends AbstractView implements
                     inventory.updateInventoryModel(getMyViewBody().getInventory());
                     inventory.updateCraftingModel(getItemFactory().getRecipes());
                     inventory.setVisible(!inventory.isVisible());
+                    break;
+                case INTERACT:
                     break;
             }
         }

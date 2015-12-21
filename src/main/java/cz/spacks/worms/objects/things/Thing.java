@@ -1,5 +1,6 @@
-package cz.spacks.worms.objects;
+package cz.spacks.worms.objects.things;
 
+import cz.spacks.worms.objects.GraphicComponent;
 import cz.spacks.worms.utilities.spritesheets.Animation;
 
 import java.awt.*;

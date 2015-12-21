@@ -3,6 +3,7 @@ package cz.spacks.worms.client.menu;
 import cz.spacks.worms.utilities.Controls;
 import cz.spacks.worms.utilities.ControlsEnum;
 import cz.spacks.worms.utilities.FileManager;
+import javafx.scene.input.KeyCode;
 
 import java.io.Serializable;
 
@@ -38,7 +39,8 @@ public class Settings implements Serializable {
                 .add(ControlsEnum.JUMP, 32)
                 .add(ControlsEnum.FIRE, 0)
                 .add(ControlsEnum.MINE, 67)
-                .add(ControlsEnum.CHAT, 10)
+                .add(ControlsEnum.CHAT, KeyCode.ENTER.impl_getCode())
+                .add(ControlsEnum.INTERACT, KeyCode.F.impl_getCode())
                 .add(ControlsEnum.INVENTORY_TOGGLE, 71)
                 .add(ControlsEnum.MAP_TOGGLE, 77);
     }
