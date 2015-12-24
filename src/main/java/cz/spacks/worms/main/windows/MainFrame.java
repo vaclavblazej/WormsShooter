@@ -15,7 +15,6 @@ import cz.spacks.worms.utilities.Controls;
 import cz.spacks.worms.utilities.ControlsEnum;
 import cz.spacks.worms.utilities.communication.RegistrationForm;
 import cz.spacks.worms.utilities.properties.Paths;
-import cz.spacks.worms.utilities.spritesheets.SpriteLoader;
 
 import javax.swing.*;
 import java.awt.*;
@@ -26,8 +25,6 @@ import java.util.List;
 
 /**
  * Custom menu class for a project.
- *
- *
  */
 public class MainFrame extends JFrame {
 
@@ -77,6 +74,7 @@ public class MainFrame extends JFrame {
     private JSlider soundSlider;
     private JLabel musicAudioSettingSlider;
     private JSlider musicSlider;
+    private JButton applyAudioSettingsButton;
     private JButton backAudioSettingsButton;
     // settings - keys
     private JPanel keysSettingsCard;
@@ -109,12 +107,12 @@ public class MainFrame extends JFrame {
         $$$setupUI$$$();
 
         Toolkit toolkit = Toolkit.getDefaultToolkit();
-        URL cursorImg = MainFrame.class.getResource(Paths.CURSOR_FILE.value());
-        Image image = toolkit.createImage(cursorImg);
-        System.out.println(image.toString());
-        Cursor c = toolkit.createCustomCursor(image, new Point(0, 0), "img");
-        System.out.println(c.toString());
-        setCursor(c);
+//        URL cursorImg = MainFrame.class.getResource(Paths.CURSOR_FILE.value());
+//        Image image = toolkit.createImage(cursorImg);
+//        System.out.println(image.toString());
+//        Cursor c = toolkit.createCustomCursor(image, new Point(0, 0), "img");
+//        System.out.println(c.toString());
+//        setCursor(c);
 
         URL url = MainFrame.class.getResource(Paths.ICON_FILE.value());
         Image img = toolkit.createImage(url);
@@ -124,7 +122,7 @@ public class MainFrame extends JFrame {
         pack();
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
-        setMinimumSize(new Dimension(1000, 600));
+        setMinimumSize(new Dimension(800, 600));
         setLocationRelativeTo(null);
 
         // todo set inactive when this window is inactive
@@ -152,7 +150,8 @@ public class MainFrame extends JFrame {
      */
     private void createUIComponents() {
         // menu card
-        menuCard = new BackgroundPanel(SpriteLoader.loadSprite("background", ".jpg"));
+//        menuCard = new BackgroundPanel(SpriteLoader.loadSprite("background", ".jpg"));
+        menuCard = new JPanel();
 
         // cz.spacks.worms.main menu
         singleplayerButton = new CustomSoundButton(e -> {
@@ -210,7 +209,12 @@ public class MainFrame extends JFrame {
         backHostButton = new CustomSoundButton(e -> menuCardLayout.show(menuCards, "multiplayerCard"));
 
         // settings
+        soundSlider = new JSlider(0, 100, Settings.getInstance().getVolume());
         backVideoSettingsButton = new CustomSoundButton(e -> menuCardLayout.show(menuCards, "settingsCard"));
+        applyAudioSettingsButton = new CustomSoundButton(e -> {
+            Settings.getInstance().setVolume(soundSlider.getValue());
+            menuCardLayout.show(menuCards, "settingsCard");
+        });
         backAudioSettingsButton = new CustomSoundButton(e -> menuCardLayout.show(menuCards, "settingsCard"));
 
         // settings - keys
@@ -485,7 +489,7 @@ public class MainFrame extends JFrame {
         final Spacer spacer9 = new Spacer();
         videoSettingsCard.add(spacer9, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         audioSettingsCard = new JPanel();
-        audioSettingsCard.setLayout(new GridLayoutManager(5, 2, new Insets(0, 0, 0, 0), -1, -1));
+        audioSettingsCard.setLayout(new GridLayoutManager(6, 2, new Insets(0, 0, 0, 0), -1, -1));
         audioSettingsCard.setOpaque(false);
         menuCards.add(audioSettingsCard, "audioSettingsCard");
         backAudioSettingsButton.setBackground(new Color(-1644826));
@@ -496,10 +500,9 @@ public class MainFrame extends JFrame {
         backAudioSettingsButton.setFont(new Font(backAudioSettingsButton.getFont().getName(), backAudioSettingsButton.getFont().getStyle(), 26));
         backAudioSettingsButton.setHideActionText(false);
         backAudioSettingsButton.setText("Back");
-        audioSettingsCard.add(backAudioSettingsButton, new GridConstraints(4, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        audioSettingsCard.add(backAudioSettingsButton, new GridConstraints(5, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         final Spacer spacer10 = new Spacer();
         audioSettingsCard.add(spacer10, new GridConstraints(3, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
-        soundSlider = new JSlider();
         soundSlider.setValue(80);
         audioSettingsCard.add(soundSlider, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         soundAudioSettingSlider = new JLabel();
@@ -515,6 +518,15 @@ public class MainFrame extends JFrame {
         musicSlider = new JSlider();
         musicSlider.setValue(80);
         audioSettingsCard.add(musicSlider, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        applyAudioSettingsButton.setBackground(new Color(-1644826));
+        applyAudioSettingsButton.setBorderPainted(false);
+        applyAudioSettingsButton.setContentAreaFilled(false);
+        applyAudioSettingsButton.setFocusPainted(true);
+        applyAudioSettingsButton.setFocusable(true);
+        applyAudioSettingsButton.setFont(new Font(applyAudioSettingsButton.getFont().getName(), applyAudioSettingsButton.getFont().getStyle(), 26));
+        applyAudioSettingsButton.setHideActionText(false);
+        applyAudioSettingsButton.setText("Apply");
+        audioSettingsCard.add(applyAudioSettingsButton, new GridConstraints(4, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         keysSettingsCard = new JPanel();
         keysSettingsCard.setLayout(new GridLayoutManager(4, 1, new Insets(0, 0, 0, 0), -1, -1));
         keysSettingsCard.setOpaque(false);

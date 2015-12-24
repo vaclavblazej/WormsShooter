@@ -1,5 +1,6 @@
 package cz.spacks.worms.utilities;
 
+import cz.spacks.worms.client.menu.Settings;
 import cz.spacks.worms.main.Application;
 import cz.spacks.worms.utilities.properties.Sounds;
 
@@ -13,17 +14,14 @@ import java.util.logging.Logger;
 
 /**
  * Used to play sounds in program.
- * <p/>
+ * <p>
  * call: <code>SoundManager.playSound(Sounds.CASH_REGISTER);</code> to play sound of
  * "CASH_REGISTER"
- *
- *
  */
 public class SoundManager {
 
     private static Logger logger = Logger.getLogger(SoundManager.class.getName());
 
-    private static Sounds sound;
     private static HashMap<Sounds, File> cache = new HashMap<>();
 
     public static synchronized void playSound(Sounds sound) {
@@ -40,20 +38,23 @@ public class SoundManager {
 
         @Override
         public void run() {
-            final File soundFile;
-            if (cache.containsKey(sound)) {
-                soundFile = cache.get(sound);
-            } else {
+            if (!cache.containsKey(sound)) {
                 URL url = Application.class.getResource(sound.value());
-                soundFile = new File(url.getPath());
-                cache.put(sound, soundFile);
+                cache.put(sound, new File(url.getPath()));
             }
-            AudioInputStream audioInputStream;
+            final File soundFile = cache.get(sound);
             try {
-                audioInputStream = AudioSystem.getAudioInputStream(soundFile);
+                AudioInputStream audioInputStream = AudioSystem.getAudioInputStream(soundFile);
                 Clip clip = AudioSystem.getClip();
                 clip.open(audioInputStream);
-                clip.start();
+                FloatControl volume = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
+                System.out.println(volume.getValue());
+                float setVol = volume.getMinimum() + (volume.getMaximum() - volume.getMinimum()) * Settings.getInstance().getVolume() / 100.0f;
+                volume.setValue(setVol);
+                System.out.println(volume.getValue());
+                if (!clip.isRunning()) {
+                    clip.start();
+                }
             } catch (UnsupportedAudioFileException | IOException | LineUnavailableException ex) {
                 logger.log(Level.SEVERE, null, ex);
             }
