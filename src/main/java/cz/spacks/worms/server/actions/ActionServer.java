@@ -9,10 +9,14 @@ import spacks.communication.utilities.SAction;
 public abstract class ActionServer implements SAction {
 
     protected transient static ClientView view;
-    protected final int id;
+    protected int id;
 
     public int getId() {
         return id;
+    }
+
+    public void setId(int id) {
+        this.id = id;
     }
 
     public static ClientView getView() {

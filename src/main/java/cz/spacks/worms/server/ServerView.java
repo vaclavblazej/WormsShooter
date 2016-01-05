@@ -2,7 +2,6 @@ package cz.spacks.worms.server;
 
 import cz.spacks.worms.objects.Body;
 import cz.spacks.worms.objects.GraphicComponent;
-import cz.spacks.worms.objects.LightSource;
 import cz.spacks.worms.objects.items.*;
 import cz.spacks.worms.objects.items.itemActions.ItemActionMine;
 import cz.spacks.worms.objects.items.itemActions.ItemActionShoot;
@@ -17,7 +16,6 @@ import java.awt.*;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.logging.Logger;
 
@@ -42,9 +40,7 @@ public class ServerView extends AbstractView implements ComponentListener {
         super(1);
         SpriteLoader.loadSprite("Map");
         SpriteLoader.set(150, 100);
-        ArrayList<LightSource> lights = new ArrayList<>(10);
-        lights.add(new LightSource(50, 10, 5));
-        map = new MapClass(SpriteLoader.getSprite().getFrame(), this, lights);
+        map = new MapClass(SpriteLoader.getSprite().getFrame(), this);
         model = new Model(map, new HashMap<>(20), objects, createItems());
         material = new Material(this);
         createRecipes();
@@ -54,8 +50,8 @@ public class ServerView extends AbstractView implements ComponentListener {
     }
 
     private ItemFactory createItems() {
-        SpriteLoader.loadSprite("Materials");
-        SpriteLoader.set(16, 16);
+        SpriteLoader.loadSprite("Items");
+        SpriteLoader.set(4, 4);
         ItemFactory itemFactory = new ItemFactory();
         itemFactory.addItem(ItemEnum.METAL, new ItemBlueprint("Metal", true, 1, 1, ItemCategory.MATERIAL, SpriteLoader.getRawSprite(4, 4), null));
         itemFactory.addItem(ItemEnum.GUN_POWDER, new ItemBlueprint("Gun powder", true, 1, 1, ItemCategory.MATERIAL, SpriteLoader.getRawSprite(4, 4), null));

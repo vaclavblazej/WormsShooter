@@ -20,6 +20,5 @@ public class MineServerAction extends ActionServer {
     @Override
     public void perform() {
         view.change(p.x, p.y, material);
-        view.getModel().getMap().recalculateShadows(p);
     }
 }

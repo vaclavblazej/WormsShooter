@@ -1,15 +1,14 @@
 package cz.spacks.worms.main.windows;
 
-import cz.spacks.worms.client.ChatLog;
-import cz.spacks.worms.client.ClientCommunication;
-import cz.spacks.worms.client.ClientView;
+import cz.spacks.worms.client.*;
 import cz.spacks.worms.client.menu.GameWindowItemBar;
 import cz.spacks.worms.client.menu.Settings;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import cz.spacks.worms.main.Application;
-import cz.spacks.worms.server.ServerCommunication;
+import cz.spacks.worms.server.ServerCommunicationInternet;
+import cz.spacks.worms.server.ServerCommunicationLocal;
 import cz.spacks.worms.utilities.BindableButton;
 import cz.spacks.worms.utilities.Controls;
 import cz.spacks.worms.utilities.ControlsEnum;
@@ -155,19 +154,19 @@ public class MainFrame extends JFrame {
 
         // cz.spacks.worms.main menu
         singleplayerButton = new CustomSoundButton(e -> {
-            final int port = 4242;
             new ServerFrame();
             try {
-                new ServerCommunication(port);
+                new ServerCommunicationLocal();
+                SwingUtilities.invokeLater(() -> {
+                    ClientCommunicationLocal clientCommunicationLocal = new ClientCommunicationLocal();
+                    clientCommunicationLocal.init(new RegistrationForm("Alpha"));
+                    joinProgressBar.setValue(joinProgressBar.getMaximum());
+                    mainCardLayout.show(rootPanel, "clientCard");
+                    clientCard.requestFocusInWindow();
+                });
             } catch (IOException e1) {
                 e1.printStackTrace();
             }
-            SwingUtilities.invokeLater(() -> {
-                ClientCommunication.getInstance().init("localhost", port, new RegistrationForm("Alpha"));
-                joinProgressBar.setValue(joinProgressBar.getMaximum());
-                mainCardLayout.show(rootPanel, "clientCard");
-                clientCard.requestFocusInWindow();
-            });
         });
         multiplayerButton = new CustomSoundButton(e -> menuCardLayout.show(menuCards, "multiplayerCard"));
         settingsButton = new CustomSoundButton(e -> menuCardLayout.show(menuCards, "settingsCard"));
@@ -189,7 +188,8 @@ public class MainFrame extends JFrame {
             final String address = joinAddressTextField.getText();
             final int port = Integer.parseInt(joinPortTextField.getText());
             final RegistrationForm form = new RegistrationForm("Beta");
-            ClientCommunication.getInstance().init(address, port, form);
+            ClientCommunicationInternet clientCommunicationInternet = new ClientCommunicationInternet();
+            clientCommunicationInternet.init(address, port, form);
             joinProgressBar.setValue(joinProgressBar.getMaximum());
             mainCardLayout.show(rootPanel, "clientCard");
             clientCard.requestFocusInWindow();
@@ -201,7 +201,7 @@ public class MainFrame extends JFrame {
             final int port = Integer.parseInt(hostPortTextField.getText());
             new ServerFrame();
             try {
-                new ServerCommunication(port);
+                new ServerCommunicationInternet(port);
             } catch (IOException e1) {
                 e1.printStackTrace();
             }

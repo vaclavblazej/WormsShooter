@@ -48,10 +48,8 @@ public class SoundManager {
                 Clip clip = AudioSystem.getClip();
                 clip.open(audioInputStream);
                 FloatControl volume = (FloatControl) clip.getControl(FloatControl.Type.MASTER_GAIN);
-                System.out.println(volume.getValue());
                 float setVol = volume.getMinimum() + (volume.getMaximum() - volume.getMinimum()) * Settings.getInstance().getVolume() / 100.0f;
                 volume.setValue(setVol);
-                System.out.println(volume.getValue());
                 if (!clip.isRunning()) {
                     clip.start();
                 }

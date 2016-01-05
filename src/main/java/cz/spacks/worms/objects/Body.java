@@ -43,7 +43,7 @@ public class Body implements GraphicComponent, SendableVia<Body, SerializableBod
     private CollisionState bottomSideCollision;
     private boolean alive;
     private int health;
-    private Frame frame;
+//    private Frame frame;
 
     public Body(Point position,
                 Point.Double velocity,
@@ -64,9 +64,9 @@ public class Body implements GraphicComponent, SendableVia<Body, SerializableBod
         this.view = view;
         this.inventory = new InventoryTableModel("Item", "Count");
         this.alive = false;
-        SpriteLoader.loadSprite("player");
-        SpriteLoader.set(32, 64);
-        frame = SpriteLoader.getSprite(0, 0);
+//        SpriteLoader.loadSprite("player");
+//        SpriteLoader.set(32, 64);
+//        frame = SpriteLoader.getSprite(0, 0);
     }
 
     public Body(int x, int y, AbstractView map) {
@@ -260,6 +260,8 @@ public class Body implements GraphicComponent, SendableVia<Body, SerializableBod
         tr.translate(position.x, position.y);
 //        tr.rotate(rotation);
         g.setTransform(tr);
+        g.setColor(Color.BLUE);
+        g.fillRect(0, 0, viewSize.width, viewSize.height);
         g.setColor(Color.RED);
         g.drawRect(0, 0, viewSize.width, viewSize.height);
 
@@ -267,7 +269,7 @@ public class Body implements GraphicComponent, SendableVia<Body, SerializableBod
 //        final int bottom = (position.y + physicsSize.height - 1) / Application.BLOCK_SIZE;
 //        int x = (position.x + physicsSize.width) / Application.BLOCK_SIZE;
 
-        g.drawImage(frame.getFrame(), null, null);
+//        g.drawImage(frame.getFrame(), null, null);
     }
 
     @Override

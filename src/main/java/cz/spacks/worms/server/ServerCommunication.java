@@ -2,27 +2,20 @@ package cz.spacks.worms.server;
 
 import cz.spacks.worms.client.actions.ActionClient;
 import cz.spacks.worms.objects.Body;
+import cz.spacks.worms.server.actions.ActionServer;
 import cz.spacks.worms.server.actions.impl.GetModelServerAction;
 import cz.spacks.worms.server.actions.impl.NewPlayerServerAction;
 import cz.spacks.worms.server.actions.impl.SetIdNewPlayerServerAction;
-import spacks.communication.SCommunication;
-import spacks.communication.server.SCommunicationServer;
 import spacks.communication.utilities.SAction;
 import spacks.communication.utilities.SListener;
 
-import java.io.IOException;
 import java.util.Collection;
 import java.util.Map;
-import java.util.logging.Level;
-import java.util.logging.Logger;
 
 /**
  *
- *
  */
-public class ServerCommunication implements SListener {
-
-    private static final Logger logger = Logger.getLogger(ServerCommunication.class.getName());
+public abstract class ServerCommunication implements SListener {
 
     private static ServerCommunication instance;
 
@@ -30,53 +23,20 @@ public class ServerCommunication implements SListener {
         return instance;
     }
 
-    private SCommunicationServer server;
-
-    public ServerCommunication(int port) throws IOException {
-        logger.info("Server: starting");
+    public ServerCommunication() {
         ActionClient.setView(ServerView.getInstance());
-        server = SCommunication.createNewServer(port, this);
-        server.start();
         instance = this;
     }
 
-    public void broadcast(SAction action) {
-        serverDo(() -> server.broadcast(action));
-    }
+    public abstract void broadcast(SAction action);
 
-    public void broadcastExceptOne(int leftOut, SAction action) {
-        serverDo(() -> server.broadcastExceptOne(leftOut, action));
-    }
+    public abstract void broadcastExceptOne(int leftOut, SAction action);
 
-    public void send(int id, SAction action) {
-        serverDo(() -> server.send(id, action));
-    }
+    public abstract void send(int id, ActionServer action);
 
-    public void sendToGroup(Collection<Integer> ids, SAction action) {
-        serverDo(() -> server.sendToGroup(ids, action));
-    }
+    public abstract void sendToGroup(Collection<Integer> ids, SAction action);
 
-    // to simplify adapter, catch exceptions
-    private interface ServerRunnable {
-        void run() throws IOException;
-    }
-
-    // to handle exception boilerplate
-    private void serverDo(ServerRunnable runnable) {
-        try {
-            runnable.run();
-        } catch (IOException ex) {
-            logger.log(Level.SEVERE, ex.toString());
-        }
-    }
-
-    public void disconnect(int id) {
-        try {
-            server.disconnectClient(id);
-        } catch (IOException ex) {
-            logger.log(Level.SEVERE, ex.toString());
-        }
-    }
+    public abstract void disconnect(int id);
 
     @Override
     public void connectionCreated(int id) {

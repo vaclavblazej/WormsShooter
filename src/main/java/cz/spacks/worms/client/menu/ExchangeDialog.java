@@ -23,7 +23,7 @@ public class ExchangeDialog extends AbstractDialog {
     private JButton moveLeft;
 
     /**
-     * @param owner   window which ownes this dialog
+     * @param owner   window which owns this dialog
      * @param fromArg owned inventory
      * @param toArg   accessed inventory
      */
