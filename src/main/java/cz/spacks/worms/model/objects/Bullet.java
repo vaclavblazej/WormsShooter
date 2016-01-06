@@ -1,8 +1,8 @@
 package cz.spacks.worms.model.objects;
 
-import cz.spacks.worms.Application;
 import cz.spacks.worms.controller.AbstractView;
 import cz.spacks.worms.controller.CollisionState;
+import cz.spacks.worms.controller.Settings;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -32,7 +32,7 @@ public class Bullet implements GraphicComponent {
     @Override
     public void draw(Graphics2D g) {
         tr = new AffineTransform();
-        tr.translate(position.x / Application.BLOCK_SIZE, position.y / Application.BLOCK_SIZE);
+        tr.translate(position.x / Settings.BLOCK_SIZE, position.y / Settings.BLOCK_SIZE);
         tr.rotate(rotation);
         g.setColor(Color.RED);
         g.setTransform(tr);
@@ -54,8 +54,8 @@ public class Bullet implements GraphicComponent {
         velocity.y += 1;
         position.x += velocity.x;
         position.y += velocity.y;
-        Color pixel = view.getPixel((int) (position.x / Application.BLOCK_SIZE), (int) (position.y / Application.BLOCK_SIZE));
-        CollisionState check = view.getMaterial().getState(pixel);
+        Color pixel = view.getPixel((int) (position.x / Settings.BLOCK_SIZE), (int) (position.y / Settings.BLOCK_SIZE));
+        CollisionState check = view.getMaterialModel().getState(pixel);
         if (check != CollisionState.GAS) {
             view.removeObject(this);
         }

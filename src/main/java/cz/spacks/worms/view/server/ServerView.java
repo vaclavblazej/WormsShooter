@@ -1,5 +1,6 @@
 package cz.spacks.worms.view.server;
 
+import cz.spacks.worms.controller.materials.MaterialModel;
 import cz.spacks.worms.model.objects.Body;
 import cz.spacks.worms.model.objects.GraphicComponent;
 import cz.spacks.worms.model.objects.items.*;
@@ -8,8 +9,8 @@ import cz.spacks.worms.model.objects.items.itemActions.ItemActionShoot;
 import cz.spacks.worms.controller.AbstractView;
 import cz.spacks.worms.controller.MapClass;
 import cz.spacks.worms.controller.communication.Model;
-import cz.spacks.worms.controller.materials.Material;
 import cz.spacks.worms.controller.spritesheets.SpriteLoader;
+import cz.spacks.worms.model.objects.Crafting;
 
 import javax.swing.*;
 import java.awt.*;
@@ -42,7 +43,7 @@ public class ServerView extends AbstractView implements ComponentListener {
         SpriteLoader.set(150, 100);
         map = new MapClass(SpriteLoader.getSprite().getFrame(), this);
         model = new Model(map, new HashMap<>(20), objects, createItems());
-        material = new Material(this);
+        materialModel = new MaterialModel(this);
         createRecipes();
 
         SwingUtilities.invokeLater(this::recalculateGraphicWindowLayout);
@@ -71,42 +72,42 @@ public class ServerView extends AbstractView implements ComponentListener {
         Crafting rec = getRecipes();
         Recipe r = new Recipe("Free gun");
         r.addProduct(fac.getBlueprint(ItemEnum.HANDGUN), 1);
-        rec.addReceipe(r);
+        rec.addRecipe(r);
         r = new Recipe("Free shovel");
         r.addProduct(fac.getBlueprint(ItemEnum.SHOVEL), 1);
-        rec.addReceipe(r);
+        rec.addRecipe(r);
         r = new Recipe("Free bullet");
         r.addProduct(fac.getBlueprint(ItemEnum.BULLET), 10);
-        rec.addReceipe(r);
+        rec.addRecipe(r);
         r = new Recipe("Gun assemble");
         r.addIngredient(fac.getBlueprint(ItemEnum.HANDGUN_BARREL), 1);
         r.addIngredient(fac.getBlueprint(ItemEnum.HANDGUN_HANDLE), 1);
         r.addIngredient(fac.getBlueprint(ItemEnum.HANDGUN_MECHANISM), 1);
         r.addProduct(fac.getBlueprint(ItemEnum.HANDGUN), 1);
-        rec.addReceipe(r);
+        rec.addRecipe(r);
         r = new Recipe("Gun disassemble");
         r.addIngredient(fac.getBlueprint(ItemEnum.HANDGUN), 1);
         r.addProduct(fac.getBlueprint(ItemEnum.HANDGUN_BARREL), 1);
         r.addProduct(fac.getBlueprint(ItemEnum.HANDGUN_HANDLE), 1);
         r.addProduct(fac.getBlueprint(ItemEnum.HANDGUN_MECHANISM), 1);
-        rec.addReceipe(r);
+        rec.addRecipe(r);
         r = new Recipe("Gun barrel");
         r.addIngredient(fac.getBlueprint(ItemEnum.METAL), 4);
         r.addProduct(fac.getBlueprint(ItemEnum.HANDGUN_BARREL), 1);
-        rec.addReceipe(r);
+        rec.addRecipe(r);
         r = new Recipe("Gun handle");
         r.addIngredient(fac.getBlueprint(ItemEnum.METAL), 8);
         r.addProduct(fac.getBlueprint(ItemEnum.HANDGUN_HANDLE), 1);
-        rec.addReceipe(r);
+        rec.addRecipe(r);
         r = new Recipe("Gun mechanism");
         r.addIngredient(fac.getBlueprint(ItemEnum.METAL), 4);
         r.addProduct(fac.getBlueprint(ItemEnum.HANDGUN_MECHANISM), 1);
-        rec.addReceipe(r);
+        rec.addRecipe(r);
         r = new Recipe("Bullet");
         r.addIngredient(fac.getBlueprint(ItemEnum.METAL), 1);
         r.addIngredient(fac.getBlueprint(ItemEnum.GUN_POWDER), 1);
         r.addProduct(fac.getBlueprint(ItemEnum.BULLET), 1);
-        rec.addReceipe(r);
+        rec.addRecipe(r);
     }
 
     public void save() {

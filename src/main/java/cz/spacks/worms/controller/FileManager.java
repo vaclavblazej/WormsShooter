@@ -1,7 +1,5 @@
 package cz.spacks.worms.controller;
 
-import cz.spacks.worms.view.client.menu.Settings;
-
 import java.io.*;
 import java.util.logging.Level;
 import java.util.logging.Logger;

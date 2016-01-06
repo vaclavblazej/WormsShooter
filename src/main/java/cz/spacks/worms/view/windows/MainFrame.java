@@ -1,17 +1,17 @@
 package cz.spacks.worms.view.windows;
 
 import cz.spacks.worms.view.client.ChatLog;
-import cz.spacks.worms.view.client.ClientCommunicationInternet;
-import cz.spacks.worms.view.client.ClientCommunicationLocal;
+import cz.spacks.worms.controller.client.ClientCommunicationInternet;
+import cz.spacks.worms.controller.client.ClientCommunicationLocal;
 import cz.spacks.worms.view.client.ClientView;
 import cz.spacks.worms.view.client.menu.GameWindowItemBar;
-import cz.spacks.worms.view.client.menu.Settings;
+import cz.spacks.worms.controller.Settings;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import cz.spacks.worms.Application;
-import cz.spacks.worms.view.server.ServerCommunicationInternet;
-import cz.spacks.worms.view.server.ServerCommunicationLocal;
+import cz.spacks.worms.controller.server.ServerCommunicationInternet;
+import cz.spacks.worms.controller.server.ServerCommunicationLocal;
 import cz.spacks.worms.controller.BindableButton;
 import cz.spacks.worms.controller.Controls;
 import cz.spacks.worms.controller.ControlsEnum;

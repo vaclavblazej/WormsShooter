@@ -1,6 +1,5 @@
 package cz.spacks.worms.controller;
 
-import cz.spacks.worms.view.client.menu.Settings;
 import cz.spacks.worms.Application;
 import cz.spacks.worms.controller.properties.Sounds;
 

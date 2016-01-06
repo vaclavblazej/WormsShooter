@@ -1,13 +1,12 @@
 package cz.spacks.worms.controller;
 
+import cz.spacks.worms.controller.materials.MaterialModel;
 import cz.spacks.worms.model.objects.Body;
 import cz.spacks.worms.model.objects.GraphicComponent;
-import cz.spacks.worms.model.objects.items.Crafting;
+import cz.spacks.worms.model.objects.Crafting;
 import cz.spacks.worms.model.objects.items.ItemFactory;
-import cz.spacks.worms.model.particles.Particle;
 import cz.spacks.worms.controller.communication.Model;
 import cz.spacks.worms.controller.defaults.DefaultComponentListener;
-import cz.spacks.worms.controller.materials.Material;
 import cz.spacks.worms.controller.materials.MaterialEnum;
 
 import javax.swing.*;
@@ -32,7 +31,7 @@ public abstract class AbstractView extends JPanel implements ActionListener, Def
     private static final Logger logger = Logger.getLogger(AbstractView.class.getName());
 
     protected Model model;
-    protected Material material;
+    protected MaterialModel materialModel;
     protected MapClass map;
     protected List<Body> bodies;
     protected List<GraphicComponent> objects;
@@ -59,10 +58,10 @@ public abstract class AbstractView extends JPanel implements ActionListener, Def
     }
 
     public CollisionState check(int x, int y) {
-        if (material != null) {
-            return material.getState(getPixel(x, y));
+        if (materialModel != null) {
+            return materialModel.getState(getPixel(x, y));
         } else {
-            return Material.DEFAULT;
+            return MaterialModel.DEFAULT;
         }
     }
 
@@ -72,13 +71,13 @@ public abstract class AbstractView extends JPanel implements ActionListener, Def
 
     public void setModel(Model model) {
         this.model = model;
-        material = new Material(this);
+        materialModel = new MaterialModel(this);
         map = model.getMap();
         bodies = new ArrayList<>(model.getControls().values());
     }
 
-    public Material getMaterial() {
-        return material;
+    public MaterialModel getMaterialModel() {
+        return materialModel;
     }
 
     public ItemFactory getItemFactory() {
@@ -114,8 +113,8 @@ public abstract class AbstractView extends JPanel implements ActionListener, Def
 
     public MaterialEnum change(int x, int y, MaterialEnum mat) {
         Graphics g = map.getGraphics();
-        MaterialEnum ret = material.getMaterial(map.getRGB(x, y));
-        g.setColor(getMaterial().getColor(mat));
+        MaterialEnum ret = materialModel.getMaterial(map.getRGB(x, y));
+        g.setColor(getMaterialModel().getColor(mat));
         g.drawLine(x, y, x, y);
         return ret;
     }
@@ -148,50 +147,6 @@ public abstract class AbstractView extends JPanel implements ActionListener, Def
         } catch (ArrayIndexOutOfBoundsException ex) {
             return Color.BLACK;
         }
-    }
-
-    public void imprint(Particle gr) {
-        destroy(gr);
-        Graphics g = map.getGraphics();
-        g.setColor(gr.color);
-        gr.draw(g);
-    }
-
-    public void imprint(int x, int y, Color color) {
-        Graphics g = map.getGraphics();
-        g.setColor(color);
-        g.drawLine(x, y, x, y);
-    }
-
-    public void swap(int x, int y, int sx, int sy) {
-        Color first = getPixel(x, y);
-        Color second = getPixel(sx, sy);
-        imprint(x, y, second);
-        imprint(sx, sy, first);
-    }
-
-    private void erase(int x, int y, int r) {
-        for (int i = 0; i < r; i++) {
-            for (int j = 0; j < r; j++) {
-                imprint(x + i, y + j, Color.BLACK);
-            }
-        }
-    }
-
-    public void destroy(Particle gr) {
-        //grains.remove(gr);
-    }
-
-    public void update(int x, int y) {
-    }
-
-    public void newSand(int x, int y) {
-        /*grains.add(new Sand(
-         x + random.nextInt(10) - 5,
-         y + random.nextInt(20) - 10,
-         (random.nextInt(RNG) - RNG / 2) / 10.,
-         -(random.nextInt(RNG) - RNG / 2) / 10.,
-         Color.CYAN));*/
     }
 
     public int getRatio() {

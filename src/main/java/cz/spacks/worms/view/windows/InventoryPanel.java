@@ -1,8 +1,8 @@
 package cz.spacks.worms.view.windows;
 
 import cz.spacks.worms.view.client.ClientView;
-import cz.spacks.worms.model.objects.items.Crafting;
-import cz.spacks.worms.model.objects.items.InventoryTableModel;
+import cz.spacks.worms.model.objects.Crafting;
+import cz.spacks.worms.view.client.menu.InventoryViewModel;
 import cz.spacks.worms.controller.defaults.DefaultKeyListener;
 
 import javax.swing.*;
@@ -20,11 +20,11 @@ public class InventoryPanel extends JPanel implements DefaultKeyListener {
 
     public InventoryPanel() {
         split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-        table = new JTable(new InventoryTableModel("", "", "")) {
+        table = new JTable(new InventoryViewModel("", "", "")) {
             @Override
             public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
                 Component c = super.prepareRenderer(renderer, row, column);
-                InventoryTableModel it = (InventoryTableModel) getModel();
+                InventoryViewModel it = (InventoryViewModel) getModel();
                 c.setForeground(it.getColor(row));
                 if (it.isHeldItem(row)) {
                     if (isRowSelected(row)) {
@@ -52,8 +52,8 @@ public class InventoryPanel extends JPanel implements DefaultKeyListener {
         add(close);
     }
 
-    public void updateInventoryModel(InventoryTableModel inventoryTableModel) {
-        table.setModel(inventoryTableModel);
+    public void updateInventoryModel(InventoryViewModel inventoryViewModel) {
+        table.setModel(inventoryViewModel);
     }
 
     public void updateCraftingModel(Crafting craftingModel) {

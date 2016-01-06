@@ -1,10 +1,12 @@
 package cz.spacks.worms.view.windows;
 
-import cz.spacks.worms.view.client.ClientCommunication;
+import cz.spacks.worms.controller.client.ClientCommunication;
+import cz.spacks.worms.model.objects.Inventory;
+import cz.spacks.worms.model.objects.ItemsCount;
+import cz.spacks.worms.view.CraftingViewModel;
 import cz.spacks.worms.view.client.ClientView;
-import cz.spacks.worms.view.client.actions.impl.CraftAction;
-import cz.spacks.worms.model.objects.items.ComponentTableModel;
-import cz.spacks.worms.model.objects.items.Crafting;
+import cz.spacks.worms.controller.client.actions.impl.CraftAction;
+import cz.spacks.worms.model.objects.Crafting;
 import cz.spacks.worms.model.objects.items.Recipe;
 
 import javax.swing.*;
@@ -12,6 +14,7 @@ import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.util.List;
 
 /**
  *
@@ -23,10 +26,10 @@ public class CraftingPanel extends JPanel implements ListSelectionListener {
     private Crafting recipesModel;
     private JScrollPane ingredientsScroll;
     private JTable ingredients;
-    private ComponentTableModel ingredientsModel;
+    private List<ItemsCount> ingredientsModel;
     private JScrollPane productsScroll;
     private JTable products;
-    private ComponentTableModel productsModel;
+    private List<ItemsCount> productsModel;
     private JButton craftButton;
     private int lastIndex;
 
@@ -46,7 +49,7 @@ public class CraftingPanel extends JPanel implements ListSelectionListener {
         craftButton = new JButton(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                ComponentTableModel inventory = ClientView.getInstance().getMyViewBody().getInventory();
+                Inventory inventory = ClientView.getInstance().getMyViewBody().getInventory();
                 if (inventory.contains(ingredientsModel)) {
                     ClientCommunication.getInstance().send(new CraftAction(lastIndex));
                 }
@@ -75,7 +78,7 @@ public class CraftingPanel extends JPanel implements ListSelectionListener {
         //boolean isAdjusting = e.getValueIsAdjusting();
         //int minIndex = lsm.getMinSelectionIndex();
         lastIndex = lsm.getMaxSelectionIndex();
-        Recipe recipe = recipesModel.getReceipe(lastIndex);
+        Recipe recipe = recipesModel.getRecipe(lastIndex);
         if (recipe != null) {
             ingredientsModel = recipe.getIngredients();
             ingredients.setModel(ingredientsModel);

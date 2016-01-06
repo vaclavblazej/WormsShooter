@@ -1,6 +1,6 @@
-import cz.spacks.worms.view.client.ClientCommunication;
-import cz.spacks.worms.view.server.ServerCommunication;
-import cz.spacks.worms.view.client.actions.impl.*;
+import cz.spacks.worms.controller.client.ClientCommunication;
+import cz.spacks.worms.controller.server.ServerCommunication;
+import cz.spacks.worms.controller.client.actions.impl.*;
 import spacks.communication.SCommunication;
 import spacks.communication.client.SCommunicationClient;
 import spacks.communication.server.SCommunicationServer;

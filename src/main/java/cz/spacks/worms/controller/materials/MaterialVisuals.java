@@ -1,7 +1,7 @@
 package cz.spacks.worms.controller.materials;
 
-import cz.spacks.worms.Application;
 import cz.spacks.worms.controller.MapClass;
+import cz.spacks.worms.controller.Settings;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -27,7 +27,7 @@ public class MaterialVisuals implements Serializable {
         for (int j = 0; j < h; j++) {
             for (int i = 0; i < w; i++) {
                 g.setColor(new Color(source.getRGB(i, j)));
-                g.fillRect(i * ratio, j * ratio, Application.BLOCK_SIZE, Application.BLOCK_SIZE);
+                g.fillRect(i * ratio, j * ratio, Settings.BLOCK_SIZE, Settings.BLOCK_SIZE);
             }
         }
         g.dispose();

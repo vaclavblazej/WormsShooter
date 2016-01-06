@@ -1,7 +1,7 @@
 package cz.spacks.worms.model.objects.items.itemActions;
 
-import cz.spacks.worms.view.client.ClientCommunication;
-import cz.spacks.worms.view.client.actions.impl.ShootAction;
+import cz.spacks.worms.controller.client.ClientCommunication;
+import cz.spacks.worms.controller.client.actions.impl.ShootAction;
 
 import java.awt.*;
 

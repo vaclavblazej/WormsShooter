@@ -1,7 +1,6 @@
 package cz.spacks.worms.model.objects;
 
-import cz.spacks.worms.Application;
-import cz.spacks.worms.model.objects.items.InventoryTableModel;
+import cz.spacks.worms.controller.Settings;
 import cz.spacks.worms.model.objects.items.ItemBlueprint;
 import cz.spacks.worms.controller.AbstractView;
 import cz.spacks.worms.controller.CollisionState;
@@ -31,7 +30,7 @@ public class Body implements GraphicComponent, SendableVia<Body, SerializableBod
     private Dimension bodyBlockSize;
     private boolean jump;
     private AbstractView view;
-    private InventoryTableModel inventory;
+    private Inventory inventory;
     private CollisionState state;
     private CollisionState leftVerticalCollision;
     private CollisionState rightVerticalCollision;
@@ -53,28 +52,21 @@ public class Body implements GraphicComponent, SendableVia<Body, SerializableBod
         this.horizontalMovement = horizontalMovement;
         this.verticalMovement = verticalMovement;
         this.bodyBlockSize = bodyBlockSize;
-        this.physicsSize = new Dimension(bodyBlockSize.width * Application.BLOCK_SIZE, bodyBlockSize.height * Application.BLOCK_SIZE);
+        this.physicsSize = new Dimension(bodyBlockSize.width * Settings.BLOCK_SIZE, bodyBlockSize.height * Settings.BLOCK_SIZE);
         int ratio = view.getRatio();
         this.viewSize = new Dimension(bodyBlockSize.width * ratio, bodyBlockSize.height * ratio);
         this.jump = jump;
         this.view = view;
-        this.inventory = new InventoryTableModel("Item", "Count");
+        this.inventory = new Inventory();
         this.alive = false;
-//        SpriteLoader.loadSprite("player");
-//        SpriteLoader.set(32, 64);
-//        frame = SpriteLoader.getSprite(0, 0);
     }
 
     public Body(int x, int y, AbstractView map) {
         this(new Point(x, y), new Point.Double(0, 0), MoveEnum.HSTOP, MoveEnum.VSTOP, new Dimension(1, 2), false, map);
     }
 
-    public InventoryTableModel getInventory() {
+    public Inventory getInventory() {
         return inventory;
-    }
-
-    public void addItem(ItemBlueprint item) {
-        inventory.add(item, 1);
     }
 
     public void setPosition(Point point) {
@@ -96,7 +88,7 @@ public class Body implements GraphicComponent, SendableVia<Body, SerializableBod
 
     @Override
     public void tick() {
-        state = view.check(position.x / Application.BLOCK_SIZE, (position.y + physicsSize.height) / Application.BLOCK_SIZE);
+        state = view.check(position.x / Settings.BLOCK_SIZE, (position.y + physicsSize.height) / Settings.BLOCK_SIZE);
         int speed;
         switch (state) {
             case GAS:
@@ -140,11 +132,11 @@ public class Body implements GraphicComponent, SendableVia<Body, SerializableBod
 
         // exact horizontal collision
         int slide = 0;
-        final int top = position.y / Application.BLOCK_SIZE;
-        final int bottom = (position.y + physicsSize.height - 1) / Application.BLOCK_SIZE;
+        final int top = position.y / Settings.BLOCK_SIZE;
+        final int bottom = (position.y + physicsSize.height - 1) / Settings.BLOCK_SIZE;
         if (velocity.x >= 0) {
             while (slide < velocity.x) {
-                int x = (position.x + physicsSize.width + slide) / Application.BLOCK_SIZE;
+                int x = (position.x + physicsSize.width + slide) / Settings.BLOCK_SIZE;
                 topSideCollision = view.check(x, top);
                 bottomSideCollision = view.check(x, bottom);
                 if (topSideCollision == CollisionState.SOLID || bottomSideCollision == CollisionState.SOLID) {
@@ -155,7 +147,7 @@ public class Body implements GraphicComponent, SendableVia<Body, SerializableBod
             }
         } else {
             while (slide > velocity.x) {
-                int x = (position.x - 1 + slide) / Application.BLOCK_SIZE;
+                int x = (position.x - 1 + slide) / Settings.BLOCK_SIZE;
                 topSideCollision = view.check(x, top);
                 bottomSideCollision = view.check(x, bottom);
                 if (topSideCollision == CollisionState.SOLID || bottomSideCollision == CollisionState.SOLID) {
@@ -169,11 +161,11 @@ public class Body implements GraphicComponent, SendableVia<Body, SerializableBod
 
         // exact vertical collision
         int fall = 0;
-        final int left = position.x / Application.BLOCK_SIZE;
-        final int right = (position.x + physicsSize.width - 1) / Application.BLOCK_SIZE;
+        final int left = position.x / Settings.BLOCK_SIZE;
+        final int right = (position.x + physicsSize.width - 1) / Settings.BLOCK_SIZE;
         if (velocity.y >= 0) {
             while (fall < velocity.y) {
-                int y = (position.y + physicsSize.height + fall) / Application.BLOCK_SIZE;
+                int y = (position.y + physicsSize.height + fall) / Settings.BLOCK_SIZE;
                 leftVerticalCollision = view.check(left, y);
                 rightVerticalCollision = view.check(right, y);
                 if (leftVerticalCollision == CollisionState.SOLID || rightVerticalCollision == CollisionState.SOLID) {
@@ -185,7 +177,7 @@ public class Body implements GraphicComponent, SendableVia<Body, SerializableBod
             }
         } else {
             while (fall > velocity.y) {
-                int y = (position.y - 1 + fall) / Application.BLOCK_SIZE;
+                int y = (position.y - 1 + fall) / Settings.BLOCK_SIZE;
                 leftVerticalCollision = view.check(left, y);
                 rightVerticalCollision = view.check(right, y);
                 if (leftVerticalCollision == CollisionState.SOLID || rightVerticalCollision == CollisionState.SOLID) {
@@ -246,7 +238,7 @@ public class Body implements GraphicComponent, SendableVia<Body, SerializableBod
     @Override
     public void draw(Graphics2D g) {
         g.setColor(Color.RED);
-        g.fillRect(position.x / Application.BLOCK_SIZE, position.y / Application.BLOCK_SIZE,
+        g.fillRect(position.x / Settings.BLOCK_SIZE, position.y / Settings.BLOCK_SIZE,
                 bodyBlockSize.width, bodyBlockSize.height);
     }
 

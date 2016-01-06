@@ -1,26 +1,24 @@
 package cz.spacks.worms.model.objects.items;
 
-import cz.spacks.worms.model.objects.ItemsCount;
+import cz.spacks.worms.view.ComponentTableModel;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.List;
 
 /**
  *
  */
-public class Recipe implements Serializable {
+public class RecipeViewModel implements Serializable {
 
-    private List<ItemsCount> ingredients;
-    private List<ItemsCount>  products;
+    private ComponentTableModel ingredients;
+    private ComponentTableModel products;
     private EnumSet<SituationProperty> conditions;
     private String name;
 
-    public Recipe(String name) {
+    public RecipeViewModel(String name) {
         this.name = name;
-        ingredients = new ArrayList<>();
-        products = new ArrayList<>();
+        ingredients = new ComponentTableModel("Ingredients", "Count");
+        products = new ComponentTableModel("Products", "Count");
         conditions = EnumSet.noneOf(SituationProperty.class);
     }
 
@@ -29,22 +27,22 @@ public class Recipe implements Serializable {
     }
 
     public void addIngredient(ItemBlueprint item, int count) {
-        ingredients.add(new ItemsCount(item, count));
+        ingredients.add(item, count);
     }
 
     public void addProduct(ItemBlueprint item, int count) {
-        products.add(new ItemsCount(item, count));
+        products.add(item, count);
     }
 
     public void addCondition(SituationProperty prop) {
         conditions.add(prop);
     }
 
-    public List<ItemsCount>  getIngredients() {
+    public ComponentTableModel getIngredients() {
         return ingredients;
     }
 
-    public List<ItemsCount>  getProducts() {
+    public ComponentTableModel getProducts() {
         return products;
     }
 }

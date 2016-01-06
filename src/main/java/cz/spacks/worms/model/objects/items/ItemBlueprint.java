@@ -54,7 +54,7 @@ public class ItemBlueprint implements Serializable, Comparable<ItemBlueprint> {
         return name;
     }
 
-    boolean isUsable() {
+    public boolean isUsable() {
         return usable;
     }
 

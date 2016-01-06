@@ -1,9 +1,9 @@
 package cz.spacks.worms.view.client;
 
-import cz.spacks.worms.view.client.actions.impl.MoveAction;
+import cz.spacks.worms.controller.client.ClientCommunication;
+import cz.spacks.worms.controller.client.actions.impl.MoveAction;
 import cz.spacks.worms.view.windows.InventoryPanel;
-import cz.spacks.worms.view.client.menu.Settings;
-import cz.spacks.worms.Application;
+import cz.spacks.worms.controller.Settings;
 import cz.spacks.worms.model.objects.Body;
 import cz.spacks.worms.model.objects.GraphicComponent;
 import cz.spacks.worms.model.objects.MoveEnum;
@@ -68,7 +68,7 @@ public class ClientView extends AbstractView implements
     private Point mouse;
 
     private ClientView() {
-        super(Application.BLOCK_SIZE);
+        super(Settings.BLOCK_SIZE);
         map = new MapClass(new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB), this);
         recalculateGraphicWindowLayout();
         currentView = null;
@@ -130,30 +130,30 @@ public class ClientView extends AbstractView implements
             viewRealPos.y = bodyPosition.y - panelViewDimensions.height / 2;
 
             // map edges
-            int maxX = map.getWidth() * Application.BLOCK_SIZE - panelViewDimensions.width - 1;
+            int maxX = map.getWidth() * Settings.BLOCK_SIZE - panelViewDimensions.width - 1;
             if (viewRealPos.x < 0) {
                 viewRealPos.x = 0;
             } else if (viewRealPos.x > maxX) {
                 viewRealPos.x = maxX;
             }
-            int maxY = map.getHeight() * Application.BLOCK_SIZE - panelViewDimensions.height - 1;
+            int maxY = map.getHeight() * Settings.BLOCK_SIZE - panelViewDimensions.height - 1;
             if (viewRealPos.y < 0) {
                 viewRealPos.y = 0;
             } else if (viewRealPos.y > maxY) {
                 viewRealPos.y = maxY;
             }
-            viewTileStartPos.x = viewRealPos.x / Application.BLOCK_SIZE;
-            viewTileStartPos.y = viewRealPos.y / Application.BLOCK_SIZE;
-            smoothOffset.x = viewRealPos.x % Application.BLOCK_SIZE;
-            smoothOffset.y = viewRealPos.y % Application.BLOCK_SIZE;
+            viewTileStartPos.x = viewRealPos.x / Settings.BLOCK_SIZE;
+            viewTileStartPos.y = viewRealPos.y / Settings.BLOCK_SIZE;
+            smoothOffset.x = viewRealPos.x % Settings.BLOCK_SIZE;
+            smoothOffset.y = viewRealPos.y % Settings.BLOCK_SIZE;
 
             // todo more effective
             tileViewDimensions = new Dimension(
-                    (panelViewDimensions.width + smoothOffset.x) / Application.BLOCK_SIZE + 1,
-                    (panelViewDimensions.height + smoothOffset.y) / Application.BLOCK_SIZE + 1);
+                    (panelViewDimensions.width + smoothOffset.x) / Settings.BLOCK_SIZE + 1,
+                    (panelViewDimensions.height + smoothOffset.y) / Settings.BLOCK_SIZE + 1);
             rasteredView = new BufferedImage(
-                    tileViewDimensions.width * Application.BLOCK_SIZE,
-                    tileViewDimensions.height * Application.BLOCK_SIZE,
+                    tileViewDimensions.width * Settings.BLOCK_SIZE,
+                    tileViewDimensions.height * Settings.BLOCK_SIZE,
                     BufferedImage.TYPE_INT_RGB);
 
             // print to screen
@@ -191,13 +191,13 @@ public class ClientView extends AbstractView implements
     private void recalculateGraphicWindowLayout() {
         panelViewDimensions = getSize();
         if (panelViewDimensions.width == 0)
-            panelViewDimensions = new Dimension(Application.BLOCK_SIZE, Application.BLOCK_SIZE);
+            panelViewDimensions = new Dimension(Settings.BLOCK_SIZE, Settings.BLOCK_SIZE);
         tileViewDimensions = new Dimension(
-                (panelViewDimensions.width) / Application.BLOCK_SIZE,
-                (panelViewDimensions.height) / Application.BLOCK_SIZE);
+                (panelViewDimensions.width) / Settings.BLOCK_SIZE,
+                (panelViewDimensions.height) / Settings.BLOCK_SIZE);
         rasteredView = new BufferedImage(
-                tileViewDimensions.width * Application.BLOCK_SIZE,
-                tileViewDimensions.height * Application.BLOCK_SIZE,
+                tileViewDimensions.width * Settings.BLOCK_SIZE,
+                tileViewDimensions.height * Settings.BLOCK_SIZE,
                 BufferedImage.TYPE_INT_RGB);
     }
 

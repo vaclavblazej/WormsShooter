@@ -1,5 +1,7 @@
 package cz.spacks.worms.model.objects.items;
 
+import cz.spacks.worms.model.objects.Crafting;
+
 import java.io.Serializable;
 import java.util.EnumMap;
 import java.util.Map;
