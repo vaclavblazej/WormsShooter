@@ -1,10 +1,7 @@
 package cz.spacks.worms.view.client.menu;
 
-import cz.spacks.worms.model.objects.Inventory;
-
 import javax.swing.*;
 import java.awt.*;
-import java.util.List;
 
 /**
  *
@@ -28,13 +25,5 @@ public class GameWindowItemBar extends JToolBar {
     public void clearBar() {
         removeAll();
         repaint();
-    }
-
-    public void refreshBar(Inventory itm) {
-        clearBar();
-        List<JButton> toolbar = itm.generateToolbar();
-        for (JButton jButton : toolbar) {
-            add(jButton);
-        }
     }
 }

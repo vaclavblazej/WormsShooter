@@ -38,7 +38,11 @@ public class Body implements GraphicComponent, SendableVia<Body, SerializableBod
     private CollisionState bottomSideCollision;
     private boolean alive;
     private int health;
-//    private Frame frame;
+    private ItemBlueprint heldItem;
+
+    public Body(){
+        this(new Point(0, 0), new Point2D.Double(0, 0), MoveEnum.HSTOP, MoveEnum.VSTOP, new Dimension(), false, null);
+    }
 
     public Body(Point position,
                 Point.Double velocity,
@@ -53,12 +57,13 @@ public class Body implements GraphicComponent, SendableVia<Body, SerializableBod
         this.verticalMovement = verticalMovement;
         this.bodyBlockSize = bodyBlockSize;
         this.physicsSize = new Dimension(bodyBlockSize.width * Settings.BLOCK_SIZE, bodyBlockSize.height * Settings.BLOCK_SIZE);
-        int ratio = view.getRatio();
+        int ratio = Settings.RATIO;
         this.viewSize = new Dimension(bodyBlockSize.width * ratio, bodyBlockSize.height * ratio);
         this.jump = jump;
         this.view = view;
         this.inventory = new Inventory();
         this.alive = false;
+        this.heldItem = null;
     }
 
     public Body(int x, int y, AbstractView map) {
@@ -263,5 +268,9 @@ public class Body implements GraphicComponent, SendableVia<Body, SerializableBod
     @Override
     public SerializableBody serialize() {
         return new SerializableBody(position, velocity, horizontalMovement, verticalMovement, bodyBlockSize, jump);
+    }
+
+    public ItemBlueprint getHeldItem() {
+        return heldItem;
     }
 }

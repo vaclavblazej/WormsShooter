@@ -2,6 +2,7 @@ package cz.spacks.worms.view.client;
 
 import cz.spacks.worms.controller.client.ClientCommunication;
 import cz.spacks.worms.controller.client.actions.impl.MoveAction;
+import cz.spacks.worms.view.client.menu.InventoryViewModel;
 import cz.spacks.worms.view.windows.InventoryPanel;
 import cz.spacks.worms.controller.Settings;
 import cz.spacks.worms.model.objects.Body;
@@ -224,7 +225,7 @@ public class ClientView extends AbstractView implements
                     minimapView.setVisible(!minimapView.isVisible());
                     break;
                 case INVENTORY_TOGGLE:
-                    inventory.updateInventoryModel(getMyViewBody().getInventory());
+                    inventory.updateInventoryModel(new InventoryViewModel(getMyViewBody()));
                     inventory.updateCraftingModel(getItemFactory().getRecipes());
                     inventory.setVisible(!inventory.isVisible());
                     break;
@@ -288,7 +289,7 @@ public class ClientView extends AbstractView implements
         switch (e.getButton()) {
             case MouseEvent.BUTTON1:
                 Point p = new Point(viewRealPos.x + e.getX(), viewRealPos.y + e.getY());
-                ItemBlueprint heldItem = getMyViewBody().getInventory().getHeldItem();
+                ItemBlueprint heldItem = getMyViewBody().getHeldItem();
                 if (heldItem != null) {
                     ItemAction action = heldItem.getAction();
                     if (action != null) {

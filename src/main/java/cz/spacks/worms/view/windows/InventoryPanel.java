@@ -1,5 +1,6 @@
 package cz.spacks.worms.view.windows;
 
+import cz.spacks.worms.model.objects.Body;
 import cz.spacks.worms.view.client.ClientView;
 import cz.spacks.worms.model.objects.Crafting;
 import cz.spacks.worms.view.client.menu.InventoryViewModel;
@@ -20,7 +21,7 @@ public class InventoryPanel extends JPanel implements DefaultKeyListener {
 
     public InventoryPanel() {
         split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-        table = new JTable(new InventoryViewModel("", "", "")) {
+        table = new JTable(new InventoryViewModel(new Body())) {
             @Override
             public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
                 Component c = super.prepareRenderer(renderer, row, column);

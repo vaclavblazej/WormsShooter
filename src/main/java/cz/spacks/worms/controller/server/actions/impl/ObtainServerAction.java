@@ -23,8 +23,6 @@ public class ObtainServerAction extends ActionServer {
     public void perform() {
         Inventory inv = view.getModel().getControls().get(id).getInventory();
         inv.add(view.getMaterialModel().getComponents(en));
-        if (ClientCommunication.getInstance().getInfo().getId() == id) {
-            GameWindowItemBar.getInstance().refreshBar(inv);
-        }
+        // todo automatic refresh changed inventory view
     }
 }

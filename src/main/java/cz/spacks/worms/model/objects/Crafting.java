@@ -8,19 +8,19 @@ import java.util.List;
 /**
  *
  */
-public class Crafting {
+public class Crafting extends ArrayList<Recipe>{
 
-    private List<Recipe> recepies;
+    private List<Recipe> recipes;
 
     public Crafting() {
-        this.recepies = new ArrayList<>();
+        this.recipes = new ArrayList<>();
     }
 
     public void addRecipe(Recipe receipe) {
-        recepies.add(receipe);
+        recipes.add(receipe);
     }
 
     public Recipe getRecipe(int index) {
-        return recepies.get(index);
+        return recipes.get(index);
     }
 }

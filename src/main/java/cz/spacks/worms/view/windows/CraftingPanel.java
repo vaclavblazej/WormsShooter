@@ -8,6 +8,7 @@ import cz.spacks.worms.view.client.ClientView;
 import cz.spacks.worms.controller.client.actions.impl.CraftAction;
 import cz.spacks.worms.model.objects.Crafting;
 import cz.spacks.worms.model.objects.items.Recipe;
+import cz.spacks.worms.view.client.menu.ItemsTableModel;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -37,7 +38,7 @@ public class CraftingPanel extends JPanel implements ListSelectionListener {
         super();
         setLayout(new BorderLayout());
         recipesModel = new Crafting();
-        recipes = new JTable(recipesModel);
+        recipes = new JTable(new CraftingViewModel(recipesModel));
         recipesScroll = new JScrollPane(recipes);
         recipesScroll.setPreferredSize(new Dimension(200, 100));
         ingredients = new JTable();
@@ -81,14 +82,14 @@ public class CraftingPanel extends JPanel implements ListSelectionListener {
         Recipe recipe = recipesModel.getRecipe(lastIndex);
         if (recipe != null) {
             ingredientsModel = recipe.getIngredients();
-            ingredients.setModel(ingredientsModel);
+            ingredients.setModel(new ItemsTableModel(ingredientsModel));
             productsModel = recipe.getProducts();
-            products.setModel(productsModel);
+            products.setModel(new ItemsTableModel(productsModel));
         }
     }
 
     public void setRecipesModel(Crafting recipesModel){
         this.recipesModel = recipesModel;
-        recipes.setModel(recipesModel);
+        recipes.setModel(new CraftingViewModel(recipesModel));
     }
 }

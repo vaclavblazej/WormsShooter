@@ -1,38 +1,37 @@
 package cz.spacks.worms.view;
 
+import cz.spacks.worms.model.objects.Crafting;
 import cz.spacks.worms.model.objects.items.Recipe;
 
 import javax.swing.table.AbstractTableModel;
 import java.io.Serializable;
-import java.util.ArrayList;
-import java.util.List;
 
 /**
  *
  */
 public class CraftingViewModel extends AbstractTableModel implements Serializable {
 
-    private List<Recipe> recepies;
     private String[] columnName = {"Recipes"};
+    private Crafting recipes;
 
-    public CraftingViewModel() {
-        this.recepies = new ArrayList<>();
+    public CraftingViewModel(Crafting recipes) {
+        this.recipes = recipes;
     }
 
-    public void addReceipe(Recipe receipe) {
-        recepies.add(receipe);
+    public void addRecipe(Recipe recipe) {
+        recipes.add(recipe);
     }
 
-    public Recipe getReceipe(int index) {
+    public Recipe getRecipe(int index) {
         if (index == -1) {
             return null;
         }
-        return recepies.get(index);
+        return recipes.get(index);
     }
 
     @Override
     public int getRowCount() {
-        return recepies.size();
+        return recipes.size();
     }
 
     @Override
@@ -44,7 +43,7 @@ public class CraftingViewModel extends AbstractTableModel implements Serializabl
     public Object getValueAt(int rowIndex, int columnIndex) {
         switch (columnIndex) {
             case 0:
-                return recepies.get(rowIndex).getName();
+                return recipes.get(rowIndex).getName();
         }
         return null;
     }

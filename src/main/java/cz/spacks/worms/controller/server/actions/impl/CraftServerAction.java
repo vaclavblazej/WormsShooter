@@ -29,9 +29,7 @@ public class CraftServerAction extends ActionServer {
         Recipe recipe = view.getModel().getFactory().getRecipes().getRecipe(recipeId);
         inventory.remove(recipe.getIngredients());
         inventory.add(recipe.getProducts());
-        if (ClientCommunication.getInstance().getInfo().getId() == id) {
-            GameWindowItemBar.getInstance().refreshBar(inventory);
-        }
+        // todo automatic update
         System.out.println("cz.spacks.worms.client craft " + id + " " + recipeId);
     }
 }

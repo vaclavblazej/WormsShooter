@@ -1,5 +1,8 @@
 package cz.spacks.worms.view.client.menu;
 
+import cz.spacks.worms.model.objects.Body;
+import cz.spacks.worms.model.objects.Inventory;
+import cz.spacks.worms.model.objects.ItemsCount;
 import cz.spacks.worms.view.ComponentTableModel;
 import cz.spacks.worms.model.objects.items.Item;
 import cz.spacks.worms.model.objects.items.ItemBlueprint;
@@ -15,24 +18,23 @@ import java.util.List;
  */
 public class InventoryViewModel extends ComponentTableModel {
 
-    private ItemBlueprint heldItem;
     private MyButton highlight;
+    private Inventory inventory;
+    private Body body;
 
-    public InventoryViewModel(String... columnNames) {
-        super(columnNames);
-        heldItem = null;
-    }
 
-    public ItemBlueprint getHeldItem() {
-        return heldItem;
-    }
-
-    public void setHeldItem(Item heldItem) {
-        this.heldItem = heldItem;
+    public InventoryViewModel(Body body) {
+        super("", "", "");
+        this.body = body;
+        this.inventory = body.getInventory();
+        List<ItemsCount> items = inventory.getComponents();
+        for (ItemsCount item : items) {
+            this.add(item.itemBlueprint, 1);
+        }
     }
 
     public boolean isHeldItem(int i) {
-        return getItem(i) == heldItem;
+        return getItem(i) == body.getHeldItem();
     }
 
     public Color getColor(int i) {
@@ -51,14 +53,14 @@ public class InventoryViewModel extends ComponentTableModel {
                         }
                         highlight = (MyButton) e.getSource();
                         highlight.setBackground(Color.GREEN);
-                        heldItem = highlight.item;
+//                        heldItem = highlight.item;
                     }
                 });
                 btn.item = getItem(i);
-                if (heldItem != null && heldItem.equals(btn.item)) {
-                    btn.setBackground(Color.GREEN);
-                    highlight = btn;
-                }
+//                if (heldItem != null && heldItem.equals(btn.item)) {
+//                    btn.setBackground(Color.GREEN);
+//                    highlight = btn;
+//                }
                 btn.setText(getValueAt(i, 0).toString() + ": " + getValueAt(i, 1).toString());
                 btn.setFocusable(false);
                 btn.setIcon(new ImageIcon(btn.item.getImage()));
