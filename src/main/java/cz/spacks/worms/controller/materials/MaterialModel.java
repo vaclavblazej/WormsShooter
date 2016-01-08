@@ -5,7 +5,7 @@ import cz.spacks.worms.model.objects.Material;
 import cz.spacks.worms.model.objects.items.ItemEnum;
 import cz.spacks.worms.model.objects.items.ItemFactory;
 import cz.spacks.worms.controller.AbstractView;
-import cz.spacks.worms.controller.CollisionState;
+import cz.spacks.worms.controller.properties.CollisionState;
 
 import java.awt.*;
 import java.util.*;

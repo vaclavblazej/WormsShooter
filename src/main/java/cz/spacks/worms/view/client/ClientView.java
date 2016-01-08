@@ -1,7 +1,7 @@
 package cz.spacks.worms.view.client;
 
-import cz.spacks.worms.controller.client.ClientCommunication;
-import cz.spacks.worms.controller.client.actions.impl.MoveAction;
+import cz.spacks.worms.controller.comunication.client.ClientCommunication;
+import cz.spacks.worms.controller.comunication.client.actions.impl.MoveAction;
 import cz.spacks.worms.view.client.menu.InventoryViewModel;
 import cz.spacks.worms.view.windows.InventoryPanel;
 import cz.spacks.worms.controller.Settings;
@@ -11,10 +11,10 @@ import cz.spacks.worms.model.objects.MoveEnum;
 import cz.spacks.worms.model.objects.items.ItemBlueprint;
 import cz.spacks.worms.model.objects.items.itemActions.ItemAction;
 import cz.spacks.worms.controller.AbstractView;
-import cz.spacks.worms.controller.Controls;
-import cz.spacks.worms.controller.ControlsEnum;
-import cz.spacks.worms.controller.MapClass;
-import cz.spacks.worms.controller.communication.Model;
+import cz.spacks.worms.model.Controls;
+import cz.spacks.worms.controller.properties.ControlsEnum;
+import cz.spacks.worms.model.MapClass;
+import cz.spacks.worms.model.communication.Model;
 import cz.spacks.worms.controller.defaults.DefaultComponentListener;
 import cz.spacks.worms.controller.defaults.DefaultKeyListener;
 import cz.spacks.worms.controller.defaults.DefaultMouseListener;

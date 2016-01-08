@@ -1,8 +1,8 @@
 package cz.spacks.worms.view.windows;
 
 import cz.spacks.worms.view.client.ChatLog;
-import cz.spacks.worms.controller.client.ClientCommunicationInternet;
-import cz.spacks.worms.controller.client.ClientCommunicationLocal;
+import cz.spacks.worms.controller.comunication.client.ClientCommunicationInternet;
+import cz.spacks.worms.controller.comunication.client.ClientCommunicationLocal;
 import cz.spacks.worms.view.client.ClientView;
 import cz.spacks.worms.view.client.menu.GameWindowItemBar;
 import cz.spacks.worms.controller.Settings;
@@ -10,12 +10,12 @@ import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import cz.spacks.worms.Application;
-import cz.spacks.worms.controller.server.ServerCommunicationInternet;
-import cz.spacks.worms.controller.server.ServerCommunicationLocal;
-import cz.spacks.worms.controller.BindableButton;
-import cz.spacks.worms.controller.Controls;
-import cz.spacks.worms.controller.ControlsEnum;
-import cz.spacks.worms.controller.communication.RegistrationForm;
+import cz.spacks.worms.controller.comunication.server.ServerCommunicationInternet;
+import cz.spacks.worms.controller.comunication.server.ServerCommunicationLocal;
+import cz.spacks.worms.view.BindableButton;
+import cz.spacks.worms.model.Controls;
+import cz.spacks.worms.controller.properties.ControlsEnum;
+import cz.spacks.worms.model.communication.RegistrationForm;
 import cz.spacks.worms.controller.properties.Paths;
 
 import javax.swing.*;

@@ -1,6 +1,6 @@
 package cz.spacks.worms.controller.materials;
 
-import cz.spacks.worms.controller.MapClass;
+import cz.spacks.worms.model.MapClass;
 import cz.spacks.worms.controller.Settings;
 
 import java.awt.*;

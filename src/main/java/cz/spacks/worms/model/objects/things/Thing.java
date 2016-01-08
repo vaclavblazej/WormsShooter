@@ -1,7 +1,7 @@
 package cz.spacks.worms.model.objects.things;
 
 import cz.spacks.worms.model.objects.GraphicComponent;
-import cz.spacks.worms.controller.spritesheets.Animation;
+import cz.spacks.worms.model.spritesheets.Animation;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;

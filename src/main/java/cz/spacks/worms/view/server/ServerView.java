@@ -7,9 +7,9 @@ import cz.spacks.worms.model.objects.items.*;
 import cz.spacks.worms.model.objects.items.itemActions.ItemActionMine;
 import cz.spacks.worms.model.objects.items.itemActions.ItemActionShoot;
 import cz.spacks.worms.controller.AbstractView;
-import cz.spacks.worms.controller.MapClass;
-import cz.spacks.worms.controller.communication.Model;
-import cz.spacks.worms.controller.spritesheets.SpriteLoader;
+import cz.spacks.worms.model.MapClass;
+import cz.spacks.worms.model.communication.Model;
+import cz.spacks.worms.controller.services.SpriteLoader;
 import cz.spacks.worms.model.objects.Crafting;
 
 import javax.swing.*;

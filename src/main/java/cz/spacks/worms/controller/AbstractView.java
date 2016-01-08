@@ -1,11 +1,13 @@
 package cz.spacks.worms.controller;
 
 import cz.spacks.worms.controller.materials.MaterialModel;
+import cz.spacks.worms.controller.properties.CollisionState;
+import cz.spacks.worms.model.MapClass;
 import cz.spacks.worms.model.objects.Body;
 import cz.spacks.worms.model.objects.GraphicComponent;
 import cz.spacks.worms.model.objects.Crafting;
 import cz.spacks.worms.model.objects.items.ItemFactory;
-import cz.spacks.worms.controller.communication.Model;
+import cz.spacks.worms.model.communication.Model;
 import cz.spacks.worms.controller.defaults.DefaultComponentListener;
 import cz.spacks.worms.controller.materials.MaterialEnum;
 

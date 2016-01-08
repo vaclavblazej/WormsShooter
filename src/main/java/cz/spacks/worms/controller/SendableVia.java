@@ -1,6 +1,6 @@
 package cz.spacks.worms.controller;
 
-import cz.spacks.worms.controller.communication.DeseriazibleInto;
+import cz.spacks.worms.model.communication.DeseriazibleInto;
 
 /**
  *

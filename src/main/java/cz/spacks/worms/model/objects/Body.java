@@ -3,9 +3,9 @@ package cz.spacks.worms.model.objects;
 import cz.spacks.worms.controller.Settings;
 import cz.spacks.worms.model.objects.items.ItemBlueprint;
 import cz.spacks.worms.controller.AbstractView;
-import cz.spacks.worms.controller.CollisionState;
+import cz.spacks.worms.controller.properties.CollisionState;
 import cz.spacks.worms.controller.SendableVia;
-import cz.spacks.worms.controller.communication.SerializableBody;
+import cz.spacks.worms.model.communication.SerializableBody;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;

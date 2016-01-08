@@ -1,7 +1,7 @@
 package cz.spacks.worms.model.objects;
 
 import cz.spacks.worms.controller.AbstractView;
-import cz.spacks.worms.controller.CollisionState;
+import cz.spacks.worms.controller.properties.CollisionState;
 import cz.spacks.worms.controller.Settings;
 
 import java.awt.*;

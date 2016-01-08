@@ -1,6 +1,6 @@
 package cz.spacks.worms.view.windows;
 
-import cz.spacks.worms.controller.SoundManager;
+import cz.spacks.worms.controller.services.SoundManager;
 import cz.spacks.worms.controller.properties.Sounds;
 
 import javax.swing.*;

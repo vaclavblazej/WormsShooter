@@ -1,7 +1,7 @@
 package cz.spacks.worms.view.client.menu;
 
 import cz.spacks.worms.view.ComponentTableModel;
-import cz.spacks.worms.controller.AbstractDialog;
+import cz.spacks.worms.view.AbstractDialog;
 import cz.spacks.worms.controller.properties.Message;
 
 import javax.swing.*;
