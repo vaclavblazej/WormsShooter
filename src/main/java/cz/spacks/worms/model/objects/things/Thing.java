@@ -1,5 +1,6 @@
 package cz.spacks.worms.model.objects.things;
 
+import cz.spacks.worms.controller.AbstractView;
 import cz.spacks.worms.model.objects.GraphicComponent;
 import cz.spacks.worms.model.spritesheets.Animation;
 
@@ -30,7 +31,7 @@ public class Thing implements GraphicComponent {
     }
 
     @Override
-    public void tick() {
+    public void tick(AbstractView view) {
         animation.update();
     }
 

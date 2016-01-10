@@ -1,6 +1,7 @@
 package cz.spacks.worms.controller.comunication.server;
 
 import cz.spacks.worms.controller.comunication.client.actions.ActionClient;
+import cz.spacks.worms.controller.comunication.serialization.SerializableModel;
 import cz.spacks.worms.model.objects.Body;
 import cz.spacks.worms.view.server.ServerView;
 import cz.spacks.worms.controller.comunication.server.actions.ActionServer;
@@ -47,7 +48,7 @@ public abstract class ServerCommunication implements SListener {
         controls.put(id, body);
         final ServerCommunication serverCommunication = ServerCommunication.getInstance();
         serverCommunication.send(id, new SetIdNewPlayerServerAction(id));
-        serverCommunication.send(id, new GetModelServerAction(serverView.getModel().serialize()));
+        serverCommunication.send(id, new GetModelServerAction(new SerializableModel().serialize(serverView.getModel())));
         serverCommunication.broadcastExceptOne(id, new NewPlayerServerAction(id));
     }
 

@@ -1,4 +1,4 @@
-package cz.spacks.worms.model.communication;
+package cz.spacks.worms.controller.comunication.serialization;
 
 import cz.spacks.worms.controller.AbstractView;
 
@@ -8,14 +8,16 @@ import java.awt.image.*;
 /**
  *
  */
-public class SerializableBufferedImage implements DeseriazibleInto<BufferedImage> {
+public class SerializableBufferedImage implements SeriaziblePair<BufferedImage, SerializableBufferedImage> {
 
     private int pixels[];
     private Dimension size;
 
-    public SerializableBufferedImage(BufferedImage image) {
+    @Override
+    public SerializableBufferedImage serialize(BufferedImage image) {
         size = new Dimension(image.getWidth(), image.getHeight());
         pixels = image.getRGB(0, 0, image.getWidth(), image.getHeight(), null, 0, image.getWidth());
+        return this;
     }
 
     public BufferedImage deserialize() {
@@ -25,10 +27,5 @@ public class SerializableBufferedImage implements DeseriazibleInto<BufferedImage
         DataBufferInt db = new DataBufferInt(pixels, pixels.length);
         WritableRaster wr = Raster.createWritableRaster(sm, db, new Point());
         return new BufferedImage(ColorModel.getRGBdefault(), wr, false, null);
-    }
-
-    @Override
-    public BufferedImage deserialize(AbstractView view) {
-        return deserialize();
     }
 }

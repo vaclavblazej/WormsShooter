@@ -39,6 +39,7 @@ public class Bullet implements GraphicComponent {
         g.fillRect(0, 0, 10, 3);
     }
 
+
     @Override
     public void drawRelative(Graphics2D g, AffineTransform trans) {
         tr = (AffineTransform) trans.clone();
@@ -50,7 +51,7 @@ public class Bullet implements GraphicComponent {
     }
 
     @Override
-    public void tick() {
+    public void tick(AbstractView view) {
         velocity.y += 1;
         position.x += velocity.x;
         position.y += velocity.y;

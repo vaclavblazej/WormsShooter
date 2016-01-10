@@ -7,8 +7,8 @@ import cz.spacks.worms.model.objects.items.*;
 import cz.spacks.worms.model.objects.items.itemActions.ItemActionMine;
 import cz.spacks.worms.model.objects.items.itemActions.ItemActionShoot;
 import cz.spacks.worms.controller.AbstractView;
-import cz.spacks.worms.model.MapClass;
-import cz.spacks.worms.model.communication.Model;
+import cz.spacks.worms.model.MapModel;
+import cz.spacks.worms.model.objects.Model;
 import cz.spacks.worms.controller.services.SpriteLoader;
 import cz.spacks.worms.model.objects.Crafting;
 
@@ -41,7 +41,7 @@ public class ServerView extends AbstractView implements ComponentListener {
         super(1);
         SpriteLoader.loadSprite("Map");
         SpriteLoader.set(150, 100);
-        map = new MapClass(SpriteLoader.getSprite().getFrame(), this);
+        map = new MapModel(SpriteLoader.getSprite().getFrame());
         model = new Model(map, new HashMap<>(20), objects, createItems());
         materialModel = new MaterialModel(this);
         createRecipes();

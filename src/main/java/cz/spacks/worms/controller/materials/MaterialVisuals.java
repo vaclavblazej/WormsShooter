@@ -1,6 +1,6 @@
 package cz.spacks.worms.controller.materials;
 
-import cz.spacks.worms.model.MapClass;
+import cz.spacks.worms.model.MapModel;
 import cz.spacks.worms.controller.Settings;
 
 import java.awt.*;
@@ -15,7 +15,7 @@ public class MaterialVisuals implements Serializable {
     private MaterialVisuals() {
     }
 
-    public static void redraw(MapClass source, BufferedImage dest) {
+    public static void redraw(MapModel source, BufferedImage dest) {
         Graphics g = dest.getGraphics();
         BufferedImage sourceImage = source.getImage();
         g.drawImage(sourceImage, 0, 0, dest.getWidth(), dest.getHeight(), null);

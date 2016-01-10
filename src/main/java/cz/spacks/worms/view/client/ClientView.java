@@ -13,8 +13,8 @@ import cz.spacks.worms.model.objects.items.itemActions.ItemAction;
 import cz.spacks.worms.controller.AbstractView;
 import cz.spacks.worms.model.Controls;
 import cz.spacks.worms.controller.properties.ControlsEnum;
-import cz.spacks.worms.model.MapClass;
-import cz.spacks.worms.model.communication.Model;
+import cz.spacks.worms.model.MapModel;
+import cz.spacks.worms.model.objects.Model;
 import cz.spacks.worms.controller.defaults.DefaultComponentListener;
 import cz.spacks.worms.controller.defaults.DefaultKeyListener;
 import cz.spacks.worms.controller.defaults.DefaultMouseListener;
@@ -60,7 +60,7 @@ public class ClientView extends AbstractView implements
     private Dimension panelViewDimensions;
     private Body body;
     private EnumSet<ControlsEnum> controlSet;
-    private MapClass currentView;
+    private MapModel currentView;
     private BufferedImage rasteredView;
     private Point viewTileStartPos;
     private final Point viewRealPos;
@@ -70,7 +70,7 @@ public class ClientView extends AbstractView implements
 
     private ClientView() {
         super(Settings.BLOCK_SIZE);
-        map = new MapClass(new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB), this);
+        map = new MapModel(new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB));
         recalculateGraphicWindowLayout();
         currentView = null;
         viewTileStartPos = new Point();

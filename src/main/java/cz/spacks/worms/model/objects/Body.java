@@ -4,8 +4,6 @@ import cz.spacks.worms.controller.Settings;
 import cz.spacks.worms.model.objects.items.ItemBlueprint;
 import cz.spacks.worms.controller.AbstractView;
 import cz.spacks.worms.controller.properties.CollisionState;
-import cz.spacks.worms.controller.SendableVia;
-import cz.spacks.worms.model.communication.SerializableBody;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -14,7 +12,7 @@ import java.awt.geom.Point2D;
 /**
  *
  */
-public class Body implements GraphicComponent, SendableVia<Body, SerializableBody> {
+public class Body implements GraphicComponent {
 
     private static final double JUMP_FORCE = 24;
     private static final double GRAVITY_FORCE = 4;
@@ -41,7 +39,7 @@ public class Body implements GraphicComponent, SendableVia<Body, SerializableBod
     private ItemBlueprint heldItem;
 
     public Body(){
-        this(new Point(0, 0), new Point2D.Double(0, 0), MoveEnum.HSTOP, MoveEnum.VSTOP, new Dimension(), false, null);
+        this(new Point(0, 0), new Point2D.Double(0, 0), MoveEnum.HSTOP, MoveEnum.VSTOP, new Dimension(), false);
     }
 
     public Body(Point position,
@@ -49,8 +47,7 @@ public class Body implements GraphicComponent, SendableVia<Body, SerializableBod
                 MoveEnum horizontalMovement,
                 MoveEnum verticalMovement,
                 Dimension bodyBlockSize,
-                boolean jump,
-                AbstractView view) {
+                boolean jump) {
         this.position = position;
         this.velocity = velocity;
         this.horizontalMovement = horizontalMovement;
@@ -60,14 +57,13 @@ public class Body implements GraphicComponent, SendableVia<Body, SerializableBod
         int ratio = Settings.RATIO;
         this.viewSize = new Dimension(bodyBlockSize.width * ratio, bodyBlockSize.height * ratio);
         this.jump = jump;
-        this.view = view;
         this.inventory = new Inventory();
         this.alive = false;
         this.heldItem = null;
     }
 
-    public Body(int x, int y, AbstractView map) {
-        this(new Point(x, y), new Point.Double(0, 0), MoveEnum.HSTOP, MoveEnum.VSTOP, new Dimension(1, 2), false, map);
+    public Body(int x, int y) {
+        this(new Point(x, y), new Point.Double(0, 0), MoveEnum.HSTOP, MoveEnum.VSTOP, new Dimension(1, 2), false);
     }
 
     public Inventory getInventory() {
@@ -86,13 +82,29 @@ public class Body implements GraphicComponent, SendableVia<Body, SerializableBod
         return velocity;
     }
 
+    public MoveEnum getHorizontalMovement() {
+        return horizontalMovement;
+    }
+
+    public MoveEnum getVerticalMovement() {
+        return verticalMovement;
+    }
+
+    public Dimension getBodyBlockSize() {
+        return bodyBlockSize;
+    }
+
+    public boolean getJump() {
+        return jump;
+    }
+
     public void setVelocity(Point.Double point) {
         this.velocity.x = point.x;
         this.velocity.y = point.y;
     }
 
     @Override
-    public void tick() {
+    public void tick(AbstractView view) {
         state = view.check(position.x / Settings.BLOCK_SIZE, (position.y + physicsSize.height) / Settings.BLOCK_SIZE);
         int speed;
         switch (state) {
@@ -263,11 +275,6 @@ public class Body implements GraphicComponent, SendableVia<Body, SerializableBod
 //        int x = (position.x + physicsSize.width) / Application.BLOCK_SIZE;
 
 //        g.drawImage(frame.getFrame(), null, null);
-    }
-
-    @Override
-    public SerializableBody serialize() {
-        return new SerializableBody(position, velocity, horizontalMovement, verticalMovement, bodyBlockSize, jump);
     }
 
     public ItemBlueprint getHeldItem() {

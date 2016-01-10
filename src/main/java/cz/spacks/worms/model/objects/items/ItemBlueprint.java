@@ -1,7 +1,7 @@
 package cz.spacks.worms.model.objects.items;
 
 import cz.spacks.worms.model.objects.items.itemActions.ItemAction;
-import cz.spacks.worms.model.communication.SerializableBufferedImage;
+import cz.spacks.worms.controller.comunication.serialization.SerializableBufferedImage;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;
@@ -30,7 +30,7 @@ public class ItemBlueprint implements Serializable, Comparable<ItemBlueprint> {
         this.usable = usable;
         this.size = p;
         this.category = category;
-        this.image = new SerializableBufferedImage(img);
+        this.image = new SerializableBufferedImage().serialize(img);
         this.action = action;
     }
 

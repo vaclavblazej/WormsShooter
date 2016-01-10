@@ -2,12 +2,12 @@ package cz.spacks.worms.controller;
 
 import cz.spacks.worms.controller.materials.MaterialModel;
 import cz.spacks.worms.controller.properties.CollisionState;
-import cz.spacks.worms.model.MapClass;
+import cz.spacks.worms.model.MapModel;
 import cz.spacks.worms.model.objects.Body;
 import cz.spacks.worms.model.objects.GraphicComponent;
 import cz.spacks.worms.model.objects.Crafting;
 import cz.spacks.worms.model.objects.items.ItemFactory;
-import cz.spacks.worms.model.communication.Model;
+import cz.spacks.worms.model.objects.Model;
 import cz.spacks.worms.controller.defaults.DefaultComponentListener;
 import cz.spacks.worms.controller.materials.MaterialEnum;
 
@@ -34,7 +34,7 @@ public abstract class AbstractView extends JPanel implements ActionListener, Def
 
     protected Model model;
     protected MaterialModel materialModel;
-    protected MapClass map;
+    protected MapModel map;
     protected List<Body> bodies;
     protected List<GraphicComponent> objects;
     protected Random random;
@@ -105,10 +105,10 @@ public abstract class AbstractView extends JPanel implements ActionListener, Def
     @Override
     public void actionPerformed(ActionEvent ae) {
         for (Body b : bodies) {
-            b.tick();
+            b.tick(this);
         }
         for (GraphicComponent g : objects) {
-            g.tick();
+            g.tick(this);
         }
         repaint();
     }
@@ -122,7 +122,7 @@ public abstract class AbstractView extends JPanel implements ActionListener, Def
     }
 
     public Body newBody() {
-        Body b = new Body(2000, 1600, this);
+        Body b = new Body(2000, 1600);
         bodies.add(b);
         return b;
     }

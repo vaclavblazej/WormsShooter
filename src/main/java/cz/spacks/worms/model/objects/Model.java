@@ -1,27 +1,23 @@
-package cz.spacks.worms.model.communication;
+package cz.spacks.worms.model.objects;
 
-import cz.spacks.worms.model.MapClass;
-import cz.spacks.worms.model.objects.Body;
-import cz.spacks.worms.model.objects.GraphicComponent;
+import cz.spacks.worms.model.MapModel;
 import cz.spacks.worms.model.objects.items.ItemFactory;
-import cz.spacks.worms.controller.SendableVia;
 
-import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
 
 /**
  *
  */
-public class Model implements SendableVia<Model, SerializableModel> {
+public class Model {
 
-    private MapClass map;
+    private MapModel map;
     private Map<Integer, Body> controls;
     private List<GraphicComponent> objects;
     private ItemFactory factory;
 
     public Model(
-            MapClass map,
+            MapModel map,
             Map<Integer, Body> controls,
             List<GraphicComponent> objects,
             ItemFactory factory) {
@@ -31,7 +27,7 @@ public class Model implements SendableVia<Model, SerializableModel> {
         this.factory = factory;
     }
 
-    public MapClass getMap() {
+    public MapModel getMap() {
         return map;
     }
 
@@ -45,14 +41,5 @@ public class Model implements SendableVia<Model, SerializableModel> {
 
     public ItemFactory getFactory() {
         return factory;
-    }
-
-    @Override
-    public SerializableModel serialize() {
-        Map<Integer, SerializableBody> arr = new HashMap<>();
-        for (Integer i : controls.keySet()) {
-            arr.put(i, controls.get(i).serialize());
-        }
-        return new SerializableModel(map.serialize(), factory, objects, arr);
     }
 }
