@@ -1,4 +1,4 @@
-package cz.spacks.worms.view.client.menu;
+package cz.spacks.worms.view.component;
 
 import javax.swing.*;
 import java.awt.*;

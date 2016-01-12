@@ -1,4 +1,4 @@
-package cz.spacks.worms.view.client.menu;
+package cz.spacks.worms.view.component;
 
 import cz.spacks.worms.model.objects.ItemsCount;
 import cz.spacks.worms.model.objects.items.ItemBlueprint;

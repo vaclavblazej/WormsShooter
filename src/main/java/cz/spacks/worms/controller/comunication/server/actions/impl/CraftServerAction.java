@@ -27,6 +27,6 @@ public class CraftServerAction extends ActionServer {
         inventory.remove(recipe.getIngredients());
         inventory.add(recipe.getProducts());
         // todo automatic update
-        System.out.println("cz.spacks.worms.client craft " + id + " " + recipeId);
+        System.out.println("cz.spacks.worms.views craft " + id + " " + recipeId);
     }
 }

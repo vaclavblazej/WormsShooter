@@ -1,10 +1,10 @@
 package cz.spacks.worms.view.windows;
 
 import cz.spacks.worms.model.objects.Body;
-import cz.spacks.worms.view.client.ClientView;
+import cz.spacks.worms.view.views.ClientView;
 import cz.spacks.worms.model.objects.Crafting;
-import cz.spacks.worms.view.client.menu.InventoryViewModel;
-import cz.spacks.worms.controller.defaults.DefaultKeyListener;
+import cz.spacks.worms.view.component.InventoryViewModel;
+import cz.spacks.worms.view.defaults.DefaultKeyListener;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;

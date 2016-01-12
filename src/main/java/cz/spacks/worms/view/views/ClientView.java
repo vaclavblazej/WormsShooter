@@ -1,8 +1,8 @@
-package cz.spacks.worms.view.client;
+package cz.spacks.worms.view.views;
 
 import cz.spacks.worms.controller.comunication.client.ClientCommunication;
 import cz.spacks.worms.controller.comunication.client.actions.impl.MoveAction;
-import cz.spacks.worms.view.client.menu.InventoryViewModel;
+import cz.spacks.worms.view.component.InventoryViewModel;
 import cz.spacks.worms.view.windows.InventoryPanel;
 import cz.spacks.worms.controller.Settings;
 import cz.spacks.worms.model.objects.Body;
@@ -10,15 +10,14 @@ import cz.spacks.worms.model.objects.GraphicComponent;
 import cz.spacks.worms.model.objects.MoveEnum;
 import cz.spacks.worms.model.objects.items.ItemBlueprint;
 import cz.spacks.worms.model.objects.items.itemActions.ItemAction;
-import cz.spacks.worms.controller.AbstractView;
 import cz.spacks.worms.model.Controls;
 import cz.spacks.worms.controller.properties.ControlsEnum;
 import cz.spacks.worms.model.MapModel;
 import cz.spacks.worms.model.objects.Model;
-import cz.spacks.worms.controller.defaults.DefaultComponentListener;
-import cz.spacks.worms.controller.defaults.DefaultKeyListener;
-import cz.spacks.worms.controller.defaults.DefaultMouseListener;
-import cz.spacks.worms.controller.defaults.DefaultMouseMotionListener;
+import cz.spacks.worms.view.defaults.DefaultComponentListener;
+import cz.spacks.worms.view.defaults.DefaultKeyListener;
+import cz.spacks.worms.view.defaults.DefaultMouseListener;
+import cz.spacks.worms.view.defaults.DefaultMouseMotionListener;
 import cz.spacks.worms.controller.materials.MaterialVisuals;
 import cz.spacks.worms.view.windows.ChatInputPanel;
 
@@ -71,7 +70,7 @@ public class ClientView extends AbstractView implements
     private ClientView() {
         super(Settings.BLOCK_SIZE);
         map = new MapModel(new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB));
-        recalculateGraphicWindowLayout();
+//        recalculateGraphicWindowLayout();
         currentView = null;
         viewTileStartPos = new Point();
         viewRealPos = new Point();

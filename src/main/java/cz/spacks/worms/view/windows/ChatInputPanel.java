@@ -1,7 +1,7 @@
 package cz.spacks.worms.view.windows;
 
 import cz.spacks.worms.controller.comunication.client.ClientCommunication;
-import cz.spacks.worms.view.client.ClientView;
+import cz.spacks.worms.view.views.ClientView;
 import cz.spacks.worms.controller.comunication.client.actions.impl.SendChatAction;
 
 import javax.swing.*;

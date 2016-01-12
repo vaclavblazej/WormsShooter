@@ -1,4 +1,4 @@
-package cz.spacks.worms.controller;
+package cz.spacks.worms.view.views;
 
 import cz.spacks.worms.controller.materials.MaterialModel;
 import cz.spacks.worms.controller.properties.CollisionState;
@@ -8,7 +8,7 @@ import cz.spacks.worms.model.objects.GraphicComponent;
 import cz.spacks.worms.model.objects.Crafting;
 import cz.spacks.worms.model.objects.items.ItemFactory;
 import cz.spacks.worms.model.objects.Model;
-import cz.spacks.worms.controller.defaults.DefaultComponentListener;
+import cz.spacks.worms.view.defaults.DefaultComponentListener;
 import cz.spacks.worms.controller.materials.MaterialEnum;
 
 import javax.swing.*;

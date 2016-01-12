@@ -1,10 +1,10 @@
 package cz.spacks.worms.view.windows;
 
-import cz.spacks.worms.view.client.ChatLog;
+import cz.spacks.worms.view.component.ChatLog;
 import cz.spacks.worms.controller.comunication.client.ClientCommunicationInternet;
 import cz.spacks.worms.controller.comunication.client.ClientCommunicationLocal;
-import cz.spacks.worms.view.client.ClientView;
-import cz.spacks.worms.view.client.menu.GameWindowItemBar;
+import cz.spacks.worms.view.views.ClientView;
+import cz.spacks.worms.view.component.GameWindowItemBar;
 import cz.spacks.worms.controller.Settings;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
@@ -86,7 +86,7 @@ public class MainFrame extends JFrame {
     private JPanel statusBar;
 
     private JLabel versionNumberLabel;
-    // cz.spacks.worms.client card
+    // cz.spacks.worms.views card
     private JPanel clientCard;
     private JPanel messagePanel;
     private JPanel chatPanel;
@@ -243,7 +243,7 @@ public class MainFrame extends JFrame {
             menuCardLayout.show(menuCards, "settingsCard");
         });
 
-        // cz.spacks.worms.client card
+        // cz.spacks.worms.views card
         final ClientView clientView = ClientView.getInstance();
         clientCard = clientView;
         minimapPanel = clientView.getMinimapView();

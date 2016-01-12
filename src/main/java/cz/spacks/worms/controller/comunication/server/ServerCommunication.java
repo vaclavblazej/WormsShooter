@@ -3,7 +3,7 @@ package cz.spacks.worms.controller.comunication.server;
 import cz.spacks.worms.controller.comunication.client.actions.ActionClient;
 import cz.spacks.worms.controller.comunication.serialization.SerializableModel;
 import cz.spacks.worms.model.objects.Body;
-import cz.spacks.worms.view.server.ServerView;
+import cz.spacks.worms.view.views.ServerView;
 import cz.spacks.worms.controller.comunication.server.actions.ActionServer;
 import cz.spacks.worms.controller.comunication.server.actions.impl.GetModelServerAction;
 import cz.spacks.worms.controller.comunication.server.actions.impl.NewPlayerServerAction;

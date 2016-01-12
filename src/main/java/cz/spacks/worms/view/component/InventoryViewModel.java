@@ -1,4 +1,4 @@
-package cz.spacks.worms.view.client.menu;
+package cz.spacks.worms.view.component;
 
 import cz.spacks.worms.model.objects.Body;
 import cz.spacks.worms.model.objects.Inventory;

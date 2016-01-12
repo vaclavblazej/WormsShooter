@@ -1,9 +1,8 @@
-package cz.spacks.worms.view.client;
+package cz.spacks.worms.view.views;
 
 import cz.spacks.worms.model.objects.Body;
 import cz.spacks.worms.model.objects.GraphicComponent;
-import cz.spacks.worms.controller.AbstractView;
-import cz.spacks.worms.controller.defaults.DefaultComponentListener;
+import cz.spacks.worms.view.defaults.DefaultComponentListener;
 
 import javax.swing.*;
 import java.awt.*;

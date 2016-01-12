@@ -1,7 +1,5 @@
 package cz.spacks.worms.controller.comunication.serialization;
 
-import cz.spacks.worms.controller.AbstractView;
-
 import java.awt.*;
 import java.awt.image.*;
 

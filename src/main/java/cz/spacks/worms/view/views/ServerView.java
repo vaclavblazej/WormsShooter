@@ -1,4 +1,4 @@
-package cz.spacks.worms.view.server;
+package cz.spacks.worms.view.views;
 
 import cz.spacks.worms.controller.materials.MaterialModel;
 import cz.spacks.worms.model.objects.Body;
@@ -6,7 +6,6 @@ import cz.spacks.worms.model.objects.GraphicComponent;
 import cz.spacks.worms.model.objects.items.*;
 import cz.spacks.worms.model.objects.items.itemActions.ItemActionMine;
 import cz.spacks.worms.model.objects.items.itemActions.ItemActionShoot;
-import cz.spacks.worms.controller.AbstractView;
 import cz.spacks.worms.model.MapModel;
 import cz.spacks.worms.model.objects.Model;
 import cz.spacks.worms.controller.services.SpriteLoader;

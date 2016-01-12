@@ -1,4 +1,4 @@
-package cz.spacks.worms.controller.defaults;
+package cz.spacks.worms.view.defaults;
 
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;

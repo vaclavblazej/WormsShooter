@@ -1,6 +1,6 @@
 package cz.spacks.worms.controller.comunication.server.actions.impl;
 
-import cz.spacks.worms.view.client.ChatLog;
+import cz.spacks.worms.view.component.ChatLog;
 import cz.spacks.worms.controller.comunication.server.actions.ActionServer;
 
 /**

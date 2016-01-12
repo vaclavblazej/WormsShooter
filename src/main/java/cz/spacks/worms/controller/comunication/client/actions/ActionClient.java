@@ -1,6 +1,6 @@
 package cz.spacks.worms.controller.comunication.client.actions;
 
-import cz.spacks.worms.view.server.ServerView;
+import cz.spacks.worms.view.views.ServerView;
 import spacks.communication.utilities.SAction;
 
 /**

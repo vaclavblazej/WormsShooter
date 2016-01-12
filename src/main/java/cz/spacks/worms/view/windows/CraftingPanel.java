@@ -4,11 +4,11 @@ import cz.spacks.worms.controller.comunication.client.ClientCommunication;
 import cz.spacks.worms.model.objects.Inventory;
 import cz.spacks.worms.model.objects.ItemsCount;
 import cz.spacks.worms.view.CraftingViewModel;
-import cz.spacks.worms.view.client.ClientView;
+import cz.spacks.worms.view.views.ClientView;
 import cz.spacks.worms.controller.comunication.client.actions.impl.CraftAction;
 import cz.spacks.worms.model.objects.Crafting;
 import cz.spacks.worms.model.objects.items.Recipe;
-import cz.spacks.worms.view.client.menu.ItemsTableModel;
+import cz.spacks.worms.view.component.ItemsTableModel;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
