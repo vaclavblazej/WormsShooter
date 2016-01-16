@@ -17,16 +17,14 @@ public class Bullet implements GraphicComponent {
     private AffineTransform tr;
     private Point.Double position;
     private double rotation;
-    private AbstractView view;
 
-    public Bullet(Point position, double rotation, AbstractView view) {
+    public Bullet(Point position, double rotation) {
         int vel = 100;
         velocity = new Point2D.Double();
         velocity.x = vel * Math.cos(rotation);
         velocity.y = vel * Math.sin(rotation);
         this.position = new Point.Double(position.x, position.y);
         this.rotation = rotation;
-        this.view = view;
     }
 
     @Override
@@ -57,8 +55,5 @@ public class Bullet implements GraphicComponent {
         position.y += velocity.y;
         Color pixel = view.getPixel((int) (position.x / Settings.BLOCK_SIZE), (int) (position.y / Settings.BLOCK_SIZE));
         CollisionState check = view.getMaterialModel().getState(pixel);
-        if (check != CollisionState.GAS) {
-            view.removeObject(this);
-        }
     }
 }

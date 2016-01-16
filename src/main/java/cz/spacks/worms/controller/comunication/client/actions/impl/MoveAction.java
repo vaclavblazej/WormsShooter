@@ -25,7 +25,7 @@ public class MoveAction extends ActionClient {
         if (body != null) {
             Point pos = body.getPosition();
             Point.Double vel = body.getVelocity();
-            ServerCommunication.getInstance().broadcast(new MoveServerAction(id, pos, vel, action));
+            serverCommunication.broadcast(new MoveServerAction(id, pos, vel, action));
             body.control(action);
         }
     }

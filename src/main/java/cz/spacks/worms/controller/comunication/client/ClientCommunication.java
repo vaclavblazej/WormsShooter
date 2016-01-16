@@ -1,5 +1,7 @@
 package cz.spacks.worms.controller.comunication.client;
 
+import cz.spacks.worms.controller.services.WorldService;
+import cz.spacks.worms.model.objects.WorldModel;
 import cz.spacks.worms.view.views.ClientView;
 import cz.spacks.worms.controller.comunication.client.actions.ActionClient;
 import cz.spacks.worms.controller.comunication.client.actions.impl.GetModelAction;
@@ -16,28 +18,23 @@ public abstract class ClientCommunication {
 
     private static final Logger logger = Logger.getLogger(ClientCommunication.class.getName());
 
-    private static ClientCommunication instance;
-
-    public static ClientCommunication getInstance() {
-        return instance;
-    }
-
-    public ClientCommunication() {
-        instance = this;
-    }
-
     private PlayerInfo info;
+    private WorldService worldService;
 
     public abstract void send(ActionClient packet) ;
 
+    public void setWorldService(WorldService worldService) {
+        this.worldService = worldService;
+    }
+
     public void bindBody(int id, Body body) {
-        Map<Integer, Body> controls = ClientView.getInstance().getModel().getControls();
+        Map<Integer, Body> controls = worldService.getWorldModel().getControls();
         controls.put(id, body);
     }
 
     public void unbindBody(int id) {
-        Map<Integer, Body> controls = ClientView.getInstance().getModel().getControls();
-        ClientView.getInstance().removeBody(controls.get(id));
+        Map<Integer, Body> controls = worldService.getWorldModel().getControls();
+        worldService.removeBody(controls.get(id));
         controls.remove(id);
     }
 

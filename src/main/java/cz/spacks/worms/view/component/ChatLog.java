@@ -10,13 +10,6 @@ import java.util.LinkedList;
  */
 public class ChatLog extends JPanel {
 
-    private static ChatLog instance;
-
-    public static ChatLog getInstance() {
-        if (instance == null) instance = new ChatLog();
-        return instance;
-    }
-
     private LinkedList<String> chat;
     private JList<String> list;
 
@@ -34,19 +27,6 @@ public class ChatLog extends JPanel {
         chat.add(log);
         list.add(log, new JLabel(log));
     }
-
-//    public void draw(Graphics2D g) {
-//        g.setTransform(new AffineTransform());
-//        g.setBackground(Color.BLACK);
-//        g.setColor(Color.WHITE);
-//        int x = 20;
-//        int y = 20;
-//        for (String string : chat) {
-//            g.drawString(string, x, y);
-//            y += 20;
-//        }
-//    }
-
     @Override
     protected void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);

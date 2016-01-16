@@ -30,7 +30,11 @@ public class MapModel {
     }
 
     public Integer getRGB(int x, int y) {
-        return map.getRGB(x, y);
+        try {
+            return map.getRGB(x, y);
+        } catch (ArrayIndexOutOfBoundsException ex) {
+            return 0;
+        }
     }
 
     public MapModel getSubmap(Point offset, Dimension size) throws ArrayIndexOutOfBoundsException {

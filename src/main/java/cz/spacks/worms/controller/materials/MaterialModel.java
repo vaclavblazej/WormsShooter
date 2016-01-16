@@ -4,7 +4,6 @@ import cz.spacks.worms.model.objects.ItemsCount;
 import cz.spacks.worms.model.objects.Material;
 import cz.spacks.worms.model.objects.items.ItemEnum;
 import cz.spacks.worms.model.objects.items.ItemFactory;
-import cz.spacks.worms.view.views.AbstractView;
 import cz.spacks.worms.controller.properties.CollisionState;
 
 import java.awt.*;
@@ -15,7 +14,9 @@ import java.util.List;
  *
  */
 public class MaterialModel {
-    public static final CollisionState DEFAULT = CollisionState.SOLID;
+    public static MaterialModel NULL = new MaterialModel();
+
+    private static final CollisionState DEFAULT = CollisionState.SOLID;
     private static final int SOLID_LIGHT = 30;
     private static final int LIQUID_LIGHT = 5;
     private static final int GAS_LIGHT = 2;
@@ -23,10 +24,14 @@ public class MaterialModel {
     private final Map<MaterialEnum, Material> material;
     private final Map<Integer, MaterialEnum> colors;
 
-    public MaterialModel(AbstractView view) {
+    private MaterialModel() {
         material = new HashMap<>();
         colors = new HashMap<>();
-        ItemFactory factory = view.getItemFactory();
+    }
+
+    public MaterialModel(ItemFactory factory) {
+        material = new HashMap<>();
+        colors = new HashMap<>();
         addMaterial(MaterialEnum.AIR, "#00AAFF", CollisionState.GAS, GAS_LIGHT);
         addMaterial(MaterialEnum.WATER, "#0000FF", CollisionState.LIQUID, LIQUID_LIGHT);
         addMaterial(MaterialEnum.DIRT, "#804000", CollisionState.SOLID, SOLID_LIGHT);

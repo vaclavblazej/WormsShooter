@@ -13,6 +13,6 @@ public class GetModelAction extends ActionClient {
     @Override
     public void perform() {
         SerializableModel model = new SerializableModel().serialize(view.getModel());
-        ServerCommunication.getInstance().send(id, new GetModelServerAction(model));
+        serverCommunication.send(id, new GetModelServerAction(model));
     }
 }

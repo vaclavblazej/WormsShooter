@@ -1,6 +1,7 @@
 package cz.spacks.worms.view.windows;
 
 import cz.spacks.worms.controller.comunication.client.ClientCommunication;
+import cz.spacks.worms.view.component.FocusGrabber;
 import cz.spacks.worms.view.views.ClientView;
 import cz.spacks.worms.controller.comunication.client.actions.impl.SendChatAction;
 
@@ -12,17 +13,11 @@ import java.awt.event.KeyEvent;
 /**
  *
  */
-public class ChatInputPanel extends JPanel {
-
-    private static ChatInputPanel instance;
-
-    public static ChatInputPanel getInstance() {
-        if (instance == null) instance = new ChatInputPanel();
-        return instance;
-    }
+public class ChatInputPanel extends JPanel implements FocusGrabber{
 
     private JTextField field;
     private JButton button;
+    private FocusGrabber focusGrabber = FocusGrabber.NULL;
 
     public ChatInputPanel() {
         field = new JTextField();
@@ -40,7 +35,11 @@ public class ChatInputPanel extends JPanel {
     public void send() {
         ClientCommunication.getInstance().send(new SendChatAction(field.getText()));
         field.setText("");
-        ClientView.getInstance().grabFocus();
+        focusGrabber.focus();
+    }
+
+    public void setFocusGrabber(FocusGrabber focusGrabber) {
+        this.focusGrabber = focusGrabber;
     }
 
     public JTextField getField() {
@@ -49,5 +48,10 @@ public class ChatInputPanel extends JPanel {
 
     public JButton getButton() {
         return button;
+    }
+
+    @Override
+    public void focus() {
+        this.grabFocus();
     }
 }

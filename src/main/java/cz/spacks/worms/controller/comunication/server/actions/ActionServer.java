@@ -1,5 +1,6 @@
 package cz.spacks.worms.controller.comunication.server.actions;
 
+import cz.spacks.worms.controller.comunication.client.ClientCommunication;
 import cz.spacks.worms.view.views.ClientView;
 import spacks.communication.utilities.SAction;
 
@@ -9,7 +10,12 @@ import spacks.communication.utilities.SAction;
 public abstract class ActionServer implements SAction {
 
     protected transient static ClientView view;
+    protected transient static ClientCommunication clientCommunication;
     protected int id;
+
+    public static void setClientCommunication(ClientCommunication clientCommunication) {
+        ActionServer.clientCommunication = clientCommunication;
+    }
 
     public int getId() {
         return id;

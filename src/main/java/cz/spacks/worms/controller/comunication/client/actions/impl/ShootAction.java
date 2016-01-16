@@ -25,6 +25,6 @@ public class ShootAction extends ActionClient {
         Point pos = (Point) body.getPosition().clone();
         double rad = Math.atan2(p.y - pos.y, p.x - pos.x);
         view.addObject(new Bullet(pos, rad, view));
-        ServerCommunication.getInstance().broadcast(new ShootServerAction(pos, rad));
+        serverCommunication.broadcast(new ShootServerAction(pos, rad));
     }
 }

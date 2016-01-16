@@ -101,6 +101,8 @@ public class MainFrame extends JFrame {
     CardLayout menuCardLayout;
 
     List<BindableButton> bindableButtons;
+    private ClientView clientView;
+
 
     public MainFrame() {
         super("Test window");
@@ -133,7 +135,7 @@ public class MainFrame extends JFrame {
         menuCardLayout = (CardLayout) menuCards.getLayout();
         versionNumberLabel.setText(Application.version);
 
-        mainFrame.addComponentListener(ClientView.getInstance());
+        mainFrame.addComponentListener((ClientView) clientCard);
 
         for (BindableButton button : bindableButtons) button.refreshText();
     }
@@ -163,6 +165,7 @@ public class MainFrame extends JFrame {
                 SwingUtilities.invokeLater(() -> {
                     ClientCommunicationLocal clientCommunicationLocal = new ClientCommunicationLocal();
                     clientCommunicationLocal.init(new RegistrationForm("Alpha"));
+                    clientView.setClientCommunication(clientCommunicationLocal);
                     joinProgressBar.setValue(joinProgressBar.getMaximum());
                     mainCardLayout.show(rootPanel, "clientCard");
                     clientCard.requestFocusInWindow();
@@ -193,6 +196,7 @@ public class MainFrame extends JFrame {
             final RegistrationForm form = new RegistrationForm("Beta");
             ClientCommunicationInternet clientCommunicationInternet = new ClientCommunicationInternet();
             clientCommunicationInternet.init(address, port, form);
+            clientView.setClientCommunication(clientCommunicationInternet);
             joinProgressBar.setValue(joinProgressBar.getMaximum());
             mainCardLayout.show(rootPanel, "clientCard");
             clientCard.requestFocusInWindow();
@@ -243,17 +247,19 @@ public class MainFrame extends JFrame {
             menuCardLayout.show(menuCards, "settingsCard");
         });
 
-        // cz.spacks.worms.views card
-        final ClientView clientView = ClientView.getInstance();
+        clientView = new ClientView();
         clientCard = clientView;
         minimapPanel = clientView.getMinimapView();
         inventoryPanel = clientView.getInventory();
-        chatPanel = ChatLog.getInstance();
+        ChatLog chatLog = new ChatLog();
+        chatPanel = chatLog;
         chatPanel.setBackground(new Color(100, 100, 255, 10));
 
-        ChatLog.getInstance().log("Hello world!");
+        chatLog.log("Hello world!");
 
-        final ChatInputPanel chatPanelInstance = ChatInputPanel.getInstance();
+        final ChatInputPanel chatPanelInstance = new ChatInputPanel();
+        chatPanelInstance.setFocusGrabber(clientView);
+        clientView.setChatFocusGrabber(chatPanelInstance);
         messagePanel = chatPanelInstance;
         messageTextField = chatPanelInstance.getField();
         messageSendButton = chatPanelInstance.getButton();

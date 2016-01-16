@@ -1,7 +1,8 @@
 package cz.spacks.worms.view.windows;
 
 import cz.spacks.worms.model.objects.Body;
-import cz.spacks.worms.view.views.ClientView;
+import cz.spacks.worms.model.objects.Inventory;
+import cz.spacks.worms.view.component.FocusGrabber;
 import cz.spacks.worms.model.objects.Crafting;
 import cz.spacks.worms.view.component.InventoryViewModel;
 import cz.spacks.worms.view.defaults.DefaultKeyListener;
@@ -18,6 +19,9 @@ public class InventoryPanel extends JPanel implements DefaultKeyListener {
     private JSplitPane split;
     private JTable table;
     private CraftingPanel craftingPanel;
+
+    private Inventory inventory;
+    private FocusGrabber focusGrabber = FocusGrabber.NULL;
 
     public InventoryPanel() {
         split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
@@ -47,10 +51,19 @@ public class InventoryPanel extends JPanel implements DefaultKeyListener {
         add(split);
         final CustomButton close = new CustomButton(e -> {
             setVisible(false);
-            ClientView.getInstance().grabFocus();
+            focusGrabber.focus();
         });
         close.setText("Close");
         add(close);
+    }
+
+    public void setFocusGrabber(FocusGrabber focusGrabber) {
+        this.focusGrabber = focusGrabber;
+    }
+
+    public void setInventory(Inventory inventory) {
+        craftingPanel.setInventory(inventory);
+        this.inventory = inventory;
     }
 
     public void updateInventoryModel(InventoryViewModel inventoryViewModel) {

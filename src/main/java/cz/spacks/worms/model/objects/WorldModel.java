@@ -3,27 +3,23 @@ package cz.spacks.worms.model.objects;
 import cz.spacks.worms.model.MapModel;
 import cz.spacks.worms.model.objects.items.ItemFactory;
 
-import java.util.List;
 import java.util.Map;
 
 /**
  *
  */
-public class Model {
+public class WorldModel {
 
     private MapModel map;
     private Map<Integer, Body> controls;
-    private List<GraphicComponent> objects;
     private ItemFactory factory;
 
-    public Model(
+    public WorldModel(
             MapModel map,
             Map<Integer, Body> controls,
-            List<GraphicComponent> objects,
             ItemFactory factory) {
         this.map = map;
         this.controls = controls;
-        this.objects = objects;
         this.factory = factory;
     }
 
@@ -33,10 +29,6 @@ public class Model {
 
     public Map<Integer, Body> getControls() {
         return controls;
-    }
-
-    public List<GraphicComponent> getObjects() {
-        return objects;
     }
 
     public ItemFactory getFactory() {

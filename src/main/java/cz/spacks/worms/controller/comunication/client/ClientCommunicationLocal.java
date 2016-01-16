@@ -30,7 +30,7 @@ public class ClientCommunicationLocal extends ClientCommunication{
         ActionServer.setView(ClientView.getInstance());
         info = new PlayerInfo(0); // local
         ServerCommunication.getInstance().connectionCreated(info.getId());
-        ClientView.getInstance().init();
+        ClientView.getInstance().icnit();
         send(new ConnectAction(form));
     }
 

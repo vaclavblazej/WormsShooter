@@ -20,7 +20,5 @@ public class ShootServerAction extends ActionServer {
 
     @Override
     public void perform() {
-        System.out.println("new bullet on views side");
-        view.addObject(new Bullet(p, d, view));
     }
 }

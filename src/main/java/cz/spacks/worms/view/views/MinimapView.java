@@ -16,20 +16,8 @@ import java.util.logging.Logger;
  */
 public class MinimapView extends AbstractView implements DefaultComponentListener {
 
-    private static final Logger logger = Logger.getLogger(MinimapView.class.getName());
-
-    private static MinimapView instance;
-
-    public static MinimapView getInstance() {
-        if (instance == null) instance = new MinimapView();
-        return instance;
-    }
-
-    private MinimapView() {
-        super(1);
-
+    public MinimapView() {
         setPreferredSize(new Dimension(300, 200));
-        SwingUtilities.invokeLater(this::init);
     }
 
     @Override
@@ -40,11 +28,10 @@ public class MinimapView extends AbstractView implements DefaultComponentListene
         final AlphaComposite alphaComposite = AlphaComposite.getInstance(compositeRule, alphaValue);
 
         Graphics2D g = (Graphics2D) graphics;
-        final BufferedImage mapImage = map.getImage();
+        final BufferedImage mapImage = worldModelCache.getMap().getImage();
         final BufferedImage glass = new BufferedImage(mapImage.getWidth(), mapImage.getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
         final Graphics2D imgGraphics = (Graphics2D) glass.getGraphics();
         for (Body b : bodies) b.draw(imgGraphics);
-        for (GraphicComponent c : objects) c.draw(imgGraphics);
         g.setComposite(alphaComposite);
         g.drawImage(mapImage, 0, 0, getWidth(), getHeight(), null);
         g.drawImage(glass, 0, 0, getWidth(), getHeight(), null);
@@ -60,7 +47,4 @@ public class MinimapView extends AbstractView implements DefaultComponentListene
         recalculateGraphicWindowLayout();
     }
 
-    @Override
-    public void actionPerformed(ActionEvent ae) {
-    }
 }

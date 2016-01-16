@@ -15,10 +15,10 @@ public class DisconnectServerAction extends ActionServer {
 
     @Override
     public void perform() {
-        if (id == ClientCommunication.getInstance().getInfo().getId()) {
-            ClientView.getInstance().reset();
+        if (id == clientCommunication.getInfo().getId()) {
+//            view.reset(); // todo handle disconnect
         } else {
-            ClientCommunication.getInstance().unbindBody(id);
+            clientCommunication.unbindBody(id);
         }
     }
 }

@@ -17,6 +17,6 @@ public class SendChatAction extends ActionClient {
 
     @Override
     public void perform() {
-        ServerCommunication.getInstance().broadcast(new SendChatServerAction(id, str));
+        serverCommunication.broadcast(new SendChatServerAction(id, str));
     }
 }

@@ -12,10 +12,7 @@ import java.io.Serializable;
  */
 public class MaterialVisuals implements Serializable {
 
-    private MaterialVisuals() {
-    }
-
-    public static void redraw(MapModel source, BufferedImage dest) {
+    public void redraw(MapModel source, BufferedImage dest) {
         Graphics g = dest.getGraphics();
         BufferedImage sourceImage = source.getImage();
         g.drawImage(sourceImage, 0, 0, dest.getWidth(), dest.getHeight(), null);

@@ -27,7 +27,7 @@ public class CraftAction extends ActionClient {
         Recipe recipe = view.getModel().getFactory().getRecipes().getRecipe(recipeId);
         inventory.remove(recipe.getIngredients());
         inventory.add(recipe.getProducts());
-        ServerCommunication.getInstance().broadcast(new CraftServerAction(recipeId, id));
+        serverCommunication.broadcast(new CraftServerAction(recipeId, id));
         System.out.println("cz.spacks.worms.view.server craft " + id + " " + recipeId);
     }
 }

@@ -2,28 +2,26 @@ package cz.spacks.worms.view.views;
 
 import cz.spacks.worms.controller.comunication.client.ClientCommunication;
 import cz.spacks.worms.controller.comunication.client.actions.impl.MoveAction;
+import cz.spacks.worms.model.MapModel;
+import cz.spacks.worms.view.component.FocusGrabber;
 import cz.spacks.worms.view.component.InventoryViewModel;
 import cz.spacks.worms.view.windows.InventoryPanel;
 import cz.spacks.worms.controller.Settings;
 import cz.spacks.worms.model.objects.Body;
-import cz.spacks.worms.model.objects.GraphicComponent;
 import cz.spacks.worms.model.objects.MoveEnum;
 import cz.spacks.worms.model.objects.items.ItemBlueprint;
 import cz.spacks.worms.model.objects.items.itemActions.ItemAction;
 import cz.spacks.worms.model.Controls;
 import cz.spacks.worms.controller.properties.ControlsEnum;
-import cz.spacks.worms.model.MapModel;
-import cz.spacks.worms.model.objects.Model;
+import cz.spacks.worms.model.objects.WorldModel;
 import cz.spacks.worms.view.defaults.DefaultComponentListener;
 import cz.spacks.worms.view.defaults.DefaultKeyListener;
 import cz.spacks.worms.view.defaults.DefaultMouseListener;
 import cz.spacks.worms.view.defaults.DefaultMouseMotionListener;
 import cz.spacks.worms.controller.materials.MaterialVisuals;
-import cz.spacks.worms.view.windows.ChatInputPanel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ActionListener;
 import java.awt.event.ComponentEvent;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseEvent;
@@ -38,7 +36,6 @@ import java.util.logging.Logger;
  *
  */
 public class ClientView extends AbstractView implements
-        ActionListener,
         DefaultKeyListener,
         DefaultMouseMotionListener,
         DefaultMouseListener,
@@ -46,32 +43,25 @@ public class ClientView extends AbstractView implements
 
     private static final Logger logger = Logger.getLogger(ClientView.class.getName());
 
-    private static ClientView instance;
-
-    public static ClientView getInstance() {
-        if (instance == null) instance = new ClientView();
-        return instance;
-    }
-
     private MinimapView minimapView;
     private InventoryPanel inventory;
     private Dimension tileViewDimensions;
     private Dimension panelViewDimensions;
     private Body body;
     private EnumSet<ControlsEnum> controlSet;
-    private MapModel currentView;
     private BufferedImage rasteredView;
     private Point viewTileStartPos;
     private final Point viewRealPos;
     private AffineTransform transformation;         // Defines view position and size. Is inverted already.
     private Controls controls;
     private Point mouse;
+    private FocusGrabber chatFocusGrabber = FocusGrabber.NULL;
+    
+    private MaterialVisuals materialVisuals;
+    private ClientCommunication clientCommunication;
 
-    private ClientView() {
-        super(Settings.BLOCK_SIZE);
-        map = new MapModel(new BufferedImage(1, 1, BufferedImage.TYPE_INT_RGB));
-//        recalculateGraphicWindowLayout();
-        currentView = null;
+    public ClientView() {
+        clientCommunication = null;
         viewTileStartPos = new Point();
         viewRealPos = new Point();
         controlSet = EnumSet.noneOf(ControlsEnum.class);
@@ -79,17 +69,28 @@ public class ClientView extends AbstractView implements
         transformation = new AffineTransform();
         // todo ratio with scale
 
-        minimapView = MinimapView.getInstance();
+        minimapView = new MinimapView();
         minimapView.setVisible(false);
         inventory = new InventoryPanel();
         inventory.setVisible(false);
+        inventory.setFocusGrabber(this);
         recalculateGraphicWindowLayout();
+        materialVisuals = new MaterialVisuals();
+
+        controls = Settings.getInstance().getControls();
+        addMouseListener(this);
+        addMouseMotionListener(this);
+        addKeyListener(this);
+    }
+
+    public void setClientCommunication(ClientCommunication clientCommunication) {
+        this.clientCommunication = clientCommunication;
     }
 
     @Override
-    public void setModel(Model model) {
-        super.setModel(model);
-        minimapView.setModel(model);
+    public void setWorldModel(WorldModel worldModel) {
+        super.setWorldModel(worldModel);
+        minimapView.setWorldModel(worldModel);
     }
 
     public void setMyView(Body body) {
@@ -98,25 +99,6 @@ public class ClientView extends AbstractView implements
 
     public Body getMyViewBody() {
         return body;
-    }
-
-    @Override
-    public void init() {
-        super.init();
-        controls = Settings.getInstance().getControls();
-        addMouseListener(this);
-        addMouseMotionListener(this);
-        addKeyListener(this);
-    }
-
-    @Override
-    public void reset() {
-        super.reset();
-        removeMouseListener(this);
-        removeMouseMotionListener(this);
-        removeKeyListener(this);
-        body = null;
-        controls = null;
     }
 
     @Override
@@ -130,13 +112,13 @@ public class ClientView extends AbstractView implements
             viewRealPos.y = bodyPosition.y - panelViewDimensions.height / 2;
 
             // map edges
-            int maxX = map.getWidth() * Settings.BLOCK_SIZE - panelViewDimensions.width - 1;
+            int maxX = mapModelCache.getWidth() * Settings.BLOCK_SIZE - panelViewDimensions.width - 1;
             if (viewRealPos.x < 0) {
                 viewRealPos.x = 0;
             } else if (viewRealPos.x > maxX) {
                 viewRealPos.x = maxX;
             }
-            int maxY = map.getHeight() * Settings.BLOCK_SIZE - panelViewDimensions.height - 1;
+            int maxY = mapModelCache.getHeight() * Settings.BLOCK_SIZE - panelViewDimensions.height - 1;
             if (viewRealPos.y < 0) {
                 viewRealPos.y = 0;
             } else if (viewRealPos.y > maxY) {
@@ -158,16 +140,15 @@ public class ClientView extends AbstractView implements
 
             // print to screen
             try {
-                currentView = map.getSubmap(viewTileStartPos, tileViewDimensions);
+                MapModel currentView = mapModelCache.getSubmap(viewTileStartPos, tileViewDimensions);
+                materialVisuals.redraw(currentView, rasteredView);
             } catch (RasterFormatException | ArrayIndexOutOfBoundsException ex) {
                 logger.log(Level.SEVERE, null, ex);
             }
-            MaterialVisuals.redraw(currentView, rasteredView);
             Graphics2D g = (Graphics2D) graphics;
             transformation.setToTranslation(-viewRealPos.x + smoothOffset.x, -viewRealPos.y + smoothOffset.y);
             final Graphics rasteredViewGraphics = rasteredView.getGraphics();
             for (Body body : bodies) body.drawRelative((Graphics2D) rasteredViewGraphics, transformation);
-            for (GraphicComponent gc : objects) gc.drawRelative((Graphics2D) rasteredViewGraphics, transformation);
             g.drawImage(rasteredView, -smoothOffset.x, -smoothOffset.y, rasteredView.getWidth(), rasteredView.getHeight(), null);
 
 //            final BufferedImage image = map.getImage();
@@ -209,7 +190,7 @@ public class ClientView extends AbstractView implements
         if (en != null && controlSet.add(en)) {
             switch (en) {
                 case JUMP:
-                    ClientCommunication.getInstance().send(new MoveAction(MoveEnum.JUMP));
+                    clientCommunication.send(new MoveAction(MoveEnum.JUMP));
                     break;
                 case UP:
                 case DOWN:
@@ -218,7 +199,7 @@ public class ClientView extends AbstractView implements
                     changeMovement();
                     break;
                 case CHAT:
-                    ChatInputPanel.getInstance().getField().grabFocus();
+                    chatFocusGrabber.focus();
                     break;
                 case MAP_TOGGLE:
                     minimapView.setVisible(!minimapView.isVisible());
@@ -259,24 +240,24 @@ public class ClientView extends AbstractView implements
         if (controlSet.contains(ControlsEnum.RIGHT)) hMov++;
         switch (hMov) {
             case 1:
-                ClientCommunication.getInstance().send(new MoveAction(MoveEnum.RIGHT));
+                clientCommunication.send(new MoveAction(MoveEnum.RIGHT));
                 break;
             case 0:
-                ClientCommunication.getInstance().send(new MoveAction(MoveEnum.HSTOP));
+                clientCommunication.send(new MoveAction(MoveEnum.HSTOP));
                 break;
             case -1:
-                ClientCommunication.getInstance().send(new MoveAction(MoveEnum.LEFT));
+                clientCommunication.send(new MoveAction(MoveEnum.LEFT));
                 break;
         }
         switch (vMov) {
             case 1:
-                ClientCommunication.getInstance().send(new MoveAction(MoveEnum.UP));
+                clientCommunication.send(new MoveAction(MoveEnum.UP));
                 break;
             case 0:
-                ClientCommunication.getInstance().send(new MoveAction(MoveEnum.VSTOP));
+                clientCommunication.send(new MoveAction(MoveEnum.VSTOP));
                 break;
             case -1:
-                ClientCommunication.getInstance().send(new MoveAction(MoveEnum.DOWN));
+                clientCommunication.send(new MoveAction(MoveEnum.DOWN));
                 break;
         }
     }
@@ -324,5 +305,9 @@ public class ClientView extends AbstractView implements
 
     public JPanel getInventory() {
         return inventory;
+    }
+
+    public void setChatFocusGrabber(FocusGrabber chatFocusGrabber) {
+        this.chatFocusGrabber = chatFocusGrabber;
     }
 }

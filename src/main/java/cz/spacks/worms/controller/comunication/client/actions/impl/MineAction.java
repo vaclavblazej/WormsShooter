@@ -33,9 +33,8 @@ public class MineAction extends ActionClient {
             MaterialEnum to = MaterialEnum.AIR;
             MaterialEnum mat = view.change(x, y, to);
             body.getInventory().add(view.getMaterialModel().getComponents(mat));
-            ServerCommunication service = ServerCommunication.getInstance();
-            service.broadcast(new ObtainServerAction(id, mat));
-            service.broadcast(new MineServerAction(new Point(x, y), to));
+            serverCommunication.broadcast(new ObtainServerAction(id, mat));
+            serverCommunication.broadcast(new MineServerAction(new Point(x, y), to));
         }
     }
 }

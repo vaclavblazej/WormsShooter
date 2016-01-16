@@ -18,7 +18,7 @@ public class ConnectServerAction extends ActionServer {
     }
 
     public void perform() {
-        Body b = ClientView.getInstance().newBody();
+        Body b = view.newBody();
         view.getModel().getControls().put(getId(), b);
         System.out.println("cz.spacks.worms.views connect");
     }

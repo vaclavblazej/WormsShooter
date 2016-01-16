@@ -1,13 +1,13 @@
 package cz.spacks.worms.view.views;
 
 import cz.spacks.worms.controller.materials.MaterialModel;
+import cz.spacks.worms.controller.services.WorldService;
 import cz.spacks.worms.model.objects.Body;
-import cz.spacks.worms.model.objects.GraphicComponent;
 import cz.spacks.worms.model.objects.items.*;
 import cz.spacks.worms.model.objects.items.itemActions.ItemActionMine;
 import cz.spacks.worms.model.objects.items.itemActions.ItemActionShoot;
 import cz.spacks.worms.model.MapModel;
-import cz.spacks.worms.model.objects.Model;
+import cz.spacks.worms.model.objects.WorldModel;
 import cz.spacks.worms.controller.services.SpriteLoader;
 import cz.spacks.worms.model.objects.Crafting;
 
@@ -17,7 +17,6 @@ import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.image.BufferedImage;
 import java.util.HashMap;
-import java.util.logging.Logger;
 
 /**
  *
@@ -25,28 +24,22 @@ import java.util.logging.Logger;
 public class ServerView extends AbstractView implements ComponentListener {
 
 
-    private static final Logger logger = Logger.getLogger(ServerView.class.getName());
-
-    private static ServerView instance;
-
-    public static ServerView getInstance() {
-        if (instance == null) instance = new ServerView();
-        return instance;
-    }
-
     private BufferedImage rasteredView;
 
-    private ServerView() {
-        super(1);
+    public ServerView() {
         SpriteLoader.loadSprite("Map");
         SpriteLoader.set(150, 100);
-        map = new MapModel(SpriteLoader.getSprite().getFrame());
-        model = new Model(map, new HashMap<>(20), objects, createItems());
-        materialModel = new MaterialModel(this);
+
+        MapModel mapModel = new MapModel(SpriteLoader.getSprite().getFrame());
+        ItemFactory items = createItems();
+        MaterialModel materialModel = new MaterialModel(items);
+        WorldModel worldModel = new WorldModel(mapModel, new HashMap<>(), items);
+        WorldService worldService = new WorldService(worldModel, materialModel);
+        setWorldService(worldService);
+
         createRecipes();
 
         SwingUtilities.invokeLater(this::recalculateGraphicWindowLayout);
-        SwingUtilities.invokeLater(this::init);
     }
 
     private ItemFactory createItems() {
@@ -110,18 +103,17 @@ public class ServerView extends AbstractView implements ComponentListener {
     }
 
     public void save() {
-        SpriteLoader.saveSprite("Map", map.getImage());
+        SpriteLoader.saveSprite("Map", mapModelCache.getImage());
     }
 
     @Override
     public void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
         Graphics2D g = (Graphics2D) graphics;
-        final BufferedImage image = map.getImage();
+        final BufferedImage image = mapModelCache.getImage();
         final BufferedImage glass = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
         final Graphics2D imgGraphics = (Graphics2D) glass.getGraphics();
         for (Body b : bodies) b.draw(imgGraphics);
-        for (GraphicComponent c : objects) c.draw(imgGraphics);
         final Graphics raster = rasteredView.getGraphics();
         raster.drawImage(image, 0, 0, image.getWidth(), image.getHeight(), null);
         raster.drawImage(glass, 0, 0, glass.getWidth(), glass.getHeight(), null);
@@ -139,15 +131,4 @@ public class ServerView extends AbstractView implements ComponentListener {
         recalculateGraphicWindowLayout();
     }
 
-    @Override
-    public void componentMoved(ComponentEvent e) {
-    }
-
-    @Override
-    public void componentShown(ComponentEvent e) {
-    }
-
-    @Override
-    public void componentHidden(ComponentEvent e) {
-    }
 }

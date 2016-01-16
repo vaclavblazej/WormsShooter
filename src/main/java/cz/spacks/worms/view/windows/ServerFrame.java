@@ -30,7 +30,7 @@ public class ServerFrame extends JFrame {
     }
 
     private void createUIComponents() {
-        serverView = ServerView.getInstance();
+        serverView = new ServerView();
     }
 
     /**

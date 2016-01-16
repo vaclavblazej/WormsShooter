@@ -1,6 +1,5 @@
 package cz.spacks.worms.controller.comunication.server;
 
-import cz.spacks.worms.controller.comunication.client.actions.ActionClient;
 import cz.spacks.worms.controller.comunication.serialization.SerializableModel;
 import cz.spacks.worms.model.objects.Body;
 import cz.spacks.worms.view.views.ServerView;
@@ -18,17 +17,6 @@ import java.util.Map;
  *
  */
 public abstract class ServerCommunication implements SListener {
-
-    private static ServerCommunication instance;
-
-    public static ServerCommunication getInstance() {
-        return instance;
-    }
-
-    public ServerCommunication() {
-        ActionClient.setView(ServerView.getInstance());
-        instance = this;
-    }
 
     public abstract void broadcast(SAction action);
 

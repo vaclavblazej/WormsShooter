@@ -34,6 +34,8 @@ public class CraftingPanel extends JPanel implements ListSelectionListener {
     private JButton craftButton;
     private int lastIndex;
 
+    private Inventory inventory;
+
     public CraftingPanel() {
         super();
         setLayout(new BorderLayout());
@@ -50,7 +52,6 @@ public class CraftingPanel extends JPanel implements ListSelectionListener {
         craftButton = new JButton(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Inventory inventory = ClientView.getInstance().getMyViewBody().getInventory();
                 if (inventory.contains(ingredientsModel)) {
                     ClientCommunication.getInstance().send(new CraftAction(lastIndex));
                 }
@@ -70,6 +71,10 @@ public class CraftingPanel extends JPanel implements ListSelectionListener {
         //add(new JScrollPane(recipes), BorderLayout.CENTER);
         recipes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         recipes.getSelectionModel().addListSelectionListener(this);
+    }
+
+    public void setInventory(Inventory inventory) {
+        this.inventory = inventory;
     }
 
     @Override
