@@ -1,12 +1,12 @@
 package cz.spacks.worms.controller.comunication.server;
 
 import cz.spacks.worms.controller.comunication.serialization.SerializableModel;
-import cz.spacks.worms.model.objects.Body;
-import cz.spacks.worms.view.views.ServerView;
 import cz.spacks.worms.controller.comunication.server.actions.ActionServer;
 import cz.spacks.worms.controller.comunication.server.actions.impl.GetModelServerAction;
 import cz.spacks.worms.controller.comunication.server.actions.impl.NewPlayerServerAction;
 import cz.spacks.worms.controller.comunication.server.actions.impl.SetIdNewPlayerServerAction;
+import cz.spacks.worms.controller.services.WorldService;
+import cz.spacks.worms.model.objects.Body;
 import spacks.communication.utilities.SAction;
 import spacks.communication.utilities.SListener;
 
@@ -28,22 +28,26 @@ public abstract class ServerCommunication implements SListener {
 
     public abstract void disconnect(int id);
 
+    private WorldService worldService;
+
+    public void setWorldService(WorldService worldService) {
+        this.worldService = worldService;
+    }
+
     @Override
     public void connectionCreated(int id) {
-        final ServerView serverView = ServerView.getInstance();
-        Body body = serverView.newBody();
-        Map<Integer, Body> controls = serverView.getModel().getControls();
+        Body body = worldService.newBody();
+        Map<Integer, Body> controls = worldService.getWorldModel().getControls();
         controls.put(id, body);
-        final ServerCommunication serverCommunication = ServerCommunication.getInstance();
-        serverCommunication.send(id, new SetIdNewPlayerServerAction(id));
-        serverCommunication.send(id, new GetModelServerAction(new SerializableModel().serialize(serverView.getModel())));
-        serverCommunication.broadcastExceptOne(id, new NewPlayerServerAction(id));
+        send(id, new SetIdNewPlayerServerAction(id));
+        send(id, new GetModelServerAction(new SerializableModel().serialize(worldService.getWorldModel())));
+        broadcastExceptOne(id, new NewPlayerServerAction(id));
     }
 
     @Override
     public void connectionRemoved(int id) {
-        Map<Integer, Body> controls = ServerView.getInstance().getModel().getControls();
-        ServerView.getInstance().removeBody(controls.get(id));
+        Map<Integer, Body> controls = worldService.getWorldModel().getControls();
+        worldService.removeBody(controls.get(id));
         controls.remove(id);
     }
 }

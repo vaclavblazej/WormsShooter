@@ -1,31 +1,29 @@
 package cz.spacks.worms.view.views;
 
+import cz.spacks.worms.controller.materials.MaterialEnum;
 import cz.spacks.worms.controller.materials.MaterialModel;
 import cz.spacks.worms.controller.properties.CollisionState;
+import cz.spacks.worms.controller.services.CacheReloader;
 import cz.spacks.worms.controller.services.WorldService;
 import cz.spacks.worms.model.MapModel;
-import cz.spacks.worms.model.objects.Body;
 import cz.spacks.worms.model.objects.Crafting;
-import cz.spacks.worms.model.objects.items.ItemFactory;
 import cz.spacks.worms.model.objects.WorldModel;
+import cz.spacks.worms.model.objects.items.ItemFactory;
 import cz.spacks.worms.view.component.FocusGrabber;
 import cz.spacks.worms.view.defaults.DefaultComponentListener;
-import cz.spacks.worms.controller.materials.MaterialEnum;
 
 import javax.swing.*;
 import java.awt.*;
-import java.util.ArrayList;
-import java.util.List;
 import java.util.Random;
 
 /**
- * Represents general view on the scene.
- *
- *
+ * Represents general worldService on the scene.
  */
-public abstract class AbstractView extends JPanel implements DefaultComponentListener, FocusGrabber {
+public abstract class AbstractView extends JPanel implements
+        DefaultComponentListener,
+        FocusGrabber,
+        CacheReloader {
 
-    protected List<Body> bodies;
     protected Random random;
 
     protected WorldService worldService;
@@ -34,7 +32,7 @@ public abstract class AbstractView extends JPanel implements DefaultComponentLis
     protected MapModel mapModelCache; // from worldModel
 
     /**
-     * Creates view and calls reset method which is obligatory to implement.
+     * Creates worldService and calls reset method which is obligatory to implement.
      */
     public AbstractView() {
         random = new Random();
@@ -48,16 +46,18 @@ public abstract class AbstractView extends JPanel implements DefaultComponentLis
         return worldModelCache;
     }
 
-    public void setWorldService(WorldService worldService){
+    public void setWorldService(WorldService worldService) {
         this.worldService = worldService;
-        materialModelCache = worldService.getMaterialModel();
-        setWorldModel(worldService.getWorldModel());
+        worldService.addCacheReloader(this);
+    }
+
+    public WorldService getWorldService() {
+        return worldService;
     }
 
     public void setWorldModel(WorldModel worldModel) {
         worldService.setWorldModel(worldModel);
         worldModelCache = worldService.getWorldModel();
-        bodies = new ArrayList<>(worldModel.getControls().values());
     }
 
     public MaterialModel getMaterialModel() {
@@ -80,17 +80,17 @@ public abstract class AbstractView extends JPanel implements DefaultComponentLis
         return ret;
     }
 
-    public Body newBody() {
-        Body b = new Body(2000, 1600);
-        bodies.add(b);
-        return b;
-    }
-
     public Color getPixel(int x, int y) {
         return worldService.getPixel(x, y);
     }
 
-    public void focus(){
+    public void focus() {
         this.grabFocus();
+    }
+
+    @Override
+    public void reloadCache() {
+        materialModelCache = worldService.getMaterialModel();
+        worldModelCache = worldService.getWorldModel();
     }
 }

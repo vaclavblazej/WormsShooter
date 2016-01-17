@@ -1,12 +1,10 @@
 package cz.spacks.worms.controller.comunication.serialization;
 
 import cz.spacks.worms.model.objects.Body;
-import cz.spacks.worms.model.objects.GraphicComponent;
 import cz.spacks.worms.model.objects.WorldModel;
 import cz.spacks.worms.model.objects.items.ItemFactory;
 
 import java.util.HashMap;
-import java.util.List;
 import java.util.Map;
 
 /**

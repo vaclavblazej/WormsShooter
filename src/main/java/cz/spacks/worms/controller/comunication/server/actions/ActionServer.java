@@ -1,7 +1,7 @@
 package cz.spacks.worms.controller.comunication.server.actions;
 
 import cz.spacks.worms.controller.comunication.client.ClientCommunication;
-import cz.spacks.worms.view.views.ClientView;
+import cz.spacks.worms.controller.services.WorldService;
 import spacks.communication.utilities.SAction;
 
 /**
@@ -9,7 +9,7 @@ import spacks.communication.utilities.SAction;
  */
 public abstract class ActionServer implements SAction {
 
-    protected transient static ClientView view;
+    protected transient static WorldService worldService;
     protected transient static ClientCommunication clientCommunication;
     protected int id;
 
@@ -25,12 +25,12 @@ public abstract class ActionServer implements SAction {
         this.id = id;
     }
 
-    public static ClientView getView() {
-        return view;
+    public static WorldService getWorldService() {
+        return worldService;
     }
 
-    public static void setView(ClientView aView) {
-        view = aView;
+    public static void setWorldService(WorldService worldServicePar) {
+        worldService = worldServicePar;
     }
 
     public ActionServer() {

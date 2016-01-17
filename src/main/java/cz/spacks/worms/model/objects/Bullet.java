@@ -1,8 +1,8 @@
 package cz.spacks.worms.model.objects;
 
-import cz.spacks.worms.view.views.AbstractView;
-import cz.spacks.worms.controller.properties.CollisionState;
 import cz.spacks.worms.controller.Settings;
+import cz.spacks.worms.controller.properties.CollisionState;
+import cz.spacks.worms.view.views.AbstractView;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;

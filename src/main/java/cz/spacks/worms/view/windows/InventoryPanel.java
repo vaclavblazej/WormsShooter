@@ -1,11 +1,12 @@
 package cz.spacks.worms.view.windows;
 
 import cz.spacks.worms.model.objects.Body;
+import cz.spacks.worms.model.objects.Crafting;
 import cz.spacks.worms.model.objects.Inventory;
 import cz.spacks.worms.view.component.FocusGrabber;
-import cz.spacks.worms.model.objects.Crafting;
 import cz.spacks.worms.view.component.InventoryViewModel;
 import cz.spacks.worms.view.defaults.DefaultKeyListener;
+import cz.spacks.worms.view.views.ClientView;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
@@ -55,6 +56,10 @@ public class InventoryPanel extends JPanel implements DefaultKeyListener {
         });
         close.setText("Close");
         add(close);
+    }
+
+    public void setView(ClientView view) {
+        craftingPanel.setView(view);
     }
 
     public void setFocusGrabber(FocusGrabber focusGrabber) {

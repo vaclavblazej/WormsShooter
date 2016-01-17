@@ -21,7 +21,7 @@ public class Application {
         System.exit(0);
     }
 
-    public static void error(Exception ex){
+    public static void error(Exception ex) {
         ex.printStackTrace();
     }
 }

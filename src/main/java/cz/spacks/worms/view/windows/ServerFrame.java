@@ -2,8 +2,8 @@ package cz.spacks.worms.view.windows;
 
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
-import cz.spacks.worms.view.views.ServerView;
 import cz.spacks.worms.controller.properties.Message;
+import cz.spacks.worms.view.views.ServerView;
 
 import javax.swing.*;
 import java.awt.*;

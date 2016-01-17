@@ -1,6 +1,5 @@
 package cz.spacks.worms.controller.comunication.server.actions.impl;
 
-import cz.spacks.worms.model.objects.Bullet;
 import cz.spacks.worms.controller.comunication.server.actions.ActionServer;
 
 import java.awt.*;

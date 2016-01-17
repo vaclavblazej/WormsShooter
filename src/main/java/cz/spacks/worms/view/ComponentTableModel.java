@@ -1,6 +1,5 @@
 package cz.spacks.worms.view;
 
-import cz.spacks.worms.controller.materials.MaterialModel;
 import cz.spacks.worms.model.objects.items.ItemBlueprint;
 
 import javax.swing.table.AbstractTableModel;

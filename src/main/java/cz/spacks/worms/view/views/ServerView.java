@@ -1,15 +1,15 @@
 package cz.spacks.worms.view.views;
 
 import cz.spacks.worms.controller.materials.MaterialModel;
+import cz.spacks.worms.controller.services.SpriteLoader;
 import cz.spacks.worms.controller.services.WorldService;
+import cz.spacks.worms.model.MapModel;
 import cz.spacks.worms.model.objects.Body;
+import cz.spacks.worms.model.objects.Crafting;
+import cz.spacks.worms.model.objects.WorldModel;
 import cz.spacks.worms.model.objects.items.*;
 import cz.spacks.worms.model.objects.items.itemActions.ItemActionMine;
 import cz.spacks.worms.model.objects.items.itemActions.ItemActionShoot;
-import cz.spacks.worms.model.MapModel;
-import cz.spacks.worms.model.objects.WorldModel;
-import cz.spacks.worms.controller.services.SpriteLoader;
-import cz.spacks.worms.model.objects.Crafting;
 
 import javax.swing.*;
 import java.awt.*;
@@ -113,7 +113,7 @@ public class ServerView extends AbstractView implements ComponentListener {
         final BufferedImage image = mapModelCache.getImage();
         final BufferedImage glass = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
         final Graphics2D imgGraphics = (Graphics2D) glass.getGraphics();
-        for (Body b : bodies) b.draw(imgGraphics);
+        for (Body b : worldModelCache.getBodies()) b.draw(imgGraphics);
         final Graphics raster = rasteredView.getGraphics();
         raster.drawImage(image, 0, 0, image.getWidth(), image.getHeight(), null);
         raster.drawImage(glass, 0, 0, glass.getWidth(), glass.getHeight(), null);

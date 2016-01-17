@@ -1,12 +1,10 @@
 package cz.spacks.worms.controller.comunication.client;
 
-import cz.spacks.worms.controller.services.WorldService;
-import cz.spacks.worms.model.objects.WorldModel;
-import cz.spacks.worms.view.views.ClientView;
+import cz.spacks.worms.controller.PlayerInfo;
 import cz.spacks.worms.controller.comunication.client.actions.ActionClient;
 import cz.spacks.worms.controller.comunication.client.actions.impl.GetModelAction;
+import cz.spacks.worms.controller.services.WorldService;
 import cz.spacks.worms.model.objects.Body;
-import cz.spacks.worms.controller.PlayerInfo;
 
 import java.util.Map;
 import java.util.logging.Logger;
@@ -19,9 +17,9 @@ public abstract class ClientCommunication {
     private static final Logger logger = Logger.getLogger(ClientCommunication.class.getName());
 
     private PlayerInfo info;
-    private WorldService worldService;
+    protected WorldService worldService;
 
-    public abstract void send(ActionClient packet) ;
+    public abstract void send(ActionClient packet);
 
     public void setWorldService(WorldService worldService) {
         this.worldService = worldService;

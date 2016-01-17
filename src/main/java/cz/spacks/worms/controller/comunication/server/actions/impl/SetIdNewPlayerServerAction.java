@@ -1,8 +1,7 @@
 package cz.spacks.worms.controller.comunication.server.actions.impl;
 
-import cz.spacks.worms.controller.comunication.client.ClientCommunication;
-import cz.spacks.worms.controller.comunication.server.actions.ActionServer;
 import cz.spacks.worms.controller.PlayerInfo;
+import cz.spacks.worms.controller.comunication.server.actions.ActionServer;
 
 /**
  *
@@ -14,6 +13,6 @@ public class SetIdNewPlayerServerAction extends ActionServer {
     }
 
     public void perform() {
-        ClientCommunication.getInstance().setInfo(new PlayerInfo(id));
+        clientCommunication.setInfo(new PlayerInfo(id));
     }
 }

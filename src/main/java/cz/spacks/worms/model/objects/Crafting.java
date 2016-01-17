@@ -8,7 +8,7 @@ import java.util.List;
 /**
  *
  */
-public class Crafting extends ArrayList<Recipe>{
+public class Crafting extends ArrayList<Recipe> {
 
     private List<Recipe> recipes;
 

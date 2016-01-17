@@ -13,7 +13,7 @@ import java.util.List;
 public class Recipe implements Serializable {
 
     private List<ItemsCount> ingredients;
-    private List<ItemsCount>  products;
+    private List<ItemsCount> products;
     private EnumSet<SituationProperty> conditions;
     private String name;
 
@@ -40,11 +40,11 @@ public class Recipe implements Serializable {
         conditions.add(prop);
     }
 
-    public List<ItemsCount>  getIngredients() {
+    public List<ItemsCount> getIngredients() {
         return ingredients;
     }
 
-    public List<ItemsCount>  getProducts() {
+    public List<ItemsCount> getProducts() {
         return products;
     }
 }

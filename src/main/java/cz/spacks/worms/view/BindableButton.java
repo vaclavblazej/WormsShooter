@@ -10,8 +10,6 @@ import java.awt.event.KeyListener;
 
 /**
  * Button which listens on keyboard when pressed and changes its text accordingly.
- *
- *
  */
 public class BindableButton extends JButton implements KeyListener {
 
@@ -33,12 +31,12 @@ public class BindableButton extends JButton implements KeyListener {
         refreshText();
     }
 
-    public void setActive(){
+    public void setActive() {
         addKeyListener(me);
         setBackground(Color.GREEN);
     }
 
-    public void setInactive(){
+    public void setInactive() {
         removeKeyListener(me);
         setBackground(Color.LIGHT_GRAY);
     }
@@ -47,7 +45,7 @@ public class BindableButton extends JButton implements KeyListener {
         return control;
     }
 
-    public void refreshText(){
+    public void refreshText() {
         setText(KeyEvent.getKeyText(code));
     }
 

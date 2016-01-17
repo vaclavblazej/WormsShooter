@@ -1,11 +1,10 @@
 package cz.spacks.worms.controller.comunication.client;
 
-import cz.spacks.worms.view.views.ClientView;
+import cz.spacks.worms.controller.PlayerInfo;
 import cz.spacks.worms.controller.comunication.client.actions.ActionClient;
 import cz.spacks.worms.controller.comunication.client.actions.impl.ConnectAction;
 import cz.spacks.worms.controller.comunication.client.actions.impl.GetModelAction;
 import cz.spacks.worms.controller.comunication.server.actions.ActionServer;
-import cz.spacks.worms.controller.PlayerInfo;
 import cz.spacks.worms.model.communication.RegistrationForm;
 import spacks.communication.SCommunication;
 import spacks.communication.client.SCommunicationClient;
@@ -18,7 +17,7 @@ import java.util.logging.Logger;
  *
  *
  */
-public class ClientCommunicationInternet extends ClientCommunication{
+public class ClientCommunicationInternet extends ClientCommunication {
 
     private static final Logger logger = Logger.getLogger(ClientCommunicationInternet.class.getName());
 
@@ -31,12 +30,11 @@ public class ClientCommunicationInternet extends ClientCommunication{
 
     public void init(String ip, int port, RegistrationForm form) {
         logger.info("Client: starting");
-        ActionServer.setView(ClientView.getInstance());
+        ActionServer.setWorldService(worldService);
         info = new PlayerInfo(-1); // temporal
         connection = SCommunication.createNewClient(new GetModelAction());
         try {
             connection.connect(ip, port);
-            ClientView.getInstance().init();
             startConnection(ip);
             send(new ConnectAction(form));
         } catch (IOException ex) {

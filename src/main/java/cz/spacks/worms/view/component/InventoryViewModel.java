@@ -3,9 +3,8 @@ package cz.spacks.worms.view.component;
 import cz.spacks.worms.model.objects.Body;
 import cz.spacks.worms.model.objects.Inventory;
 import cz.spacks.worms.model.objects.ItemsCount;
-import cz.spacks.worms.view.ComponentTableModel;
-import cz.spacks.worms.model.objects.items.Item;
 import cz.spacks.worms.model.objects.items.ItemBlueprint;
+import cz.spacks.worms.view.ComponentTableModel;
 
 import javax.swing.*;
 import java.awt.*;

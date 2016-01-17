@@ -1,24 +1,29 @@
 package cz.spacks.worms.view.views;
 
-import cz.spacks.worms.controller.comunication.client.ClientCommunication;
-import cz.spacks.worms.controller.comunication.client.actions.impl.MoveAction;
-import cz.spacks.worms.model.MapModel;
-import cz.spacks.worms.view.component.FocusGrabber;
-import cz.spacks.worms.view.component.InventoryViewModel;
-import cz.spacks.worms.view.windows.InventoryPanel;
 import cz.spacks.worms.controller.Settings;
+import cz.spacks.worms.controller.comunication.client.ClientCommunication;
+import cz.spacks.worms.controller.comunication.client.actions.impl.CraftAction;
+import cz.spacks.worms.controller.comunication.client.actions.impl.MoveAction;
+import cz.spacks.worms.controller.materials.MaterialModel;
+import cz.spacks.worms.controller.materials.MaterialVisuals;
+import cz.spacks.worms.controller.properties.ControlsEnum;
+import cz.spacks.worms.controller.services.SpriteLoader;
+import cz.spacks.worms.controller.services.WorldService;
+import cz.spacks.worms.model.Controls;
+import cz.spacks.worms.model.MapModel;
 import cz.spacks.worms.model.objects.Body;
 import cz.spacks.worms.model.objects.MoveEnum;
-import cz.spacks.worms.model.objects.items.ItemBlueprint;
-import cz.spacks.worms.model.objects.items.itemActions.ItemAction;
-import cz.spacks.worms.model.Controls;
-import cz.spacks.worms.controller.properties.ControlsEnum;
 import cz.spacks.worms.model.objects.WorldModel;
+import cz.spacks.worms.model.objects.items.ItemBlueprint;
+import cz.spacks.worms.model.objects.items.ItemFactory;
+import cz.spacks.worms.model.objects.items.itemActions.ItemAction;
+import cz.spacks.worms.view.component.FocusGrabber;
+import cz.spacks.worms.view.component.InventoryViewModel;
 import cz.spacks.worms.view.defaults.DefaultComponentListener;
 import cz.spacks.worms.view.defaults.DefaultKeyListener;
 import cz.spacks.worms.view.defaults.DefaultMouseListener;
 import cz.spacks.worms.view.defaults.DefaultMouseMotionListener;
-import cz.spacks.worms.controller.materials.MaterialVisuals;
+import cz.spacks.worms.view.windows.InventoryPanel;
 
 import javax.swing.*;
 import java.awt.*;
@@ -29,6 +34,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.image.RasterFormatException;
 import java.util.EnumSet;
+import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -52,15 +58,18 @@ public class ClientView extends AbstractView implements
     private BufferedImage rasteredView;
     private Point viewTileStartPos;
     private final Point viewRealPos;
-    private AffineTransform transformation;         // Defines view position and size. Is inverted already.
+    private AffineTransform transformation;         // Defines worldService position and size. Is inverted already.
     private Controls controls;
     private Point mouse;
     private FocusGrabber chatFocusGrabber = FocusGrabber.NULL;
-    
+
     private MaterialVisuals materialVisuals;
     private ClientCommunication clientCommunication;
 
     public ClientView() {
+        WorldService worldService = new WorldService();
+        setWorldService(worldService);
+
         clientCommunication = null;
         viewTileStartPos = new Point();
         viewRealPos = new Point();
@@ -72,6 +81,7 @@ public class ClientView extends AbstractView implements
         minimapView = new MinimapView();
         minimapView.setVisible(false);
         inventory = new InventoryPanel();
+        inventory.setView(this);
         inventory.setVisible(false);
         inventory.setFocusGrabber(this);
         recalculateGraphicWindowLayout();
@@ -106,7 +116,7 @@ public class ClientView extends AbstractView implements
         super.paintComponent(graphics);
         Point smoothOffset = new Point(0, 0);
         if (body != null) {
-            // view point
+            // worldService point
             Point bodyPosition = body.getPosition();
             viewRealPos.x = bodyPosition.x - panelViewDimensions.width / 2;
             viewRealPos.y = bodyPosition.y - panelViewDimensions.height / 2;
@@ -148,7 +158,8 @@ public class ClientView extends AbstractView implements
             Graphics2D g = (Graphics2D) graphics;
             transformation.setToTranslation(-viewRealPos.x + smoothOffset.x, -viewRealPos.y + smoothOffset.y);
             final Graphics rasteredViewGraphics = rasteredView.getGraphics();
-            for (Body body : bodies) body.drawRelative((Graphics2D) rasteredViewGraphics, transformation);
+            for (Body body : worldModelCache.getBodies())
+                body.drawRelative((Graphics2D) rasteredViewGraphics, transformation);
             g.drawImage(rasteredView, -smoothOffset.x, -smoothOffset.y, rasteredView.getWidth(), rasteredView.getHeight(), null);
 
 //            final BufferedImage image = map.getImage();
@@ -164,7 +175,7 @@ public class ClientView extends AbstractView implements
 //            rasteredView.getGraphics().drawImage(glass, 0, 0, rasteredView.getWidth(), rasteredView.getHeight(), null);
 //            g.drawImage(rasteredView, 0, 0, getWidth(), getHeight(), null);
 
-//             reset view
+//             reset worldService
             g.setTransform(new AffineTransform());
         }
     }
@@ -273,7 +284,7 @@ public class ClientView extends AbstractView implements
                 if (heldItem != null) {
                     ItemAction action = heldItem.getAction();
                     if (action != null) {
-                        action.action(p);
+                        clientCommunication.send(action.action(p));
                     }
                 }
                 break;
@@ -309,5 +320,9 @@ public class ClientView extends AbstractView implements
 
     public void setChatFocusGrabber(FocusGrabber chatFocusGrabber) {
         this.chatFocusGrabber = chatFocusGrabber;
+    }
+
+    public void craft(int recipeId) {
+        clientCommunication.send(new CraftAction(recipeId));
     }
 }

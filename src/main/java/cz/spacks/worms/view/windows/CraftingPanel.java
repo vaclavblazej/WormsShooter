@@ -1,14 +1,12 @@
 package cz.spacks.worms.view.windows;
 
-import cz.spacks.worms.controller.comunication.client.ClientCommunication;
+import cz.spacks.worms.model.objects.Crafting;
 import cz.spacks.worms.model.objects.Inventory;
 import cz.spacks.worms.model.objects.ItemsCount;
-import cz.spacks.worms.view.CraftingViewModel;
-import cz.spacks.worms.view.views.ClientView;
-import cz.spacks.worms.controller.comunication.client.actions.impl.CraftAction;
-import cz.spacks.worms.model.objects.Crafting;
 import cz.spacks.worms.model.objects.items.Recipe;
+import cz.spacks.worms.view.CraftingViewModel;
 import cz.spacks.worms.view.component.ItemsTableModel;
+import cz.spacks.worms.view.views.ClientView;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
@@ -35,6 +33,7 @@ public class CraftingPanel extends JPanel implements ListSelectionListener {
     private int lastIndex;
 
     private Inventory inventory;
+    private ClientView view;
 
     public CraftingPanel() {
         super();
@@ -53,7 +52,7 @@ public class CraftingPanel extends JPanel implements ListSelectionListener {
             @Override
             public void actionPerformed(ActionEvent e) {
                 if (inventory.contains(ingredientsModel)) {
-                    ClientCommunication.getInstance().send(new CraftAction(lastIndex));
+                    view.craft(lastIndex);
                 }
             }
         });
@@ -71,6 +70,10 @@ public class CraftingPanel extends JPanel implements ListSelectionListener {
         //add(new JScrollPane(recipes), BorderLayout.CENTER);
         recipes.setSelectionMode(ListSelectionModel.SINGLE_SELECTION);
         recipes.getSelectionModel().addListSelectionListener(this);
+    }
+
+    public void setView(ClientView view) {
+        this.view = view;
     }
 
     public void setInventory(Inventory inventory) {
@@ -93,7 +96,7 @@ public class CraftingPanel extends JPanel implements ListSelectionListener {
         }
     }
 
-    public void setRecipesModel(Crafting recipesModel){
+    public void setRecipesModel(Crafting recipesModel) {
         this.recipesModel = recipesModel;
         recipes.setModel(new CraftingViewModel(recipesModel));
     }

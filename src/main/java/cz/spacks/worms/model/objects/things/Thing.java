@@ -1,8 +1,8 @@
 package cz.spacks.worms.model.objects.things;
 
-import cz.spacks.worms.view.views.AbstractView;
 import cz.spacks.worms.model.objects.GraphicComponent;
 import cz.spacks.worms.model.spritesheets.Animation;
+import cz.spacks.worms.view.views.AbstractView;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;

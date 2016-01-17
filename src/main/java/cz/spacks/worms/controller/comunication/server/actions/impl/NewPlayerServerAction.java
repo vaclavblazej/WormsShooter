@@ -1,8 +1,7 @@
 package cz.spacks.worms.controller.comunication.server.actions.impl;
 
-import cz.spacks.worms.view.views.ClientView;
-import cz.spacks.worms.model.objects.Body;
 import cz.spacks.worms.controller.comunication.server.actions.ActionServer;
+import cz.spacks.worms.model.objects.Body;
 
 /**
  *
@@ -14,7 +13,7 @@ public class NewPlayerServerAction extends ActionServer {
     }
 
     public void perform() {
-        Body b = view.newBody();
-        view.getModel().getControls().put(getId(), b);
+        Body b = worldService.newBody();
+        worldService.getWorldModel().getControls().put(getId(), b);
     }
 }

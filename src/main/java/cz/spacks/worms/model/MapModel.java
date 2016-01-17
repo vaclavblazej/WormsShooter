@@ -40,10 +40,14 @@ public class MapModel {
     public MapModel getSubmap(Point offset, Dimension size) throws ArrayIndexOutOfBoundsException {
         final int width = map.getWidth();
         final int height = map.getHeight();
-        if(offset.x < 0) throw new ArrayIndexOutOfBoundsException("You tried to get subimage with left x index = " + offset.x);
-        if(offset.y < 0) throw new ArrayIndexOutOfBoundsException("You tried to get subimage with top y index = " + offset.y);
-        if(offset.x + size.width > width) throw new ArrayIndexOutOfBoundsException("You tried to get subimage with right x index = " + (offset.x + size.width));
-        if(offset.y + size.height > height) throw new ArrayIndexOutOfBoundsException("You tried to get subimage with bottom y index = " + (offset.y + size.height));
+        if (offset.x < 0)
+            throw new ArrayIndexOutOfBoundsException("You tried to get subimage with left x index = " + offset.x);
+        if (offset.y < 0)
+            throw new ArrayIndexOutOfBoundsException("You tried to get subimage with top y index = " + offset.y);
+        if (offset.x + size.width > width)
+            throw new ArrayIndexOutOfBoundsException("You tried to get subimage with right x index = " + (offset.x + size.width));
+        if (offset.y + size.height > height)
+            throw new ArrayIndexOutOfBoundsException("You tried to get subimage with bottom y index = " + (offset.y + size.height));
         final BufferedImage subimage = map.getSubimage(offset.x, offset.y, size.width, size.height);
         return new MapModel(subimage);
     }

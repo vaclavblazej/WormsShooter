@@ -4,9 +4,6 @@ import cz.spacks.worms.model.communication.RegistrationForm;
 
 /**
  * Information about player.
- *
- *
- *
  */
 public class PlayerInfo {
 

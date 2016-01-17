@@ -12,7 +12,7 @@ class ConnectionEstablishing {
         // common
         String address = "localhost";
         int port = 4242;
-        // cz.spacks.worms.view.server
+        // cz.spacks.worms.worldService.server
         new ServerCommunication(port);
         SCommunicationServer server = SCommunication.createNewServer(port, this);
         server.start();
@@ -34,7 +34,7 @@ class Documentation {
         client.send(ConnectAction);
         server.send(SetIdNewPlayerServerAction);
         server.send(GetModelServerAction);
-//        cz.spacks.worms.view.server.broadcast(ConnectServerAction);
+//        cz.spacks.worms.worldService.server.broadcast(ConnectServerAction);
 
         // craft
         client.send(CraftAction);

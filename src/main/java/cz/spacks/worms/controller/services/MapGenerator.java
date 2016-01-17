@@ -1,7 +1,7 @@
 package cz.spacks.worms.controller.services;
 
-import cz.spacks.worms.controller.materials.MaterialModel;
 import cz.spacks.worms.controller.materials.MaterialEnum;
+import cz.spacks.worms.controller.materials.MaterialModel;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

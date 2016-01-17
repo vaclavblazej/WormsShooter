@@ -1,8 +1,8 @@
 package cz.spacks.worms.controller.comunication.server.actions.impl;
 
+import cz.spacks.worms.controller.comunication.server.actions.ActionServer;
 import cz.spacks.worms.model.objects.Body;
 import cz.spacks.worms.model.objects.MoveEnum;
-import cz.spacks.worms.controller.comunication.server.actions.ActionServer;
 
 import java.awt.*;
 
@@ -28,7 +28,7 @@ public class MoveServerAction extends ActionServer {
 
     @Override
     public void perform() {
-        Body body = view.getModel().getControls().get(id);
+        Body body = worldService.getWorldModel().getControls().get(id);
         if (body != null) {
             body.setPosition(new Point(positionX, positionY));
             body.setVelocity(new Point.Double(velocityX, velocityY));

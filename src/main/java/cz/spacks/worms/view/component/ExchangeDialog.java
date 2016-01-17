@@ -1,16 +1,14 @@
 package cz.spacks.worms.view.component;
 
-import cz.spacks.worms.view.ComponentTableModel;
-import cz.spacks.worms.view.AbstractDialog;
 import cz.spacks.worms.controller.properties.Message;
+import cz.spacks.worms.view.AbstractDialog;
+import cz.spacks.worms.view.ComponentTableModel;
 
 import javax.swing.*;
 import java.awt.event.ActionEvent;
 
 /**
  * Dialog allowing inventory item exchange.
- *
- *
  */
 public class ExchangeDialog extends AbstractDialog {
 

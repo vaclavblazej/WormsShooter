@@ -1,6 +1,5 @@
 package cz.spacks.worms.controller.comunication.server.actions.impl;
 
-import cz.spacks.worms.view.component.ChatLog;
 import cz.spacks.worms.controller.comunication.server.actions.ActionServer;
 
 /**
@@ -16,6 +15,6 @@ public class SendChatServerAction extends ActionServer {
     }
 
     public void perform() {
-        ChatLog.getInstance().log(id + " " + str);
+        worldService.logChat(id + ": " + str);
     }
 }

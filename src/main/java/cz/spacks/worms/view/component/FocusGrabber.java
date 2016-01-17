@@ -7,5 +7,6 @@ public interface FocusGrabber {
 
     void focus();
 
-    FocusGrabber NULL = () -> {};
+    FocusGrabber NULL = () -> {
+    };
 }

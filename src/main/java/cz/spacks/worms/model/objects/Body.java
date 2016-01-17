@@ -1,9 +1,9 @@
 package cz.spacks.worms.model.objects;
 
 import cz.spacks.worms.controller.Settings;
+import cz.spacks.worms.controller.properties.CollisionState;
 import cz.spacks.worms.model.objects.items.ItemBlueprint;
 import cz.spacks.worms.view.views.AbstractView;
-import cz.spacks.worms.controller.properties.CollisionState;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -38,7 +38,7 @@ public class Body implements GraphicComponent {
     private int health;
     private ItemBlueprint heldItem;
 
-    public Body(){
+    public Body() {
         this(new Point(0, 0), new Point2D.Double(0, 0), MoveEnum.HSTOP, MoveEnum.VSTOP, new Dimension(), false);
     }
 
@@ -131,7 +131,7 @@ public class Body implements GraphicComponent {
                 velocity.x = Math.signum(velocity.x) * Math.max(Math.abs(velocity.x) - 1, 0) / 2;
                 break;
         }
-        switch (state){
+        switch (state) {
             case LIQUID:
                 switch (verticalMovement) {
                     case UP:

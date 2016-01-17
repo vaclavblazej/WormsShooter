@@ -6,7 +6,7 @@ import java.io.Serializable;
  *
  *
  */
-public class RegistrationForm implements Serializable{
+public class RegistrationForm implements Serializable {
 
     private String name;
 

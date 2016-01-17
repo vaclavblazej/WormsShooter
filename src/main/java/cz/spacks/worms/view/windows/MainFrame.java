@@ -1,22 +1,22 @@
 package cz.spacks.worms.view.windows;
 
-import cz.spacks.worms.view.component.ChatLog;
-import cz.spacks.worms.controller.comunication.client.ClientCommunicationInternet;
-import cz.spacks.worms.controller.comunication.client.ClientCommunicationLocal;
-import cz.spacks.worms.view.views.ClientView;
-import cz.spacks.worms.view.component.GameWindowItemBar;
-import cz.spacks.worms.controller.Settings;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import cz.spacks.worms.Application;
+import cz.spacks.worms.controller.Settings;
+import cz.spacks.worms.controller.comunication.client.ClientCommunicationInternet;
+import cz.spacks.worms.controller.comunication.client.ClientCommunicationLocal;
 import cz.spacks.worms.controller.comunication.server.ServerCommunicationInternet;
 import cz.spacks.worms.controller.comunication.server.ServerCommunicationLocal;
-import cz.spacks.worms.view.BindableButton;
-import cz.spacks.worms.model.Controls;
 import cz.spacks.worms.controller.properties.ControlsEnum;
-import cz.spacks.worms.model.communication.RegistrationForm;
 import cz.spacks.worms.controller.properties.Paths;
+import cz.spacks.worms.model.Controls;
+import cz.spacks.worms.model.communication.RegistrationForm;
+import cz.spacks.worms.view.BindableButton;
+import cz.spacks.worms.view.component.ChatLogPanel;
+import cz.spacks.worms.view.component.GameWindowItemBar;
+import cz.spacks.worms.view.views.ClientView;
 
 import javax.swing.*;
 import java.awt.*;
@@ -102,10 +102,12 @@ public class MainFrame extends JFrame {
 
     List<BindableButton> bindableButtons;
     private ClientView clientView;
+    private ChatLogPanel chatLog;
+    private ChatInputPanel chatPanelInstance;
 
 
     public MainFrame() {
-        super("Test window");
+        super("WormsShooter");
         mainFrame = this;
 
         $$$setupUI$$$();
@@ -169,6 +171,8 @@ public class MainFrame extends JFrame {
                     joinProgressBar.setValue(joinProgressBar.getMaximum());
                     mainCardLayout.show(rootPanel, "clientCard");
                     clientCard.requestFocusInWindow();
+                    chatLog.setChatLog(clientView.getWorldService().getChatLog());
+                    chatPanelInstance.setClientCommunication(clientCommunicationLocal);
                 });
             } catch (IOException e1) {
                 e1.printStackTrace();
@@ -200,6 +204,7 @@ public class MainFrame extends JFrame {
             joinProgressBar.setValue(joinProgressBar.getMaximum());
             mainCardLayout.show(rootPanel, "clientCard");
             clientCard.requestFocusInWindow();
+            chatPanelInstance.setClientCommunication(clientCommunicationInternet);
         });
         backJoinButton = new CustomSoundButton(e -> menuCardLayout.show(menuCards, "multiplayerCard"));
 
@@ -251,13 +256,11 @@ public class MainFrame extends JFrame {
         clientCard = clientView;
         minimapPanel = clientView.getMinimapView();
         inventoryPanel = clientView.getInventory();
-        ChatLog chatLog = new ChatLog();
+        chatLog = new ChatLogPanel();
         chatPanel = chatLog;
         chatPanel.setBackground(new Color(100, 100, 255, 10));
 
-        chatLog.log("Hello world!");
-
-        final ChatInputPanel chatPanelInstance = new ChatInputPanel();
+        chatPanelInstance = new ChatInputPanel();
         chatPanelInstance.setFocusGrabber(clientView);
         clientView.setChatFocusGrabber(chatPanelInstance);
         messagePanel = chatPanelInstance;
