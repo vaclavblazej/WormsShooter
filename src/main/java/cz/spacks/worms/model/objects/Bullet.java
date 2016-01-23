@@ -2,6 +2,7 @@ package cz.spacks.worms.model.objects;
 
 import cz.spacks.worms.controller.Settings;
 import cz.spacks.worms.controller.properties.CollisionState;
+import cz.spacks.worms.controller.services.WorldService;
 import cz.spacks.worms.view.views.AbstractView;
 
 import java.awt.*;
@@ -49,11 +50,11 @@ public class Bullet implements GraphicComponent {
     }
 
     @Override
-    public void tick(AbstractView view) {
+    public void tick(WorldService worldService) {
         velocity.y += 1;
         position.x += velocity.x;
         position.y += velocity.y;
-        Color pixel = view.getPixel((int) (position.x / Settings.BLOCK_SIZE), (int) (position.y / Settings.BLOCK_SIZE));
-        CollisionState check = view.getMaterialModel().getState(pixel);
+        Color pixel = worldService.getPixel((int) (position.x / Settings.BLOCK_SIZE), (int) (position.y / Settings.BLOCK_SIZE));
+        CollisionState check = worldService.getMaterialModel().getState(pixel);
     }
 }

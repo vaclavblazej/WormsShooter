@@ -2,6 +2,7 @@ package cz.spacks.worms.model.objects;
 
 import cz.spacks.worms.controller.Settings;
 import cz.spacks.worms.controller.properties.CollisionState;
+import cz.spacks.worms.controller.services.WorldService;
 import cz.spacks.worms.model.objects.items.ItemBlueprint;
 import cz.spacks.worms.view.views.AbstractView;
 
@@ -104,8 +105,8 @@ public class Body implements GraphicComponent {
     }
 
     @Override
-    public void tick(AbstractView view) {
-        state = view.check(position.x / Settings.BLOCK_SIZE, (position.y + physicsSize.height) / Settings.BLOCK_SIZE);
+    public void tick(WorldService worldService) {
+        state = worldService.getState(position.x / Settings.BLOCK_SIZE, (position.y + physicsSize.height) / Settings.BLOCK_SIZE);
         int speed;
         switch (state) {
             case GAS:
@@ -154,8 +155,8 @@ public class Body implements GraphicComponent {
         if (velocity.x >= 0) {
             while (slide < velocity.x) {
                 int x = (position.x + physicsSize.width + slide) / Settings.BLOCK_SIZE;
-                topSideCollision = view.check(x, top);
-                bottomSideCollision = view.check(x, bottom);
+                topSideCollision = worldService.getState(x, top);
+                bottomSideCollision = worldService.getState(x, bottom);
                 if (topSideCollision == CollisionState.SOLID || bottomSideCollision == CollisionState.SOLID) {
                     velocity.x = 0;
                     break;
@@ -165,8 +166,8 @@ public class Body implements GraphicComponent {
         } else {
             while (slide > velocity.x) {
                 int x = (position.x - 1 + slide) / Settings.BLOCK_SIZE;
-                topSideCollision = view.check(x, top);
-                bottomSideCollision = view.check(x, bottom);
+                topSideCollision = worldService.getState(x, top);
+                bottomSideCollision = worldService.getState(x, bottom);
                 if (topSideCollision == CollisionState.SOLID || bottomSideCollision == CollisionState.SOLID) {
                     velocity.x = 0;
                     break;
@@ -183,8 +184,8 @@ public class Body implements GraphicComponent {
         if (velocity.y >= 0) {
             while (fall < velocity.y) {
                 int y = (position.y + physicsSize.height + fall) / Settings.BLOCK_SIZE;
-                leftVerticalCollision = view.check(left, y);
-                rightVerticalCollision = view.check(right, y);
+                leftVerticalCollision = worldService.getState(left, y);
+                rightVerticalCollision = worldService.getState(right, y);
                 if (leftVerticalCollision == CollisionState.SOLID || rightVerticalCollision == CollisionState.SOLID) {
                     velocity.y = 0;
                     jump = true;
@@ -195,8 +196,8 @@ public class Body implements GraphicComponent {
         } else {
             while (fall > velocity.y) {
                 int y = (position.y - 1 + fall) / Settings.BLOCK_SIZE;
-                leftVerticalCollision = view.check(left, y);
-                rightVerticalCollision = view.check(right, y);
+                leftVerticalCollision = worldService.getState(left, y);
+                rightVerticalCollision = worldService.getState(right, y);
                 if (leftVerticalCollision == CollisionState.SOLID || rightVerticalCollision == CollisionState.SOLID) {
                     velocity.y = 0;
                     break;

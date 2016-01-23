@@ -38,10 +38,6 @@ public abstract class AbstractView extends JPanel implements
         random = new Random();
     }
 
-    public CollisionState check(int x, int y) {
-        return worldService.getState(x, y);
-    }
-
     public WorldModel getModel() {
         return worldModelCache;
     }
@@ -49,6 +45,7 @@ public abstract class AbstractView extends JPanel implements
     public void setWorldService(WorldService worldService) {
         this.worldService = worldService;
         worldService.addCacheReloader(this);
+        reloadCache();
     }
 
     public WorldService getWorldService() {
@@ -92,5 +89,8 @@ public abstract class AbstractView extends JPanel implements
     public void reloadCache() {
         materialModelCache = worldService.getMaterialModel();
         worldModelCache = worldService.getWorldModel();
+        if (worldModelCache != null) {
+            mapModelCache = worldModelCache.getMap();
+        }
     }
 }

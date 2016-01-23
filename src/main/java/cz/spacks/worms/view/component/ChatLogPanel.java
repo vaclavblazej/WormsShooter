@@ -25,6 +25,7 @@ public class ChatLogPanel extends JPanel {
         g.setTransform(new AffineTransform());
         int x = 20;
         int y = 20;
+        if(chatLog != null)
         for (String string : chatLog.getChat()) {
             g.drawString(string, x, y);
             y += 20;

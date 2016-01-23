@@ -28,7 +28,7 @@ public class ClientCommunicationInternet extends ClientCommunication {
     private PlayerInfo info;
     private SCommunicationClient connection;
 
-    public void init(String ip, int port, RegistrationForm form) {
+    public boolean init(String ip, int port, RegistrationForm form) {
         logger.info("Client: starting");
         ActionServer.setWorldService(worldService);
         info = new PlayerInfo(-1); // temporal
@@ -37,8 +37,10 @@ public class ClientCommunicationInternet extends ClientCommunication {
             connection.connect(ip, port);
             startConnection(ip);
             send(new ConnectAction(form));
+            return true;
         } catch (IOException ex) {
             logger.log(Level.SEVERE, null, ex);
+            return false;
         }
     }
 

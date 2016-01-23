@@ -1,5 +1,6 @@
 package cz.spacks.worms.view.views;
 
+import cz.spacks.worms.controller.services.WorldService;
 import cz.spacks.worms.model.objects.Body;
 import cz.spacks.worms.view.defaults.DefaultComponentListener;
 
@@ -14,6 +15,8 @@ public class MinimapView extends AbstractView implements DefaultComponentListene
 
     public MinimapView() {
         setPreferredSize(new Dimension(300, 200));
+        WorldService worldService = new WorldService();
+        setWorldService(worldService);
     }
 
     @Override

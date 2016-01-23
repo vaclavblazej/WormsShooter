@@ -12,7 +12,7 @@ import java.io.Serializable;
  */
 public class Settings implements Serializable {
 
-    public static final int RATIO = 20; // todo should define zoom in views
+    public static final int RATIO = 32; // todo should define zoom in views
     public static final int BLOCK_SIZE = 32;
 
     private static Settings instance;

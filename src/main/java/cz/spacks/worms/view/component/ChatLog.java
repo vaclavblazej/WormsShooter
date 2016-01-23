@@ -11,6 +11,7 @@ public class ChatLog {
 
     public ChatLog() {
         chat = new LinkedList<>();
+        chat.add("Hello world!");
     }
 
     public void log(String log) {

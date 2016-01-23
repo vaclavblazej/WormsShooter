@@ -1,13 +1,10 @@
 package cz.spacks.worms.controller.services;
 
-import cz.spacks.worms.controller.comunication.client.actions.impl.CraftAction;
 import cz.spacks.worms.controller.materials.MaterialEnum;
 import cz.spacks.worms.controller.materials.MaterialModel;
 import cz.spacks.worms.controller.properties.CollisionState;
 import cz.spacks.worms.model.objects.Body;
-import cz.spacks.worms.model.objects.MoveEnum;
 import cz.spacks.worms.model.objects.WorldModel;
-import cz.spacks.worms.model.objects.items.itemActions.ItemAction;
 import cz.spacks.worms.view.component.ChatLog;
 
 import javax.swing.*;
@@ -16,7 +13,7 @@ import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
 
-public class WorldService implements ActionListener {
+public class WorldServiceClient implements ActionListener {
 
     private WorldModel worldModel;
     private MaterialModel materialModel = MaterialModel.NULL;
@@ -25,10 +22,10 @@ public class WorldService implements ActionListener {
 
     private java.util.List<CacheReloader> cacheReloaderList = new ArrayList<>();
 
-    public WorldService() {
+    public WorldServiceClient() {
     }
 
-    public WorldService(WorldModel worldModel, MaterialModel materialModel) {
+    public WorldServiceClient(WorldModel worldModel, MaterialModel materialModel) {
         this.worldModel = worldModel;
         this.materialModel = materialModel;
         notifyCacheRealoaders();
@@ -70,7 +67,7 @@ public class WorldService implements ActionListener {
     @Override
     public void actionPerformed(ActionEvent e) {
         for (Body b : worldModel.getBodies()) {
-            b.tick(this);
+//            b.tick(this);
         }
     }
 
@@ -107,20 +104,5 @@ public class WorldService implements ActionListener {
 
     public ChatLog getChatLog() {
         return chatLog;
-    }
-
-    public void move(MoveEnum action) {
-        Body body = worldModel.getControls().get(0);
-        if (body != null) {
-            body.control(action);
-        }
-    }
-
-    public void itemAction(ItemAction action, Point p) {
-        action.action(p).perform();
-    }
-
-    public void action(CraftAction craftAction) {
-        craftAction.perform();
     }
 }

@@ -16,5 +16,6 @@ public class ConnectAction extends ActionClient {
 
     @Override
     public void perform() {
+        serverCommunication.connectionCreated(form.getId()); // todo revisit connecting
     }
 }

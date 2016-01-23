@@ -1,5 +1,6 @@
 package cz.spacks.worms.view.windows;
 
+import cz.spacks.worms.controller.services.WorldService;
 import cz.spacks.worms.model.objects.Body;
 import cz.spacks.worms.model.objects.Crafting;
 import cz.spacks.worms.model.objects.Inventory;
@@ -20,8 +21,8 @@ public class InventoryPanel extends JPanel implements DefaultKeyListener {
     private JSplitPane split;
     private JTable table;
     private CraftingPanel craftingPanel;
+    private WorldService worldService;
 
-    private Inventory inventory;
     private FocusGrabber focusGrabber = FocusGrabber.NULL;
 
     public InventoryPanel() {
@@ -66,9 +67,13 @@ public class InventoryPanel extends JPanel implements DefaultKeyListener {
         this.focusGrabber = focusGrabber;
     }
 
-    public void setInventory(Inventory inventory) {
-        craftingPanel.setInventory(inventory);
-        this.inventory = inventory;
+    public void setWorldService(WorldService worldService) {
+        this.worldService = worldService;
+        craftingPanel.setRecipesModel(worldService.getWorldModel().getFactory().getRecipes());
+    }
+
+    public void setInventory(Body body) {
+        updateInventoryModel(new InventoryViewModel(body));
     }
 
     public void updateInventoryModel(InventoryViewModel inventoryViewModel) {

@@ -4,10 +4,8 @@ import cz.spacks.worms.controller.Settings;
 import cz.spacks.worms.controller.comunication.client.ClientCommunication;
 import cz.spacks.worms.controller.comunication.client.actions.impl.CraftAction;
 import cz.spacks.worms.controller.comunication.client.actions.impl.MoveAction;
-import cz.spacks.worms.controller.materials.MaterialModel;
 import cz.spacks.worms.controller.materials.MaterialVisuals;
 import cz.spacks.worms.controller.properties.ControlsEnum;
-import cz.spacks.worms.controller.services.SpriteLoader;
 import cz.spacks.worms.controller.services.WorldService;
 import cz.spacks.worms.model.Controls;
 import cz.spacks.worms.model.MapModel;
@@ -15,7 +13,6 @@ import cz.spacks.worms.model.objects.Body;
 import cz.spacks.worms.model.objects.MoveEnum;
 import cz.spacks.worms.model.objects.WorldModel;
 import cz.spacks.worms.model.objects.items.ItemBlueprint;
-import cz.spacks.worms.model.objects.items.ItemFactory;
 import cz.spacks.worms.model.objects.items.itemActions.ItemAction;
 import cz.spacks.worms.view.component.FocusGrabber;
 import cz.spacks.worms.view.component.InventoryViewModel;
@@ -27,14 +24,11 @@ import cz.spacks.worms.view.windows.InventoryPanel;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ComponentEvent;
-import java.awt.event.KeyEvent;
-import java.awt.event.MouseEvent;
+import java.awt.event.*;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.image.RasterFormatException;
 import java.util.EnumSet;
-import java.util.HashMap;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -42,6 +36,7 @@ import java.util.logging.Logger;
  *
  */
 public class ClientView extends AbstractView implements
+        ActionListener,
         DefaultKeyListener,
         DefaultMouseMotionListener,
         DefaultMouseListener,
@@ -64,13 +59,10 @@ public class ClientView extends AbstractView implements
     private FocusGrabber chatFocusGrabber = FocusGrabber.NULL;
 
     private MaterialVisuals materialVisuals;
-    private ClientCommunication clientCommunication;
+    private Timer timer = new Timer(1000/40, this);
 
     public ClientView() {
-        WorldService worldService = new WorldService();
-        setWorldService(worldService);
 
-        clientCommunication = null;
         viewTileStartPos = new Point();
         viewRealPos = new Point();
         controlSet = EnumSet.noneOf(ControlsEnum.class);
@@ -87,14 +79,21 @@ public class ClientView extends AbstractView implements
         recalculateGraphicWindowLayout();
         materialVisuals = new MaterialVisuals();
 
+        WorldService worldService = new WorldService();
+        setWorldService(worldService);
+
         controls = Settings.getInstance().getControls();
         addMouseListener(this);
         addMouseMotionListener(this);
         addKeyListener(this);
+
+        timer.start();
     }
 
-    public void setClientCommunication(ClientCommunication clientCommunication) {
-        this.clientCommunication = clientCommunication;
+    @Override
+    public void setWorldService(WorldService worldService) {
+        super.setWorldService(worldService);
+        minimapView.setWorldService(worldService);
     }
 
     @Override
@@ -105,6 +104,8 @@ public class ClientView extends AbstractView implements
 
     public void setMyView(Body body) {
         this.body = body;
+        inventory.setWorldService(worldService);
+        inventory.setInventory(body);
     }
 
     public Body getMyViewBody() {
@@ -201,7 +202,7 @@ public class ClientView extends AbstractView implements
         if (en != null && controlSet.add(en)) {
             switch (en) {
                 case JUMP:
-                    clientCommunication.send(new MoveAction(MoveEnum.JUMP));
+                    worldService.move(MoveEnum.JUMP);
                     break;
                 case UP:
                 case DOWN:
@@ -251,24 +252,24 @@ public class ClientView extends AbstractView implements
         if (controlSet.contains(ControlsEnum.RIGHT)) hMov++;
         switch (hMov) {
             case 1:
-                clientCommunication.send(new MoveAction(MoveEnum.RIGHT));
+                worldService.move(MoveEnum.RIGHT);
                 break;
             case 0:
-                clientCommunication.send(new MoveAction(MoveEnum.HSTOP));
+                worldService.move(MoveEnum.HSTOP);
                 break;
             case -1:
-                clientCommunication.send(new MoveAction(MoveEnum.LEFT));
+                worldService.move(MoveEnum.LEFT);
                 break;
         }
         switch (vMov) {
             case 1:
-                clientCommunication.send(new MoveAction(MoveEnum.UP));
+                worldService.move(MoveEnum.UP);
                 break;
             case 0:
-                clientCommunication.send(new MoveAction(MoveEnum.VSTOP));
+                worldService.move(MoveEnum.VSTOP);
                 break;
             case -1:
-                clientCommunication.send(new MoveAction(MoveEnum.DOWN));
+                worldService.move(MoveEnum.DOWN);
                 break;
         }
     }
@@ -284,7 +285,7 @@ public class ClientView extends AbstractView implements
                 if (heldItem != null) {
                     ItemAction action = heldItem.getAction();
                     if (action != null) {
-                        clientCommunication.send(action.action(p));
+                        worldService.itemAction(action, p);
                     }
                 }
                 break;
@@ -323,6 +324,11 @@ public class ClientView extends AbstractView implements
     }
 
     public void craft(int recipeId) {
-        clientCommunication.send(new CraftAction(recipeId));
+        worldService.action(new CraftAction(recipeId));
+    }
+
+    @Override
+    public void actionPerformed(ActionEvent e) {
+        this.repaint();
     }
 }

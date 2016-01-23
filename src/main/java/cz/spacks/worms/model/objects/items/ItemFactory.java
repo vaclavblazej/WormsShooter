@@ -34,4 +34,8 @@ public class ItemFactory implements Serializable {
     public ItemBlueprint getBlueprint(ItemEnum en) {
         return items.get(en);
     }
+
+    public void setRecipes(Crafting recipes) {
+        this.recipes = recipes;
+    }
 }

@@ -5,6 +5,8 @@ import cz.spacks.worms.controller.comunication.client.actions.ActionClient;
 import cz.spacks.worms.controller.comunication.client.actions.impl.GetModelAction;
 import cz.spacks.worms.controller.services.WorldService;
 import cz.spacks.worms.model.objects.Body;
+import cz.spacks.worms.model.objects.WorldModel;
+import cz.spacks.worms.view.views.ClientView;
 
 import java.util.Map;
 import java.util.logging.Logger;
@@ -18,6 +20,7 @@ public abstract class ClientCommunication {
 
     private PlayerInfo info;
     protected WorldService worldService;
+    protected ClientView clientView;
 
     public abstract void send(ActionClient packet);
 
@@ -45,7 +48,14 @@ public abstract class ClientCommunication {
         return info;
     }
 
+    public void setClientView(ClientView clientView) {
+        this.clientView = clientView;
+    }
+
     public void setInfo(PlayerInfo info) {
         this.info = info;
+        final WorldModel worldModel = worldService.getWorldModel();
+        final Map<Integer, Body> controls = worldModel.getControls();
+        clientView.setMyView(controls.get(info.getId()));
     }
 }
