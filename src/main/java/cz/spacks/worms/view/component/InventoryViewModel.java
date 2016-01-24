@@ -2,6 +2,7 @@ package cz.spacks.worms.view.component;
 
 import cz.spacks.worms.model.objects.Body;
 import cz.spacks.worms.model.objects.Inventory;
+import cz.spacks.worms.model.objects.InventoryListener;
 import cz.spacks.worms.model.objects.ItemsCount;
 import cz.spacks.worms.model.objects.items.ItemBlueprint;
 import cz.spacks.worms.view.ComponentTableModel;
@@ -15,7 +16,7 @@ import java.util.List;
 /**
  *
  */
-public class InventoryViewModel extends ComponentTableModel {
+public class InventoryViewModel extends ComponentTableModel implements InventoryListener {
 
     private MyButton highlight;
     private Inventory inventory;
@@ -23,9 +24,10 @@ public class InventoryViewModel extends ComponentTableModel {
 
 
     public InventoryViewModel(Body body) {
-        super("", "", "");
+        super(body.toString().substring(34), "", "");
         this.body = body;
         this.inventory = body.getInventory();
+        inventory.addListener(this);
         List<ItemsCount> items = inventory.getComponents();
         for (ItemsCount item : items) {
             this.add(item.itemBlueprint, 1);
@@ -67,6 +69,14 @@ public class InventoryViewModel extends ComponentTableModel {
             }
         }
         return toolbar;
+    }
+
+    @Override
+    public void change() {
+        List<ItemsCount> items = inventory.getComponents();
+        for (ItemsCount item : items) {
+            this.add(item.itemBlueprint, 1);
+        }
     }
 
     private class MyButton extends JButton {

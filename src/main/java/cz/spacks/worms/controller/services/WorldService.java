@@ -4,9 +4,8 @@ import cz.spacks.worms.controller.comunication.client.actions.impl.CraftAction;
 import cz.spacks.worms.controller.materials.MaterialEnum;
 import cz.spacks.worms.controller.materials.MaterialModel;
 import cz.spacks.worms.controller.properties.CollisionState;
-import cz.spacks.worms.model.objects.Body;
-import cz.spacks.worms.model.objects.MoveEnum;
-import cz.spacks.worms.model.objects.WorldModel;
+import cz.spacks.worms.model.objects.*;
+import cz.spacks.worms.model.objects.items.ItemEnum;
 import cz.spacks.worms.model.objects.items.itemActions.ItemAction;
 import cz.spacks.worms.view.component.ChatLog;
 
@@ -77,6 +76,10 @@ public class WorldService implements ActionListener {
     public Body newBody() {
         Body b = new Body(2000, 1600);
         worldModel.getBodies().add(b);
+        final Inventory inventory = b.getInventory();
+        final ArrayList<ItemsCount> addedComponents = new ArrayList<>();
+        addedComponents.add(new ItemsCount(worldModel.getFactory().getBlueprint(ItemEnum.SHOVEL), 2));
+        inventory.add(addedComponents);
         return b;
     }
 
@@ -122,5 +125,9 @@ public class WorldService implements ActionListener {
 
     public void action(CraftAction craftAction) {
         craftAction.perform();
+    }
+
+    public void craft(int recipeId){
+        action(new CraftAction(recipeId));
     }
 }

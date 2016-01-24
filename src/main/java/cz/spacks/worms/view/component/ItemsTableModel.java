@@ -11,7 +11,7 @@ import java.util.List;
 public class ItemsTableModel extends ComponentTableModel {
 
     public ItemsTableModel(List<ItemsCount> items) {
-        super("");
+        super("", "");
         for (ItemsCount item : items) {
             this.add(item.itemBlueprint, 1);
         }

@@ -1,17 +1,20 @@
 package cz.spacks.worms.view.windows;
 
+import cz.spacks.worms.controller.Settings;
+import cz.spacks.worms.controller.properties.ControlsEnum;
 import cz.spacks.worms.controller.services.WorldService;
+import cz.spacks.worms.model.Controls;
 import cz.spacks.worms.model.objects.Body;
-import cz.spacks.worms.model.objects.Crafting;
-import cz.spacks.worms.model.objects.Inventory;
 import cz.spacks.worms.view.component.FocusGrabber;
 import cz.spacks.worms.view.component.InventoryViewModel;
 import cz.spacks.worms.view.defaults.DefaultKeyListener;
-import cz.spacks.worms.view.views.ClientView;
 
 import javax.swing.*;
 import javax.swing.table.TableCellRenderer;
 import java.awt.*;
+import java.awt.event.KeyEvent;
+import java.awt.event.KeyListener;
+import java.util.List;
 
 /**
  *
@@ -20,24 +23,27 @@ public class InventoryPanel extends JPanel implements DefaultKeyListener {
 
     private JSplitPane split;
     private JTable table;
+    final CustomButton close;
     private CraftingPanel craftingPanel;
     private WorldService worldService;
+    private Controls controls;
+    private InventoryViewModel inventoryModel;
 
     private FocusGrabber focusGrabber = FocusGrabber.NULL;
 
     public InventoryPanel() {
         split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-        table = new JTable(new InventoryViewModel(new Body())) {
+        inventoryModel = new InventoryViewModel(new Body());
+        table = new JTable(inventoryModel) {
             @Override
             public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
                 Component c = super.prepareRenderer(renderer, row, column);
-                InventoryViewModel it = (InventoryViewModel) getModel();
-                c.setForeground(it.getColor(row));
-                if (it.isHeldItem(row)) {
+                c.setForeground(inventoryModel.getColor(row));
+                if (inventoryModel.isHeldItem(row)) {
                     if (isRowSelected(row)) {
                         c.setBackground(Color.GREEN);
                     } else {
-                        c.setBackground(Color.decode("#00AA00"));
+                        c.setBackground(Color.ORANGE);
                     }
                 } else if (isRowSelected(row)) {
                     c.setBackground(Color.LIGHT_GRAY);
@@ -51,16 +57,15 @@ public class InventoryPanel extends JPanel implements DefaultKeyListener {
         craftingPanel = new CraftingPanel();
         split.add(craftingPanel, 2);
         add(split);
-        final CustomButton close = new CustomButton(e -> {
+        close = new CustomButton(e -> {
             setVisible(false);
             focusGrabber.focus();
         });
         close.setText("Close");
         add(close);
-    }
 
-    public void setView(ClientView view) {
-        craftingPanel.setView(view);
+        controls = Settings.getInstance().getControls();
+        addKeyListener(this);
     }
 
     public void setFocusGrabber(FocusGrabber focusGrabber) {
@@ -69,18 +74,48 @@ public class InventoryPanel extends JPanel implements DefaultKeyListener {
 
     public void setWorldService(WorldService worldService) {
         this.worldService = worldService;
+        craftingPanel.setWorldService(worldService);
         craftingPanel.setRecipesModel(worldService.getWorldModel().getFactory().getRecipes());
     }
 
     public void setInventory(Body body) {
+        craftingPanel.setInventory(body.getInventory());
         updateInventoryModel(new InventoryViewModel(body));
     }
 
     public void updateInventoryModel(InventoryViewModel inventoryViewModel) {
+        inventoryModel = inventoryViewModel;
         table.setModel(inventoryViewModel);
     }
 
-    public void updateCraftingModel(Crafting craftingModel) {
-        craftingPanel.setRecipesModel(craftingModel);
+    public JToolBar generateToolbar(){
+        final JToolBar jToolBar = new JToolBar();
+        final List<JButton> jButtons = inventoryModel.generateToolbar();
+        for (JButton jButton : jButtons) {
+            jToolBar.add(jButton);
+        }
+        return jToolBar;
+    }
+
+    @Override
+    public void keyPressed(KeyEvent e) {
+        ControlsEnum en = controls.get(e.getKeyCode());
+        if (en != null) {
+            switch (en) {
+                case INVENTORY_TOGGLE:
+                    this.setVisible(!this.isVisible());
+                    focusGrabber.focus();
+                    break;
+            }
+        }
+    }
+
+    @Override
+    public synchronized void addKeyListener(KeyListener l) {
+        super.addKeyListener(l);
+        split.addKeyListener(this);
+        table.addKeyListener(this);
+        craftingPanel.addKeyListener(this);
+        close.addKeyListener(l);
     }
 }

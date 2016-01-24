@@ -7,32 +7,43 @@ import java.util.List;
 /**
  *
  */
-public class Inventory { // todo consider extends ArrayList<ItemsCount>
+public class Inventory extends ArrayList<ItemsCount>{
 
-    private List<ItemsCount> components;
+    private ArrayList<InventoryListener> inventoryListeners;
 
     public Inventory() {
-        components = new ArrayList<>();
+        inventoryListeners = new ArrayList<>();
+    }
+
+    public void addListener(InventoryListener listener){
+        inventoryListeners.add(listener);
+    }
+
+    public void removeListener(InventoryListener listener){
+        inventoryListeners.remove(listener);
     }
 
     public void add(List<ItemsCount> addedComponents) {
-        components.addAll(addedComponents);
+        addAll(addedComponents);
+        change();
     }
 
     public void remove(List<ItemsCount> addedComponents) {
-        components.removeAll(addedComponents);
-        // todo notify listeners
+        removeAll(addedComponents);
+        change();
     }
 
-    public void setComponents(List<ItemsCount> components) {
-        this.components = components;
+    private void change(){
+        for (InventoryListener listener : inventoryListeners) {
+            listener.change();
+        }
     }
 
     public List<ItemsCount> getComponents() {
-        return components;
+        return this;
     }
 
     public boolean contains(List<ItemsCount> ingredientsModel) {
-        return components.containsAll(ingredientsModel);
+        return containsAll(ingredientsModel);
     }
 }

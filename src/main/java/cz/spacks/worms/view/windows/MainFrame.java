@@ -6,6 +6,7 @@ import com.intellij.uiDesigner.core.Spacer;
 import cz.spacks.worms.Application;
 import cz.spacks.worms.controller.Settings;
 import cz.spacks.worms.controller.comunication.client.ClientCommunicationInternet;
+import cz.spacks.worms.controller.comunication.client.actions.ActionClient;
 import cz.spacks.worms.controller.comunication.server.ServerCommunicationInternet;
 import cz.spacks.worms.controller.properties.ControlsEnum;
 import cz.spacks.worms.controller.properties.Paths;
@@ -111,6 +112,7 @@ public class MainFrame extends JFrame {
     private ClientView clientView;
     private ChatLogPanel chatLog;
     private ChatInputPanel chatPanelInstance;
+    private InventoryPanel inventoryPanelInst;
 
 
     public MainFrame() {
@@ -135,7 +137,7 @@ public class MainFrame extends JFrame {
         pack();
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
-        setMinimumSize(new Dimension(800, 600));
+        setMinimumSize(new Dimension(1200, 800));
 
         // todo set inactive when this window is inactive
 
@@ -171,6 +173,9 @@ public class MainFrame extends JFrame {
         singleplayerButton = new CustomSoundButton(e -> {
             final WorldService worldService = new DefaultWorldSetting().getDefaultWorldService();
             worldService.startTick();
+
+            ActionClient.setWorldService(worldService);
+
             SwingUtilities.invokeLater(() -> {
                 clientView.setWorldService(worldService);
                 clientView.setWorldModel(worldService.getWorldModel());
@@ -269,7 +274,8 @@ public class MainFrame extends JFrame {
         clientView = new ClientView();
         clientCard = clientView;
         minimapPanel = clientView.getMinimapView();
-        inventoryPanel = clientView.getInventory();
+        inventoryPanelInst = clientView.getInventory();
+        inventoryPanel = inventoryPanelInst;
         chatLog = new ChatLogPanel();
         chatPanel = chatLog;
         chatPanel.setBackground(new Color(100, 100, 255, 10));
@@ -281,7 +287,7 @@ public class MainFrame extends JFrame {
         messageTextField = chatPanelInstance.getField();
         messageSendButton = chatPanelInstance.getButton();
 
-        itemToolbar = GameWindowItemBar.getInstance();
+        itemToolbar = inventoryPanelInst.generateToolbar();
 
         getMyIpButton = new CustomButton(e -> {
             getMyIpButton.setEnabled(false);

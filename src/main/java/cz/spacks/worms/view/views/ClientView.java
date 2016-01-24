@@ -1,9 +1,6 @@
 package cz.spacks.worms.view.views;
 
 import cz.spacks.worms.controller.Settings;
-import cz.spacks.worms.controller.comunication.client.ClientCommunication;
-import cz.spacks.worms.controller.comunication.client.actions.impl.CraftAction;
-import cz.spacks.worms.controller.comunication.client.actions.impl.MoveAction;
 import cz.spacks.worms.controller.materials.MaterialVisuals;
 import cz.spacks.worms.controller.properties.ControlsEnum;
 import cz.spacks.worms.controller.services.WorldService;
@@ -15,7 +12,6 @@ import cz.spacks.worms.model.objects.WorldModel;
 import cz.spacks.worms.model.objects.items.ItemBlueprint;
 import cz.spacks.worms.model.objects.items.itemActions.ItemAction;
 import cz.spacks.worms.view.component.FocusGrabber;
-import cz.spacks.worms.view.component.InventoryViewModel;
 import cz.spacks.worms.view.defaults.DefaultComponentListener;
 import cz.spacks.worms.view.defaults.DefaultKeyListener;
 import cz.spacks.worms.view.defaults.DefaultMouseListener;
@@ -50,8 +46,6 @@ public class ClientView extends AbstractView implements
     private Dimension panelViewDimensions;
     private Body body;
     private EnumSet<ControlsEnum> controlSet;
-    private BufferedImage rasteredView;
-    private Point viewTileStartPos;
     private final Point viewRealPos;
     private AffineTransform transformation;         // Defines worldService position and size. Is inverted already.
     private Controls controls;
@@ -59,7 +53,7 @@ public class ClientView extends AbstractView implements
     private FocusGrabber chatFocusGrabber = FocusGrabber.NULL;
 
     private MaterialVisuals materialVisuals;
-    private Timer timer = new Timer(1000/40, this);
+    private Timer timer = new Timer(1000 / 40, this);
 
     public ClientView() {
 
@@ -73,7 +67,6 @@ public class ClientView extends AbstractView implements
         minimapView = new MinimapView();
         minimapView.setVisible(false);
         inventory = new InventoryPanel();
-        inventory.setView(this);
         inventory.setVisible(false);
         inventory.setFocusGrabber(this);
         recalculateGraphicWindowLayout();
@@ -108,9 +101,9 @@ public class ClientView extends AbstractView implements
         inventory.setInventory(body);
     }
 
-    public Body getMyViewBody() {
-        return body;
-    }
+    private BufferedImage rasteredView = null;
+    private Point viewTileStartPos = new Point();
+    private Point lastViewTileStartPos = new Point();
 
     @Override
     protected void paintComponent(Graphics graphics) {
@@ -144,10 +137,12 @@ public class ClientView extends AbstractView implements
             tileViewDimensions = new Dimension(
                     (panelViewDimensions.width + smoothOffset.x) / Settings.BLOCK_SIZE + 1,
                     (panelViewDimensions.height + smoothOffset.y) / Settings.BLOCK_SIZE + 1);
+//            if(rasteredView == null) {
             rasteredView = new BufferedImage(
                     tileViewDimensions.width * Settings.BLOCK_SIZE,
                     tileViewDimensions.height * Settings.BLOCK_SIZE,
                     BufferedImage.TYPE_INT_RGB);
+//            }
 
             // print to screen
             try {
@@ -217,8 +212,6 @@ public class ClientView extends AbstractView implements
                     minimapView.setVisible(!minimapView.isVisible());
                     break;
                 case INVENTORY_TOGGLE:
-                    inventory.updateInventoryModel(new InventoryViewModel(getMyViewBody()));
-                    inventory.updateCraftingModel(getItemFactory().getRecipes());
                     inventory.setVisible(!inventory.isVisible());
                     break;
                 case INTERACT:
@@ -281,7 +274,7 @@ public class ClientView extends AbstractView implements
         switch (e.getButton()) {
             case MouseEvent.BUTTON1:
                 Point p = new Point(viewRealPos.x + e.getX(), viewRealPos.y + e.getY());
-                ItemBlueprint heldItem = getMyViewBody().getHeldItem();
+                ItemBlueprint heldItem = body.getHeldItem();
                 if (heldItem != null) {
                     ItemAction action = heldItem.getAction();
                     if (action != null) {
@@ -315,16 +308,12 @@ public class ClientView extends AbstractView implements
         return minimapView;
     }
 
-    public JPanel getInventory() {
+    public InventoryPanel getInventory() {
         return inventory;
     }
 
     public void setChatFocusGrabber(FocusGrabber chatFocusGrabber) {
         this.chatFocusGrabber = chatFocusGrabber;
-    }
-
-    public void craft(int recipeId) {
-        worldService.action(new CraftAction(recipeId));
     }
 
     @Override
