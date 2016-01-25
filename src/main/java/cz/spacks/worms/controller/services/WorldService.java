@@ -7,7 +7,7 @@ import cz.spacks.worms.controller.properties.CollisionState;
 import cz.spacks.worms.model.objects.*;
 import cz.spacks.worms.model.objects.items.ItemEnum;
 import cz.spacks.worms.model.objects.items.itemActions.ItemAction;
-import cz.spacks.worms.view.component.ChatLog;
+import cz.spacks.worms.model.ChatLog;
 
 import javax.swing.*;
 import java.awt.*;
@@ -79,7 +79,7 @@ public class WorldService implements ActionListener {
         final Inventory inventory = b.getInventory();
         final ArrayList<ItemsCount> addedComponents = new ArrayList<>();
         addedComponents.add(new ItemsCount(worldModel.getFactory().getBlueprint(ItemEnum.SHOVEL), 2));
-        inventory.add(addedComponents);
+        inventory.addAll(addedComponents);
         return b;
     }
 

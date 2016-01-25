@@ -4,7 +4,6 @@ import cz.spacks.worms.controller.Settings;
 import cz.spacks.worms.controller.properties.CollisionState;
 import cz.spacks.worms.controller.services.WorldService;
 import cz.spacks.worms.model.objects.items.ItemBlueprint;
-import cz.spacks.worms.view.views.AbstractView;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -28,7 +27,6 @@ public class Body implements GraphicComponent {
     private Dimension viewSize;
     private Dimension bodyBlockSize;
     private boolean jump;
-    private AbstractView view;
     private Inventory inventory;
     private CollisionState state;
     private CollisionState leftVerticalCollision;

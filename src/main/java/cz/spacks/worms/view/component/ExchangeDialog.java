@@ -35,10 +35,10 @@ public class ExchangeDialog extends AbstractDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int l = from.getRowCount();
-                ComponentTableModel list = new ComponentTableModel();
+                ItemsTableModel list = new ItemsTableModel();
                 for (int i = 0; i < l; i++) {
                     if (fromTable.isRowSelected(i)) {
-                        list.add(from.getItem(i), 1);
+//                        list.add(from.getItem(i), 1);
                     }
                 }
                 from.remove(list);
@@ -50,10 +50,10 @@ public class ExchangeDialog extends AbstractDialog {
             @Override
             public void actionPerformed(ActionEvent e) {
                 int l = to.getRowCount();
-                ComponentTableModel list = new ComponentTableModel();
+                ComponentTableModel list = new ItemsTableModel();
                 for (int i = 0; i < l; i++) {
                     if (fromTable.isRowSelected(i)) {
-                        list.add(to.getItem(i), 1);
+//                        list.add(to.getItem(i), 1);
                     }
                 }
                 to.remove(list);

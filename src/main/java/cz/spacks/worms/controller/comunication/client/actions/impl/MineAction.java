@@ -31,7 +31,7 @@ public class MineAction extends ActionClient {
         if (distance < 6) {
             MaterialEnum to = MaterialEnum.AIR;
             MaterialEnum mat = worldService.change(x, y, to);
-            body.getInventory().add(worldService.getMaterialModel().getComponents(mat));
+            body.getInventory().addAll(worldService.getMaterialModel().getComponents(mat));
 //            serverCommunication.broadcast(new ObtainServerAction(id, mat));
 //            serverCommunication.broadcast(new MineServerAction(new Point(x, y), to));
         }

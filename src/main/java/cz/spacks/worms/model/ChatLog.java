@@ -1,4 +1,4 @@
-package cz.spacks.worms.view.component;
+package cz.spacks.worms.model;
 
 import java.util.LinkedList;
 

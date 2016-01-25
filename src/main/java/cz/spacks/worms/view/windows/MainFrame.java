@@ -17,7 +17,6 @@ import cz.spacks.worms.model.communication.RegistrationForm;
 import cz.spacks.worms.model.objects.Body;
 import cz.spacks.worms.view.BindableButton;
 import cz.spacks.worms.view.component.ChatLogPanel;
-import cz.spacks.worms.view.component.GameWindowItemBar;
 import cz.spacks.worms.view.views.ClientView;
 
 import javax.swing.*;
@@ -287,7 +286,7 @@ public class MainFrame extends JFrame {
         messageTextField = chatPanelInstance.getField();
         messageSendButton = chatPanelInstance.getButton();
 
-        itemToolbar = inventoryPanelInst.generateToolbar();
+        itemToolbar = new JToolBar();
 
         getMyIpButton = new CustomButton(e -> {
             getMyIpButton.setEnabled(false);

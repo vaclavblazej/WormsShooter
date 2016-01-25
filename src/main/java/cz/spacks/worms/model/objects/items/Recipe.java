@@ -1,5 +1,6 @@
 package cz.spacks.worms.model.objects.items;
 
+import cz.spacks.worms.model.objects.Inventory;
 import cz.spacks.worms.model.objects.ItemsCount;
 
 import java.io.Serializable;
@@ -12,15 +13,15 @@ import java.util.List;
  */
 public class Recipe implements Serializable {
 
-    private List<ItemsCount> ingredients;
-    private List<ItemsCount> products;
+    private Inventory ingredients;
+    private Inventory products;
     private EnumSet<SituationProperty> conditions;
     private String name;
 
     public Recipe(String name) {
         this.name = name;
-        ingredients = new ArrayList<>();
-        products = new ArrayList<>();
+        ingredients = new Inventory();
+        products = new Inventory();
         conditions = EnumSet.noneOf(SituationProperty.class);
     }
 
@@ -40,11 +41,11 @@ public class Recipe implements Serializable {
         conditions.add(prop);
     }
 
-    public List<ItemsCount> getIngredients() {
+    public Inventory getIngredients() {
         return ingredients;
     }
 
-    public List<ItemsCount> getProducts() {
+    public Inventory getProducts() {
         return products;
     }
 }

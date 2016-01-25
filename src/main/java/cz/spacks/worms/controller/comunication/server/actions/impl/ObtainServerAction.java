@@ -19,7 +19,7 @@ public class ObtainServerAction extends ActionServer {
     @Override
     public void perform() {
         Inventory inv = worldService.getWorldModel().getControls().get(id).getInventory();
-        inv.add(worldService.getMaterialModel().getComponents(en));
+        inv.addAll(worldService.getMaterialModel().getComponents(en));
         // todo automatic refresh changed inventory worldService
     }
 }

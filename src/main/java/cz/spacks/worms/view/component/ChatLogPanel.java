@@ -1,5 +1,7 @@
 package cz.spacks.worms.view.component;
 
+import cz.spacks.worms.model.ChatLog;
+
 import javax.swing.*;
 import java.awt.*;
 import java.awt.geom.AffineTransform;

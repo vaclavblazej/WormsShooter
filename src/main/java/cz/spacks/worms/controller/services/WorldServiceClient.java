@@ -5,7 +5,7 @@ import cz.spacks.worms.controller.materials.MaterialModel;
 import cz.spacks.worms.controller.properties.CollisionState;
 import cz.spacks.worms.model.objects.Body;
 import cz.spacks.worms.model.objects.WorldModel;
-import cz.spacks.worms.view.component.ChatLog;
+import cz.spacks.worms.model.ChatLog;
 
 import javax.swing.*;
 import java.awt.*;

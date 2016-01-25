@@ -26,10 +26,10 @@ public class CraftingPanel extends JPanel implements ListSelectionListener {
     private Crafting recipesModel;
     private JScrollPane ingredientsScroll;
     private JTable ingredients;
-    private List<ItemsCount> ingredientsModel;
+    private Inventory ingredientsModel;
     private JScrollPane productsScroll;
     private JTable products;
-    private List<ItemsCount> productsModel;
+    private Inventory productsModel;
     private JButton craftButton;
     private int selectedRecipeId;
 

@@ -5,8 +5,10 @@ import cz.spacks.worms.controller.properties.ControlsEnum;
 import cz.spacks.worms.controller.services.WorldService;
 import cz.spacks.worms.model.Controls;
 import cz.spacks.worms.model.objects.Body;
+import cz.spacks.worms.model.objects.Inventory;
+import cz.spacks.worms.model.objects.items.RecipeViewModel;
 import cz.spacks.worms.view.component.FocusGrabber;
-import cz.spacks.worms.view.component.InventoryViewModel;
+import cz.spacks.worms.view.component.ItemsTableModel;
 import cz.spacks.worms.view.defaults.DefaultKeyListener;
 
 import javax.swing.*;
@@ -14,7 +16,6 @@ import javax.swing.table.TableCellRenderer;
 import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
-import java.util.List;
 
 /**
  *
@@ -22,50 +23,55 @@ import java.util.List;
 public class InventoryPanel extends JPanel implements DefaultKeyListener {
 
     private JSplitPane split;
-    private JTable table;
-    final CustomButton close;
+    private JTable itemList;
+    final CustomButton closeButton;
     private CraftingPanel craftingPanel;
     private WorldService worldService;
     private Controls controls;
-    private InventoryViewModel inventoryModel;
+    private ItemsTableModel inventoryModel;
+    private RecipeViewModel recipeViewModel;
 
     private FocusGrabber focusGrabber = FocusGrabber.NULL;
 
     public InventoryPanel() {
         split = new JSplitPane(JSplitPane.HORIZONTAL_SPLIT);
-        inventoryModel = new InventoryViewModel(new Body());
-        table = new JTable(inventoryModel) {
+        inventoryModel = new ItemsTableModel();
+        inventoryModel.setInventory(new Inventory());
+        recipeViewModel = new RecipeViewModel();
+        itemList = new JTable(inventoryModel) {
             @Override
             public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
                 Component c = super.prepareRenderer(renderer, row, column);
-                c.setForeground(inventoryModel.getColor(row));
-                if (inventoryModel.isHeldItem(row)) {
-                    if (isRowSelected(row)) {
-                        c.setBackground(Color.GREEN);
-                    } else {
-                        c.setBackground(Color.ORANGE);
-                    }
-                } else if (isRowSelected(row)) {
-                    c.setBackground(Color.LIGHT_GRAY);
-                } else {
-                    c.setBackground(Color.WHITE);
-                }
+//                c.setForeground(inventoryModel.getColor(row));
+//                if (inventoryModel.isHeldItem(row)) {
+//                    if (isRowSelected(row)) {
+//                        c.setBackground(Color.GREEN);
+//                    } else {
+//                        c.setBackground(Color.ORANGE);
+//                    }
+//                } else {
+//                    if (isRowSelected(row)) {
+//                        c.setBackground(Color.LIGHT_GRAY);
+//                    } else {
+//                        c.setBackground(Color.WHITE);
+//                    }
+//                }
                 return c;
             }
         };
-        split.add(new JScrollPane(table), 1);
+        split.add(new JScrollPane(itemList), 1);
         craftingPanel = new CraftingPanel();
         split.add(craftingPanel, 2);
-        add(split);
-        close = new CustomButton(e -> {
-            setVisible(false);
+        this.add(split);
+        closeButton = new CustomButton(e -> {
+            this.setVisible(false);
             focusGrabber.focus();
         });
-        close.setText("Close");
-        add(close);
+        closeButton.setText("Close");
+        this.add(closeButton);
 
         controls = Settings.getInstance().getControls();
-        addKeyListener(this);
+        this.addKeyListener(this);
     }
 
     public void setFocusGrabber(FocusGrabber focusGrabber) {
@@ -80,21 +86,14 @@ public class InventoryPanel extends JPanel implements DefaultKeyListener {
 
     public void setInventory(Body body) {
         craftingPanel.setInventory(body.getInventory());
-        updateInventoryModel(new InventoryViewModel(body));
+        final ItemsTableModel itemsTableModel = new ItemsTableModel();
+        itemsTableModel.setInventory(body.getInventory());
+        updateInventoryModel(itemsTableModel);
     }
 
-    public void updateInventoryModel(InventoryViewModel inventoryViewModel) {
-        inventoryModel = inventoryViewModel;
-        table.setModel(inventoryViewModel);
-    }
-
-    public JToolBar generateToolbar(){
-        final JToolBar jToolBar = new JToolBar();
-        final List<JButton> jButtons = inventoryModel.generateToolbar();
-        for (JButton jButton : jButtons) {
-            jToolBar.add(jButton);
-        }
-        return jToolBar;
+    public void updateInventoryModel(ItemsTableModel itemsTableModel) {
+        inventoryModel = itemsTableModel;
+        itemList.setModel(itemsTableModel);
     }
 
     @Override
@@ -114,8 +113,8 @@ public class InventoryPanel extends JPanel implements DefaultKeyListener {
     public synchronized void addKeyListener(KeyListener l) {
         super.addKeyListener(l);
         split.addKeyListener(this);
-        table.addKeyListener(this);
+        itemList.addKeyListener(this);
         craftingPanel.addKeyListener(this);
-        close.addKeyListener(l);
+        closeButton.addKeyListener(l);
     }
 }

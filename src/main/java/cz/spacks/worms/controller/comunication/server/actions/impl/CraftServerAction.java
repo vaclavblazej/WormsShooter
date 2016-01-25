@@ -24,8 +24,8 @@ public class CraftServerAction extends ActionServer {
         Map<Integer, Body> controls = worldService.getWorldModel().getControls();
         Inventory inventory = controls.get(id).getInventory();
         Recipe recipe = worldService.getWorldModel().getFactory().getRecipes().getRecipe(recipeId);
-        inventory.remove(recipe.getIngredients());
-        inventory.add(recipe.getProducts());
+        inventory.removeAll(recipe.getIngredients());
+        inventory.addAll(recipe.getProducts());
         // todo automatic update
         System.out.println("cz.spacks.worms.views craft " + id + " " + recipeId);
     }

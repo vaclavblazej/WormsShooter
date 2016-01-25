@@ -26,9 +26,9 @@ public class CraftAction extends ActionClient {
         Inventory inventory = controls.get(0).getInventory();
         Recipe recipe = worldService.getWorldModel().getFactory().getRecipes().getRecipe(recipeId);
         final List<ItemsCount> ingredients = recipe.getIngredients();
-        if (inventory.contains(ingredients)) {
-            inventory.remove(ingredients);
-            inventory.add(recipe.getProducts());
+        if (inventory.containsAll(ingredients)) {
+            inventory.removeAll(ingredients);
+            inventory.addAll(recipe.getProducts());
         }
         System.out.println("cz.spacks.worms.worldService.server craft " + id + " " + recipeId);
     }
