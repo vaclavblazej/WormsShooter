@@ -39,9 +39,9 @@ public class InventoryPanel extends JPanel implements DefaultKeyListener {
         inventoryModel.setInventory(new Inventory());
         recipeViewModel = new RecipeViewModel();
         itemList = new JTable(inventoryModel) {
-            @Override
-            public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
-                Component c = super.prepareRenderer(renderer, row, column);
+//            @Override
+//            public Component prepareRenderer(TableCellRenderer renderer, int row, int column) {
+//                Component c = super.prepareRenderer(renderer, row, column);
 //                c.setForeground(inventoryModel.getColor(row));
 //                if (inventoryModel.isHeldItem(row)) {
 //                    if (isRowSelected(row)) {
@@ -56,8 +56,8 @@ public class InventoryPanel extends JPanel implements DefaultKeyListener {
 //                        c.setBackground(Color.WHITE);
 //                    }
 //                }
-                return c;
-            }
+//                return c;
+//            }
         };
         split.add(new JScrollPane(itemList), 1);
         craftingPanel = new CraftingPanel();

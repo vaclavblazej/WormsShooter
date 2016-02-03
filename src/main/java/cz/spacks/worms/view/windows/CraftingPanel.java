@@ -52,7 +52,7 @@ public class CraftingPanel extends JPanel implements ListSelectionListener {
         craftButton = new JButton(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                if (inventory.contains(ingredientsModel)) {
+                if (inventory.containsAll(ingredientsModel)) {
                     worldService.craft(selectedRecipeId);
                 }
             }

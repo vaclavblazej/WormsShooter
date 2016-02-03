@@ -1,13 +1,14 @@
 package cz.spacks.worms.view.component;
 
 import cz.spacks.worms.model.objects.Inventory;
+import cz.spacks.worms.model.objects.InventoryListener;
 import cz.spacks.worms.model.objects.ItemsCount;
 import cz.spacks.worms.view.ComponentTableModel;
 
 /**
  *
  */
-public class ItemsTableModel extends ComponentTableModel<ItemsCount> {
+public class ItemsTableModel extends ComponentTableModel<ItemsCount> implements InventoryListener{
 
     public ItemsTableModel() {
         this(new Inventory());
@@ -24,6 +25,7 @@ public class ItemsTableModel extends ComponentTableModel<ItemsCount> {
     }
 
     public void setInventory(Inventory inventory) {
+        inventory.addListener(this);
         this.setComponents(inventory);
     }
 
@@ -36,5 +38,11 @@ public class ItemsTableModel extends ComponentTableModel<ItemsCount> {
                 return itemsCount.count;
         }
         return null;
+    }
+
+    @Override
+    public void dataChanged() {
+        fireTableDataChanged();
+        System.out.println("data changed");
     }
 }
