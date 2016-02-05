@@ -1,6 +1,7 @@
-package cz.spacks.worms.model.objects;
+package cz.spacks.worms.model.map;
 
-import cz.spacks.worms.model.MapModel;
+import cz.spacks.worms.model.map.MapModel;
+import cz.spacks.worms.model.objects.Body;
 import cz.spacks.worms.model.objects.items.ItemFactory;
 
 import java.util.ArrayList;

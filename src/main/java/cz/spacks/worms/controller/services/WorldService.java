@@ -4,6 +4,7 @@ import cz.spacks.worms.controller.comunication.client.actions.impl.CraftAction;
 import cz.spacks.worms.controller.materials.MaterialEnum;
 import cz.spacks.worms.controller.materials.MaterialModel;
 import cz.spacks.worms.controller.properties.CollisionState;
+import cz.spacks.worms.model.map.WorldModel;
 import cz.spacks.worms.model.objects.*;
 import cz.spacks.worms.model.objects.items.ItemEnum;
 import cz.spacks.worms.model.objects.items.itemActions.ItemAction;

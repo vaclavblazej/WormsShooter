@@ -1,22 +1,12 @@
 package cz.spacks.worms.view.views;
 
-import cz.spacks.worms.controller.materials.MaterialModel;
-import cz.spacks.worms.controller.services.SpriteLoader;
-import cz.spacks.worms.controller.services.WorldService;
-import cz.spacks.worms.model.MapModel;
 import cz.spacks.worms.model.objects.Body;
-import cz.spacks.worms.model.objects.Crafting;
-import cz.spacks.worms.model.objects.WorldModel;
-import cz.spacks.worms.model.objects.items.*;
-import cz.spacks.worms.model.objects.items.itemActions.ItemActionMine;
-import cz.spacks.worms.model.objects.items.itemActions.ItemActionShoot;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ComponentEvent;
 import java.awt.event.ComponentListener;
 import java.awt.image.BufferedImage;
-import java.util.HashMap;
 
 /**
  *

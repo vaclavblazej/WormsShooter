@@ -46,7 +46,7 @@ public class Settings implements Serializable {
                 .add(ControlsEnum.INTERACT, KeyCode.F.impl_getCode())
                 .add(ControlsEnum.INVENTORY_TOGGLE, 71)
                 .add(ControlsEnum.MAP_TOGGLE, 77);
-        volume = 86;
+        volume = 40;
         quality = 2;
     }
 

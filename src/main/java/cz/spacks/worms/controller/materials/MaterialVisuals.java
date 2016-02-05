@@ -1,6 +1,6 @@
 package cz.spacks.worms.controller.materials;
 
-import cz.spacks.worms.model.MapModel;
+import cz.spacks.worms.model.map.MapModel;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

@@ -1,6 +1,6 @@
 package cz.spacks.worms.controller.comunication.serialization;
 
-import cz.spacks.worms.model.MapModel;
+import cz.spacks.worms.model.map.MapModel;
 
 /**
  *

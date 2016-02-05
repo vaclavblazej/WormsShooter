@@ -1,9 +1,9 @@
 package cz.spacks.worms.controller.services;
 
 import cz.spacks.worms.controller.materials.MaterialModel;
-import cz.spacks.worms.model.MapModel;
+import cz.spacks.worms.model.map.MapModel;
 import cz.spacks.worms.model.objects.Crafting;
-import cz.spacks.worms.model.objects.WorldModel;
+import cz.spacks.worms.model.map.WorldModel;
 import cz.spacks.worms.model.objects.items.*;
 import cz.spacks.worms.model.objects.items.itemActions.ItemActionMine;
 import cz.spacks.worms.model.objects.items.itemActions.ItemActionShoot;

@@ -12,8 +12,6 @@ import cz.spacks.worms.view.component.ItemsTableModel;
 import cz.spacks.worms.view.defaults.DefaultKeyListener;
 
 import javax.swing.*;
-import javax.swing.table.TableCellRenderer;
-import java.awt.*;
 import java.awt.event.KeyEvent;
 import java.awt.event.KeyListener;
 
@@ -24,7 +22,6 @@ public class InventoryPanel extends JPanel implements DefaultKeyListener {
 
     private JSplitPane split;
     private JTable itemList;
-    final CustomButton closeButton;
     private CraftingPanel craftingPanel;
     private WorldService worldService;
     private Controls controls;
@@ -63,12 +60,6 @@ public class InventoryPanel extends JPanel implements DefaultKeyListener {
         craftingPanel = new CraftingPanel();
         split.add(craftingPanel, 2);
         this.add(split);
-        closeButton = new CustomButton(e -> {
-            this.setVisible(false);
-            focusGrabber.focus();
-        });
-        closeButton.setText("Close");
-        this.add(closeButton);
 
         controls = Settings.getInstance().getControls();
         this.addKeyListener(this);
@@ -115,6 +106,5 @@ public class InventoryPanel extends JPanel implements DefaultKeyListener {
         split.addKeyListener(this);
         itemList.addKeyListener(this);
         craftingPanel.addKeyListener(this);
-        closeButton.addKeyListener(l);
     }
 }

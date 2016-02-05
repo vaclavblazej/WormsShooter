@@ -2,12 +2,11 @@ package cz.spacks.worms.view.views;
 
 import cz.spacks.worms.controller.materials.MaterialEnum;
 import cz.spacks.worms.controller.materials.MaterialModel;
-import cz.spacks.worms.controller.properties.CollisionState;
 import cz.spacks.worms.controller.services.CacheReloader;
 import cz.spacks.worms.controller.services.WorldService;
-import cz.spacks.worms.model.MapModel;
+import cz.spacks.worms.model.map.MapModel;
 import cz.spacks.worms.model.objects.Crafting;
-import cz.spacks.worms.model.objects.WorldModel;
+import cz.spacks.worms.model.map.WorldModel;
 import cz.spacks.worms.model.objects.items.ItemFactory;
 import cz.spacks.worms.view.component.FocusGrabber;
 import cz.spacks.worms.view.defaults.DefaultComponentListener;

@@ -2,7 +2,7 @@ package cz.spacks.worms.controller.materials;
 
 import cz.spacks.worms.controller.properties.CollisionState;
 import cz.spacks.worms.model.objects.ItemsCount;
-import cz.spacks.worms.model.objects.Material;
+import cz.spacks.worms.model.map.Material;
 import cz.spacks.worms.model.objects.items.ItemEnum;
 import cz.spacks.worms.model.objects.items.ItemFactory;
 
@@ -45,13 +45,11 @@ public class MaterialModel {
         addMaterial(MaterialEnum.SAND, "#FFFF00", CollisionState.SOLID, SOLID_LIGHT, sandItems);
     }
 
-    private void addMaterial(MaterialEnum mat, String code,
-                             CollisionState state, int transparency) {
+    private void addMaterial(MaterialEnum mat, String code, CollisionState state, int transparency) {
         addMaterial(mat, code, state, transparency, new ArrayList<>());
     }
 
-    private void addMaterial(MaterialEnum mat, String code,
-                             CollisionState state, int transparency, List<ItemsCount> minedItems) {
+    private void addMaterial(MaterialEnum mat, String code, CollisionState state, int transparency, List<ItemsCount> minedItems) {
         Color color = Color.decode(code);
         material.put(mat, new Material(color, state, transparency, minedItems));
         colors.put(color.getRGB(), mat);

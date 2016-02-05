@@ -1,4 +1,4 @@
-package cz.spacks.worms.model;
+package cz.spacks.worms.model.map;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

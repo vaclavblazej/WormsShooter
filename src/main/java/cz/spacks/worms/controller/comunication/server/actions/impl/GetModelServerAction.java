@@ -2,7 +2,7 @@ package cz.spacks.worms.controller.comunication.server.actions.impl;
 
 import cz.spacks.worms.controller.comunication.serialization.SerializableModel;
 import cz.spacks.worms.controller.comunication.server.actions.ActionServer;
-import cz.spacks.worms.model.objects.WorldModel;
+import cz.spacks.worms.model.map.WorldModel;
 
 /**
  *

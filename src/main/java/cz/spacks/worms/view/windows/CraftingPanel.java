@@ -83,13 +83,14 @@ public class CraftingPanel extends JPanel implements ListSelectionListener {
 
     @Override
     public void valueChanged(ListSelectionEvent e) {
-        craftButton.setEnabled(true);
         ListSelectionModel lsm = (ListSelectionModel) e.getSource();
         //boolean isAdjusting = e.getValueIsAdjusting();
         //int minIndex = lsm.getMinSelectionIndex();
         selectedRecipeId = lsm.getMaxSelectionIndex();
         Recipe recipe = recipesModel.getRecipe(selectedRecipeId);
-        if (recipe != null) {
+        final boolean validRecipe = recipe != null;
+        craftButton.setEnabled(validRecipe);
+        if (validRecipe) {
             ingredientsModel = recipe.getIngredients();
             ingredients.setModel(new ItemsTableModel(ingredientsModel));
             productsModel = recipe.getProducts();
