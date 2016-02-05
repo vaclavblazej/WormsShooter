@@ -1,20 +1,19 @@
 package cz.spacks.worms.view.windows;
 
-import cz.spacks.worms.controller.client.ClientCommunication;
+import cz.spacks.worms.controller.services.WorldService;
+import cz.spacks.worms.model.objects.Crafting;
 import cz.spacks.worms.model.objects.Inventory;
 import cz.spacks.worms.model.objects.ItemsCount;
-import cz.spacks.worms.view.CraftingViewModel;
-import cz.spacks.worms.view.client.ClientView;
-import cz.spacks.worms.controller.client.actions.impl.CraftAction;
-import cz.spacks.worms.model.objects.Crafting;
 import cz.spacks.worms.model.objects.items.Recipe;
-import cz.spacks.worms.view.client.menu.ItemsTableModel;
+import cz.spacks.worms.view.CraftingViewModel;
+import cz.spacks.worms.view.component.ItemsTableModel;
 
 import javax.swing.*;
 import javax.swing.event.ListSelectionEvent;
 import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
+import java.awt.event.KeyListener;
 import java.util.List;
 
 /**
@@ -27,12 +26,15 @@ public class CraftingPanel extends JPanel implements ListSelectionListener {
     private Crafting recipesModel;
     private JScrollPane ingredientsScroll;
     private JTable ingredients;
-    private List<ItemsCount> ingredientsModel;
+    private Inventory ingredientsModel;
     private JScrollPane productsScroll;
     private JTable products;
-    private List<ItemsCount> productsModel;
+    private Inventory productsModel;
     private JButton craftButton;
-    private int lastIndex;
+    private int selectedRecipeId;
+
+    private Inventory inventory;
+    private WorldService worldService;
 
     public CraftingPanel() {
         super();
@@ -50,9 +52,8 @@ public class CraftingPanel extends JPanel implements ListSelectionListener {
         craftButton = new JButton(new AbstractAction() {
             @Override
             public void actionPerformed(ActionEvent e) {
-                Inventory inventory = ClientView.getInstance().getMyViewBody().getInventory();
-                if (inventory.contains(ingredientsModel)) {
-                    ClientCommunication.getInstance().send(new CraftAction(lastIndex));
+                if (inventory.containsAll(ingredientsModel)) {
+                    worldService.craft(selectedRecipeId);
                 }
             }
         });
@@ -72,15 +73,24 @@ public class CraftingPanel extends JPanel implements ListSelectionListener {
         recipes.getSelectionModel().addListSelectionListener(this);
     }
 
+    public void setWorldService(WorldService worldService) {
+        this.worldService = worldService;
+    }
+
+    public void setInventory(Inventory inventory) {
+        this.inventory = inventory;
+    }
+
     @Override
     public void valueChanged(ListSelectionEvent e) {
-        craftButton.setEnabled(true);
         ListSelectionModel lsm = (ListSelectionModel) e.getSource();
         //boolean isAdjusting = e.getValueIsAdjusting();
         //int minIndex = lsm.getMinSelectionIndex();
-        lastIndex = lsm.getMaxSelectionIndex();
-        Recipe recipe = recipesModel.getRecipe(lastIndex);
-        if (recipe != null) {
+        selectedRecipeId = lsm.getMaxSelectionIndex();
+        Recipe recipe = recipesModel.getRecipe(selectedRecipeId);
+        final boolean validRecipe = recipe != null;
+        craftButton.setEnabled(validRecipe);
+        if (validRecipe) {
             ingredientsModel = recipe.getIngredients();
             ingredients.setModel(new ItemsTableModel(ingredientsModel));
             productsModel = recipe.getProducts();
@@ -88,8 +98,20 @@ public class CraftingPanel extends JPanel implements ListSelectionListener {
         }
     }
 
-    public void setRecipesModel(Crafting recipesModel){
+    public void setRecipesModel(Crafting recipesModel) {
         this.recipesModel = recipesModel;
         recipes.setModel(new CraftingViewModel(recipesModel));
+    }
+
+    @Override
+    public synchronized void addKeyListener(KeyListener l) {
+        super.addKeyListener(l);
+        recipesScroll.addKeyListener(l);
+        ingredientsScroll.addKeyListener(l);
+        productsScroll.addKeyListener(l);
+        recipes.addKeyListener(l);
+        ingredients.addKeyListener(l);
+        products.addKeyListener(l);
+        craftButton.addKeyListener(l);
     }
 }

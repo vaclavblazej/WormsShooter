@@ -6,7 +6,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 
-public class ItemsCount{
+public class ItemsCount {
     public ItemBlueprint itemBlueprint;
     public int count;
 
@@ -22,12 +22,12 @@ public class ItemsCount{
             itemsCounts = new ArrayList<>();
         }
 
-        public Builder add(ItemBlueprint itemBlueprint, int count){
+        public Builder add(ItemBlueprint itemBlueprint, int count) {
             itemsCounts.add(new ItemsCount(itemBlueprint, count));
             return this;
         }
 
-        public List<ItemsCount> build(){
+        public List<ItemsCount> build() {
             return itemsCounts;
         }
     }

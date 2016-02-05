@@ -4,12 +4,11 @@ import cz.spacks.worms.model.objects.Crafting;
 import cz.spacks.worms.model.objects.items.Recipe;
 
 import javax.swing.table.AbstractTableModel;
-import java.io.Serializable;
 
 /**
  *
  */
-public class CraftingViewModel extends AbstractTableModel implements Serializable {
+public class CraftingViewModel extends AbstractTableModel {
 
     private String[] columnName = {"Recipes"};
     private Crafting recipes;

@@ -2,37 +2,54 @@ package cz.spacks.worms.model.objects;
 
 
 import java.util.ArrayList;
-import java.util.List;
+import java.util.Collection;
 
 /**
  *
  */
-public class Inventory { // todo consider extends ArrayList<ItemsCount>
+public class Inventory extends ArrayList<ItemsCount>{
 
-    private List<ItemsCount> components;
+    private ArrayList<InventoryListener> listeners;
 
     public Inventory() {
-        components = new ArrayList<>();
+        this.listeners = new ArrayList<>();
     }
 
-    public void add(List<ItemsCount> addedComponents) {
-        components.addAll(addedComponents);
+    public void addListener(InventoryListener listener){
+        listeners.add(listener);
     }
 
-    public void remove(List<ItemsCount> addedComponents) {
-        components.removeAll(addedComponents);
-        // todo notify listeners
+    public void dataChanged(){
+        for (InventoryListener listener : listeners) {
+            listener.dataChanged();
+        }
     }
 
-    public void setComponents(List<ItemsCount> components) {
-        this.components = components;
+    @Override
+    public ItemsCount remove(int index) {
+        final ItemsCount remove = super.remove(index);
+        dataChanged();
+        return remove;
     }
 
-    public List<ItemsCount> getComponents() {
-        return components;
+    @Override
+    public boolean add(ItemsCount itemsCount) {
+        final boolean add = super.add(itemsCount);
+        dataChanged();
+        return add;
     }
 
-    public boolean contains(List<ItemsCount> ingredientsModel) {
-        return components.containsAll(ingredientsModel);
+    @Override
+    public boolean addAll(Collection<? extends ItemsCount> c) {
+        final boolean b = super.addAll(c);
+        dataChanged();
+        return b;
+    }
+
+    @Override
+    public boolean removeAll(Collection<?> c) {
+        final boolean b = super.removeAll(c);
+        dataChanged();
+        return b;
     }
 }

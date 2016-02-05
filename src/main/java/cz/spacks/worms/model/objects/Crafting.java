@@ -8,19 +8,16 @@ import java.util.List;
 /**
  *
  */
-public class Crafting extends ArrayList<Recipe>{
+public class Crafting extends ArrayList<Recipe> {
 
-    private List<Recipe> recipes;
-
-    public Crafting() {
-        this.recipes = new ArrayList<>();
-    }
+    public static Recipe NULL = new Recipe("");
 
     public void addRecipe(Recipe receipe) {
-        recipes.add(receipe);
+        add(receipe);
     }
 
     public Recipe getRecipe(int index) {
-        return recipes.get(index);
+        if (index == -1) return NULL;
+        return get(index);
     }
 }

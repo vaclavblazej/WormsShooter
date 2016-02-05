@@ -1,29 +1,33 @@
 package cz.spacks.worms.view.windows;
 
-import cz.spacks.worms.view.client.ChatLog;
-import cz.spacks.worms.controller.client.ClientCommunicationInternet;
-import cz.spacks.worms.controller.client.ClientCommunicationLocal;
-import cz.spacks.worms.view.client.ClientView;
-import cz.spacks.worms.view.client.menu.GameWindowItemBar;
-import cz.spacks.worms.controller.Settings;
 import com.intellij.uiDesigner.core.GridConstraints;
 import com.intellij.uiDesigner.core.GridLayoutManager;
 import com.intellij.uiDesigner.core.Spacer;
 import cz.spacks.worms.Application;
-import cz.spacks.worms.controller.server.ServerCommunicationInternet;
-import cz.spacks.worms.controller.server.ServerCommunicationLocal;
-import cz.spacks.worms.controller.BindableButton;
-import cz.spacks.worms.controller.Controls;
-import cz.spacks.worms.controller.ControlsEnum;
-import cz.spacks.worms.controller.communication.RegistrationForm;
+import cz.spacks.worms.controller.Settings;
+import cz.spacks.worms.controller.comunication.client.ClientCommunicationInternet;
+import cz.spacks.worms.controller.comunication.client.actions.ActionClient;
+import cz.spacks.worms.controller.comunication.server.ServerCommunicationInternet;
+import cz.spacks.worms.controller.properties.ControlsEnum;
 import cz.spacks.worms.controller.properties.Paths;
+import cz.spacks.worms.controller.services.DefaultWorldSetting;
+import cz.spacks.worms.controller.services.WorldService;
+import cz.spacks.worms.model.Controls;
+import cz.spacks.worms.model.communication.RegistrationForm;
+import cz.spacks.worms.model.objects.Body;
+import cz.spacks.worms.view.BindableButton;
+import cz.spacks.worms.view.component.ChatLogPanel;
+import cz.spacks.worms.view.views.ClientView;
 
 import javax.swing.*;
 import java.awt.*;
+import java.io.BufferedReader;
 import java.io.IOException;
+import java.io.InputStreamReader;
 import java.net.URL;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Map;
 
 /**
  * Custom menu class for a project.
@@ -86,7 +90,7 @@ public class MainFrame extends JFrame {
     private JPanel statusBar;
 
     private JLabel versionNumberLabel;
-    // cz.spacks.worms.client card
+    // cz.spacks.worms.views card
     private JPanel clientCard;
     private JPanel messagePanel;
     private JPanel chatPanel;
@@ -95,15 +99,23 @@ public class MainFrame extends JFrame {
     private JPanel minimapPanel;
     private JPanel inventoryPanel;
     private JToolBar itemToolbar;
+    private JButton getMyIpButton;
+    private JLabel myIpLabel;
+    private JButton exitToMenuButton;
 
 
     CardLayout mainCardLayout;
     CardLayout menuCardLayout;
 
     List<BindableButton> bindableButtons;
+    private ClientView clientView;
+    private ChatLogPanel chatLog;
+    private ChatInputPanel chatPanelInstance;
+    private InventoryPanel inventoryPanelInst;
+
 
     public MainFrame() {
-        super("Test window");
+        super("WormsShooter");
         mainFrame = this;
 
         $$$setupUI$$$();
@@ -124,8 +136,7 @@ public class MainFrame extends JFrame {
         pack();
         setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
         setVisible(true);
-        setMinimumSize(new Dimension(800, 600));
-        setLocationRelativeTo(null);
+        setMinimumSize(new Dimension(1200, 800));
 
         // todo set inactive when this window is inactive
 
@@ -133,9 +144,11 @@ public class MainFrame extends JFrame {
         menuCardLayout = (CardLayout) menuCards.getLayout();
         versionNumberLabel.setText(Application.version);
 
-        mainFrame.addComponentListener(ClientView.getInstance());
+        mainFrame.addComponentListener((ClientView) clientCard);
 
         for (BindableButton button : bindableButtons) button.refreshText();
+
+        showOnScreen(1, this);
     }
 
     /**
@@ -157,19 +170,21 @@ public class MainFrame extends JFrame {
 
         // cz.spacks.worms.main menu
         singleplayerButton = new CustomSoundButton(e -> {
-            new ServerFrame();
-            try {
-                new ServerCommunicationLocal();
-                SwingUtilities.invokeLater(() -> {
-                    ClientCommunicationLocal clientCommunicationLocal = new ClientCommunicationLocal();
-                    clientCommunicationLocal.init(new RegistrationForm("Alpha"));
-                    joinProgressBar.setValue(joinProgressBar.getMaximum());
-                    mainCardLayout.show(rootPanel, "clientCard");
-                    clientCard.requestFocusInWindow();
-                });
-            } catch (IOException e1) {
-                e1.printStackTrace();
-            }
+            final WorldService worldService = new DefaultWorldSetting().getDefaultWorldService();
+            worldService.startTick();
+
+            ActionClient.setWorldService(worldService);
+
+            SwingUtilities.invokeLater(() -> {
+                clientView.setWorldService(worldService);
+                clientView.setWorldModel(worldService.getWorldModel());
+                mainCardLayout.show(rootPanel, "clientCard");
+                clientCard.requestFocusInWindow();
+                chatLog.setChatLog(clientView.getWorldService().getChatLog());
+                final Map<Integer, Body> controls = worldService.getWorldModel().getControls();
+                controls.put(0, worldService.newBody());
+                clientView.setMyView(controls.get(0));
+            });
         });
         multiplayerButton = new CustomSoundButton(e -> menuCardLayout.show(menuCards, "multiplayerCard"));
         settingsButton = new CustomSoundButton(e -> menuCardLayout.show(menuCards, "settingsCard"));
@@ -182,7 +197,11 @@ public class MainFrame extends JFrame {
         backSettingsButton = new CustomSoundButton(e -> menuCardLayout.show(menuCards, "mainMenuCard"));
 
         // multiplayer
-        joinMultiplayerButton = new CustomSoundButton(e -> menuCardLayout.show(menuCards, "joinMultiplayerCard"));
+        joinMultiplayerButton = new CustomSoundButton(e -> {
+            menuCardLayout.show(menuCards, "joinMultiplayerCard");
+            joinProgressBar.setValue(joinProgressBar.getMinimum());
+            joinProgressBar.setForeground(Color.green);
+        });
         hostMultiplayerButton = new CustomSoundButton(e -> menuCardLayout.show(menuCards, "hostMultiplayerCard"));
         backMultiplayerButton = new CustomSoundButton(e -> menuCardLayout.show(menuCards, "mainMenuCard"));
 
@@ -192,10 +211,18 @@ public class MainFrame extends JFrame {
             final int port = Integer.parseInt(joinPortTextField.getText());
             final RegistrationForm form = new RegistrationForm("Beta");
             ClientCommunicationInternet clientCommunicationInternet = new ClientCommunicationInternet();
-            clientCommunicationInternet.init(address, port, form);
-            joinProgressBar.setValue(joinProgressBar.getMaximum());
-            mainCardLayout.show(rootPanel, "clientCard");
-            clientCard.requestFocusInWindow();
+            final boolean initSuccesfull = clientCommunicationInternet.init(address, port, form);
+            if (initSuccesfull) {
+                // todo revisit
+//                clientView.setClientCommunication(clientCommunicationInternet);
+                joinProgressBar.setValue(joinProgressBar.getMaximum());
+                mainCardLayout.show(rootPanel, "clientCard");
+                clientCard.requestFocusInWindow();
+                chatPanelInstance.setClientCommunication(clientCommunicationInternet);
+            } else {
+                joinProgressBar.setValue(joinProgressBar.getMaximum());
+                joinProgressBar.setForeground(Color.red);
+            }
         });
         backJoinButton = new CustomSoundButton(e -> menuCardLayout.show(menuCards, "multiplayerCard"));
 
@@ -243,23 +270,57 @@ public class MainFrame extends JFrame {
             menuCardLayout.show(menuCards, "settingsCard");
         });
 
-        // cz.spacks.worms.client card
-        final ClientView clientView = ClientView.getInstance();
+        clientView = new ClientView();
         clientCard = clientView;
         minimapPanel = clientView.getMinimapView();
-        inventoryPanel = clientView.getInventory();
-        chatPanel = ChatLog.getInstance();
+        inventoryPanelInst = clientView.getInventory();
+        inventoryPanel = inventoryPanelInst;
+        chatLog = new ChatLogPanel();
+        chatPanel = chatLog;
         chatPanel.setBackground(new Color(100, 100, 255, 10));
 
-        ChatLog.getInstance().log("Hello world!");
-
-        final ChatInputPanel chatPanelInstance = ChatInputPanel.getInstance();
+        chatPanelInstance = new ChatInputPanel();
+        chatPanelInstance.setFocusGrabber(clientView);
+        clientView.setChatFocusGrabber(chatPanelInstance);
         messagePanel = chatPanelInstance;
         messageTextField = chatPanelInstance.getField();
         messageSendButton = chatPanelInstance.getButton();
 
-        itemToolbar = GameWindowItemBar.getInstance();
+        itemToolbar = new JToolBar();
+
+        getMyIpButton = new CustomButton(e -> {
+            getMyIpButton.setEnabled(false);
+            SwingUtilities.invokeLater(() -> {
+                try {
+                    // todo change to my stacked action
+                    myIpLabel.setText("Getting your IP address");
+                    URL whatIsMyIp = new URL("http://checkip.amazonaws.com");
+                    BufferedReader in = new BufferedReader(new InputStreamReader(whatIsMyIp.openStream()));
+                    String myIp = in.readLine();
+                    myIpLabel.setText(myIp);
+                } catch (IOException e1) {
+                    e1.printStackTrace();
+                }
+//                getMyIpButton.setEnabled(true);
+            });
+        });
+
+        exitToMenuButton = new CustomButton(e -> mainCardLayout.show(rootPanel, "menuCard"));
     }
+
+
+    public static void showOnScreen(int screen, JFrame frame) {
+        GraphicsEnvironment ge = GraphicsEnvironment.getLocalGraphicsEnvironment();
+        GraphicsDevice[] gd = ge.getScreenDevices();
+        if (screen > -1 && screen < gd.length) {
+            frame.setLocation(gd[screen].getDefaultConfiguration().getBounds().x, frame.getY());
+        } else if (gd.length > 0) {
+            frame.setLocation(gd[0].getDefaultConfiguration().getBounds().x, frame.getY());
+        } else {
+            throw new RuntimeException("No Screens Found");
+        }
+    }
+
 
     /**
      * Method generated by IntelliJ IDEA GUI Designer
@@ -450,7 +511,7 @@ public class MainFrame extends JFrame {
         hostMultiplayerCard.setOpaque(false);
         menuCards.add(hostMultiplayerCard, "hostMultiplayerCard");
         final JPanel panel3 = new JPanel();
-        panel3.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
+        panel3.setLayout(new GridLayoutManager(2, 3, new Insets(0, 0, 0, 0), -1, -1));
         hostMultiplayerCard.add(panel3, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         final JLabel label3 = new JLabel();
         label3.setText("Port:");
@@ -461,7 +522,14 @@ public class MainFrame extends JFrame {
         final Spacer spacer7 = new Spacer();
         panel3.add(spacer7, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
         final Spacer spacer8 = new Spacer();
-        hostMultiplayerCard.add(spacer8, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        panel3.add(spacer8, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+        myIpLabel = new JLabel();
+        myIpLabel.setText("");
+        panel3.add(myIpLabel, new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        getMyIpButton.setText("GetMyIp");
+        panel3.add(getMyIpButton, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        final Spacer spacer9 = new Spacer();
+        hostMultiplayerCard.add(spacer9, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         hostHostButton.setBorderPainted(false);
         hostHostButton.setContentAreaFilled(false);
         hostHostButton.setFont(new Font(hostHostButton.getFont().getName(), hostHostButton.getFont().getStyle(), 26));
@@ -489,8 +557,8 @@ public class MainFrame extends JFrame {
         label4.setFont(new Font(label4.getFont().getName(), label4.getFont().getStyle(), 36));
         label4.setText("Video settings");
         videoSettingsCard.add(label4, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final Spacer spacer9 = new Spacer();
-        videoSettingsCard.add(spacer9, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        final Spacer spacer10 = new Spacer();
+        videoSettingsCard.add(spacer10, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         audioSettingsCard = new JPanel();
         audioSettingsCard.setLayout(new GridLayoutManager(6, 2, new Insets(0, 0, 0, 0), -1, -1));
         audioSettingsCard.setOpaque(false);
@@ -504,9 +572,9 @@ public class MainFrame extends JFrame {
         backAudioSettingsButton.setHideActionText(false);
         backAudioSettingsButton.setText("Back");
         audioSettingsCard.add(backAudioSettingsButton, new GridConstraints(5, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final Spacer spacer10 = new Spacer();
-        audioSettingsCard.add(spacer10, new GridConstraints(3, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
-        soundSlider.setValue(80);
+        final Spacer spacer11 = new Spacer();
+        audioSettingsCard.add(spacer11, new GridConstraints(3, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        soundSlider.setValue(75);
         audioSettingsCard.add(soundSlider, new GridConstraints(1, 1, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         soundAudioSettingSlider = new JLabel();
         soundAudioSettingSlider.setText("Sound");
@@ -543,8 +611,8 @@ public class MainFrame extends JFrame {
         applyKeysSettingsButton.setHideActionText(false);
         applyKeysSettingsButton.setText("Apply");
         keysSettingsCard.add(applyKeysSettingsButton, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final Spacer spacer11 = new Spacer();
-        keysSettingsCard.add(spacer11, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        final Spacer spacer12 = new Spacer();
+        keysSettingsCard.add(spacer12, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         final JLabel label6 = new JLabel();
         label6.setFont(new Font(label6.getFont().getName(), label6.getFont().getStyle(), 36));
         label6.setText("Keys");
@@ -555,46 +623,48 @@ public class MainFrame extends JFrame {
         statusBar.setLayout(new GridLayoutManager(1, 3, new Insets(0, 0, 0, 0), -1, -1));
         statusBar.setOpaque(false);
         margin.add(statusBar, new GridConstraints(3, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        final Spacer spacer12 = new Spacer();
-        statusBar.add(spacer12, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+        final Spacer spacer13 = new Spacer();
+        statusBar.add(spacer13, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
         final JLabel label7 = new JLabel();
         label7.setText("Some more info");
         statusBar.add(label7, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         versionNumberLabel = new JLabel();
         versionNumberLabel.setText("version number");
         statusBar.add(versionNumberLabel, new GridConstraints(0, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_NONE, GridConstraints.SIZEPOLICY_FIXED, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
-        final Spacer spacer13 = new Spacer();
-        margin.add(spacer13, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         final Spacer spacer14 = new Spacer();
-        margin.add(spacer14, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        margin.add(spacer14, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         final Spacer spacer15 = new Spacer();
-        margin.add(spacer15, new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+        margin.add(spacer15, new GridConstraints(0, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         final Spacer spacer16 = new Spacer();
-        margin.add(spacer16, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+        margin.add(spacer16, new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+        final Spacer spacer17 = new Spacer();
+        margin.add(spacer17, new GridConstraints(1, 0, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
         clientCard.setLayout(new GridLayoutManager(4, 3, new Insets(0, 0, 0, 0), -1, -1));
         clientCard.setEnabled(true);
         rootPanel.add(clientCard, "clientCard");
-        messagePanel.setLayout(new GridLayoutManager(3, 2, new Insets(0, 0, 0, 0), -1, -1));
+        messagePanel.setLayout(new GridLayoutManager(4, 2, new Insets(0, 0, 0, 0), -1, -1));
         messagePanel.setOpaque(false);
         clientCard.add(messagePanel, new GridConstraints(0, 0, 3, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, new Dimension(165, 91), null, 0, false));
         messageTextField.setFocusable(true);
         messageTextField.setOpaque(false);
-        messagePanel.add(messageTextField, new GridConstraints(2, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
+        messagePanel.add(messageTextField, new GridConstraints(3, 0, 1, 1, GridConstraints.ANCHOR_WEST, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(150, -1), null, 0, false));
         messageSendButton.setFocusable(false);
         messageSendButton.setOpaque(false);
         messageSendButton.setText("Send");
-        messagePanel.add(messageSendButton, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
+        messagePanel.add(messageSendButton, new GridConstraints(3, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         chatPanel.setOpaque(true);
-        messagePanel.add(chatPanel, new GridConstraints(1, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        final Spacer spacer17 = new Spacer();
-        messagePanel.add(spacer17, new GridConstraints(0, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        messagePanel.add(chatPanel, new GridConstraints(2, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
+        final Spacer spacer18 = new Spacer();
+        messagePanel.add(spacer18, new GridConstraints(1, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        exitToMenuButton.setText("Exit to menu");
+        messagePanel.add(exitToMenuButton, new GridConstraints(0, 0, 1, 2, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_FIXED, null, null, null, 0, false));
         minimapPanel.setFocusable(false);
         minimapPanel.setOpaque(false);
         clientCard.add(minimapPanel, new GridConstraints(2, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
-        final Spacer spacer18 = new Spacer();
-        clientCard.add(spacer18, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
         final Spacer spacer19 = new Spacer();
-        clientCard.add(spacer19, new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
+        clientCard.add(spacer19, new GridConstraints(2, 1, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, 1, null, null, null, 0, false));
+        final Spacer spacer20 = new Spacer();
+        clientCard.add(spacer20, new GridConstraints(1, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_VERTICAL, 1, GridConstraints.SIZEPOLICY_WANT_GROW, null, null, null, 0, false));
         clientCard.add(inventoryPanel, new GridConstraints(0, 2, 1, 1, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_BOTH, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, GridConstraints.SIZEPOLICY_CAN_SHRINK | GridConstraints.SIZEPOLICY_CAN_GROW, null, null, null, 0, false));
         clientCard.add(itemToolbar, new GridConstraints(3, 0, 1, 3, GridConstraints.ANCHOR_CENTER, GridConstraints.FILL_HORIZONTAL, GridConstraints.SIZEPOLICY_WANT_GROW, GridConstraints.SIZEPOLICY_FIXED, null, new Dimension(-1, 20), null, 0, false));
     }

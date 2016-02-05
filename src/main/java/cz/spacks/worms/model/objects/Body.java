@@ -1,11 +1,9 @@
 package cz.spacks.worms.model.objects;
 
 import cz.spacks.worms.controller.Settings;
+import cz.spacks.worms.controller.properties.CollisionState;
+import cz.spacks.worms.controller.services.WorldService;
 import cz.spacks.worms.model.objects.items.ItemBlueprint;
-import cz.spacks.worms.controller.AbstractView;
-import cz.spacks.worms.controller.CollisionState;
-import cz.spacks.worms.controller.SendableVia;
-import cz.spacks.worms.controller.communication.SerializableBody;
 
 import java.awt.*;
 import java.awt.geom.AffineTransform;
@@ -14,7 +12,7 @@ import java.awt.geom.Point2D;
 /**
  *
  */
-public class Body implements GraphicComponent, SendableVia<Body, SerializableBody> {
+public class Body implements GraphicComponent {
 
     private static final double JUMP_FORCE = 24;
     private static final double GRAVITY_FORCE = 4;
@@ -29,7 +27,6 @@ public class Body implements GraphicComponent, SendableVia<Body, SerializableBod
     private Dimension viewSize;
     private Dimension bodyBlockSize;
     private boolean jump;
-    private AbstractView view;
     private Inventory inventory;
     private CollisionState state;
     private CollisionState leftVerticalCollision;
@@ -40,8 +37,8 @@ public class Body implements GraphicComponent, SendableVia<Body, SerializableBod
     private int health;
     private ItemBlueprint heldItem;
 
-    public Body(){
-        this(new Point(0, 0), new Point2D.Double(0, 0), MoveEnum.HSTOP, MoveEnum.VSTOP, new Dimension(), false, null);
+    public Body() {
+        this(new Point(0, 0), new Point2D.Double(0, 0), MoveEnum.HSTOP, MoveEnum.VSTOP, new Dimension(), false);
     }
 
     public Body(Point position,
@@ -49,8 +46,7 @@ public class Body implements GraphicComponent, SendableVia<Body, SerializableBod
                 MoveEnum horizontalMovement,
                 MoveEnum verticalMovement,
                 Dimension bodyBlockSize,
-                boolean jump,
-                AbstractView view) {
+                boolean jump) {
         this.position = position;
         this.velocity = velocity;
         this.horizontalMovement = horizontalMovement;
@@ -60,14 +56,13 @@ public class Body implements GraphicComponent, SendableVia<Body, SerializableBod
         int ratio = Settings.RATIO;
         this.viewSize = new Dimension(bodyBlockSize.width * ratio, bodyBlockSize.height * ratio);
         this.jump = jump;
-        this.view = view;
         this.inventory = new Inventory();
         this.alive = false;
         this.heldItem = null;
     }
 
-    public Body(int x, int y, AbstractView map) {
-        this(new Point(x, y), new Point.Double(0, 0), MoveEnum.HSTOP, MoveEnum.VSTOP, new Dimension(1, 2), false, map);
+    public Body(int x, int y) {
+        this(new Point(x, y), new Point.Double(0, 0), MoveEnum.HSTOP, MoveEnum.VSTOP, new Dimension(1, 2), false);
     }
 
     public Inventory getInventory() {
@@ -86,14 +81,30 @@ public class Body implements GraphicComponent, SendableVia<Body, SerializableBod
         return velocity;
     }
 
+    public MoveEnum getHorizontalMovement() {
+        return horizontalMovement;
+    }
+
+    public MoveEnum getVerticalMovement() {
+        return verticalMovement;
+    }
+
+    public Dimension getBodyBlockSize() {
+        return bodyBlockSize;
+    }
+
+    public boolean getJump() {
+        return jump;
+    }
+
     public void setVelocity(Point.Double point) {
         this.velocity.x = point.x;
         this.velocity.y = point.y;
     }
 
     @Override
-    public void tick() {
-        state = view.check(position.x / Settings.BLOCK_SIZE, (position.y + physicsSize.height) / Settings.BLOCK_SIZE);
+    public void tick(WorldService worldService) {
+        state = worldService.getState(position.x / Settings.BLOCK_SIZE, (position.y + physicsSize.height) / Settings.BLOCK_SIZE);
         int speed;
         switch (state) {
             case GAS:
@@ -119,7 +130,7 @@ public class Body implements GraphicComponent, SendableVia<Body, SerializableBod
                 velocity.x = Math.signum(velocity.x) * Math.max(Math.abs(velocity.x) - 1, 0) / 2;
                 break;
         }
-        switch (state){
+        switch (state) {
             case LIQUID:
                 switch (verticalMovement) {
                     case UP:
@@ -142,8 +153,8 @@ public class Body implements GraphicComponent, SendableVia<Body, SerializableBod
         if (velocity.x >= 0) {
             while (slide < velocity.x) {
                 int x = (position.x + physicsSize.width + slide) / Settings.BLOCK_SIZE;
-                topSideCollision = view.check(x, top);
-                bottomSideCollision = view.check(x, bottom);
+                topSideCollision = worldService.getState(x, top);
+                bottomSideCollision = worldService.getState(x, bottom);
                 if (topSideCollision == CollisionState.SOLID || bottomSideCollision == CollisionState.SOLID) {
                     velocity.x = 0;
                     break;
@@ -153,8 +164,8 @@ public class Body implements GraphicComponent, SendableVia<Body, SerializableBod
         } else {
             while (slide > velocity.x) {
                 int x = (position.x - 1 + slide) / Settings.BLOCK_SIZE;
-                topSideCollision = view.check(x, top);
-                bottomSideCollision = view.check(x, bottom);
+                topSideCollision = worldService.getState(x, top);
+                bottomSideCollision = worldService.getState(x, bottom);
                 if (topSideCollision == CollisionState.SOLID || bottomSideCollision == CollisionState.SOLID) {
                     velocity.x = 0;
                     break;
@@ -171,8 +182,8 @@ public class Body implements GraphicComponent, SendableVia<Body, SerializableBod
         if (velocity.y >= 0) {
             while (fall < velocity.y) {
                 int y = (position.y + physicsSize.height + fall) / Settings.BLOCK_SIZE;
-                leftVerticalCollision = view.check(left, y);
-                rightVerticalCollision = view.check(right, y);
+                leftVerticalCollision = worldService.getState(left, y);
+                rightVerticalCollision = worldService.getState(right, y);
                 if (leftVerticalCollision == CollisionState.SOLID || rightVerticalCollision == CollisionState.SOLID) {
                     velocity.y = 0;
                     jump = true;
@@ -183,8 +194,8 @@ public class Body implements GraphicComponent, SendableVia<Body, SerializableBod
         } else {
             while (fall > velocity.y) {
                 int y = (position.y - 1 + fall) / Settings.BLOCK_SIZE;
-                leftVerticalCollision = view.check(left, y);
-                rightVerticalCollision = view.check(right, y);
+                leftVerticalCollision = worldService.getState(left, y);
+                rightVerticalCollision = worldService.getState(right, y);
                 if (leftVerticalCollision == CollisionState.SOLID || rightVerticalCollision == CollisionState.SOLID) {
                     velocity.y = 0;
                     break;
@@ -263,11 +274,6 @@ public class Body implements GraphicComponent, SendableVia<Body, SerializableBod
 //        int x = (position.x + physicsSize.width) / Application.BLOCK_SIZE;
 
 //        g.drawImage(frame.getFrame(), null, null);
-    }
-
-    @Override
-    public SerializableBody serialize() {
-        return new SerializableBody(position, velocity, horizontalMovement, verticalMovement, bodyBlockSize, jump);
     }
 
     public ItemBlueprint getHeldItem() {

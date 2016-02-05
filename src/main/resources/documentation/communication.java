@@ -1,18 +1,18 @@
-import cz.spacks.worms.controller.client.ClientCommunication;
-import cz.spacks.worms.controller.server.ServerCommunication;
-import cz.spacks.worms.controller.client.actions.impl.*;
+import cz.spacks.worms.controller.comunication.client.ClientCommunication;
+import cz.spacks.worms.controller.comunication.server.ServerCommunication;
+import cz.spacks.worms.controller.comunication.client.actions.impl.*;
 import spacks.communication.SCommunication;
 import spacks.communication.client.SCommunicationClient;
 import spacks.communication.server.SCommunicationServer;
 import spacks.communication.utilities.SAction;
-import cz.spacks.worms.controller.communication.RegistrationForm;
+import cz.spacks.worms.model.communication.RegistrationForm;
 
 class ConnectionEstablishing {
     {
         // common
         String address = "localhost";
         int port = 4242;
-        // cz.spacks.worms.view.server
+        // cz.spacks.worms.worldService.server
         new ServerCommunication(port);
         SCommunicationServer server = SCommunication.createNewServer(port, this);
         server.start();
@@ -34,7 +34,7 @@ class Documentation {
         client.send(ConnectAction);
         server.send(SetIdNewPlayerServerAction);
         server.send(GetModelServerAction);
-//        cz.spacks.worms.view.server.broadcast(ConnectServerAction);
+//        cz.spacks.worms.worldService.server.broadcast(ConnectServerAction);
 
         // craft
         client.send(CraftAction);

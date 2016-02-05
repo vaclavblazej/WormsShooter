@@ -1,5 +1,8 @@
 package cz.spacks.worms.controller;
 
+import cz.spacks.worms.controller.properties.ControlsEnum;
+import cz.spacks.worms.controller.services.FileManager;
+import cz.spacks.worms.model.Controls;
 import javafx.scene.input.KeyCode;
 
 import java.io.Serializable;
@@ -9,7 +12,7 @@ import java.io.Serializable;
  */
 public class Settings implements Serializable {
 
-    public static final int RATIO = 20; // todo should define zoom in views
+    public static final int RATIO = 32; // todo should define zoom in views
     public static final int BLOCK_SIZE = 32;
 
     private static Settings instance;
@@ -43,7 +46,7 @@ public class Settings implements Serializable {
                 .add(ControlsEnum.INTERACT, KeyCode.F.impl_getCode())
                 .add(ControlsEnum.INVENTORY_TOGGLE, 71)
                 .add(ControlsEnum.MAP_TOGGLE, 77);
-        volume = 86;
+        volume = 40;
         quality = 2;
     }
 
