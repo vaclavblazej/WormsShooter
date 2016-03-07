@@ -4,10 +4,12 @@ import cz.spacks.worms.controller.materials.MaterialEnum;
 import cz.spacks.worms.controller.materials.MaterialModel;
 import cz.spacks.worms.controller.services.CacheReloader;
 import cz.spacks.worms.controller.services.WorldService;
+import cz.spacks.worms.model.map.Chunk;
 import cz.spacks.worms.model.map.MapModel;
 import cz.spacks.worms.model.objects.Crafting;
 import cz.spacks.worms.model.map.WorldModel;
 import cz.spacks.worms.model.objects.items.ItemFactory;
+import cz.spacks.worms.view.MapViewModel;
 import cz.spacks.worms.view.component.FocusGrabber;
 import cz.spacks.worms.view.defaults.DefaultComponentListener;
 
@@ -27,6 +29,7 @@ public abstract class AbstractView extends JPanel implements
 
     protected WorldService worldService;
     protected WorldModel worldModelCache; // from worldModel
+    protected MapViewModel mapViewModel; // from worldModel
     protected MaterialModel materialModelCache; // from worldService
     protected MapModel mapModelCache; // from worldModel
 
@@ -35,6 +38,7 @@ public abstract class AbstractView extends JPanel implements
      */
     public AbstractView() {
         random = new Random();
+        mapViewModel = new MapViewModel();
     }
 
     public WorldModel getModel() {
@@ -53,6 +57,7 @@ public abstract class AbstractView extends JPanel implements
 
     public void setWorldModel(WorldModel worldModel) {
         worldService.setWorldModel(worldModel);
+        worldService.getWorldModel().getMap().addListener(mapViewModel);
         worldModelCache = worldService.getWorldModel();
     }
 
@@ -69,9 +74,10 @@ public abstract class AbstractView extends JPanel implements
     }
 
     public MaterialEnum change(int x, int y, MaterialEnum mat) {
-        Graphics g = worldModelCache.getMap().getGraphics();
-        MaterialEnum ret = materialModelCache.getMaterial(worldModelCache.getMap().getRGB(x, y));
-        g.setColor(getMaterialModel().getColor(mat));
+        Graphics g = mapViewModel.getGraphics();
+        final Chunk chunk = worldModelCache.getMap().getChunk(new Point(x, y));
+        MaterialEnum ret = materialModelCache.getMaterial(chunk);
+        g.setColor(materialModelCache.getColor(mat));
         g.drawLine(x, y, x, y);
         return ret;
     }

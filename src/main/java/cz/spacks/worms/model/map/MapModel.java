@@ -1,7 +1,14 @@
 package cz.spacks.worms.model.map;
 
+import cz.spacks.worms.controller.materials.MaterialEnum;
+import cz.spacks.worms.controller.materials.MaterialModel;
+import cz.spacks.worms.model.structures.Map2D;
+
 import java.awt.*;
 import java.awt.image.BufferedImage;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.logging.Level;
 import java.util.logging.Logger;
 
 /**
@@ -11,76 +18,76 @@ public class MapModel {
 
     private static final Logger logger = Logger.getLogger(MapModel.class.getName());
 
-    private BufferedImage map;
+    private Map2D<Chunk> map;
+    private Dimension dimensions;
 
-    public MapModel(BufferedImage map) {
-        this.map = toCompatibleImage(map);
+    private List<MapModelListener> listeners;
+
+    public MapModel(Dimension dimension) {
+        this.map = new Map2D<>();
+        this.dimensions = dimension;
+        this.listeners = new ArrayList<>();
     }
 
-    public int getWidth() {
-        return map.getWidth();
+    public MapModel(Dimension dimension, MaterialModel materialModel) {
+        this.map = new Map2D<>();
+        this.dimensions = dimension;
+//        for (int i = 0; i < dimension.width; i++) {
+//            for (int j = 0; j < dimension.height; j++) {
+//                final ArrayList<MaterialAmount> materialAmounts = new ArrayList<>();
+//                materialAmounts.add(new MaterialAmount(materialModel.getMaterial(MaterialEnum.AIR), 1));
+//                map.put(i, j, new Chunk(materialAmounts));
+//            }
+//        }
+        this.listeners = new ArrayList<>();
+
     }
 
-    public int getHeight() {
-        return map.getHeight();
+    public MapModel(Dimension dimension, Map2D<Chunk> map) {
+        this.map = map;
+        this.dimensions = dimension;
+        this.listeners = new ArrayList<>();
     }
 
-    public Graphics getGraphics() {
-        return map.getGraphics();
-    }
-
-    public Integer getRGB(int x, int y) {
-        try {
-            return map.getRGB(x, y);
-        } catch (ArrayIndexOutOfBoundsException ex) {
-            return 0;
+    public void addChunk(Chunk chunk, Point position) {
+        if (position.x >= 0 && position.x < dimensions.width && position.y >= 0 && position.y < dimensions.height) {
+            map.put(position.x, position.y, chunk);
+        } else {
+            logger.log(Level.SEVERE, "Tried to put chunk "
+                    + chunk.toString()
+                    + " on position "
+                    + position.toString()
+                    + ", but position must be between 0 and "
+                    + dimensions.toString());
         }
     }
 
-    public MapModel getSubmap(Point offset, Dimension size) throws ArrayIndexOutOfBoundsException {
-        final int width = map.getWidth();
-        final int height = map.getHeight();
-        if (offset.x < 0)
-            throw new ArrayIndexOutOfBoundsException("You tried to get subimage with left x index = " + offset.x);
-        if (offset.y < 0)
-            throw new ArrayIndexOutOfBoundsException("You tried to get subimage with top y index = " + offset.y);
-        if (offset.x + size.width > width)
-            throw new ArrayIndexOutOfBoundsException("You tried to get subimage with right x index = " + (offset.x + size.width));
-        if (offset.y + size.height > height)
-            throw new ArrayIndexOutOfBoundsException("You tried to get subimage with bottom y index = " + (offset.y + size.height));
-        final BufferedImage subimage = map.getSubimage(offset.x, offset.y, size.width, size.height);
-        return new MapModel(subimage);
-    }
-
-    public BufferedImage getImage() {
+    public Map2D<Chunk> getMap() {
         return map;
     }
 
-    /**
-     * http://stackoverflow.com/questions/196890/java2d-performance-issues
-     */
-    private BufferedImage toCompatibleImage(BufferedImage image) {
-        // obtain the current system graphical settings
-        GraphicsConfiguration gfx_config = GraphicsEnvironment.
-                getLocalGraphicsEnvironment().getDefaultScreenDevice().
-                getDefaultConfiguration();
+    public Chunk getChunk(Point position) {
+        final Chunk chunk = map.get(position.x, position.y);
+        if (chunk == null) {
+            logger.log(Level.SEVERE, "Tried to get chunk from position "
+                    + position.toString()
+                    + ", but position must be between 0 and "
+                    + dimensions.toString());
+            return Chunk.NULL;
+        }
+        return chunk;
+    }
 
-        // if image is already compatible and optimized for current system settings, simply return it
-        if (image.getColorModel().equals(gfx_config.getColorModel()))
-            return image;
+    public Dimension getDimensions() {
+        return dimensions;
+    }
 
-        // image is not optimized, so create a new image that is
-        BufferedImage new_image = gfx_config.createCompatibleImage(
-                image.getWidth(), image.getHeight(), image.getTransparency());
+    public void addListener(MapModelListener listener) {
+        listeners.add(listener);
+        listener.setModel(this);
+    }
 
-        // get the graphics context of the new image to draw the old image on
-        Graphics2D g2d = (Graphics2D) new_image.getGraphics();
-
-        // actually draw the image and dispose of context no longer needed
-        g2d.drawImage(image, 0, 0, null);
-        g2d.dispose();
-
-        // return the new optimized image
-        return new_image;
+    public void removeListener(MapModelListener listener) {
+        listeners.remove(listener);
     }
 }

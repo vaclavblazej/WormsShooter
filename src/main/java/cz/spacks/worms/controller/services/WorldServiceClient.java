@@ -56,13 +56,13 @@ public class WorldServiceClient implements ActionListener {
         return materialModel;
     }
 
-    public CollisionState getState(int x, int y) {
-        return materialModel.getState(getPixel(x, y));
-    }
+//    public CollisionState getState(int x, int y) {
+//        return materialModel.getState(getPixel(x, y));
+//    }
 
-    public Color getPixel(int x, int y) {
-        return new Color(worldModel.getMap().getRGB(x, y));
-    }
+//    public Color getPixel(int x, int y) {
+//        return new Color(worldModel.getMap().getRGB(x, y));
+//    }
 
     @Override
     public void actionPerformed(ActionEvent e) {
@@ -81,12 +81,12 @@ public class WorldServiceClient implements ActionListener {
         worldModel.getBodies().remove(body);
     }
 
-    public MaterialEnum change(int x, int y, MaterialEnum material) {
-        Color color = materialModel.getColor(material);
-        MaterialEnum removedMaterial = materialModel.getMaterial(color.getRGB());
-        worldModel.getMap().getImage().setRGB(x, y, color.getRGB());
-        return removedMaterial;
-    }
+//    public MaterialEnum change(int x, int y, MaterialEnum material) {
+//        Color color = materialModel.getColor(material);
+//        MaterialEnum removedMaterial = materialModel.getMaterial(color.getRGB());
+//        worldModel.getMap().getImage().setRGB(x, y, color.getRGB());
+//        return removedMaterial;
+//    }
 
     public void addCacheReloader(CacheReloader cacheReloader) {
         cacheReloaderList.add(cacheReloader);

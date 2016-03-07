@@ -24,7 +24,7 @@ public class ServerView extends AbstractView implements ComponentListener {
     public void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
         Graphics2D g = (Graphics2D) graphics;
-        final BufferedImage image = mapModelCache.getImage();
+        final BufferedImage image = mapViewModel.getImage();
         final BufferedImage glass = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
         final Graphics2D imgGraphics = (Graphics2D) glass.getGraphics();
         for (Body b : worldModelCache.getBodies()) b.draw(imgGraphics);

@@ -2,8 +2,6 @@ package cz.spacks.worms.controller.comunication.client.actions.impl;
 
 import cz.spacks.worms.controller.Settings;
 import cz.spacks.worms.controller.comunication.client.actions.ActionClient;
-import cz.spacks.worms.controller.comunication.server.actions.impl.MineServerAction;
-import cz.spacks.worms.controller.comunication.server.actions.impl.ObtainServerAction;
 import cz.spacks.worms.controller.materials.MaterialEnum;
 import cz.spacks.worms.model.objects.Body;
 
@@ -30,8 +28,9 @@ public class MineAction extends ActionClient {
                 + Math.abs(pos.y / Settings.BLOCK_SIZE - y);
         if (distance < 6) {
             MaterialEnum to = MaterialEnum.AIR;
-            MaterialEnum mat = worldService.change(x, y, to);
-            body.getInventory().addAll(worldService.getMaterialModel().getComponents(mat));
+//            MaterialEnum mat = worldService.change(x, y, to); todo
+//            body.getInventory().addAll(worldService.getMaterialModel().getComponents(mat)); todo
+
 //            serverCommunication.broadcast(new ObtainServerAction(id, mat));
 //            serverCommunication.broadcast(new MineServerAction(new Point(x, y), to));
         }

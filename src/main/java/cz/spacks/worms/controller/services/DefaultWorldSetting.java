@@ -1,24 +1,39 @@
 package cz.spacks.worms.controller.services;
 
 import cz.spacks.worms.controller.materials.MaterialModel;
-import cz.spacks.worms.model.map.MapModel;
+import cz.spacks.worms.model.map.*;
 import cz.spacks.worms.model.objects.Crafting;
-import cz.spacks.worms.model.map.WorldModel;
 import cz.spacks.worms.model.objects.items.*;
 import cz.spacks.worms.model.objects.items.itemActions.ItemActionMine;
 import cz.spacks.worms.model.objects.items.itemActions.ItemActionShoot;
 
+import java.awt.*;
+import java.awt.image.BufferedImage;
+import java.util.ArrayList;
 import java.util.HashMap;
 
 public class DefaultWorldSetting {
 
     public WorldService getDefaultWorldService() {
-        SpriteLoader.loadSprite("Map");
-        SpriteLoader.set(150, 100);
-
-        MapModel mapModel = new MapModel(SpriteLoader.getSprite().getFrame());
         ItemFactory items = createItems();
         MaterialModel materialModel = new MaterialModel(items);
+
+        final Dimension dimension = new Dimension(150, 100);
+        MapModel mapModel = new MapModel(dimension, materialModel);
+        SpriteLoader.loadSprite("Map");
+        SpriteLoader.set(dimension.width, dimension.height);
+        final BufferedImage frame = SpriteLoader.getSprite().getFrame();
+        for (int y = 0; y < frame.getHeight(); y++) {
+            for (int x = 0; x < frame.getWidth(); x++) {
+                final Color color = new Color(frame.getRGB(x, y));
+                final Material material = materialModel.getMaterial(color);
+                final ArrayList<MaterialAmount> materials = new ArrayList<>();
+                materials.add(new MaterialAmount(material, 1));
+                mapModel.addChunk(new Chunk(materials), new Point(x, y));
+                System.out.println(x + ' ' + y + "    " + color.toString());
+            }
+        }
+
         WorldModel worldModel = new WorldModel(mapModel, new HashMap<>(), items);
         WorldService worldService = new WorldService(worldModel, materialModel);
 

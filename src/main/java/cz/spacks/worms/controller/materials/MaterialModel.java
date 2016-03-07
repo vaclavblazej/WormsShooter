@@ -1,6 +1,8 @@
 package cz.spacks.worms.controller.materials;
 
 import cz.spacks.worms.controller.properties.CollisionState;
+import cz.spacks.worms.model.map.Chunk;
+import cz.spacks.worms.model.map.MaterialAmount;
 import cz.spacks.worms.model.objects.ItemsCount;
 import cz.spacks.worms.model.map.Material;
 import cz.spacks.worms.model.objects.items.ItemEnum;
@@ -51,7 +53,7 @@ public class MaterialModel {
 
     private void addMaterial(MaterialEnum mat, String code, CollisionState state, int transparency, List<ItemsCount> minedItems) {
         Color color = Color.decode(code);
-        material.put(mat, new Material(color, state, transparency, minedItems));
+        material.put(mat, new Material(mat, color, state, transparency, minedItems));
         colors.put(color.getRGB(), mat);
     }
 
@@ -69,12 +71,29 @@ public class MaterialModel {
         return 0;
     }
 
-    public MaterialEnum getMaterial(Integer i) {
-        return colors.get(i);
+    // todo should return complex material view
+    public MaterialEnum getMaterial(Chunk chunk) {
+        final List<MaterialAmount> materials = chunk.getMaterials();
+        MaterialEnum materialEnum = MaterialEnum.AIR;
+        for (MaterialAmount materialAmount : materials) {
+            // todo make composite materials
+            final Color color = materialAmount.getMaterial().color;
+            materialEnum = colors.get(color);
+        }
+        return materialEnum;
+    }
+
+    public Material getMaterial(MaterialEnum materialEnum) {
+        return material.get(materialEnum);
     }
 
     public CollisionState getState(Color color) {
         return getState(colors.get(color.getRGB()));
+    }
+
+    public Material getMaterial(Color color) {
+        final MaterialEnum materialEnum = colors.get(color.getRGB());
+        return getMaterial(materialEnum);
     }
 
     public CollisionState getState(MaterialEnum mat) {

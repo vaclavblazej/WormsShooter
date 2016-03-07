@@ -19,6 +19,6 @@ public class MineServerAction extends ActionServer {
 
     @Override
     public void perform() {
-        worldService.change(p.x, p.y, material);
+//        worldService.change(p.x, p.y, material); todo
     }
 }

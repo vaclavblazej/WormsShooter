@@ -116,13 +116,13 @@ public class ClientView extends AbstractView implements
             viewRealPos.y = bodyPosition.y - panelViewDimensions.height / 2;
 
             // map edges
-            int maxX = mapModelCache.getWidth() * Settings.BLOCK_SIZE - panelViewDimensions.width - 1;
+            int maxX = mapModelCache.getDimensions().width * Settings.BLOCK_SIZE - panelViewDimensions.width - 1;
             if (viewRealPos.x < 0) {
                 viewRealPos.x = 0;
             } else if (viewRealPos.x > maxX) {
                 viewRealPos.x = maxX;
             }
-            int maxY = mapModelCache.getHeight() * Settings.BLOCK_SIZE - panelViewDimensions.height - 1;
+            int maxY = mapModelCache.getDimensions().height * Settings.BLOCK_SIZE - panelViewDimensions.height - 1;
             if (viewRealPos.y < 0) {
                 viewRealPos.y = 0;
             } else if (viewRealPos.y > maxY) {
@@ -146,7 +146,7 @@ public class ClientView extends AbstractView implements
 
             // print to screen
             try {
-                MapModel currentView = mapModelCache.getSubmap(viewTileStartPos, tileViewDimensions);
+                BufferedImage currentView = mapViewModel.getSubimage(viewTileStartPos, tileViewDimensions);
                 materialVisuals.redraw(currentView, rasteredView);
             } catch (RasterFormatException | ArrayIndexOutOfBoundsException ex) {
                 logger.log(Level.SEVERE, null, ex);

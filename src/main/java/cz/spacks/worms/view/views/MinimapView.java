@@ -27,7 +27,7 @@ public class MinimapView extends AbstractView implements DefaultComponentListene
         final AlphaComposite alphaComposite = AlphaComposite.getInstance(compositeRule, alphaValue);
 
         Graphics2D g = (Graphics2D) graphics;
-        final BufferedImage mapImage = worldModelCache.getMap().getImage();
+        final BufferedImage mapImage = mapViewModel.getImage();
         final BufferedImage glass = new BufferedImage(mapImage.getWidth(), mapImage.getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
         final Graphics2D imgGraphics = (Graphics2D) glass.getGraphics();
         for (Body b : worldModelCache.getBodies()) b.draw(imgGraphics);

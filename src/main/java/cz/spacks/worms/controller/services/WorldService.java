@@ -1,20 +1,23 @@
 package cz.spacks.worms.controller.services;
 
 import cz.spacks.worms.controller.comunication.client.actions.impl.CraftAction;
-import cz.spacks.worms.controller.materials.MaterialEnum;
 import cz.spacks.worms.controller.materials.MaterialModel;
 import cz.spacks.worms.controller.properties.CollisionState;
+import cz.spacks.worms.model.ChatLog;
 import cz.spacks.worms.model.map.WorldModel;
-import cz.spacks.worms.model.objects.*;
+import cz.spacks.worms.model.objects.Body;
+import cz.spacks.worms.model.objects.Inventory;
+import cz.spacks.worms.model.objects.ItemsCount;
+import cz.spacks.worms.model.objects.MoveEnum;
 import cz.spacks.worms.model.objects.items.ItemEnum;
 import cz.spacks.worms.model.objects.items.itemActions.ItemAction;
-import cz.spacks.worms.model.ChatLog;
 
 import javax.swing.*;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.List;
 
 public class WorldService implements ActionListener {
 
@@ -23,7 +26,7 @@ public class WorldService implements ActionListener {
     private Timer tickTimer = new Timer(40, this);
     private ChatLog chatLog;
 
-    private java.util.List<CacheReloader> cacheReloaderList = new ArrayList<>();
+    private List<CacheReloader> cacheReloaderList = new ArrayList<>();
 
     public WorldService() {
     }
@@ -64,7 +67,8 @@ public class WorldService implements ActionListener {
     }
 
     public Color getPixel(int x, int y) {
-        return new Color(worldModel.getMap().getRGB(x, y));
+        // todo make more sane
+        return new Color(worldModel.getMap().getChunk(new Point(x, y)).getMaterials().get(0).getMaterial().color.getRGB());
     }
 
     @Override
@@ -88,12 +92,13 @@ public class WorldService implements ActionListener {
         worldModel.getBodies().remove(body);
     }
 
-    public MaterialEnum change(int x, int y, MaterialEnum material) {
-        Color color = materialModel.getColor(material);
-        MaterialEnum removedMaterial = materialModel.getMaterial(color.getRGB());
-        worldModel.getMap().getImage().setRGB(x, y, color.getRGB());
-        return removedMaterial;
-    }
+//    todo
+//    public MaterialEnum change(int x, int y, MaterialEnum material) {
+//        Color color = materialModel.getColor(material);
+//        MaterialEnum removedMaterial = materialModel.getMaterial(color.getRGB());
+//        worldModel.getMap().getImage().setRGB(x, y, color.getRGB());
+//        return removedMaterial;
+//    }
 
     public void addCacheReloader(CacheReloader cacheReloader) {
         cacheReloaderList.add(cacheReloader);
@@ -128,7 +133,7 @@ public class WorldService implements ActionListener {
         craftAction.perform();
     }
 
-    public void craft(int recipeId){
+    public void craft(int recipeId) {
         action(new CraftAction(recipeId));
     }
 }
