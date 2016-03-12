@@ -1,10 +1,8 @@
 package cz.spacks.worms.model.objects;
 
-import cz.spacks.worms.controller.Settings;
 import cz.spacks.worms.model.objects.items.ItemBlueprint;
 
 import java.awt.*;
-import java.awt.geom.AffineTransform;
 import java.awt.geom.Point2D;
 
 /**
@@ -62,5 +60,9 @@ public class Body {
 
     public ItemBlueprint getHeldItem() {
         return heldItem;
+    }
+
+    public void setHeldItem(ItemBlueprint heldItem) {
+        this.heldItem = heldItem;
     }
 }

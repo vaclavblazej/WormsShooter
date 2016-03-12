@@ -60,4 +60,7 @@ public abstract class ComponentTableModel<Elem> extends AbstractTableModel {
         return columnNames[column];
     }
 
+    public Elem getComponentAtRow(int row){
+        return components.get(row);
+    }
 }
