@@ -1,11 +1,8 @@
 package cz.spacks.worms.model.map;
 
-import cz.spacks.worms.controller.materials.MaterialEnum;
-import cz.spacks.worms.controller.materials.MaterialModel;
 import cz.spacks.worms.model.structures.Map2D;
 
 import java.awt.*;
-import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.logging.Level;
@@ -27,20 +24,6 @@ public class MapModel {
         this.map = new Map2D<>();
         this.dimensions = dimension;
         this.listeners = new ArrayList<>();
-    }
-
-    public MapModel(Dimension dimension, MaterialModel materialModel) {
-        this.map = new Map2D<>();
-        this.dimensions = dimension;
-//        for (int i = 0; i < dimension.width; i++) {
-//            for (int j = 0; j < dimension.height; j++) {
-//                final ArrayList<MaterialAmount> materialAmounts = new ArrayList<>();
-//                materialAmounts.add(new MaterialAmount(materialModel.getMaterial(MaterialEnum.AIR), 1));
-//                map.put(i, j, new Chunk(materialAmounts));
-//            }
-//        }
-        this.listeners = new ArrayList<>();
-
     }
 
     public MapModel(Dimension dimension, Map2D<Chunk> map) {

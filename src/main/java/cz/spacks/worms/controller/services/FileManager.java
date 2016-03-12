@@ -11,6 +11,7 @@ import java.util.logging.Logger;
  */
 public class FileManager {
 
+    @SuppressWarnings("unchecked")
     public static <T> T load(String name) {
         try {
             File f = new File(name);

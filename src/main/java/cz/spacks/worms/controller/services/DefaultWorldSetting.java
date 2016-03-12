@@ -19,7 +19,7 @@ public class DefaultWorldSetting {
         MaterialModel materialModel = new MaterialModel(items);
 
         final Dimension dimension = new Dimension(150, 100);
-        MapModel mapModel = new MapModel(dimension, materialModel);
+        MapModel mapModel = new MapModel(dimension);
         SpriteLoader.loadSprite("Map");
         SpriteLoader.set(dimension.width, dimension.height);
         final BufferedImage frame = SpriteLoader.getSprite().getFrame();
@@ -30,7 +30,6 @@ public class DefaultWorldSetting {
                 final ArrayList<MaterialAmount> materials = new ArrayList<>();
                 materials.add(new MaterialAmount(material, 1));
                 mapModel.addChunk(new Chunk(materials), new Point(x, y));
-                System.out.println(x + ' ' + y + "    " + color.toString());
             }
         }
 

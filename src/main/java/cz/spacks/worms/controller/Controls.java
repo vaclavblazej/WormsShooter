@@ -1,4 +1,4 @@
-package cz.spacks.worms.model;
+package cz.spacks.worms.controller;
 
 import cz.spacks.worms.controller.properties.ControlsEnum;
 
@@ -16,8 +16,8 @@ public class Controls implements Serializable {
 
     public Controls() {
         if (keys == null) {
-            keys = new HashMap<>(10);
-            actions = new HashMap<>(10);
+            keys = new HashMap<>();
+            actions = new HashMap<>();
         }
     }
 

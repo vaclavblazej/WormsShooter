@@ -2,7 +2,6 @@ package cz.spacks.worms.controller;
 
 import cz.spacks.worms.controller.properties.ControlsEnum;
 import cz.spacks.worms.controller.services.FileManager;
-import cz.spacks.worms.model.Controls;
 import javafx.scene.input.KeyCode;
 
 import java.io.Serializable;

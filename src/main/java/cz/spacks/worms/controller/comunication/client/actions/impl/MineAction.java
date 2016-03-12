@@ -2,6 +2,7 @@ package cz.spacks.worms.controller.comunication.client.actions.impl;
 
 import cz.spacks.worms.controller.Settings;
 import cz.spacks.worms.controller.comunication.client.actions.ActionClient;
+import cz.spacks.worms.controller.events.impl.RemoveChunkEvent;
 import cz.spacks.worms.controller.materials.MaterialEnum;
 import cz.spacks.worms.model.objects.Body;
 
@@ -27,7 +28,9 @@ public class MineAction extends ActionClient {
         int distance = Math.abs(pos.x / Settings.BLOCK_SIZE - x)
                 + Math.abs(pos.y / Settings.BLOCK_SIZE - y);
         if (distance < 6) {
+            System.out.println("hello MINING");
             MaterialEnum to = MaterialEnum.AIR;
+            worldService.addEvent(new RemoveChunkEvent(new Point(x, y)));
 //            MaterialEnum mat = worldService.change(x, y, to); todo
 //            body.getInventory().addAll(worldService.getMaterialModel().getComponents(mat)); todo
 

@@ -1,6 +1,7 @@
 package cz.spacks.worms.view.views;
 
-import cz.spacks.worms.model.objects.Body;
+import cz.spacks.worms.controller.services.controls.BodyControl;
+import cz.spacks.worms.controller.services.controls.BodyView;
 
 import javax.swing.*;
 import java.awt.*;
@@ -27,7 +28,9 @@ public class ServerView extends AbstractView implements ComponentListener {
         final BufferedImage image = mapViewModel.getImage();
         final BufferedImage glass = new BufferedImage(image.getWidth(), image.getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
         final Graphics2D imgGraphics = (Graphics2D) glass.getGraphics();
-        for (Body b : worldModelCache.getBodies()) b.draw(imgGraphics);
+        for (BodyView bodyView : bodyViews) {
+            bodyView.draw(imgGraphics);
+        }
         final Graphics raster = rasteredView.getGraphics();
         raster.drawImage(image, 0, 0, image.getWidth(), image.getHeight(), null);
         raster.drawImage(glass, 0, 0, glass.getWidth(), glass.getHeight(), null);

@@ -1,8 +1,10 @@
 package cz.spacks.worms.controller.services;
 
 import cz.spacks.worms.controller.comunication.client.actions.impl.CraftAction;
+import cz.spacks.worms.controller.events.WorldEvent;
 import cz.spacks.worms.controller.materials.MaterialModel;
 import cz.spacks.worms.controller.properties.CollisionState;
+import cz.spacks.worms.controller.services.controls.BodyControl;
 import cz.spacks.worms.model.ChatLog;
 import cz.spacks.worms.model.map.WorldModel;
 import cz.spacks.worms.model.objects.Body;
@@ -17,6 +19,7 @@ import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Iterator;
 import java.util.List;
 
 public class WorldService implements ActionListener {
@@ -25,8 +28,10 @@ public class WorldService implements ActionListener {
     private MaterialModel materialModel = MaterialModel.NULL;
     private Timer tickTimer = new Timer(40, this);
     private ChatLog chatLog;
+    private List<BodyControl> bodyControls = new ArrayList<>();
 
     private List<CacheReloader> cacheReloaderList = new ArrayList<>();
+    private List<WorldServiceListener> listeners = new ArrayList<>();
 
     public WorldService() {
     }
@@ -36,6 +41,10 @@ public class WorldService implements ActionListener {
         this.materialModel = materialModel;
         notifyCacheRealoaders();
         chatLog = new ChatLog();
+    }
+
+    public void addEvent(WorldEvent worldEvent) {
+        worldModel.addEvent(worldEvent);
     }
 
     public void startTick() {
@@ -73,26 +82,46 @@ public class WorldService implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        for (Body b : worldModel.getBodies()) {
-            b.tick(this);
+        for (BodyControl bodyControl : bodyControls) {
+            bodyControl.tick(this);
         }
     }
 
     public Body newBody() {
-        Body b = new Body(2000, 1600);
-        worldModel.getBodies().add(b);
-        final Inventory inventory = b.getInventory();
+        Body body = new Body(2000, 1600);
+        bodyControls.add(new BodyControl(body));
+        final Inventory inventory = body.getInventory();
         final ArrayList<ItemsCount> addedComponents = new ArrayList<>();
         addedComponents.add(new ItemsCount(worldModel.getFactory().getBlueprint(ItemEnum.SHOVEL), 2));
         inventory.addAll(addedComponents);
-        return b;
+        for (WorldServiceListener listener : listeners) {
+            listener.addedBody(body);
+        }
+        return body;
     }
 
     public void removeBody(Body body) {
-        worldModel.getBodies().remove(body);
+        // todo remove control, but not the body
+        for (WorldServiceListener listener : listeners) {
+            listener.removedBody(body);
+        }
+        final Iterator<BodyControl> iterator = bodyControls.iterator();
+        while (iterator.hasNext()) {
+            final BodyControl bodyControl = iterator.next();
+            if (bodyControl.getBody().equals(body)) {
+                iterator.remove();
+            }
+        }
     }
 
-//    todo
+    public void addListener(WorldServiceListener listener) {
+        listeners.add(listener);
+    }
+
+    public List<BodyControl> getBodyControls() {
+        return bodyControls;
+    }
+    //    todo
 //    public MaterialEnum change(int x, int y, MaterialEnum material) {
 //        Color color = materialModel.getColor(material);
 //        MaterialEnum removedMaterial = materialModel.getMaterial(color.getRGB());
@@ -119,9 +148,9 @@ public class WorldService implements ActionListener {
     }
 
     public void move(MoveEnum action) {
-        Body body = worldModel.getControls().get(0);
-        if (body != null) {
-            body.control(action);
+        final BodyControl bodyControl = bodyControls.get(0);
+        if (bodyControl != null) {
+            bodyControl.control(action);
         }
     }
 

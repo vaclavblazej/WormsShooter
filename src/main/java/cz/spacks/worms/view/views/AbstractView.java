@@ -4,10 +4,13 @@ import cz.spacks.worms.controller.materials.MaterialEnum;
 import cz.spacks.worms.controller.materials.MaterialModel;
 import cz.spacks.worms.controller.services.CacheReloader;
 import cz.spacks.worms.controller.services.WorldService;
+import cz.spacks.worms.controller.services.WorldServiceListener;
+import cz.spacks.worms.controller.services.controls.BodyView;
 import cz.spacks.worms.model.map.Chunk;
 import cz.spacks.worms.model.map.MapModel;
-import cz.spacks.worms.model.objects.Crafting;
 import cz.spacks.worms.model.map.WorldModel;
+import cz.spacks.worms.model.objects.Body;
+import cz.spacks.worms.model.objects.Crafting;
 import cz.spacks.worms.model.objects.items.ItemFactory;
 import cz.spacks.worms.view.MapViewModel;
 import cz.spacks.worms.view.component.FocusGrabber;
@@ -15,23 +18,29 @@ import cz.spacks.worms.view.defaults.DefaultComponentListener;
 
 import javax.swing.*;
 import java.awt.*;
+import java.awt.event.ComponentEvent;
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Random;
 
 /**
  * Represents general worldService on the scene.
  */
 public abstract class AbstractView extends JPanel implements
+        WorldServiceListener,
         DefaultComponentListener,
         FocusGrabber,
-        CacheReloader {
+        CacheReloader{
 
     protected Random random;
 
     protected WorldService worldService;
-    protected WorldModel worldModelCache; // from worldModel
-    protected MapViewModel mapViewModel; // from worldModel
+    protected MapViewModel mapViewModel;
+    protected WorldModel worldModelCache; // from worldService
     protected MaterialModel materialModelCache; // from worldService
     protected MapModel mapModelCache; // from worldModel
+
+    protected List<BodyView> bodyViews = new ArrayList<>();
 
     /**
      * Creates worldService and calls reset method which is obligatory to implement.
@@ -59,6 +68,18 @@ public abstract class AbstractView extends JPanel implements
         worldService.setWorldModel(worldModel);
         worldService.getWorldModel().getMap().addListener(mapViewModel);
         worldModelCache = worldService.getWorldModel();
+        worldService.addListener(this);
+    }
+
+    @Override
+    public void addedBody(Body body) {
+        addBodyView(new BodyView(body));
+    }
+
+    @Override
+    public void removedBody(Body body) {
+        // todo proper bodyView disposal
+        System.out.println("Would remove body " + body.toString());
     }
 
     public MaterialModel getMaterialModel() {
@@ -84,6 +105,14 @@ public abstract class AbstractView extends JPanel implements
 
     public Color getPixel(int x, int y) {
         return worldService.getPixel(x, y);
+    }
+
+    public List<BodyView> getBodyViews() {
+        return bodyViews;
+    }
+
+    public void addBodyView(BodyView bodyView) {
+        bodyViews.add(bodyView);
     }
 
     public void focus() {

@@ -1,26 +1,25 @@
 package cz.spacks.worms.controller.services;
 
-import cz.spacks.worms.controller.materials.MaterialEnum;
 import cz.spacks.worms.controller.materials.MaterialModel;
-import cz.spacks.worms.controller.properties.CollisionState;
-import cz.spacks.worms.model.objects.Body;
+import cz.spacks.worms.controller.services.controls.BodyControl;
 import cz.spacks.worms.model.map.WorldModel;
-import cz.spacks.worms.model.ChatLog;
+import cz.spacks.worms.model.objects.Body;
 
 import javax.swing.*;
-import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
 import java.util.ArrayList;
+import java.util.Iterator;
+import java.util.List;
 
 public class WorldServiceClient implements ActionListener {
 
     private WorldModel worldModel;
     private MaterialModel materialModel = MaterialModel.NULL;
     private Timer tickTimer = new Timer(40, this);
-    private ChatLog chatLog;
+    private List<BodyControl> bodyControls = new ArrayList<>();
 
-    private java.util.List<CacheReloader> cacheReloaderList = new ArrayList<>();
+    private List<CacheReloader> cacheReloaderList = new ArrayList<>();
 
     public WorldServiceClient() {
     }
@@ -29,7 +28,6 @@ public class WorldServiceClient implements ActionListener {
         this.worldModel = worldModel;
         this.materialModel = materialModel;
         notifyCacheRealoaders();
-        chatLog = new ChatLog();
     }
 
     public void startTick() {
@@ -66,27 +64,23 @@ public class WorldServiceClient implements ActionListener {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        for (Body b : worldModel.getBodies()) {
-//            b.tick(this);
-        }
     }
 
     public Body newBody() {
         Body b = new Body(2000, 1600);
-        worldModel.getBodies().add(b);
+        bodyControls.add(new BodyControl(b));
         return b;
     }
 
     public void removeBody(Body body) {
-        worldModel.getBodies().remove(body);
+        final Iterator<BodyControl> iterator = bodyControls.iterator();
+        while (iterator.hasNext()) {
+            final BodyControl bodyControl = iterator.next();
+            if (bodyControl.getBody().equals(body)) {
+                iterator.remove();
+            }
+        }
     }
-
-//    public MaterialEnum change(int x, int y, MaterialEnum material) {
-//        Color color = materialModel.getColor(material);
-//        MaterialEnum removedMaterial = materialModel.getMaterial(color.getRGB());
-//        worldModel.getMap().getImage().setRGB(x, y, color.getRGB());
-//        return removedMaterial;
-//    }
 
     public void addCacheReloader(CacheReloader cacheReloader) {
         cacheReloaderList.add(cacheReloader);
@@ -96,13 +90,5 @@ public class WorldServiceClient implements ActionListener {
         for (CacheReloader cacheReloader : cacheReloaderList) {
             cacheReloader.reloadCache();
         }
-    }
-
-    public void logChat(String log) {
-        chatLog.log(log);
-    }
-
-    public ChatLog getChatLog() {
-        return chatLog;
     }
 }

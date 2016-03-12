@@ -1,14 +1,14 @@
 package cz.spacks.worms.view.views;
 
+import cz.spacks.worms.controller.Controls;
 import cz.spacks.worms.controller.Settings;
 import cz.spacks.worms.controller.materials.MaterialVisuals;
 import cz.spacks.worms.controller.properties.ControlsEnum;
 import cz.spacks.worms.controller.services.WorldService;
-import cz.spacks.worms.model.Controls;
-import cz.spacks.worms.model.map.MapModel;
+import cz.spacks.worms.controller.services.controls.BodyView;
+import cz.spacks.worms.model.map.WorldModel;
 import cz.spacks.worms.model.objects.Body;
 import cz.spacks.worms.model.objects.MoveEnum;
-import cz.spacks.worms.model.map.WorldModel;
 import cz.spacks.worms.model.objects.items.ItemBlueprint;
 import cz.spacks.worms.model.objects.items.itemActions.ItemAction;
 import cz.spacks.worms.view.component.FocusGrabber;
@@ -154,8 +154,9 @@ public class ClientView extends AbstractView implements
             Graphics2D g = (Graphics2D) graphics;
             transformation.setToTranslation(-viewRealPos.x + smoothOffset.x, -viewRealPos.y + smoothOffset.y);
             final Graphics rasteredViewGraphics = rasteredView.getGraphics();
-            for (Body body : worldModelCache.getBodies())
-                body.drawRelative((Graphics2D) rasteredViewGraphics, transformation);
+            for (BodyView bodyView : bodyViews) {
+                bodyView.drawRelative((Graphics2D) rasteredViewGraphics, transformation);
+            }
             g.drawImage(rasteredView, -smoothOffset.x, -smoothOffset.y, rasteredView.getWidth(), rasteredView.getHeight(), null);
 
 //            final BufferedImage image = map.getImage();

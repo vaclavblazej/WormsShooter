@@ -1,7 +1,8 @@
 package cz.spacks.worms.view.views;
 
 import cz.spacks.worms.controller.services.WorldService;
-import cz.spacks.worms.model.objects.Body;
+import cz.spacks.worms.controller.services.controls.BodyControl;
+import cz.spacks.worms.controller.services.controls.BodyView;
 import cz.spacks.worms.view.defaults.DefaultComponentListener;
 
 import java.awt.*;
@@ -30,7 +31,9 @@ public class MinimapView extends AbstractView implements DefaultComponentListene
         final BufferedImage mapImage = mapViewModel.getImage();
         final BufferedImage glass = new BufferedImage(mapImage.getWidth(), mapImage.getHeight(), BufferedImage.TYPE_4BYTE_ABGR);
         final Graphics2D imgGraphics = (Graphics2D) glass.getGraphics();
-        for (Body b : worldModelCache.getBodies()) b.draw(imgGraphics);
+        for (BodyView bodyView : bodyViews) {
+            bodyView.draw(imgGraphics);
+        }
         g.setComposite(alphaComposite);
         g.drawImage(mapImage, 0, 0, getWidth(), getHeight(), null);
         g.drawImage(glass, 0, 0, getWidth(), getHeight(), null);

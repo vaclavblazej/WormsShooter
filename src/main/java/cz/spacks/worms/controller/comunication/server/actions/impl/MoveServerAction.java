@@ -1,6 +1,7 @@
 package cz.spacks.worms.controller.comunication.server.actions.impl;
 
 import cz.spacks.worms.controller.comunication.server.actions.ActionServer;
+import cz.spacks.worms.controller.services.controls.BodyControl;
 import cz.spacks.worms.model.objects.Body;
 import cz.spacks.worms.model.objects.MoveEnum;
 
@@ -28,11 +29,12 @@ public class MoveServerAction extends ActionServer {
 
     @Override
     public void perform() {
-        Body body = worldService.getWorldModel().getControls().get(id);
-        if (body != null) {
+        final BodyControl control = worldService.getBodyControls().get(id);
+        if (control != null) {
+            final Body body = control.getBody();
             body.setPosition(new Point(positionX, positionY));
             body.setVelocity(new Point.Double(velocityX, velocityY));
-            body.control(action);
+            control.control(action);
         }
     }
 }

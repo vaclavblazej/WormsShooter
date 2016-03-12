@@ -12,7 +12,7 @@ import cz.spacks.worms.controller.properties.ControlsEnum;
 import cz.spacks.worms.controller.properties.Paths;
 import cz.spacks.worms.controller.services.DefaultWorldSetting;
 import cz.spacks.worms.controller.services.WorldService;
-import cz.spacks.worms.model.Controls;
+import cz.spacks.worms.controller.Controls;
 import cz.spacks.worms.model.communication.RegistrationForm;
 import cz.spacks.worms.model.objects.Body;
 import cz.spacks.worms.view.BindableButton;
