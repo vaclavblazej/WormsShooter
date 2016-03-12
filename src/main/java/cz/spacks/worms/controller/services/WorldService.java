@@ -155,7 +155,7 @@ public class WorldService implements ActionListener {
     }
 
     public void itemAction(ItemAction action, Point p) {
-        action.action(p).perform();
+        action.action(p);
     }
 
     public void action(CraftAction craftAction) {

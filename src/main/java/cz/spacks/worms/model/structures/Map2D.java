@@ -31,4 +31,16 @@ public class Map2D<E> implements Serializable {
         return (ires == null) ? null : ires.get(y);
     }
 
+    public E remove(int x, int y) {
+        final HashMap<Integer, E> res = map.get(x);
+        if (res != null) {
+            final E e = res.get(y);
+            if (e != null) {
+                res.remove(y);
+                return e;
+            }
+        }
+        return null;
+    }
+
 }

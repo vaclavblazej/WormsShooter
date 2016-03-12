@@ -12,13 +12,13 @@ import cz.spacks.worms.model.map.WorldModel;
 import cz.spacks.worms.model.objects.Body;
 import cz.spacks.worms.model.objects.Crafting;
 import cz.spacks.worms.model.objects.items.ItemFactory;
+import cz.spacks.worms.model.objects.items.itemActions.ItemAction;
 import cz.spacks.worms.view.MapViewModel;
 import cz.spacks.worms.view.component.FocusGrabber;
 import cz.spacks.worms.view.defaults.DefaultComponentListener;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.ComponentEvent;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Random;
@@ -30,7 +30,7 @@ public abstract class AbstractView extends JPanel implements
         WorldServiceListener,
         DefaultComponentListener,
         FocusGrabber,
-        CacheReloader{
+        CacheReloader {
 
     protected Random random;
 
@@ -56,6 +56,7 @@ public abstract class AbstractView extends JPanel implements
 
     public void setWorldService(WorldService worldService) {
         this.worldService = worldService;
+        ItemAction.setWorldService(worldService); // todo
         worldService.addCacheReloader(this);
         reloadCache();
     }

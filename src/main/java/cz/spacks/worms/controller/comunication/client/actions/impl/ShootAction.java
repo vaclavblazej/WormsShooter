@@ -19,10 +19,5 @@ public class ShootAction extends ActionClient {
 
     @Override
     public void perform() {
-        Body body = worldService.getWorldModel().getControls().get(id);
-        Point pos = (Point) body.getPosition().clone();
-        double rad = Math.atan2(p.y - pos.y, p.x - pos.x);
-//        worldService.addObject(new Bullet(pos, rad, worldService)); // todo fix objects
-//        serverCommunication.broadcast(new ShootServerAction(pos, rad));
     }
 }

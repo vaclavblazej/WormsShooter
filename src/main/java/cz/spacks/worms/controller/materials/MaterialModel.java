@@ -57,6 +57,13 @@ public class MaterialModel {
         colors.put(color.getRGB(), mat);
     }
 
+    public Chunk getChunk(MaterialEnum materialEnum){
+        final Material material = this.material.get(materialEnum);
+        final ArrayList<MaterialAmount> materials = new ArrayList<>();
+        materials.add(new MaterialAmount(material, 1));
+        return new Chunk(materials);
+    }
+
     public Color getColor(MaterialEnum en) {
         if (material.get(en) != null) {
             return material.get(en).color;

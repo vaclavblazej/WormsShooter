@@ -43,6 +43,5 @@ public class ItemsTableModel extends ComponentTableModel<ItemsCount> implements 
     @Override
     public void dataChanged() {
         fireTableDataChanged();
-        System.out.println("data changed");
     }
 }

@@ -34,7 +34,9 @@ public class MapModel {
 
     public void addChunk(Chunk chunk, Point position) {
         if (position.x >= 0 && position.x < dimensions.width && position.y >= 0 && position.y < dimensions.height) {
+            map.remove(position.x, position.y);
             map.put(position.x, position.y, chunk);
+            dataChanged(position);
         } else {
             logger.log(Level.SEVERE, "Tried to put chunk "
                     + chunk.toString()
@@ -63,6 +65,12 @@ public class MapModel {
 
     public Dimension getDimensions() {
         return dimensions;
+    }
+
+    private void dataChanged(Point position) {
+        for (MapModelListener listener : listeners) {
+            listener.chunkUpdated(position);
+        }
     }
 
     public void addListener(MapModelListener listener) {

@@ -1,14 +1,19 @@
 package cz.spacks.worms.model.objects.items.itemActions;
 
-import cz.spacks.worms.controller.comunication.client.actions.ActionClient;
+import cz.spacks.worms.controller.services.WorldService;
 
 import java.awt.*;
-import java.io.Serializable;
 
 /**
  *
  */
-public interface ItemAction extends Serializable {
+public abstract class ItemAction {
 
-    ActionClient action(Point point);
+    protected static WorldService worldService;
+
+    public static void setWorldService(WorldService aView) {
+        worldService = aView;
+    }
+
+    public abstract void action(Point point);
 }
