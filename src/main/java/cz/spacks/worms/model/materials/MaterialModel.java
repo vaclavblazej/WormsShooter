@@ -1,10 +1,10 @@
-package cz.spacks.worms.controller.materials;
+package cz.spacks.worms.model.materials;
 
 import cz.spacks.worms.controller.properties.CollisionState;
 import cz.spacks.worms.model.map.Chunk;
+import cz.spacks.worms.model.map.Material;
 import cz.spacks.worms.model.map.MaterialAmount;
 import cz.spacks.worms.model.objects.ItemsCount;
-import cz.spacks.worms.model.map.Material;
 import cz.spacks.worms.model.objects.items.ItemEnum;
 import cz.spacks.worms.model.objects.items.ItemFactory;
 
@@ -57,7 +57,7 @@ public class MaterialModel {
         colors.put(color.getRGB(), mat);
     }
 
-    public Chunk getChunk(MaterialEnum materialEnum){
+    public Chunk getChunk(MaterialEnum materialEnum) {
         final Material material = this.material.get(materialEnum);
         final ArrayList<MaterialAmount> materials = new ArrayList<>();
         materials.add(new MaterialAmount(material, 1));
@@ -84,8 +84,8 @@ public class MaterialModel {
         MaterialEnum materialEnum = MaterialEnum.AIR;
         for (MaterialAmount materialAmount : materials) {
             // todo make composite materials
-            final Color color = materialAmount.getMaterial().color;
-            materialEnum = colors.get(color);
+            materialEnum = materialAmount.getMaterial().type;
+            break;
         }
         return materialEnum;
     }
@@ -109,6 +109,11 @@ public class MaterialModel {
     }
 
     public List<ItemsCount> getComponents(MaterialEnum mat) {
-        return material.get(mat).minedItems;
+        final List<ItemsCount> minedItems = material.get(mat).minedItems;
+        final List<ItemsCount> newList = new ArrayList<>();
+        for (ItemsCount minedItem : minedItems) {
+            newList.add(new ItemsCount(minedItem));
+        }
+        return newList;
     }
 }

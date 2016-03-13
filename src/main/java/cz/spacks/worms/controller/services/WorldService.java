@@ -1,18 +1,22 @@
 package cz.spacks.worms.controller.services;
 
+import cz.spacks.worms.controller.Settings;
 import cz.spacks.worms.controller.comunication.client.actions.impl.CraftAction;
-import cz.spacks.worms.controller.events.WorldEvent;
-import cz.spacks.worms.controller.materials.MaterialModel;
+import cz.spacks.worms.controller.events.itemActions.ItemAction;
 import cz.spacks.worms.controller.properties.CollisionState;
 import cz.spacks.worms.controller.services.controls.BodyControl;
 import cz.spacks.worms.model.ChatLog;
+import cz.spacks.worms.model.map.Chunk;
+import cz.spacks.worms.model.map.MaterialAmount;
+import cz.spacks.worms.model.map.WorldEvent;
 import cz.spacks.worms.model.map.WorldModel;
+import cz.spacks.worms.model.materials.MaterialModel;
 import cz.spacks.worms.model.objects.Body;
 import cz.spacks.worms.model.objects.Inventory;
 import cz.spacks.worms.model.objects.ItemsCount;
 import cz.spacks.worms.model.objects.MoveEnum;
+import cz.spacks.worms.model.objects.items.DroppedItem;
 import cz.spacks.worms.model.objects.items.ItemEnum;
-import cz.spacks.worms.model.objects.items.itemActions.ItemAction;
 
 import javax.swing.*;
 import java.awt.*;
@@ -39,6 +43,7 @@ public class WorldService implements ActionListener {
     public WorldService(WorldModel worldModel, MaterialModel materialModel) {
         this.worldModel = worldModel;
         this.materialModel = materialModel;
+        worldModel.setMaterialModelCache(materialModel);
         notifyCacheRealoaders();
         chatLog = new ChatLog();
     }
@@ -85,10 +90,49 @@ public class WorldService implements ActionListener {
         for (BodyControl bodyControl : bodyControls) {
             bodyControl.tick(this);
         }
+        final List<WorldEvent> todoEvents = worldModel.getTodoEvents();
+        for (WorldEvent todoEvent : todoEvents) {
+            todoEvent.perform(this);
+        }
+        todoEvents.clear();
+        final List<WorldEvent> continuingEvents = worldModel.getContinuingEvents();
+        for (WorldEvent continuingEvent : continuingEvents) {
+            continuingEvent.perform(this);
+        }
+        final Iterator<DroppedItem> iterator = worldModel.getDroppedItems().iterator();
+        while(iterator.hasNext()){
+            final DroppedItem droppedItem = iterator.next();
+            for (BodyControl bodyControl : bodyControls) {
+                final Body body = bodyControl.getBody();
+                final Point position = body.getPosition();
+                if (position.distance(droppedItem.getPosition()) < 60) {
+                    body.getInventory().add(droppedItem.getItem());
+                    iterator.remove();
+                }
+            }
+        }
+    }
+
+    public void damageChunk(Point position) {
+        final Chunk chunk = worldModel.getMap().destroyChunk(position);
+        if (chunk != Chunk.NULL) {
+            final List<MaterialAmount> materials = chunk.getMaterials();
+            for (MaterialAmount material : materials) {
+                final List<ItemsCount> minedItems = material.getMaterial().minedItems;
+                for (ItemsCount minedItem : minedItems) {
+                    for (int i = 0; i < minedItem.count; i++) {
+                        final Point point = new Point(
+                                position.x * Settings.BLOCK_SIZE + Settings.BLOCK_SIZE / 2,
+                                position.y * Settings.BLOCK_SIZE + Settings.BLOCK_SIZE / 2);
+                        worldModel.addRigidItem(minedItem.itemBlueprint.getInstance(), point);
+                    }
+                }
+            }
+        }
     }
 
     public Body newBody() {
-        Body body = new Body(2000, 1600);
+        Body body = new Body(2400, 1800);
         bodyControls.add(new BodyControl(body));
         final Inventory inventory = body.getInventory();
         final ArrayList<ItemsCount> addedComponents = new ArrayList<>();

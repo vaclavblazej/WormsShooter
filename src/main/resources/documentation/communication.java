@@ -1,11 +1,11 @@
 import cz.spacks.worms.controller.comunication.client.ClientCommunication;
-import cz.spacks.worms.controller.comunication.server.ServerCommunication;
 import cz.spacks.worms.controller.comunication.client.actions.impl.*;
+import cz.spacks.worms.controller.comunication.server.ServerCommunication;
+import cz.spacks.worms.model.communication.RegistrationForm;
 import spacks.communication.SCommunication;
 import spacks.communication.client.SCommunicationClient;
 import spacks.communication.server.SCommunicationServer;
 import spacks.communication.utilities.SAction;
-import cz.spacks.worms.model.communication.RegistrationForm;
 
 class ConnectionEstablishing {
     {

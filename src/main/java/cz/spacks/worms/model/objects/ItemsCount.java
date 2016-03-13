@@ -15,6 +15,11 @@ public class ItemsCount {
         this.count = count;
     }
 
+    public ItemsCount(ItemsCount itemsCount) {
+        this.itemBlueprint = itemsCount.itemBlueprint;
+        this.count = itemsCount.count;
+    }
+
     public static class Builder {
         private List<ItemsCount> itemsCounts;
 
@@ -24,6 +29,11 @@ public class ItemsCount {
 
         public Builder add(ItemBlueprint itemBlueprint, int count) {
             itemsCounts.add(new ItemsCount(itemBlueprint, count));
+            return this;
+        }
+
+        public Builder add(ItemsCount itemsCount) {
+            itemsCounts.add(new ItemsCount(itemsCount));
             return this;
         }
 

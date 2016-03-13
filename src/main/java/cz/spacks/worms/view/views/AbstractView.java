@@ -1,7 +1,6 @@
 package cz.spacks.worms.view.views;
 
-import cz.spacks.worms.controller.materials.MaterialEnum;
-import cz.spacks.worms.controller.materials.MaterialModel;
+import cz.spacks.worms.controller.events.itemActions.ItemAction;
 import cz.spacks.worms.controller.services.CacheReloader;
 import cz.spacks.worms.controller.services.WorldService;
 import cz.spacks.worms.controller.services.WorldServiceListener;
@@ -9,10 +8,11 @@ import cz.spacks.worms.controller.services.controls.BodyView;
 import cz.spacks.worms.model.map.Chunk;
 import cz.spacks.worms.model.map.MapModel;
 import cz.spacks.worms.model.map.WorldModel;
+import cz.spacks.worms.model.materials.MaterialEnum;
+import cz.spacks.worms.model.materials.MaterialModel;
 import cz.spacks.worms.model.objects.Body;
 import cz.spacks.worms.model.objects.Crafting;
 import cz.spacks.worms.model.objects.items.ItemFactory;
-import cz.spacks.worms.model.objects.items.itemActions.ItemAction;
 import cz.spacks.worms.view.MapViewModel;
 import cz.spacks.worms.view.component.FocusGrabber;
 import cz.spacks.worms.view.defaults.DefaultComponentListener;

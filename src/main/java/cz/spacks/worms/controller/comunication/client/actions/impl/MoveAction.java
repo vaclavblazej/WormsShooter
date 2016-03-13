@@ -7,7 +7,6 @@ import cz.spacks.worms.model.objects.Body;
 import cz.spacks.worms.model.objects.MoveEnum;
 
 import java.awt.*;
-import java.util.*;
 
 /**
  *

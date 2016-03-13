@@ -1,4 +1,4 @@
-package cz.spacks.worms.controller.materials;
+package cz.spacks.worms.model.materials;
 
 /**
  *

@@ -1,13 +1,17 @@
 package cz.spacks.worms.model.objects;
 
 
+import cz.spacks.worms.model.objects.items.Item;
+import cz.spacks.worms.model.objects.items.ItemBlueprint;
+
 import java.util.ArrayList;
 import java.util.Collection;
+import java.util.Iterator;
 
 /**
  *
  */
-public class Inventory extends ArrayList<ItemsCount>{
+public class Inventory extends ArrayList<ItemsCount> {
 
     private ArrayList<InventoryListener> listeners;
 
@@ -15,11 +19,11 @@ public class Inventory extends ArrayList<ItemsCount>{
         this.listeners = new ArrayList<>();
     }
 
-    public void addListener(InventoryListener listener){
+    public void addListener(InventoryListener listener) {
         listeners.add(listener);
     }
 
-    public void dataChanged(){
+    public void dataChanged() {
         for (InventoryListener listener : listeners) {
             listener.dataChanged();
         }
@@ -34,16 +38,46 @@ public class Inventory extends ArrayList<ItemsCount>{
 
     @Override
     public boolean add(ItemsCount itemsCount) {
-        final boolean add = super.add(itemsCount);
+        this.addOne(itemsCount);
         dataChanged();
-        return add;
+        return true;
+    }
+
+    public boolean add(Item itemsCount) {
+        this.addOne(new ItemsCount(itemsCount, 1));
+        dataChanged();
+        return true;
     }
 
     @Override
     public boolean addAll(Collection<? extends ItemsCount> c) {
-        final boolean b = super.addAll(c);
+        for (ItemsCount itemsCount : c) {
+            this.addOne(itemsCount);
+        }
         dataChanged();
-        return b;
+        return true;
+    }
+
+    private void addOne(ItemsCount itemsCount) {
+        final ItemsCount found = find(itemsCount.itemBlueprint);
+        if (found != null) {
+            found.count += itemsCount.count;
+        } else {
+            super.add(itemsCount);
+        }
+    }
+
+    public ItemsCount find(ItemBlueprint blueprint) {
+        final Iterator<ItemsCount> iterator = this.iterator();
+        ItemsCount found = null;
+        while (iterator.hasNext()) {
+            final ItemsCount next = iterator.next();
+            if (next.itemBlueprint.equals(blueprint)) {
+                found = next;
+                break;
+            }
+        }
+        return found;
     }
 
     @Override

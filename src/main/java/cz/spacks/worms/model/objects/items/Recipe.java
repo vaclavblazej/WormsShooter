@@ -4,9 +4,7 @@ import cz.spacks.worms.model.objects.Inventory;
 import cz.spacks.worms.model.objects.ItemsCount;
 
 import java.io.Serializable;
-import java.util.ArrayList;
 import java.util.EnumSet;
-import java.util.List;
 
 /**
  *

@@ -1,13 +1,12 @@
 package cz.spacks.worms.view.windows;
 
+import cz.spacks.worms.controller.Controls;
 import cz.spacks.worms.controller.Settings;
 import cz.spacks.worms.controller.properties.ControlsEnum;
 import cz.spacks.worms.controller.services.WorldService;
-import cz.spacks.worms.controller.Controls;
 import cz.spacks.worms.model.objects.Body;
 import cz.spacks.worms.model.objects.Inventory;
 import cz.spacks.worms.model.objects.ItemsCount;
-import cz.spacks.worms.model.objects.items.ItemBlueprint;
 import cz.spacks.worms.model.objects.items.RecipeViewModel;
 import cz.spacks.worms.view.component.FocusGrabber;
 import cz.spacks.worms.view.component.ItemsTableModel;

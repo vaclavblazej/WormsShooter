@@ -1,8 +1,8 @@
 package cz.spacks.worms.controller.services;
 
-import cz.spacks.worms.controller.materials.MaterialModel;
 import cz.spacks.worms.controller.services.controls.BodyControl;
 import cz.spacks.worms.model.map.WorldModel;
+import cz.spacks.worms.model.materials.MaterialModel;
 import cz.spacks.worms.model.objects.Body;
 
 import javax.swing.*;

@@ -1,7 +1,6 @@
 package cz.spacks.worms.view.views;
 
 import cz.spacks.worms.controller.services.WorldService;
-import cz.spacks.worms.controller.services.controls.BodyControl;
 import cz.spacks.worms.controller.services.controls.BodyView;
 import cz.spacks.worms.view.defaults.DefaultComponentListener;
 

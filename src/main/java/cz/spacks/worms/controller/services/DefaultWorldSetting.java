@@ -1,11 +1,11 @@
 package cz.spacks.worms.controller.services;
 
-import cz.spacks.worms.controller.materials.MaterialModel;
+import cz.spacks.worms.controller.events.itemActions.ItemActionMine;
+import cz.spacks.worms.controller.events.itemActions.ItemActionShoot;
 import cz.spacks.worms.model.map.*;
+import cz.spacks.worms.model.materials.MaterialModel;
 import cz.spacks.worms.model.objects.Crafting;
 import cz.spacks.worms.model.objects.items.*;
-import cz.spacks.worms.model.objects.items.itemActions.ItemActionMine;
-import cz.spacks.worms.model.objects.items.itemActions.ItemActionShoot;
 
 import java.awt.*;
 import java.awt.image.BufferedImage;

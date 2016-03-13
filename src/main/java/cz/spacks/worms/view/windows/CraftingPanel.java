@@ -3,7 +3,6 @@ package cz.spacks.worms.view.windows;
 import cz.spacks.worms.controller.services.WorldService;
 import cz.spacks.worms.model.objects.Crafting;
 import cz.spacks.worms.model.objects.Inventory;
-import cz.spacks.worms.model.objects.ItemsCount;
 import cz.spacks.worms.model.objects.items.Recipe;
 import cz.spacks.worms.view.CraftingViewModel;
 import cz.spacks.worms.view.component.ItemsTableModel;
@@ -14,7 +13,6 @@ import javax.swing.event.ListSelectionListener;
 import java.awt.*;
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyListener;
-import java.util.List;
 
 /**
  *

@@ -1,7 +1,7 @@
 package cz.spacks.worms.controller.comunication.server.actions.impl;
 
 import cz.spacks.worms.controller.comunication.server.actions.ActionServer;
-import cz.spacks.worms.controller.materials.MaterialEnum;
+import cz.spacks.worms.model.materials.MaterialEnum;
 import cz.spacks.worms.model.objects.Inventory;
 
 /**

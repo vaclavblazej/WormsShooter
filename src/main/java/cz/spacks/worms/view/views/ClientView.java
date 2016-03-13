@@ -2,15 +2,16 @@ package cz.spacks.worms.view.views;
 
 import cz.spacks.worms.controller.Controls;
 import cz.spacks.worms.controller.Settings;
-import cz.spacks.worms.controller.materials.MaterialVisuals;
+import cz.spacks.worms.controller.events.itemActions.ItemAction;
 import cz.spacks.worms.controller.properties.ControlsEnum;
 import cz.spacks.worms.controller.services.WorldService;
 import cz.spacks.worms.controller.services.controls.BodyView;
 import cz.spacks.worms.model.map.WorldModel;
+import cz.spacks.worms.model.materials.MaterialVisuals;
 import cz.spacks.worms.model.objects.Body;
 import cz.spacks.worms.model.objects.MoveEnum;
+import cz.spacks.worms.model.objects.items.DroppedItem;
 import cz.spacks.worms.model.objects.items.ItemBlueprint;
-import cz.spacks.worms.model.objects.items.itemActions.ItemAction;
 import cz.spacks.worms.view.component.FocusGrabber;
 import cz.spacks.worms.view.defaults.DefaultComponentListener;
 import cz.spacks.worms.view.defaults.DefaultKeyListener;
@@ -25,6 +26,7 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.awt.image.RasterFormatException;
 import java.util.EnumSet;
+import java.util.List;
 import java.util.logging.Level;
 import java.util.logging.Logger;
 
@@ -151,12 +153,22 @@ public class ClientView extends AbstractView implements
             } catch (RasterFormatException | ArrayIndexOutOfBoundsException ex) {
                 logger.log(Level.SEVERE, null, ex);
             }
-            Graphics2D g = (Graphics2D) graphics;
+            final Graphics2D rasteredViewGraphics = (Graphics2D) rasteredView.getGraphics();
+            final List<DroppedItem> droppedItems = worldModelCache.getDroppedItems();
             transformation.setToTranslation(-viewRealPos.x + smoothOffset.x, -viewRealPos.y + smoothOffset.y);
-            final Graphics rasteredViewGraphics = rasteredView.getGraphics();
-            for (BodyView bodyView : bodyViews) {
-                bodyView.drawRelative((Graphics2D) rasteredViewGraphics, transformation);
+            for (DroppedItem droppedItem : droppedItems) {
+                final Point position = droppedItem.getPosition();
+                rasteredViewGraphics.setColor(Color.YELLOW);
+
+                AffineTransform tr = new AffineTransform(transformation);
+                tr.translate(position.x, position.y);
+                rasteredViewGraphics.setTransform(tr);
+                rasteredViewGraphics.drawOval(-4, -4, 8, 8);
             }
+            for (BodyView bodyView : bodyViews) {
+                bodyView.drawRelative(rasteredViewGraphics, transformation);
+            }
+            Graphics2D g = (Graphics2D) graphics;
             g.drawImage(rasteredView, -smoothOffset.x, -smoothOffset.y, rasteredView.getWidth(), rasteredView.getHeight(), null);
 
 //            final BufferedImage image = map.getImage();

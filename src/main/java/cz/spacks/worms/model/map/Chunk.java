@@ -1,7 +1,7 @@
 package cz.spacks.worms.model.map;
 
-import cz.spacks.worms.controller.materials.MaterialEnum;
 import cz.spacks.worms.controller.properties.CollisionState;
+import cz.spacks.worms.model.materials.MaterialEnum;
 
 import java.awt.*;
 import java.util.ArrayList;

@@ -4,8 +4,8 @@ import cz.spacks.worms.controller.PlayerInfo;
 import cz.spacks.worms.controller.comunication.client.actions.ActionClient;
 import cz.spacks.worms.controller.comunication.client.actions.impl.GetModelAction;
 import cz.spacks.worms.controller.services.WorldService;
-import cz.spacks.worms.model.objects.Body;
 import cz.spacks.worms.model.map.WorldModel;
+import cz.spacks.worms.model.objects.Body;
 import cz.spacks.worms.view.views.ClientView;
 
 import java.util.Map;

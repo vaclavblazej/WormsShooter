@@ -1,5 +1,7 @@
 package cz.spacks.worms.model.map;
 
+import cz.spacks.worms.model.materials.MaterialEnum;
+import cz.spacks.worms.model.materials.MaterialModel;
 import cz.spacks.worms.model.structures.Map2D;
 
 import java.awt.*;
@@ -18,12 +20,11 @@ public class MapModel {
     private Map2D<Chunk> map;
     private Dimension dimensions;
 
+    private MaterialModel materialModelCache;
     private List<MapModelListener> listeners;
 
     public MapModel(Dimension dimension) {
-        this.map = new Map2D<>();
-        this.dimensions = dimension;
-        this.listeners = new ArrayList<>();
+        this(dimension, new Map2D<>());
     }
 
     public MapModel(Dimension dimension, Map2D<Chunk> map) {
@@ -45,6 +46,15 @@ public class MapModel {
                     + ", but position must be between 0 and "
                     + dimensions.toString());
         }
+    }
+
+    public Chunk destroyChunk(Point position) {
+        final Chunk chunk = this.getChunk(position);
+        if(chunk != Chunk.NULL) {
+            final Chunk newChunk = materialModelCache.getChunk(MaterialEnum.AIR);
+            this.addChunk(newChunk, position);
+        }
+        return chunk;
     }
 
     public Map2D<Chunk> getMap() {
@@ -80,5 +90,9 @@ public class MapModel {
 
     public void removeListener(MapModelListener listener) {
         listeners.remove(listener);
+    }
+
+    public void setMaterialModelCache(MaterialModel materialModelCache) {
+        this.materialModelCache = materialModelCache;
     }
 }

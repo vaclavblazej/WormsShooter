@@ -1,6 +1,5 @@
 package cz.spacks.worms.view.views;
 
-import cz.spacks.worms.controller.services.controls.BodyControl;
 import cz.spacks.worms.controller.services.controls.BodyView;
 
 import javax.swing.*;

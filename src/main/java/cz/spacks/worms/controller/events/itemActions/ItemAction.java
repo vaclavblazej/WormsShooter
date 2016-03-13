@@ -1,4 +1,4 @@
-package cz.spacks.worms.model.objects.items.itemActions;
+package cz.spacks.worms.controller.events.itemActions;
 
 import cz.spacks.worms.controller.services.WorldService;
 
