@@ -14,10 +14,12 @@ There is bunch of interesting challenges to tackle. You could create AI for char
 
 I want to compile this project from source code
 -----------------------------------------------
-* You need git and maven installed.
-* download the folder with source codes : git clone https://github.com/vaclavblazej/WormsShooter.git
-* open the folder: cd WormsShooter
-* compile it with maven: mvn clear package
-* ...
+You need java8, git and maven2 installed.
+Then run these commands and you should see a running application.
 
-https://github.com/Skarabelus/WormsShooter
+* git clone https://github.com/vaclavblazej/WormsShooter.git
+* cd WormsShooter
+* mvn clear package
+* cd target/
+* chmod u+x wormsShooter-jar-with-dependencies.jar 
+* java -jar wormsShooter-jar-with-dependencies.jar 
